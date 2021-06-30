@@ -1,0 +1,36 @@
+\_form#0:$N \times N$
+\_form#1:$\Rightarrow (i,i-1)$
+\_form#2:$\Rightarrow (i,i)$
+\_form#3:$\Rightarrow (i,i+1)$
+\_form#4:$\Rightarrow (i,i+2)$
+\_form#5:$ N \times N $
+\_form#6:$ A \cdot x = b $
+\_form#7:$ (i,i-1) $
+\_form#8:$ (i,i) $
+\_form#9:$ (i,i+1) $
+\_form#10:$ (i,i+2) $
+\_form#11:$ a_{k+1, k} $
+\_form#12:$ (i+1, i) $
+\_form#13:$ G_{N \times N} = [g_ij]_{N \times N} $
+\_form#14:$ G_{N \times N} = [g_{ij}]_{N \times N} $
+\_form#15:\begin{eqnarray*} g &=& \frac{Gm_2}{r^2} \\ &=& \frac{(6.673 \times 10^{-11}\,\mbox{m}^3\,\mbox{kg}^{-1}\, \mbox{s}^{-2})(5.9736 \times 10^{24}\,\mbox{kg})}{(6371.01\,\mbox{km})^2} \\ &=& 9.82066032\,\mbox{m/s}^2 \end{eqnarray*}
+\_form#16:\begin{eqnarray*} g_{ij} &=& 1, i = j \ne k, k+1 \\ &=& \cos{\theta}, i = j = k, k+1 \\ &=& \sin{\theta}, i = k, j = k+1 \\ &=&-\sin{\theta}, i = k+1, j = k \\ &=& 0, otherwise \end{eqnarray*}
+\_form#17:\begin{eqnarray*} g_{ij} &=& 1, i = j \ne k, k+1 \\ &=& \cos{\theta}, i = j = k, k+1 \\ &=& \sin{\theta}, i = k, j = k+1 \\ &=&-\sin{\theta}, i = k+1, j = k \\ &=& 0, \textbf{otherwise} \end{eqnarray*}
+\_form#18:$ A $
+\_form#19:\begin{equation} \begin{array}{cc} 1 & 0 \\ 0 & 1 \end{array} \end{equation}
+\_form#20:\begin{eqnarray*} g_{ij} &=& 1, i = j \ne k, k+1 \\ &=& \cos{\theta}, i = j = k, k+1 \\ &=& \sin{\theta}, i = k, j = k+1 \\ &=&-\sin{\theta}, i = k+1, j = k \\ &=& 0, \textbf{otherwise} \\ &=& \begin{array}{cccc} 1 & ... & & 1 \\ 0 & \cos{\theta} & \sin{\theta} & 0 \\ 0 & -\sin{\theta} & \cos{\theta} & 0 \\ 0 & ... & & 1 \end{array} \end{eqnarray*}
+\_form#21:\begin{eqnarray*} g_{ij} &=& 1, i = j \ne k, k+1 \\ &=& \cos{\theta}, i = j = k, k+1 \\ &=& \sin{\theta}, i = k, j = k+1 \\ &=&-\sin{\theta}, i = k+1, j = k \\ &=& 0, \textbf{otherwise} \\ &=& \left[\begin{array}{cccc} 1 & ... & 1 \\ 0 & \cos{\theta} & \sin{\theta} & 0 \\ 0 & -\sin{\theta} & \cos{\theta} & 0 \\ 0 & ... & 1 \end{array}\right] \end{eqnarray*}
+\_form#22:\begin{eqnarray*} g_{ij} &=& 1, i = j \ne k, k+1 \\ &=& \cos{\theta}, i = j = k, k+1 \\ &=& \sin{\theta}, i = k, j = k+1 \\ &=&-\sin{\theta}, i = k+1, j = k \\ &=& 0, \textbf{otherwise} \\ &=& \left[\begin{array}{cccc} 1 & ... & ... & 1 \\ 0 & \cos{\theta} & \sin{\theta} & 0 \\ 0 & -\sin{\theta} & \cos{\theta} & 0 \\ 0 & ... & ... & 1 \end{array}\right] \end{eqnarray*}
+\_form#23:\begin{eqnarray*} g_{ij} &=& 1, i = j \ne k, k+1 \\ &=& \cos{\theta}, i = j = k, k+1 \\ &=& \sin{\theta}, i = k, j = k+1 \\ &=&-\sin{\theta}, i = k+1, j = k \\ &=& 0, \textbf{otherwise} \\ \Rightarrow G &=& \left[\begin{array}{cccc} 1 & ... & ... & 1 \\ 0 & \cos{\theta} & \sin{\theta} & 0 \\ 0 & -\sin{\theta} & \cos{\theta} & 0 \\ 0 & ... & ... & 1 \end{array}\right] \end{eqnarray*}
+\_form#24:$ B_{N \times N} = [b_{i,j}]_{N \times N} $
+\_form#25:\begin{equation} C_{N \times N} = G_{N \times N} B_{N \times N} \end{equation}
+\_form#26:\begin{equation} C_{N \times N} = G_{N \times N} \cdot B_{N \times N} \end{equation}
+\_form#27:\begin{equation} \Rightarrow c_{ij} = \sum_{l=1}^N g_{i,l} * b_{l,j} \end{equation}
+\_form#28:\begin{equation} \Rightarrow c_{ij} = \sum_{l=1}^N g_{i,l} b_{l,j} \end{equation}
+\_form#29:\begin{eqnarray*} c_{ij} &=& g_{k,k} b_{k,j} + g_{k,k+1} b_{k+1,j}, i=k \\ &=& g_{k+1,k} b_{k+1,j} + g_{k+1,k+1} b_{k+1,j}, i=k+1 \\ &=& b_{i,j}, \textbf{otherwise} \end{eqnarray*}
+\_form#30:\begin{eqnarray*} \Rightarrow c_{ij} &=& g_{k,k} b_{k,j} + g_{k,k+1} b_{k+1,j}, i=k \\ &=& g_{k+1,k} b_{k+1,j} + g_{k+1,k+1} b_{k+1,j}, i=k+1 \\ &=& b_{i,j}, \textbf{otherwise} \end{eqnarray*}
+\_form#31:\[ C_{N \times N} = G_{N \times N} \cdot B_{N \times N} \]
+\_form#32:\begin{equation} g_{ij} = \begin{array}{cc} 1 & i = j \ne k, k+1 \\ \cos{\theta} & i = j = k, k+1 \\ \sin{\theta} & i = k, j = k+1 \\ -\sin{\theta} & i = k+1, j = k \\ 0 & \textbf{otherwise} \end{array} \end{equation}
+\_form#33:\begin{eqnarray*} C_{N \times N} = G_{N \times N} \cdot B_{N \times N} \end{eqnarray*}
+\_form#34:\begin{eqnarray*} \Rightarrow c_{ij} = \sum_{l=1}^N g_{i,l} b_{l,j} \end{eqnarray*}
+\_form#35:\begin{equation} \Rightarrow c_{ij} = \begin{array}{cc} g_{k,k} b_{k,j} + g_{k,k+1} b_{k+1,j} & i=k \\ g_{k+1,k} b_{k+1,j} + g_{k+1,k+1} b_{k+1,j} & i=k+1 \\ b_{i,j} & \textbf{otherwise} \end{array} \end{equation}

@@ -1,0 +1,159 @@
+\hypertarget{class_q_r_solver}{}\doxysection{Q\+R\+Solver Class Reference}
+\label{class_q_r_solver}\index{QRSolver@{QRSolver}}
+
+
+Class to implement QR factorization algorithm for solving matrix equations of the A.\+x = b where A is a n x n tridiagonal matrix and x and b are n x 1 vectors.  
+
+
+
+
+{\ttfamily \#include $<$Q\+R\+\_\+\+Solver.\+hpp$>$}
+
+Inheritance diagram for Q\+R\+Solver\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_q_r_solver}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_q_r_solver_a188245fec368a438a24ad41803392416}{Q\+R\+Solver}} (unsigned int \mbox{\hyperlink{class_tridiagonal_matrix_aa5008f3c029ac2f1b481d8169da10b1b}{N}})
+\begin{DoxyCompactList}\small\item\em Construct a new \mbox{\hyperlink{class_q_r_solver}{Q\+R\+Solver}} object. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_q_r_solver_a5ea90d4c96557456acbc94597b4456d2}{$\sim$\+Q\+R\+Solver}} ()
+\begin{DoxyCompactList}\small\item\em Destroy the \mbox{\hyperlink{class_q_r_solver}{Q\+R\+Solver}} object. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_q_r_solver_a26706f4441e6a9e7953a5c0ee87b6155}\label{class_q_r_solver_a26706f4441e6a9e7953a5c0ee87b6155}} 
+void {\bfseries Q\+Rfactorize} ()
+\item 
+\mbox{\Hypertarget{class_q_r_solver_a88293f565243d241703365f29acd7ae8}\label{class_q_r_solver_a88293f565243d241703365f29acd7ae8}} 
+void {\bfseries initQ} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_q_r_solver_aa7a83179886e554f27f6f66447036b51}\label{class_q_r_solver_aa7a83179886e554f27f6f66447036b51}} 
+void \mbox{\hyperlink{class_q_r_solver_aa7a83179886e554f27f6f66447036b51}{loadR}} ()
+\begin{DoxyCompactList}\small\item\em Loads the values of R matrix that will change during multiplication with Givens\textquotesingle{} rotation matrix to temporary variables. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_q_r_solver_a9850bcf20b5dd49bf938d752c396b674}\label{class_q_r_solver_a9850bcf20b5dd49bf938d752c396b674}} 
+void \mbox{\hyperlink{class_q_r_solver_a9850bcf20b5dd49bf938d752c396b674}{setup\+Givens\+Rotation\+Matrix}} ()
+\begin{DoxyCompactList}\small\item\em Setup Givens\textquotesingle{} rotation matrix. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_q_r_solver_a38c417dd8ccd3aceef20405e940388bd}\label{class_q_r_solver_a38c417dd8ccd3aceef20405e940388bd}} 
+void \mbox{\hyperlink{class_q_r_solver_a38c417dd8ccd3aceef20405e940388bd}{multiply\+Givens\+Matrix\+WithR}} ()
+\begin{DoxyCompactList}\small\item\em Multiplies the Givens rotation matrix with R matrix and updates its value. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_q_r_solver_a447187a62327508543499b002f129623}\label{class_q_r_solver_a447187a62327508543499b002f129623}} 
+void \mbox{\hyperlink{class_q_r_solver_a447187a62327508543499b002f129623}{multiply\+Givens\+Matrix\+WithQ}} ()
+\begin{DoxyCompactList}\small\item\em Multiplies the Givens rotation matrix with R matrix and updates its value. \end{DoxyCompactList}\item 
+unsigned int \mbox{\hyperlink{class_q_r_solver_a5ce9ad32d6ae63bb5bd4f131dda5425d}{get\+Index}} (unsigned int row\+\_\+index, unsigned int column\+\_\+index)
+\begin{DoxyCompactList}\small\item\em Get the index in a flattened linear array representation of a 2D matrix. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_q_r_solver_a66748417897fbfd077d104d0b96e6250}\label{class_q_r_solver_a66748417897fbfd077d104d0b96e6250}} 
+real\+\_\+t $\ast$ {\bfseries Q}
+\item 
+\mbox{\Hypertarget{class_q_r_solver_a2486091b1e61a4e5de7ffd67b05f0abb}\label{class_q_r_solver_a2486091b1e61a4e5de7ffd67b05f0abb}} 
+real\+\_\+t {\bfseries G\+\_\+k\+\_\+k}
+\item 
+\mbox{\Hypertarget{class_q_r_solver_a6846faa98a6b43fc803e2c9b2b88095e}\label{class_q_r_solver_a6846faa98a6b43fc803e2c9b2b88095e}} 
+real\+\_\+t {\bfseries G\+\_\+k\+\_\+kp1}
+\item 
+\mbox{\Hypertarget{class_q_r_solver_a190adca74e46a1c2a7d64a8e6f528a1b}\label{class_q_r_solver_a190adca74e46a1c2a7d64a8e6f528a1b}} 
+real\+\_\+t {\bfseries G\+\_\+kp1\+\_\+k}
+\item 
+\mbox{\Hypertarget{class_q_r_solver_a543ac557a2fea0da0b110eed7df4215b}\label{class_q_r_solver_a543ac557a2fea0da0b110eed7df4215b}} 
+real\+\_\+t {\bfseries G\+\_\+kp1\+\_\+kp1}
+\item 
+\mbox{\Hypertarget{class_q_r_solver_aca683b519155344a8931efed5ed8ba80}\label{class_q_r_solver_aca683b519155344a8931efed5ed8ba80}} 
+real\+\_\+t {\bfseries R\+\_\+k\+\_\+k}
+\item 
+\mbox{\Hypertarget{class_q_r_solver_ad07750ef4a218c7589f447bbf694a25c}\label{class_q_r_solver_ad07750ef4a218c7589f447bbf694a25c}} 
+real\+\_\+t {\bfseries R\+\_\+k\+\_\+kp1}
+\item 
+\mbox{\Hypertarget{class_q_r_solver_ade8727a7b3374878512803085334c3c9}\label{class_q_r_solver_ade8727a7b3374878512803085334c3c9}} 
+real\+\_\+t {\bfseries R\+\_\+kp1\+\_\+k}
+\item 
+\mbox{\Hypertarget{class_q_r_solver_a765693b2fb11607fb18ac55a5987bf91}\label{class_q_r_solver_a765693b2fb11607fb18ac55a5987bf91}} 
+real\+\_\+t {\bfseries R\+\_\+kp1\+\_\+kp1}
+\item 
+\mbox{\Hypertarget{class_q_r_solver_a3a9526357e945ffa730b1ff636301805}\label{class_q_r_solver_a3a9526357e945ffa730b1ff636301805}} 
+real\+\_\+t {\bfseries R\+\_\+kp1\+\_\+kp2}
+\item 
+\mbox{\Hypertarget{class_q_r_solver_a1eca2aac61fafab8ab626eee43e26e47}\label{class_q_r_solver_a1eca2aac61fafab8ab626eee43e26e47}} 
+unsigned int {\bfseries k}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class to implement QR factorization algorithm for solving matrix equations of the A.\+x = b where A is a n x n tridiagonal matrix and x and b are n x 1 vectors. 
+
+Definition at line 27 of file Q\+R\+\_\+\+Solver.\+hpp.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_q_r_solver_a188245fec368a438a24ad41803392416}\label{class_q_r_solver_a188245fec368a438a24ad41803392416}} 
+\index{QRSolver@{QRSolver}!QRSolver@{QRSolver}}
+\index{QRSolver@{QRSolver}!QRSolver@{QRSolver}}
+\doxysubsubsection{\texorpdfstring{QRSolver()}{QRSolver()}}
+{\footnotesize\ttfamily Q\+R\+Solver\+::\+Q\+R\+Solver (\begin{DoxyParamCaption}\item[{unsigned int}]{N }\end{DoxyParamCaption})}
+
+
+
+Construct a new \mbox{\hyperlink{class_q_r_solver}{Q\+R\+Solver}} object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em N} & \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 5 of file Q\+R\+\_\+\+Solver.\+cpp.
+
+\mbox{\Hypertarget{class_q_r_solver_a5ea90d4c96557456acbc94597b4456d2}\label{class_q_r_solver_a5ea90d4c96557456acbc94597b4456d2}} 
+\index{QRSolver@{QRSolver}!````~QRSolver@{$\sim$QRSolver}}
+\index{````~QRSolver@{$\sim$QRSolver}!QRSolver@{QRSolver}}
+\doxysubsubsection{\texorpdfstring{$\sim$QRSolver()}{~QRSolver()}}
+{\footnotesize\ttfamily Q\+R\+Solver\+::$\sim$\+Q\+R\+Solver (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Destroy the \mbox{\hyperlink{class_q_r_solver}{Q\+R\+Solver}} object. 
+
+
+
+Definition at line 14 of file Q\+R\+\_\+\+Solver.\+cpp.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_q_r_solver_a5ce9ad32d6ae63bb5bd4f131dda5425d}\label{class_q_r_solver_a5ce9ad32d6ae63bb5bd4f131dda5425d}} 
+\index{QRSolver@{QRSolver}!getIndex@{getIndex}}
+\index{getIndex@{getIndex}!QRSolver@{QRSolver}}
+\doxysubsubsection{\texorpdfstring{getIndex()}{getIndex()}}
+{\footnotesize\ttfamily unsigned int Q\+R\+Solver\+::get\+Index (\begin{DoxyParamCaption}\item[{unsigned int}]{row\+\_\+index,  }\item[{unsigned int}]{column\+\_\+index }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+Get the index in a flattened linear array representation of a 2D matrix. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em row\+\_\+index} & Row index i of the desired element \\
+\hline
+{\em column\+\_\+index} & Column index j of the desired element \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Index in a linear array of the i,j element of a 2D matrix implemented using the linear array 
+\end{DoxyReturn}
+
+
+Definition at line 87 of file Q\+R\+\_\+\+Solver.\+hpp.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+combustion-\/packed-\/pellet-\/core-\/shell-\/particles/include/\mbox{\hyperlink{_q_r___solver_8hpp}{Q\+R\+\_\+\+Solver.\+hpp}}\item 
+combustion-\/packed-\/pellet-\/core-\/shell-\/particles/src/Q\+R\+\_\+\+Solver.\+cpp\end{DoxyCompactItemize}

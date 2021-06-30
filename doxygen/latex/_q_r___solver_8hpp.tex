@@ -1,0 +1,30 @@
+\hypertarget{_q_r___solver_8hpp}{}\doxysection{combustion-\/packed-\/pellet-\/core-\/shell-\/particles/include/\+Q\+R\+\_\+\+Solver.hpp File Reference}
+\label{_q_r___solver_8hpp}\index{combustion-\/packed-\/pellet-\/core-\/shell-\/particles/include/QR\_Solver.hpp@{combustion-\/packed-\/pellet-\/core-\/shell-\/particles/include/QR\_Solver.hpp}}
+
+
+This header file defines a class for solving 2D matrix equations of the form A.\+x = b (where A is an n x n matrix and x and b are n x 1 vectors) using QR factorization technique. Also the class is implemented in such a way that it may be parallelized easily using openmp constructs.  
+
+
+{\ttfamily \#include \char`\"{}Tridiagonal\+\_\+\+Matrix.\+hpp\char`\"{}}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_q_r_solver}{Q\+R\+Solver}}
+\begin{DoxyCompactList}\small\item\em Class to implement QR factorization algorithm for solving matrix equations of the A.\+x = b where A is a n x n tridiagonal matrix and x and b are n x 1 vectors. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This header file defines a class for solving 2D matrix equations of the form A.\+x = b (where A is an n x n matrix and x and b are n x 1 vectors) using QR factorization technique. Also the class is implemented in such a way that it may be parallelized easily using openmp constructs. 
+
+\begin{DoxyAuthor}{Author}
+Souritra Garai (\href{mailto:souritra.garai@iitgn.ac.in}{\texttt{ souritra.\+garai@iitgn.\+ac.\+in}}) 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2021-\/06-\/23
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2021 
+\end{DoxyCopyright}

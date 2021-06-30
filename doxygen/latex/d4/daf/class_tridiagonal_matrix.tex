@@ -1,0 +1,93 @@
+\hypertarget{class_tridiagonal_matrix}{}\doxysection{Tridiagonal\+Matrix Class Reference}
+\label{class_tridiagonal_matrix}\index{TridiagonalMatrix@{TridiagonalMatrix}}
+
+
+Class to represent a 2D Tridiagonal square matrix of size $N \times N$.  
+
+
+
+
+{\ttfamily \#include $<$QR\+\_\+\+Solver.\+hpp$>$}
+
+
+
+Inheritance diagram for Tridiagonal\+Matrix\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=182pt]{da/d7c/class_tridiagonal_matrix__inherit__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_tridiagonal_matrix_a8046a9840afa4dee2fa01ed5d07db00b_a8046a9840afa4dee2fa01ed5d07db00b}{Tridiagonal\+Matrix}} (unsigned int N)
+\begin{DoxyCompactList}\small\item\em Construct a new Tridiagonal Matrix. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_tridiagonal_matrix_a251b0f9aa6bbecda7e180204c2ace727}\label{class_tridiagonal_matrix_a251b0f9aa6bbecda7e180204c2ace727}} 
+{\bfseries $\sim$\+Tridiagonal\+Matrix} ()
+\begin{DoxyCompactList}\small\item\em Destroy the Tridiagonal Matrix. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{_q_r___solver_8hpp_a1593e630658b17c26d1d911313efe5a0}{real\+\_\+t}} \mbox{\hyperlink{class_tridiagonal_matrix_a9e07840f67d0c012fa2897862e213c48_a9e07840f67d0c012fa2897862e213c48}{get\+Element}} (unsigned int row\+\_\+index, unsigned int column\+\_\+index)
+\begin{DoxyCompactList}\small\item\em Get the i,j th element of 2D Tridiagonal Matrix. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_tridiagonal_matrix_aa4755643fdb069342c3f1710b43ab741}\label{class_tridiagonal_matrix_aa4755643fdb069342c3f1710b43ab741}} 
+void {\bfseries set\+Element} (unsigned int row\+\_\+index, unsigned int column\+\_\+index, \mbox{\hyperlink{_q_r___solver_8hpp_a1593e630658b17c26d1d911313efe5a0}{real\+\_\+t}} value)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_tridiagonal_matrix_a35640b90bf963bf17eaa87da07cf7b53}\label{class_tridiagonal_matrix_a35640b90bf963bf17eaa87da07cf7b53}} 
+unsigned int {\bfseries N\+\_\+}
+\begin{DoxyCompactList}\small\item\em Size of main diagonal of the $N \times N$ 2D Tridiagonal Matrix. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class to represent a 2D Tridiagonal square matrix of size $N \times N$. 
+
+Definition at line 26 of file QR\+\_\+\+Solver.\+hpp.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_tridiagonal_matrix_a8046a9840afa4dee2fa01ed5d07db00b_a8046a9840afa4dee2fa01ed5d07db00b}\label{class_tridiagonal_matrix_a8046a9840afa4dee2fa01ed5d07db00b_a8046a9840afa4dee2fa01ed5d07db00b}} 
+\index{TridiagonalMatrix@{TridiagonalMatrix}!TridiagonalMatrix@{TridiagonalMatrix}}
+\index{TridiagonalMatrix@{TridiagonalMatrix}!TridiagonalMatrix@{TridiagonalMatrix}}
+\doxysubsubsection{\texorpdfstring{TridiagonalMatrix()}{TridiagonalMatrix()}}
+{\footnotesize\ttfamily Tridiagonal\+Matrix\+::\+Tridiagonal\+Matrix (\begin{DoxyParamCaption}\item[{unsigned int}]{N }\end{DoxyParamCaption})}
+
+
+
+Construct a new Tridiagonal Matrix. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em N} & Size of main diagonal of the $N \times N$ 2D Tridiagonal Matrix \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_tridiagonal_matrix_a9e07840f67d0c012fa2897862e213c48_a9e07840f67d0c012fa2897862e213c48}\label{class_tridiagonal_matrix_a9e07840f67d0c012fa2897862e213c48_a9e07840f67d0c012fa2897862e213c48}} 
+\index{TridiagonalMatrix@{TridiagonalMatrix}!getElement@{getElement}}
+\index{getElement@{getElement}!TridiagonalMatrix@{TridiagonalMatrix}}
+\doxysubsubsection{\texorpdfstring{getElement()}{getElement()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{_q_r___solver_8hpp_a1593e630658b17c26d1d911313efe5a0}{real\+\_\+t}} Tridiagonal\+Matrix\+::get\+Element (\begin{DoxyParamCaption}\item[{unsigned int}]{row\+\_\+index,  }\item[{unsigned int}]{column\+\_\+index }\end{DoxyParamCaption})}
+
+
+
+Get the i,j th element of 2D Tridiagonal Matrix. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em row\+\_\+index} & Row index i \\
+\hline
+{\em column\+\_\+index} & Column index j \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+real\+\_\+t Returns value of the element at the i,j position of a 2D Tridiagonal Matrix 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{_q_r___solver_8hpp}{QR\+\_\+\+Solver.\+hpp}}\end{DoxyCompactItemize}

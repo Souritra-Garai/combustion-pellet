@@ -1,0 +1,220 @@
+\hypertarget{class_lower_triangular_matrix}{}\doxysection{Lower\+Triangular\+Matrix$<$ real\+\_\+t $>$ Class Template Reference}
+\label{class_lower_triangular_matrix}\index{LowerTriangularMatrix$<$ real\_t $>$@{LowerTriangularMatrix$<$ real\_t $>$}}
+
+
+Class to implement a memory efficient model of Lower Triangular Square Matrix.  
+
+
+
+
+{\ttfamily \#include $<$Lower\+\_\+\+Triangular\+\_\+\+Matrix.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_lower_triangular_matrix_aa4a86a0a1621f2aeb50ed26c8f3dd947}{Lower\+Triangular\+Matrix}} (unsigned int n)
+\begin{DoxyCompactList}\small\item\em Construct a new Lower Triangular Matrix object. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_lower_triangular_matrix_ab138351d200ebf0a002e4a05088b8629}{$\sim$\+Lower\+Triangular\+Matrix}} ()
+\begin{DoxyCompactList}\small\item\em Destroy the Lower Triangular Matrix object. \end{DoxyCompactList}\item 
+real\+\_\+t \mbox{\hyperlink{class_lower_triangular_matrix_afac6544bf291a513d6479fe0142e477f}{get\+Element}} (unsigned int row\+\_\+index, unsigned int column\+\_\+index)
+\begin{DoxyCompactList}\small\item\em Get the i,j th element of the Lower Triangular Matrix. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_lower_triangular_matrix_ac21a1222bd0cc122cd70886cc1bc2ac1}{set\+Element}} (unsigned int row\+\_\+index, unsigned int column\+\_\+index, real\+\_\+t value)
+\begin{DoxyCompactList}\small\item\em Set the value of the i,j th element of the Lower Triangular Matrix. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_lower_triangular_matrix_a1ee773d216bdcbd5309e11d076577969}{print\+Matrix}} ()
+\begin{DoxyCompactList}\small\item\em Prints the Lower Triangular Matrix in form of a 2D array. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+unsigned int \mbox{\hyperlink{class_lower_triangular_matrix_a1b03090276bf946cda4d1d27f8e77ab0}{get\+Index}} (unsigned int row\+\_\+index, unsigned int column\+\_\+index)
+\begin{DoxyCompactList}\small\item\em Get the index of i,j th element of lower triangular matrix. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_lower_triangular_matrix_a4be6e84f4c43074398d0c267356c9337}{index\+Of\+Zero\+Element}} (unsigned int row\+\_\+index, unsigned int column\+\_\+index)
+\begin{DoxyCompactList}\small\item\em Checks if the row index i and the column index j belong to a zero element of the lower triangular matrix. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_lower_triangular_matrix_a12e6c591cae5543ac324d885d7cf80ea}\label{class_lower_triangular_matrix_a12e6c591cae5543ac324d885d7cf80ea}} 
+real\+\_\+t $\ast$ \mbox{\hyperlink{class_lower_triangular_matrix_a12e6c591cae5543ac324d885d7cf80ea}{array}}
+\begin{DoxyCompactList}\small\item\em One dimensional array to store only non zero elements of the lower triangular matrix. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_lower_triangular_matrix_a73c17cb70502e520b6a7b130fcfa6516}\label{class_lower_triangular_matrix_a73c17cb70502e520b6a7b130fcfa6516}} 
+const unsigned int \mbox{\hyperlink{class_lower_triangular_matrix_a73c17cb70502e520b6a7b130fcfa6516}{N}}
+\begin{DoxyCompactList}\small\item\em Size of main diagonal of $ N \times N $ square matrix. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename real\+\_\+t$>$\newline
+class Lower\+Triangular\+Matrix$<$ real\+\_\+t $>$}
+
+Class to implement a memory efficient model of Lower Triangular Square Matrix. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em real\+\_\+t} & float, double or long double data types to represent real numbers \\
+\hline
+\end{DoxyTemplParams}
+
+
+Definition at line 23 of file Lower\+\_\+\+Triangular\+\_\+\+Matrix.\+hpp.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_lower_triangular_matrix_aa4a86a0a1621f2aeb50ed26c8f3dd947}\label{class_lower_triangular_matrix_aa4a86a0a1621f2aeb50ed26c8f3dd947}} 
+\index{LowerTriangularMatrix$<$ real\_t $>$@{LowerTriangularMatrix$<$ real\_t $>$}!LowerTriangularMatrix@{LowerTriangularMatrix}}
+\index{LowerTriangularMatrix@{LowerTriangularMatrix}!LowerTriangularMatrix$<$ real\_t $>$@{LowerTriangularMatrix$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{LowerTriangularMatrix()}{LowerTriangularMatrix()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+\mbox{\hyperlink{class_lower_triangular_matrix}{Lower\+Triangular\+Matrix}}$<$ real\+\_\+t $>$\+::\mbox{\hyperlink{class_lower_triangular_matrix}{Lower\+Triangular\+Matrix}} (\begin{DoxyParamCaption}\item[{unsigned int}]{n }\end{DoxyParamCaption})}
+
+
+
+Construct a new Lower Triangular Matrix object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em n} & Number of rows in the $ N \times N $ square matrix \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 17 of file Lower\+\_\+\+Triangular\+\_\+\+Matrix.\+cpp.
+
+\mbox{\Hypertarget{class_lower_triangular_matrix_ab138351d200ebf0a002e4a05088b8629}\label{class_lower_triangular_matrix_ab138351d200ebf0a002e4a05088b8629}} 
+\index{LowerTriangularMatrix$<$ real\_t $>$@{LowerTriangularMatrix$<$ real\_t $>$}!````~LowerTriangularMatrix@{$\sim$LowerTriangularMatrix}}
+\index{````~LowerTriangularMatrix@{$\sim$LowerTriangularMatrix}!LowerTriangularMatrix$<$ real\_t $>$@{LowerTriangularMatrix$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{$\sim$LowerTriangularMatrix()}{~LowerTriangularMatrix()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+\mbox{\hyperlink{class_lower_triangular_matrix}{Lower\+Triangular\+Matrix}}$<$ real\+\_\+t $>$\+::$\sim$\mbox{\hyperlink{class_lower_triangular_matrix}{Lower\+Triangular\+Matrix}}}
+
+
+
+Destroy the Lower Triangular Matrix object. 
+
+
+
+Definition at line 30 of file Lower\+\_\+\+Triangular\+\_\+\+Matrix.\+cpp.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_lower_triangular_matrix_afac6544bf291a513d6479fe0142e477f}\label{class_lower_triangular_matrix_afac6544bf291a513d6479fe0142e477f}} 
+\index{LowerTriangularMatrix$<$ real\_t $>$@{LowerTriangularMatrix$<$ real\_t $>$}!getElement@{getElement}}
+\index{getElement@{getElement}!LowerTriangularMatrix$<$ real\_t $>$@{LowerTriangularMatrix$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{getElement()}{getElement()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+real\+\_\+t \mbox{\hyperlink{class_lower_triangular_matrix}{Lower\+Triangular\+Matrix}}$<$ real\+\_\+t $>$\+::get\+Element (\begin{DoxyParamCaption}\item[{unsigned int}]{row\+\_\+index,  }\item[{unsigned int}]{column\+\_\+index }\end{DoxyParamCaption})}
+
+
+
+Get the i,j th element of the Lower Triangular Matrix. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em row\+\_\+index} & Row index i \\
+\hline
+{\em column\+\_\+index} & Column index j \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Value of the i,j th element of the Lower Triangular Matrix 
+\end{DoxyReturn}
+
+
+Definition at line 58 of file Lower\+\_\+\+Triangular\+\_\+\+Matrix.\+cpp.
+
+\mbox{\Hypertarget{class_lower_triangular_matrix_a1b03090276bf946cda4d1d27f8e77ab0}\label{class_lower_triangular_matrix_a1b03090276bf946cda4d1d27f8e77ab0}} 
+\index{LowerTriangularMatrix$<$ real\_t $>$@{LowerTriangularMatrix$<$ real\_t $>$}!getIndex@{getIndex}}
+\index{getIndex@{getIndex}!LowerTriangularMatrix$<$ real\_t $>$@{LowerTriangularMatrix$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{getIndex()}{getIndex()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+unsigned int \mbox{\hyperlink{class_lower_triangular_matrix}{Lower\+Triangular\+Matrix}}$<$ real\+\_\+t $>$\+::get\+Index (\begin{DoxyParamCaption}\item[{unsigned int}]{row\+\_\+index,  }\item[{unsigned int}]{column\+\_\+index }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the index of i,j th element of lower triangular matrix. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em row\+\_\+index} & Row index i \\
+\hline
+{\em column\+\_\+index} & Column index j \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Index of the i,j th element in the flattened array representation 
+\end{DoxyReturn}
+
+
+Definition at line 37 of file Lower\+\_\+\+Triangular\+\_\+\+Matrix.\+cpp.
+
+\mbox{\Hypertarget{class_lower_triangular_matrix_a4be6e84f4c43074398d0c267356c9337}\label{class_lower_triangular_matrix_a4be6e84f4c43074398d0c267356c9337}} 
+\index{LowerTriangularMatrix$<$ real\_t $>$@{LowerTriangularMatrix$<$ real\_t $>$}!indexOfZeroElement@{indexOfZeroElement}}
+\index{indexOfZeroElement@{indexOfZeroElement}!LowerTriangularMatrix$<$ real\_t $>$@{LowerTriangularMatrix$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{indexOfZeroElement()}{indexOfZeroElement()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+bool \mbox{\hyperlink{class_lower_triangular_matrix}{Lower\+Triangular\+Matrix}}$<$ real\+\_\+t $>$\+::index\+Of\+Zero\+Element (\begin{DoxyParamCaption}\item[{unsigned int}]{row\+\_\+index,  }\item[{unsigned int}]{column\+\_\+index }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Checks if the row index i and the column index j belong to a zero element of the lower triangular matrix. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em row\+\_\+index} & Row index i \\
+\hline
+{\em column\+\_\+index} & Column index j \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if i,j are indices of zero elements in a lower triangular matrix 
+
+false if i,j are indices of non zero elements in a lower triangular matrix 
+\end{DoxyReturn}
+
+
+Definition at line 48 of file Lower\+\_\+\+Triangular\+\_\+\+Matrix.\+cpp.
+
+\mbox{\Hypertarget{class_lower_triangular_matrix_a1ee773d216bdcbd5309e11d076577969}\label{class_lower_triangular_matrix_a1ee773d216bdcbd5309e11d076577969}} 
+\index{LowerTriangularMatrix$<$ real\_t $>$@{LowerTriangularMatrix$<$ real\_t $>$}!printMatrix@{printMatrix}}
+\index{printMatrix@{printMatrix}!LowerTriangularMatrix$<$ real\_t $>$@{LowerTriangularMatrix$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{printMatrix()}{printMatrix()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+void \mbox{\hyperlink{class_lower_triangular_matrix}{Lower\+Triangular\+Matrix}}$<$ real\+\_\+t $>$\+::print\+Matrix}
+
+
+
+Prints the Lower Triangular Matrix in form of a 2D array. 
+
+
+
+Definition at line 97 of file Lower\+\_\+\+Triangular\+\_\+\+Matrix.\+cpp.
+
+\mbox{\Hypertarget{class_lower_triangular_matrix_ac21a1222bd0cc122cd70886cc1bc2ac1}\label{class_lower_triangular_matrix_ac21a1222bd0cc122cd70886cc1bc2ac1}} 
+\index{LowerTriangularMatrix$<$ real\_t $>$@{LowerTriangularMatrix$<$ real\_t $>$}!setElement@{setElement}}
+\index{setElement@{setElement}!LowerTriangularMatrix$<$ real\_t $>$@{LowerTriangularMatrix$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{setElement()}{setElement()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+void \mbox{\hyperlink{class_lower_triangular_matrix}{Lower\+Triangular\+Matrix}}$<$ real\+\_\+t $>$\+::set\+Element (\begin{DoxyParamCaption}\item[{unsigned int}]{row\+\_\+index,  }\item[{unsigned int}]{column\+\_\+index,  }\item[{real\+\_\+t}]{value }\end{DoxyParamCaption})}
+
+
+
+Set the value of the i,j th element of the Lower Triangular Matrix. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em row\+\_\+index} & Row index i \\
+\hline
+{\em column\+\_\+index} & Column index j \\
+\hline
+{\em value} & Value to be set at the i,j th element \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 76 of file Lower\+\_\+\+Triangular\+\_\+\+Matrix.\+cpp.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+combustion-\/packed-\/pellet-\/core-\/shell-\/particles/include/\mbox{\hyperlink{_lower___triangular___matrix_8hpp}{Lower\+\_\+\+Triangular\+\_\+\+Matrix.\+hpp}}\item 
+combustion-\/packed-\/pellet-\/core-\/shell-\/particles/src/\mbox{\hyperlink{_lower___triangular___matrix_8cpp}{Lower\+\_\+\+Triangular\+\_\+\+Matrix.\+cpp}}\end{DoxyCompactItemize}

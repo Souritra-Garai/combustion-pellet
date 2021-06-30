@@ -1,0 +1,4 @@
+<map id="QR_Solver" name="QR_Solver">
+<area shape="rect" id="node1" title="Class to implement QR factorization algorithm for solving matrix equations of the A...." alt="" coords="29,80,118,107"/>
+<area shape="rect" id="node2" href="$d4/daf/class_tridiagonal_matrix.html" title="Class to represent a 2D Tridiagonal square matrix of size ." alt="" coords="5,5,141,32"/>
+</map>
