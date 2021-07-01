@@ -1,8 +1,9 @@
 /**
- * @file Lower_Triangular_Matrix.hpp
+ * @file Q_Matrix.hpp
  * @author Souritra Garai (souritra.garai@iitgn.ac.in)
  * @brief This header file defines a class for memory efficient 
- * implementation of lower triangualer square matrices
+ * implementation of Q matrix used for QR factorisation of tridiagonal matrix
+ * using Givens rotation matrix
  * @version 0.1
  * @date 2021-06-25
  * 
@@ -14,35 +15,35 @@
 #define __LOWER_TRIANGULAR_MATRIX__
 
 /**
- * @brief Class to implement a memory efficient model of Lower Triangular
- * Square Matrix.
+ * @brief Class to implement a memory efficient model of
+ * \f$ N \times \f$ Q Matrix.
  * 
- * @tparam real_t float, double or long double data types to represent real numbers
+ * @tparam real_t float, double or long double data types
+ * to represent real numbers
  */
 template <typename real_t>
-class LowerTriangularMatrix
+class QMatrix
 {
     public:
         
         /**
-         * @brief Construct a new Lower Triangular Matrix object
+         * @brief Construct a new Q Matrix
          * 
          * @param n Number of rows in the \f$ N \times N \f$ square matrix
          */
-        LowerTriangularMatrix(unsigned int n);
+        QMatrix(unsigned int n);
 
         /**
-         * @brief Destroy the Lower Triangular Matrix object
-         * 
+         * @brief Destroy the Q Matrix object
          */
-        ~LowerTriangularMatrix();
+        ~QMatrix();
 
         /**
-         * @brief Get the i,j th element of the Lower Triangular Matrix
+         * @brief Get the i,j th element of the Q Matrix
          * 
          * @param row_index Row index i
          * @param column_index Column index j
-         * @return Value of the i,j th element of the Lower Triangular Matrix
+         * @return Value of the i,j th element of the Q Matrix
          */
         real_t getElement(
             unsigned int row_index,
@@ -50,11 +51,11 @@ class LowerTriangularMatrix
         );
 
         /**
-         * @brief Set the value of the i,j th element of the Lower Triangular Matrix
+         * @brief Set the value of the i,j th element of the Q Matrix
          * 
          * @param row_index Row index i
          * @param column_index Column index j
-         * @param value Value to be set at the i,j th element
+         * @param value Value to be set at the i,j th position
          */
         void setElement(
             unsigned int row_index,
@@ -63,10 +64,23 @@ class LowerTriangularMatrix
         );
 
         /**
-         * @brief Prints the Lower Triangular Matrix in form of a 2D array
-         * 
+         * @brief Prints the Q Matrix in form of a 2D array
          */
         void printMatrix();
+
+        /**
+         * @brief Makes Q matrix an identity matrix
+         */
+        void identity();
+        
+        /**
+         * @brief Multiplies the Q matrix with the column vector b
+         * and stores the result in the column vector x
+         * 
+         * @param b 
+         * @param x 
+         */
+        void multiply(real_t *b, real_t *x);
         
     private :
 
@@ -77,18 +91,18 @@ class LowerTriangularMatrix
         real_t *array;
 
         /**
-         * @brief Size of main diagonal of \f$ N \times N \f$
+         * @brief Number of rows in a \f$ N \times N \f$
          * square matrix
          */
         const unsigned int N;
 
         /**
-         * @brief Get the index of i,j th element of lower triangular
-         * matrix
+         * @brief Get the index of i,j th element of Q matrix in the
+         * flattened array
          * 
          * @param row_index Row index i
          * @param column_index Column index j
-         * @return Index of the i,j th element in the flattened array representation
+         * @return Index of the i,j th element in the flattened array
          */
         unsigned int getIndex(
             unsigned int row_index,
@@ -97,12 +111,12 @@ class LowerTriangularMatrix
         
         /**
          * @brief Checks if the row index i and the column index j
-         * belong to a zero element of the lower triangular matrix
+         * belong to a zero element of the Q matrix
          * 
          * @param row_index Row index i
          * @param column_index Column index j
-         * @return true if i,j are indices of zero elements in a lower triangular matrix
-         * @return false if i,j are indices of non zero elements in a lower triangular matrix
+         * @return true if i,j are indices of zero elements in a Q matrix
+         * @return false if i,j are indices of non zero elements in a Q matrix
          */
         bool indexOfZeroElement(
             unsigned int row_index,

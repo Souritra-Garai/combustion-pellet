@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['_7eqr_5fsolver_23',['~QR_Solver',['../dd/d19/class_q_r___solver.html#a4381664b05946b979a0e5734440d8ff4',1,'QR_Solver']]],
-  ['_7etridiagonalmatrix_24',['~TridiagonalMatrix',['../d4/daf/class_tridiagonal_matrix.html#a251b0f9aa6bbecda7e180204c2ace727',1,'TridiagonalMatrix']]]
+  ['setelement_28',['setElement',['../class_q_matrix.html#acd1eca818c55f95b51c9ba3eeac5719f',1,'QMatrix::setElement()'],['../class_r_matrix.html#aecd123cfb802391b8b27c8207141ea33',1,'RMatrix::setElement()']]],
+  ['setupgivensrotationmatrix_29',['setupGivensRotationMatrix',['../class_q_r_solver.html#a2002a8fc9d18863d9ad17e3f6ec94529',1,'QRSolver']]]
 ];

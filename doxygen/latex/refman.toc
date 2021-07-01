@@ -1,66 +1,59 @@
 \@ifundefined {etoctocstyle}{\let \etoc@startlocaltoc \@gobble \let \etoc@settocdepth \@gobble \let \etoc@depthtag \@gobble \let \etoc@setlocaltop \@gobble }{}
-\contentsline {chapter}{\numberline {1}Hierarchical Index}{1}{chapter.1}%
-\contentsline {section}{\numberline {1.1}Class Hierarchy}{1}{section.1.1}%
+\contentsline {chapter}{\numberline {1}combustion-\/packed-\/pellet-\/core-\/shell-\/particle}{1}{chapter.1}%
 \contentsline {chapter}{\numberline {2}Class Index}{3}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Class List}{3}{section.2.1}%
 \contentsline {chapter}{\numberline {3}File Index}{5}{chapter.3}%
 \contentsline {section}{\numberline {3.1}File List}{5}{section.3.1}%
 \contentsline {chapter}{\numberline {4}Class Documentation}{7}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Givens\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Rotation\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Matrix$<$ real\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}t $>$ Class Template Reference}{7}{section.4.1}%
+\contentsline {section}{\numberline {4.1}G\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Matrix$<$ real\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}t $>$ Class Template Reference}{7}{section.4.1}%
 \contentsline {subsection}{\numberline {4.1.1}Detailed Description}{8}{subsection.4.1.1}%
 \contentsline {subsection}{\numberline {4.1.2}Constructor \& Destructor Documentation}{8}{subsection.4.1.2}%
-\contentsline {subsubsection}{\numberline {4.1.2.1}GivensRotationMatrix()}{8}{subsubsection.4.1.2.1}%
-\contentsline {subsection}{\numberline {4.1.3}Member Function Documentation}{8}{subsection.4.1.3}%
-\contentsline {subsubsection}{\numberline {4.1.3.1}multiply()}{9}{subsubsection.4.1.3.1}%
-\contentsline {subsubsection}{\numberline {4.1.3.2}setupRotationMatrix()}{9}{subsubsection.4.1.3.2}%
-\contentsline {section}{\numberline {4.2}Lower\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Triangular\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Matrix$<$ real\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}t $>$ Class Template Reference}{9}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Detailed Description}{10}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}Constructor \& Destructor Documentation}{10}{subsection.4.2.2}%
-\contentsline {subsubsection}{\numberline {4.2.2.1}LowerTriangularMatrix()}{10}{subsubsection.4.2.2.1}%
-\contentsline {subsubsection}{\numberline {4.2.2.2}$\sim $LowerTriangularMatrix()}{11}{subsubsection.4.2.2.2}%
-\contentsline {subsection}{\numberline {4.2.3}Member Function Documentation}{11}{subsection.4.2.3}%
-\contentsline {subsubsection}{\numberline {4.2.3.1}getElement()}{11}{subsubsection.4.2.3.1}%
-\contentsline {subsubsection}{\numberline {4.2.3.2}getIndex()}{11}{subsubsection.4.2.3.2}%
-\contentsline {subsubsection}{\numberline {4.2.3.3}indexOfZeroElement()}{12}{subsubsection.4.2.3.3}%
-\contentsline {subsubsection}{\numberline {4.2.3.4}printMatrix()}{12}{subsubsection.4.2.3.4}%
-\contentsline {subsubsection}{\numberline {4.2.3.5}setElement()}{12}{subsubsection.4.2.3.5}%
-\contentsline {section}{\numberline {4.3}Q\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}R\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Solver Class Reference}{13}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Detailed Description}{14}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}Constructor \& Destructor Documentation}{14}{subsection.4.3.2}%
-\contentsline {subsubsection}{\numberline {4.3.2.1}QRSolver()}{14}{subsubsection.4.3.2.1}%
-\contentsline {subsubsection}{\numberline {4.3.2.2}$\sim $QRSolver()}{14}{subsubsection.4.3.2.2}%
-\contentsline {subsection}{\numberline {4.3.3}Member Function Documentation}{15}{subsection.4.3.3}%
-\contentsline {subsubsection}{\numberline {4.3.3.1}getIndex()}{15}{subsubsection.4.3.3.1}%
-\contentsline {section}{\numberline {4.4}Tridiagonal\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Matrix$<$ real\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}t $>$ Class Template Reference}{15}{section.4.4}%
-\contentsline {subsection}{\numberline {4.4.1}Detailed Description}{16}{subsection.4.4.1}%
-\contentsline {subsection}{\numberline {4.4.2}Constructor \& Destructor Documentation}{16}{subsection.4.4.2}%
-\contentsline {subsubsection}{\numberline {4.4.2.1}TridiagonalMatrix()}{16}{subsubsection.4.4.2.1}%
-\contentsline {subsubsection}{\numberline {4.4.2.2}$\sim $TridiagonalMatrix()}{17}{subsubsection.4.4.2.2}%
-\contentsline {subsection}{\numberline {4.4.3}Member Function Documentation}{17}{subsection.4.4.3}%
-\contentsline {subsubsection}{\numberline {4.4.3.1}getElement()}{17}{subsubsection.4.4.3.1}%
-\contentsline {subsubsection}{\numberline {4.4.3.2}getIndex()}{17}{subsubsection.4.4.3.2}%
-\contentsline {subsubsection}{\numberline {4.4.3.3}indexOfZeroElement()}{19}{subsubsection.4.4.3.3}%
-\contentsline {subsubsection}{\numberline {4.4.3.4}print()}{19}{subsubsection.4.4.3.4}%
-\contentsline {subsubsection}{\numberline {4.4.3.5}printMatrix()}{20}{subsubsection.4.4.3.5}%
-\contentsline {subsubsection}{\numberline {4.4.3.6}setElement()}{20}{subsubsection.4.4.3.6}%
-\contentsline {subsection}{\numberline {4.4.4}Member Data Documentation}{20}{subsection.4.4.4}%
-\contentsline {subsubsection}{\numberline {4.4.4.1}array}{20}{subsubsection.4.4.4.1}%
-\contentsline {subsubsection}{\numberline {4.4.4.2}N}{20}{subsubsection.4.4.4.2}%
-\contentsline {chapter}{\numberline {5}File Documentation}{21}{chapter.5}%
-\contentsline {section}{\numberline {5.1}combustion-\/packed-\/pellet-\/core-\/shell-\/particles/examples/\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Lower\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Triangular\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Matrix\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Example.cpp File Reference}{21}{section.5.1}%
-\contentsline {subsection}{\numberline {5.1.1}Detailed Description}{21}{subsection.5.1.1}%
-\contentsline {section}{\numberline {5.2}combustion-\/packed-\/pellet-\/core-\/shell-\/particles/examples/\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Q\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}R\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Solver\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Example.cpp File Reference}{22}{section.5.2}%
-\contentsline {subsection}{\numberline {5.2.1}Detailed Description}{22}{subsection.5.2.1}%
-\contentsline {section}{\numberline {5.3}combustion-\/packed-\/pellet-\/core-\/shell-\/particles/include/\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Givens\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Rotation\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Matrix.hpp File Reference}{22}{section.5.3}%
-\contentsline {subsection}{\numberline {5.3.1}Detailed Description}{23}{subsection.5.3.1}%
-\contentsline {section}{\numberline {5.4}combustion-\/packed-\/pellet-\/core-\/shell-\/particles/include/\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Lower\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Triangular\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Matrix.hpp File Reference}{23}{section.5.4}%
-\contentsline {subsection}{\numberline {5.4.1}Detailed Description}{23}{subsection.5.4.1}%
-\contentsline {section}{\numberline {5.5}combustion-\/packed-\/pellet-\/core-\/shell-\/particles/include/\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Q\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}R\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Solver.hpp File Reference}{24}{section.5.5}%
-\contentsline {subsection}{\numberline {5.5.1}Detailed Description}{24}{subsection.5.5.1}%
-\contentsline {section}{\numberline {5.6}combustion-\/packed-\/pellet-\/core-\/shell-\/particles/include/\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Tridiagonal\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Matrix.hpp File Reference}{24}{section.5.6}%
-\contentsline {subsection}{\numberline {5.6.1}Detailed Description}{25}{subsection.5.6.1}%
-\contentsline {section}{\numberline {5.7}combustion-\/packed-\/pellet-\/core-\/shell-\/particles/src/\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Lower\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Triangular\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Matrix.cpp File Reference}{25}{section.5.7}%
-\contentsline {subsection}{\numberline {5.7.1}Detailed Description}{25}{subsection.5.7.1}%
-\contentsline {section}{\numberline {5.8}combustion-\/packed-\/pellet-\/core-\/shell-\/particles/src/\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Tridiagonal\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Matrix.cpp File Reference}{26}{section.5.8}%
-\contentsline {subsection}{\numberline {5.8.1}Detailed Description}{26}{subsection.5.8.1}%
-\contentsline {chapter}{Index}{27}{section*.24}%
+\contentsline {subsubsection}{\numberline {4.1.2.1}GMatrix()}{8}{subsubsection.4.1.2.1}%
+\contentsline {subsection}{\numberline {4.1.3}Member Function Documentation}{9}{subsection.4.1.3}%
+\contentsline {subsubsection}{\numberline {4.1.3.1}multiply()\hspace {0.1cm}{\footnotesize \ttfamily [1/2]}}{9}{subsubsection.4.1.3.1}%
+\contentsline {subsubsection}{\numberline {4.1.3.2}multiply()\hspace {0.1cm}{\footnotesize \ttfamily [2/2]}}{9}{subsubsection.4.1.3.2}%
+\contentsline {subsubsection}{\numberline {4.1.3.3}multiplyLastRow()}{10}{subsubsection.4.1.3.3}%
+\contentsline {section}{\numberline {4.2}Q\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Matrix$<$ real\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}t $>$ Class Template Reference}{11}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Detailed Description}{11}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Constructor \& Destructor Documentation}{12}{subsection.4.2.2}%
+\contentsline {subsubsection}{\numberline {4.2.2.1}QMatrix()}{12}{subsubsection.4.2.2.1}%
+\contentsline {subsection}{\numberline {4.2.3}Member Function Documentation}{12}{subsection.4.2.3}%
+\contentsline {subsubsection}{\numberline {4.2.3.1}getElement()}{12}{subsubsection.4.2.3.1}%
+\contentsline {subsubsection}{\numberline {4.2.3.2}getIndex()}{13}{subsubsection.4.2.3.2}%
+\contentsline {subsubsection}{\numberline {4.2.3.3}indexOfZeroElement()}{13}{subsubsection.4.2.3.3}%
+\contentsline {subsubsection}{\numberline {4.2.3.4}multiply()}{14}{subsubsection.4.2.3.4}%
+\contentsline {subsubsection}{\numberline {4.2.3.5}setElement()}{14}{subsubsection.4.2.3.5}%
+\contentsline {section}{\numberline {4.3}Q\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}R\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Solver$<$ real\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}t $>$ Class Template Reference}{14}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Detailed Description}{15}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Constructor \& Destructor Documentation}{15}{subsection.4.3.2}%
+\contentsline {subsubsection}{\numberline {4.3.2.1}QRSolver()}{16}{subsubsection.4.3.2.1}%
+\contentsline {subsubsection}{\numberline {4.3.2.2}$\sim $QRSolver()}{17}{subsubsection.4.3.2.2}%
+\contentsline {subsection}{\numberline {4.3.3}Member Function Documentation}{17}{subsection.4.3.3}%
+\contentsline {subsubsection}{\numberline {4.3.3.1}getIndex()}{17}{subsubsection.4.3.3.1}%
+\contentsline {section}{\numberline {4.4}R\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Matrix$<$ real\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}t $>$ Class Template Reference}{18}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Detailed Description}{18}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Constructor \& Destructor Documentation}{19}{subsection.4.4.2}%
+\contentsline {subsubsection}{\numberline {4.4.2.1}RMatrix()}{19}{subsubsection.4.4.2.1}%
+\contentsline {subsubsection}{\numberline {4.4.2.2}$\sim $RMatrix()}{19}{subsubsection.4.4.2.2}%
+\contentsline {subsection}{\numberline {4.4.3}Member Function Documentation}{19}{subsection.4.4.3}%
+\contentsline {subsubsection}{\numberline {4.4.3.1}getElement()}{19}{subsubsection.4.4.3.1}%
+\contentsline {subsubsection}{\numberline {4.4.3.2}getIndex()}{20}{subsubsection.4.4.3.2}%
+\contentsline {subsubsection}{\numberline {4.4.3.3}indexOfZeroElement()}{20}{subsubsection.4.4.3.3}%
+\contentsline {subsubsection}{\numberline {4.4.3.4}print()}{21}{subsubsection.4.4.3.4}%
+\contentsline {subsubsection}{\numberline {4.4.3.5}printMatrix()}{21}{subsubsection.4.4.3.5}%
+\contentsline {subsubsection}{\numberline {4.4.3.6}setElement()}{21}{subsubsection.4.4.3.6}%
+\contentsline {subsection}{\numberline {4.4.4}Member Data Documentation}{21}{subsection.4.4.4}%
+\contentsline {subsubsection}{\numberline {4.4.4.1}array}{21}{subsubsection.4.4.4.1}%
+\contentsline {subsubsection}{\numberline {4.4.4.2}N}{22}{subsubsection.4.4.4.2}%
+\contentsline {chapter}{\numberline {5}File Documentation}{23}{chapter.5}%
+\contentsline {section}{\numberline {5.1}examples/\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Q\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}R\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Solver\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Example.cpp File Reference}{23}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}Detailed Description}{24}{subsection.5.1.1}%
+\contentsline {section}{\numberline {5.2}include/\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Q\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Matrix.hpp File Reference}{24}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Detailed Description}{24}{subsection.5.2.1}%
+\contentsline {section}{\numberline {5.3}include/\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Q\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}R\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Solver.hpp File Reference}{25}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}Detailed Description}{25}{subsection.5.3.1}%
+\contentsline {section}{\numberline {5.4}include/\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}R\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Matrix.hpp File Reference}{26}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}Detailed Description}{26}{subsection.5.4.1}%
+\contentsline {section}{\numberline {5.5}src/\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}R\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}\discretionary {\mbox {\scriptsize $\DOTSB \leftarrow \joinrel \rhook $}}{}{}Matrix.cpp File Reference}{26}{section.5.5}%
+\contentsline {subsection}{\numberline {5.5.1}Detailed Description}{27}{subsection.5.5.1}%
+\contentsline {chapter}{Index}{29}{section*.24}%

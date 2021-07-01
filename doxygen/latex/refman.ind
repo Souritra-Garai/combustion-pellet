@@ -1,118 +1,103 @@
 \begin{theindex}
 
-  \item {$\sim$LowerTriangularMatrix}
-    \subitem {LowerTriangularMatrix$<$ real\_t $>$}, \hyperpage{10}
   \item {$\sim$QRSolver}
-    \subitem {QRSolver}, \hyperpage{14}
-  \item {$\sim$TridiagonalMatrix}
-    \subitem {TridiagonalMatrix$<$ real\_t $>$}, \hyperpage{17}
+    \subitem {QRSolver$<$ real\_t $>$}, \hyperpage{17}
+  \item {$\sim$RMatrix}
+    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{19}
 
   \indexspace
 
   \item {array}
-    \subitem {TridiagonalMatrix$<$ real\_t $>$}, \hyperpage{20}
+    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{21}
 
   \indexspace
 
-  \item {combustion-\/packed-\/pellet-\/core-\/shell-\/particles/examples/Lower\_Triangular\_Matrix\_Example.cpp}, 
-		\hyperpage{21}
-  \item {combustion-\/packed-\/pellet-\/core-\/shell-\/particles/examples/QR\_Solver\_Example.cpp}, 
-		\hyperpage{22}
-  \item {combustion-\/packed-\/pellet-\/core-\/shell-\/particles/include/GivensRotationMatrix.hpp}, 
-		\hyperpage{22}
-  \item {combustion-\/packed-\/pellet-\/core-\/shell-\/particles/include/Lower\_Triangular\_Matrix.hpp}, 
-		\hyperpage{23}
-  \item {combustion-\/packed-\/pellet-\/core-\/shell-\/particles/include/QR\_Solver.hpp}, 
-		\hyperpage{24}
-  \item {combustion-\/packed-\/pellet-\/core-\/shell-\/particles/include/Tridiagonal\_Matrix.hpp}, 
-		\hyperpage{24}
-  \item {combustion-\/packed-\/pellet-\/core-\/shell-\/particles/src/Lower\_Triangular\_Matrix.cpp}, 
-		\hyperpage{25}
-  \item {combustion-\/packed-\/pellet-\/core-\/shell-\/particles/src/Tridiagonal\_Matrix.cpp}, 
-		\hyperpage{26}
+  \item {examples/QR\_Solver\_Example.cpp}, \hyperpage{23}
 
   \indexspace
 
   \item {getElement}
-    \subitem {LowerTriangularMatrix$<$ real\_t $>$}, \hyperpage{11}
-    \subitem {TridiagonalMatrix$<$ real\_t $>$}, \hyperpage{17}
+    \subitem {QMatrix$<$ real\_t $>$}, \hyperpage{12}
+    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{19}
   \item {getIndex}
-    \subitem {LowerTriangularMatrix$<$ real\_t $>$}, \hyperpage{11}
-    \subitem {QRSolver}, \hyperpage{15}
-    \subitem {TridiagonalMatrix$<$ real\_t $>$}, \hyperpage{17}
-  \item {GivensRotationMatrix}
-    \subitem {GivensRotationMatrix$<$ real\_t $>$}, \hyperpage{8}
-  \item {GivensRotationMatrix$<$ real\_t $>$}, \hyperpage{7}
-    \subitem {GivensRotationMatrix}, \hyperpage{8}
-    \subitem {multiply}, \hyperpage{8}
-    \subitem {setupRotationMatrix}, \hyperpage{9}
+    \subitem {QMatrix$<$ real\_t $>$}, \hyperpage{13}
+    \subitem {QRSolver$<$ real\_t $>$}, \hyperpage{17}
+    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{20}
+  \item {GMatrix}
+    \subitem {GMatrix$<$ real\_t $>$}, \hyperpage{8}
+  \item {GMatrix$<$ real\_t $>$}, \hyperpage{7}
+    \subitem {GMatrix}, \hyperpage{8}
+    \subitem {multiply}, \hyperpage{9}
+    \subitem {multiplyLastRow}, \hyperpage{10}
 
   \indexspace
 
+  \item {include/Q\_Matrix.hpp}, \hyperpage{24}
+  \item {include/QR\_Solver.hpp}, \hyperpage{25}
+  \item {include/R\_Matrix.hpp}, \hyperpage{26}
   \item {indexOfZeroElement}
-    \subitem {LowerTriangularMatrix$<$ real\_t $>$}, \hyperpage{12}
-    \subitem {TridiagonalMatrix$<$ real\_t $>$}, \hyperpage{19}
-
-  \indexspace
-
-  \item {LowerTriangularMatrix}
-    \subitem {LowerTriangularMatrix$<$ real\_t $>$}, \hyperpage{10}
-  \item {LowerTriangularMatrix$<$ real\_t $>$}, \hyperpage{9}
-    \subitem {$\sim$LowerTriangularMatrix}, \hyperpage{10}
-    \subitem {getElement}, \hyperpage{11}
-    \subitem {getIndex}, \hyperpage{11}
-    \subitem {indexOfZeroElement}, \hyperpage{12}
-    \subitem {LowerTriangularMatrix}, \hyperpage{10}
-    \subitem {printMatrix}, \hyperpage{12}
-    \subitem {setElement}, \hyperpage{12}
+    \subitem {QMatrix$<$ real\_t $>$}, \hyperpage{13}
+    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{20}
 
   \indexspace
 
   \item {multiply}
-    \subitem {GivensRotationMatrix$<$ real\_t $>$}, \hyperpage{8}
+    \subitem {GMatrix$<$ real\_t $>$}, \hyperpage{9}
+    \subitem {QMatrix$<$ real\_t $>$}, \hyperpage{13}
+  \item {multiplyLastRow}
+    \subitem {GMatrix$<$ real\_t $>$}, \hyperpage{10}
 
   \indexspace
 
   \item {N}
-    \subitem {TridiagonalMatrix$<$ real\_t $>$}, \hyperpage{20}
+    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{22}
 
   \indexspace
 
   \item {print}
-    \subitem {TridiagonalMatrix$<$ real\_t $>$}, \hyperpage{19}
+    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{20}
   \item {printMatrix}
-    \subitem {LowerTriangularMatrix$<$ real\_t $>$}, \hyperpage{12}
-    \subitem {TridiagonalMatrix$<$ real\_t $>$}, \hyperpage{19}
+    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{21}
 
   \indexspace
 
-  \item {QRSolver}, \hyperpage{13}
-    \subitem {$\sim$QRSolver}, \hyperpage{14}
-    \subitem {getIndex}, \hyperpage{15}
-    \subitem {QRSolver}, \hyperpage{14}
+  \item {QMatrix}
+    \subitem {QMatrix$<$ real\_t $>$}, \hyperpage{12}
+  \item {QMatrix$<$ real\_t $>$}, \hyperpage{11}
+    \subitem {getElement}, \hyperpage{12}
+    \subitem {getIndex}, \hyperpage{13}
+    \subitem {indexOfZeroElement}, \hyperpage{13}
+    \subitem {multiply}, \hyperpage{13}
+    \subitem {QMatrix}, \hyperpage{12}
+    \subitem {setElement}, \hyperpage{14}
+  \item {QRSolver}
+    \subitem {QRSolver$<$ real\_t $>$}, \hyperpage{15}
+  \item {QRSolver$<$ real\_t $>$}, \hyperpage{14}
+    \subitem {$\sim$QRSolver}, \hyperpage{17}
+    \subitem {getIndex}, \hyperpage{17}
+    \subitem {QRSolver}, \hyperpage{15}
+
+  \indexspace
+
+  \item {RMatrix}
+    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{19}
+  \item {RMatrix$<$ real\_t $>$}, \hyperpage{18}
+    \subitem {$\sim$RMatrix}, \hyperpage{19}
+    \subitem {array}, \hyperpage{21}
+    \subitem {getElement}, \hyperpage{19}
+    \subitem {getIndex}, \hyperpage{20}
+    \subitem {indexOfZeroElement}, \hyperpage{20}
+    \subitem {N}, \hyperpage{22}
+    \subitem {print}, \hyperpage{20}
+    \subitem {printMatrix}, \hyperpage{21}
+    \subitem {RMatrix}, \hyperpage{19}
+    \subitem {setElement}, \hyperpage{21}
 
   \indexspace
 
   \item {setElement}
-    \subitem {LowerTriangularMatrix$<$ real\_t $>$}, \hyperpage{12}
-    \subitem {TridiagonalMatrix$<$ real\_t $>$}, \hyperpage{20}
-  \item {setupRotationMatrix}
-    \subitem {GivensRotationMatrix$<$ real\_t $>$}, \hyperpage{9}
-
-  \indexspace
-
-  \item {TridiagonalMatrix}
-    \subitem {TridiagonalMatrix$<$ real\_t $>$}, \hyperpage{16}
-  \item {TridiagonalMatrix$<$ real\_t $>$}, \hyperpage{15}
-    \subitem {$\sim$TridiagonalMatrix}, \hyperpage{17}
-    \subitem {array}, \hyperpage{20}
-    \subitem {getElement}, \hyperpage{17}
-    \subitem {getIndex}, \hyperpage{17}
-    \subitem {indexOfZeroElement}, \hyperpage{19}
-    \subitem {N}, \hyperpage{20}
-    \subitem {print}, \hyperpage{19}
-    \subitem {printMatrix}, \hyperpage{19}
-    \subitem {setElement}, \hyperpage{20}
-    \subitem {TridiagonalMatrix}, \hyperpage{16}
+    \subitem {QMatrix$<$ real\_t $>$}, \hyperpage{14}
+    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{21}
+  \item {src/R\_Matrix.cpp}, \hyperpage{26}
 
 \end{theindex}

@@ -91,13 +91,26 @@ $(document).ready(function(){initNavTree('_q_r___solver_8hpp.html',''); initResi
 
 <p>This header file defines a class for solving 2D matrix equations of the form A.x = b (where A is an n x n matrix and x and b are n x 1 vectors) using QR factorization technique. Also the class is implemented in such a way that it may be parallelized easily using openmp constructs.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="_tridiagonal___matrix_8hpp_source.html">Tridiagonal_Matrix.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;Lower_Triangular_Matrix.hpp&quot;</code><br />
+<code>#include &quot;GivensRotationMatrix.hpp&quot;</code><br />
+<code>#include &quot;Tridiagonal_Matrix.hpp&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for QR_Solver.hpp:</div>
+<div class="dyncontent">
+<div class="center"><img src="_q_r___solver_8hpp__incl.png" border="0" usemap="#combustion-packed-pellet-core-shell-particles_2include_2_q_r___solver_8hpp" alt=""/></div>
+<map name="combustion-packed-pellet-core-shell-particles_2include_2_q_r___solver_8hpp" id="combustion-packed-pellet-core-shell-particles_2include_2_q_r___solver_8hpp">
+<area shape="rect" title="This header file defines a class for solving 2D matrix equations of the form A.x = b (where A is an n..." alt="" coords="235,5,437,61"/>
+<area shape="rect" title=" " alt="" coords="5,109,216,136"/>
+<area shape="rect" title=" " alt="" coords="240,109,432,136"/>
+<area shape="rect" title=" " alt="" coords="456,109,627,136"/>
+</map>
+</div>
 </div>
 <p><a href="_q_r___solver_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_q_r_solver.html">QRSolver</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_q_r_solver.html">QRSolver&lt; real_t &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class to implement QR factorization algorithm for solving matrix equations of the A.x = b where A is a n x n tridiagonal matrix and x and b are n x 1 vectors.  <a href="class_q_r_solver.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>

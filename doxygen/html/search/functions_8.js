@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['_7elowertriangularmatrix_57',['~LowerTriangularMatrix',['../class_lower_triangular_matrix.html#ab138351d200ebf0a002e4a05088b8629',1,'LowerTriangularMatrix']]],
-  ['_7eqrsolver_58',['~QRSolver',['../class_q_r_solver.html#a5ea90d4c96557456acbc94597b4456d2',1,'QRSolver']]],
-  ['_7etridiagonalmatrix_59',['~TridiagonalMatrix',['../class_tridiagonal_matrix.html#a856da391b4acf24b32bd0e52ce856dfc',1,'TridiagonalMatrix']]]
+  ['setelement_57',['setElement',['../class_q_matrix.html#acd1eca818c55f95b51c9ba3eeac5719f',1,'QMatrix::setElement()'],['../class_r_matrix.html#aecd123cfb802391b8b27c8207141ea33',1,'RMatrix::setElement()']]],
+  ['setupgivensrotationmatrix_58',['setupGivensRotationMatrix',['../class_q_r_solver.html#a2002a8fc9d18863d9ad17e3f6ec94529',1,'QRSolver']]]
 ];

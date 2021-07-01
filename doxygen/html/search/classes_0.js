@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['givensrotationmatrix_29',['GivensRotationMatrix',['../class_givens_rotation_matrix.html',1,'']]]
+  ['gmatrix_33',['GMatrix',['../class_g_matrix.html',1,'']]]
 ];

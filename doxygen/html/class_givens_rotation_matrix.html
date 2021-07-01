@@ -94,40 +94,39 @@ $(document).ready(function(){initNavTree('class_givens_rotation_matrix.html','')
 <p>Class to implement a memory efficient Givens' Rotation Matrix that can vanish the element <img class="formulaInl" alt="$ a_{k+1, k} $" src="form_11.png"/> of a tridiagonal matrix <img class="formulaInl" alt="$ A $" src="form_18.png"/>.  
  <a href="class_givens_rotation_matrix.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="_givens_rotation_matrix_8hpp_source.html">GivensRotationMatrix.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="_givens___rotation___matrix_8hpp_source.html">Givens_Rotation_Matrix.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:adf1a4b0f85e97b7e560f351770dba8e8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_givens_rotation_matrix.html#adf1a4b0f85e97b7e560f351770dba8e8">GivensRotationMatrix</a> ()</td></tr>
-<tr class="memdesc:adf1a4b0f85e97b7e560f351770dba8e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new Givens Rotation Matrix.  <a href="class_givens_rotation_matrix.html#adf1a4b0f85e97b7e560f351770dba8e8">More...</a><br /></td></tr>
-<tr class="separator:adf1a4b0f85e97b7e560f351770dba8e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79b341601a025800835ba788b7037b31"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_givens_rotation_matrix.html#a79b341601a025800835ba788b7037b31">setupRotationMatrix</a> (<a class="el" href="class_tridiagonal_matrix.html">TridiagonalMatrix</a>&lt; real_t &gt; &amp;matrix, unsigned int index)</td></tr>
-<tr class="memdesc:a79b341601a025800835ba788b7037b31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets up the Givens Rotation Matrix to vanish the element at position <img class="formulaInl" alt="$ (i+1, i) $" src="form_12.png"/> of tridiagonal matrix.  <a href="class_givens_rotation_matrix.html#a79b341601a025800835ba788b7037b31">More...</a><br /></td></tr>
-<tr class="separator:a79b341601a025800835ba788b7037b31"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aacece0f31994bec31183938862f0f6ba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_givens_rotation_matrix.html#aacece0f31994bec31183938862f0f6ba">multiply</a> (<a class="el" href="class_tridiagonal_matrix.html">TridiagonalMatrix</a>&lt; real_t &gt; &amp;matrix)</td></tr>
-<tr class="memdesc:aacece0f31994bec31183938862f0f6ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiplies the Givens Rotation Matrix to the Tridiagonal Matrix and updates the tridiagonal matrix in place.  <a href="class_givens_rotation_matrix.html#aacece0f31994bec31183938862f0f6ba">More...</a><br /></td></tr>
-<tr class="separator:aacece0f31994bec31183938862f0f6ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69b69823ad8e0213a502c18983fd98e0"><td class="memItemLeft" align="right" valign="top"><a id="a69b69823ad8e0213a502c18983fd98e0"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>multiply</b> (<a class="el" href="class_lower_triangular_matrix.html">LowerTriangularMatrix</a>&lt; real_t &gt; &amp;matrix)</td></tr>
+<tr class="memitem:a7bd129225d767255c98e964352a09e11"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_givens_rotation_matrix.html#a7bd129225d767255c98e964352a09e11">GivensRotationMatrix</a> (<a class="el" href="class_tridiagonal_matrix.html">TridiagonalMatrix</a>&lt; real_t &gt; &amp;matrix, unsigned int index)</td></tr>
+<tr class="memdesc:a7bd129225d767255c98e964352a09e11"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new Givens Rotation Matrix to vanish the element at position <img class="formulaInl" alt="$ (i+1, i) $" src="form_12.png"/> of tridiagonal matrix.  <a href="class_givens_rotation_matrix.html#a7bd129225d767255c98e964352a09e11">More...</a><br /></td></tr>
+<tr class="separator:a7bd129225d767255c98e964352a09e11"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69b69823ad8e0213a502c18983fd98e0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_givens_rotation_matrix.html#a69b69823ad8e0213a502c18983fd98e0">multiply</a> (<a class="el" href="class_lower_triangular_matrix.html">LowerTriangularMatrix</a>&lt; real_t &gt; &amp;matrix)</td></tr>
+<tr class="memdesc:a69b69823ad8e0213a502c18983fd98e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Multiplies the Givens Rotation Matrix to the Tridiagonal Matrix and updates the tridiagonal matrix in place.  <a href="class_givens_rotation_matrix.html#a69b69823ad8e0213a502c18983fd98e0">More...</a><br /></td></tr>
 <tr class="separator:a69b69823ad8e0213a502c18983fd98e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:a0a57f9bd3a1c47505e1552930af7eb04"><td class="memItemLeft" align="right" valign="top"><a id="a0a57f9bd3a1c47505e1552930af7eb04"></a>
-real_t&#160;</td><td class="memItemRight" valign="bottom"><b>element_i_i</b></td></tr>
-<tr class="separator:a0a57f9bd3a1c47505e1552930af7eb04"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa09f2b8e498ca6d1845382a5f2e6a0c9"><td class="memItemLeft" align="right" valign="top"><a id="aa09f2b8e498ca6d1845382a5f2e6a0c9"></a>
-real_t&#160;</td><td class="memItemRight" valign="bottom"><b>element_i_ip1</b></td></tr>
-<tr class="separator:aa09f2b8e498ca6d1845382a5f2e6a0c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1318018bf52e6c8447ce517368411fb"><td class="memItemLeft" align="right" valign="top"><a id="af1318018bf52e6c8447ce517368411fb"></a>
-real_t&#160;</td><td class="memItemRight" valign="bottom"><b>element_ip1_i</b></td></tr>
-<tr class="separator:af1318018bf52e6c8447ce517368411fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad21fafe089f6689ed951f31e4b230a5f"><td class="memItemLeft" align="right" valign="top"><a id="ad21fafe089f6689ed951f31e4b230a5f"></a>
-real_t&#160;</td><td class="memItemRight" valign="bottom"><b>element_ip1_ip1</b></td></tr>
-<tr class="separator:ad21fafe089f6689ed951f31e4b230a5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a42cda959236e41236e8b75534dc8d1c9"><td class="memItemLeft" align="right" valign="top"><a id="a42cda959236e41236e8b75534dc8d1c9"></a>
-unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>i</b></td></tr>
-<tr class="separator:a42cda959236e41236e8b75534dc8d1c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b23a476d22c0b1d8f6d0b73ace6c080"><td class="memItemLeft" align="right" valign="top"><a id="a0b23a476d22c0b1d8f6d0b73ace6c080"></a>
+real_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_givens_rotation_matrix.html#a0b23a476d22c0b1d8f6d0b73ace6c080">element_k_k</a></td></tr>
+<tr class="memdesc:a0b23a476d22c0b1d8f6d0b73ace6c080"><td class="mdescLeft">&#160;</td><td class="mdescRight">Element of Givens Rotation Matrix at position <img class="formulaInl" alt="$ k, k $" src="form_42.png"/>. <br /></td></tr>
+<tr class="separator:a0b23a476d22c0b1d8f6d0b73ace6c080"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18c8fc34c0c34f476761e42ce6dc2f7c"><td class="memItemLeft" align="right" valign="top"><a id="a18c8fc34c0c34f476761e42ce6dc2f7c"></a>
+real_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_givens_rotation_matrix.html#a18c8fc34c0c34f476761e42ce6dc2f7c">element_k_kp1</a></td></tr>
+<tr class="memdesc:a18c8fc34c0c34f476761e42ce6dc2f7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Element of Givens Rotation Matrix at position <img class="formulaInl" alt="$ k, k+1 $" src="form_43.png"/>. <br /></td></tr>
+<tr class="separator:a18c8fc34c0c34f476761e42ce6dc2f7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8379c67a5e9d29d3cd37c6f5f7b2e71d"><td class="memItemLeft" align="right" valign="top"><a id="a8379c67a5e9d29d3cd37c6f5f7b2e71d"></a>
+real_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_givens_rotation_matrix.html#a8379c67a5e9d29d3cd37c6f5f7b2e71d">element_kp1_k</a></td></tr>
+<tr class="memdesc:a8379c67a5e9d29d3cd37c6f5f7b2e71d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Element of Givens Rotation Matrix at position <img class="formulaInl" alt="$ k+1, k $" src="form_44.png"/>. <br /></td></tr>
+<tr class="separator:a8379c67a5e9d29d3cd37c6f5f7b2e71d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1cf31c947cc5eba073e339863f524585"><td class="memItemLeft" align="right" valign="top"><a id="a1cf31c947cc5eba073e339863f524585"></a>
+real_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_givens_rotation_matrix.html#a1cf31c947cc5eba073e339863f524585">element_kp1_kp1</a></td></tr>
+<tr class="memdesc:a1cf31c947cc5eba073e339863f524585"><td class="mdescLeft">&#160;</td><td class="mdescRight">Element of Givens Rotation Matrix at position <img class="formulaInl" alt="$ k+1, k+1 $" src="form_45.png"/>. <br /></td></tr>
+<tr class="separator:a1cf31c947cc5eba073e339863f524585"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a494c5863ed9c2145f44aa4a4f20940ed"><td class="memItemLeft" align="right" valign="top"><a id="a494c5863ed9c2145f44aa4a4f20940ed"></a>
+unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_givens_rotation_matrix.html#a494c5863ed9c2145f44aa4a4f20940ed">k</a></td></tr>
+<tr class="memdesc:a494c5863ed9c2145f44aa4a4f20940ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Index k, where we want to vanish the element at position <img class="formulaInl" alt="$ k+1, k $" src="form_44.png"/>. <br /></td></tr>
+<tr class="separator:a494c5863ed9c2145f44aa4a4f20940ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;typename real_t&gt;<br />
@@ -136,7 +135,7 @@ class GivensRotationMatrix&lt; real_t &gt;</h3>
 <p>Class to implement a memory efficient Givens' Rotation Matrix that can vanish the element <img class="formulaInl" alt="$ a_{k+1, k} $" src="form_11.png"/> of a tridiagonal matrix <img class="formulaInl" alt="$ A $" src="form_18.png"/>. </p>
 <p>A Givens rotation matrix is an orthogonal such that <img class="formulaInl" alt="$ G_{N \times N} = [g_{ij}]_{N \times N} $" src="form_14.png"/> where <br  />
  </p><p class="formulaDsp">
-<img class="formulaDsp" alt="\begin{equation} g_{ij} = \begin{array}{cc} 1 &amp; i = j \ne k, k+1 \\ \cos{\theta} &amp; i = j = k, k+1 \\ \sin{\theta} &amp; i = k, j = k+1 \\ -\sin{\theta} &amp; i = k+1, j = k \\ 0 &amp; \textbf{otherwise} \end{array} \end{equation}" src="form_32.png"/>
+<img class="formulaDsp" alt="\begin{equation} g_{ij} = \begin{array}{cc} 1 &amp; i = j \ne k, k+1 \\ \cos{\theta} &amp; i = j = k, k+1 \\ \sin{\theta} &amp; i = k, j = k+1 \\ -\sin{\theta} &amp; i = k+1, j = k \\ 0 &amp; \text{otherwise} \end{array} \end{equation}" src="form_36.png"/>
 </p>
 <p>When the Givens Rotation Matrix is multiplied to another matrix <img class="formulaInl" alt="$ B_{N \times N} = [b_{i,j}]_{N \times N} $" src="form_24.png"/> </p><p class="formulaDsp">
 <img class="formulaDsp" alt="\begin{equation} C_{N \times N} = G_{N \times N} \cdot B_{N \times N} \end{equation}" src="form_26.png"/>
@@ -145,7 +144,7 @@ class GivensRotationMatrix&lt; real_t &gt;</h3>
 <img class="formulaDsp" alt="\begin{equation} \Rightarrow c_{ij} = \sum_{l=1}^N g_{i,l} b_{l,j} \end{equation}" src="form_28.png"/>
 </p>
  <p class="formulaDsp">
-<img class="formulaDsp" alt="\begin{equation} \Rightarrow c_{ij} = \begin{array}{cc} g_{k,k} b_{k,j} + g_{k,k+1} b_{k+1,j} &amp; i=k \\ g_{k+1,k} b_{k+1,j} + g_{k+1,k+1} b_{k+1,j} &amp; i=k+1 \\ b_{i,j} &amp; \textbf{otherwise} \end{array} \end{equation}" src="form_35.png"/>
+<img class="formulaDsp" alt="\begin{equation} \Rightarrow c_{ij} = \begin{array}{cc} g_{k,k} b_{k,j} + g_{k,k+1} b_{k+1,j} &amp; i=k \\ g_{k+1,k} b_{k,j} + g_{k+1,k+1} b_{k+1,j} &amp; i=k+1 \\ b_{i,j} &amp; \text{otherwise} \end{array} \end{equation}" src="form_37.png"/>
 </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -154,10 +153,10 @@ class GivensRotationMatrix&lt; real_t &gt;</h3>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_givens_rotation_matrix_8hpp_source.html#l00057">57</a> of file <a class="el" href="_givens_rotation_matrix_8hpp_source.html">GivensRotationMatrix.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_givens___rotation___matrix_8hpp_source.html#l00057">57</a> of file <a class="el" href="_givens___rotation___matrix_8hpp_source.html">Givens_Rotation_Matrix.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="adf1a4b0f85e97b7e560f351770dba8e8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adf1a4b0f85e97b7e560f351770dba8e8">&#9670;&nbsp;</a></span>GivensRotationMatrix()</h2>
+<a id="a7bd129225d767255c98e964352a09e11"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7bd129225d767255c98e964352a09e11">&#9670;&nbsp;</a></span>GivensRotationMatrix()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -166,57 +165,6 @@ template&lt;typename real_t &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="class_givens_rotation_matrix.html">GivensRotationMatrix</a>&lt; real_t &gt;::<a class="el" href="class_givens_rotation_matrix.html">GivensRotationMatrix</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Construct a new Givens Rotation Matrix. </p>
-
-</div>
-</div>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="aacece0f31994bec31183938862f0f6ba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aacece0f31994bec31183938862f0f6ba">&#9670;&nbsp;</a></span>multiply()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename real_t &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class_givens_rotation_matrix.html">GivensRotationMatrix</a>&lt; real_t &gt;::multiply </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_tridiagonal_matrix.html">TridiagonalMatrix</a>&lt; real_t &gt; &amp;&#160;</td>
-          <td class="paramname"><em>matrix</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Multiplies the Givens Rotation Matrix to the Tridiagonal Matrix and updates the tridiagonal matrix in place. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">matrix</td><td>Tridiagonal Matrix that will be converted into upper tridiagonal matrix after multiplication</td></tr>
-  </table>
-  </dd>
-</dl>
-<p>For multiplication with a Tridiagonal matrix </p>
-
-</div>
-</div>
-<a id="a79b341601a025800835ba788b7037b31"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a79b341601a025800835ba788b7037b31">&#9670;&nbsp;</a></span>setupRotationMatrix()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename real_t &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class_givens_rotation_matrix.html">GivensRotationMatrix</a>&lt; real_t &gt;::setupRotationMatrix </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="class_tridiagonal_matrix.html">TridiagonalMatrix</a>&lt; real_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>matrix</em>, </td>
@@ -235,7 +183,7 @@ template&lt;typename real_t &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Sets up the Givens Rotation Matrix to vanish the element at position <img class="formulaInl" alt="$ (i+1, i) $" src="form_12.png"/> of tridiagonal matrix. </p>
+<p>Construct a new Givens Rotation Matrix to vanish the element at position <img class="formulaInl" alt="$ (i+1, i) $" src="form_12.png"/> of tridiagonal matrix. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">matrix</td><td>Tridiagonal matrix whose element at position <img class="formulaInl" alt="$ (i+1, i) $" src="form_12.png"/> needs to be vanished </td></tr>
@@ -244,10 +192,65 @@ template&lt;typename real_t &gt; </div>
   </dd>
 </dl>
 
+<p class="definition">Definition at line <a class="el" href="_givens___rotation___matrix_8cpp_source.html#l00016">16</a> of file <a class="el" href="_givens___rotation___matrix_8cpp_source.html">Givens_Rotation_Matrix.cpp</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_givens_rotation_matrix_a7bd129225d767255c98e964352a09e11_cgraph.png" border="0" usemap="#class_givens_rotation_matrix_a7bd129225d767255c98e964352a09e11_cgraph" alt=""/></div>
+<map name="class_givens_rotation_matrix_a7bd129225d767255c98e964352a09e11_cgraph" id="class_givens_rotation_matrix_a7bd129225d767255c98e964352a09e11_cgraph">
+<area shape="rect" title="Construct a new Givens Rotation Matrix to vanish the element at position &#160;of tridiagonal matrix." alt="" coords="5,5,177,47"/>
+<area shape="rect" href="class_tridiagonal_matrix.html#a4abb5f559b7ab6a8735d67ff2c1df477" title="Get the i,j th element of 2D Tridiagonal Matrix." alt="" coords="225,5,369,47"/>
+</map>
+</div>
+
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
-<li>combustion-packed-pellet-core-shell-particles/include/<a class="el" href="_givens_rotation_matrix_8hpp_source.html">GivensRotationMatrix.hpp</a></li>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a69b69823ad8e0213a502c18983fd98e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69b69823ad8e0213a502c18983fd98e0">&#9670;&nbsp;</a></span>multiply()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename real_t &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="class_givens_rotation_matrix.html">GivensRotationMatrix</a>&lt; real_t &gt;::multiply </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_lower_triangular_matrix.html">LowerTriangularMatrix</a>&lt; real_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>matrix</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Multiplies the Givens Rotation Matrix to the Tridiagonal Matrix and updates the tridiagonal matrix in place. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">matrix</td><td>Tridiagonal Matrix that will be converted into upper tridiagonal matrix after multiplication</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>A Tridiagonal matrix can be represented as <img class="formulaInl" alt="$ T_{N \times N} = [t_{i,j}]_{N \times N} $" src="form_38.png"/> where </p><p class="formulaDsp">
+<img class="formulaDsp" alt="\begin{eqnarray*} t_{i,j} = 0, &amp; \text{if} j &lt; i-1 \text{or} j &gt; i+1 } Thus, upon multiplying the tridiagonal matrix with the rotation matrix, we get matrix \f$ C_{N \times N} \f$ \f{equation}{ c_{ij} = \begin{array}{cc} g_{k,k} t_{k,j} + g_{k,k+1} t_{k+1,j} &amp; i=k \\ g_{k+1,k} t_{k,j} + g_{k+1,k+1} t_{k+1,j} &amp; i=k+1 \\ t_{i,j} &amp; \text{otherwise} \end{array} \f{equation}{ \Rightarrow c_{ij} = \begin{array}{cc} g_{k,k} t_{k,k-1} &amp; i=k &amp; j=k-1 \\ g_{k,k} t_{k,k} + g_{k,k+1} t_{k+1,k} &amp; i=k &amp; j=k \\ g_{k,k} t_{k,k+1} + g_{k,k+1} t_{k+1,k+1} &amp; i=k &amp; j=k+1 \\ g_{k,k+1} t_{k+1,k+2} &amp; i=k &amp; j=k+2 \\ g_{k+1,k} t_{k,k-1} &amp; i=k+1 &amp; j=k-1 \\ g_{k+1,k} t_{k,k} + g_{k+1,k+1} t_{k+1,k} &amp; i=k+1 &amp; j=k \\ g_{k+1,k} t_{k,k+1} + g_{k+1,k+1} t_{k+1,k+1} &amp; i=k+1 &amp; j=k+1 \\ g_{k+1,k+1} t_{k+1,k+2} &amp; i=k+1 &amp; j=k+2 \\ t_{i,j} &amp; \text{otherwise} \end{array} But as we iterate over k and multiply the corresponding rotation marix, the sub-diagonal (\f$ t_{i,i-1} \f$) becomes zero and the super-super-diagonal (\f$ t_{i,i+2} \f$) fills up with non-zero values. \f{equation}{ \Rightarrow c_{ij} = \begin{array}{cc} 0 &amp; i=k &amp; j=k-1 \\ g_{k,k} t_{k,k} + g_{k,k+1} t_{k+1,k} &amp; i=k &amp; j=k \\ g_{k,k} t_{k,k+1} + g_{k,k+1} t_{k+1,k+1} &amp; i=k &amp; j=k+1 \\ g_{k,k+1} t_{k+1,k+2} &amp; i=k &amp; j=k+2 \\ 0 &amp; i=k+1 &amp; j=k-1 \\ 0 &amp; i=k+1 &amp; j=k \\ g_{k+1,k} t_{k,k+1} + g_{k+1,k+1} t_{k+1,k+1} &amp; i=k+1 &amp; j=k+1 \\ g_{k+1,k+1} t_{k+1,k+2} &amp; i=k+1 &amp; j=k+2 \\ t_{i,j} &amp; \text{otherwise} \end{array} */ void multiply(TridiagonalMatrix&lt;real_t&gt; &amp;matrix); /** @brief Multiplies the Givens Rotation Matrix to the Lower Triangular Matrix and updates the Lower Triangular matrix in place @param matrix Lower Triangular Matrix passed as reference A Lower Triangular may be represented as matrix \f$ L_{N \times N} = [l_{i,j}]_{N \times N} \f$ where \f{eqnarray*}{ l_{i,j} = 0, &amp; j &gt; i \end{eqnarray*}" src="form_39.png"/>
+</p>
+<p>Thus, when a rotation matrix is multiplied to a lower triangular matrix </p><p class="formulaDsp">
+<img class="formulaDsp" alt="\begin{equation} C_{N \times N} = G_{N \times N} \cdot L_{N \times N} \end{equation}" src="form_40.png"/>
+</p>
+ <p class="formulaDsp">
+<img class="formulaDsp" alt="\begin{equation} \Rightarrow c_{ij} = \sum_{l=1}^N g_{i,l} b_{l,j} \end{equation}" src="form_28.png"/>
+</p>
+ <p class="formulaDsp">
+<img class="formulaDsp" alt="\begin{equation} \Rightarrow c_{ij} = \begin{array}{cc} g_{k,k} l_{k,j} + g_{k,k+1} l_{k+1,j} &amp; i=k \\ g_{k+1,k} l_{k,j} + g_{k+1,k+1} l_{k+1,j} &amp; i=k+1 \\ l_{i,j} &amp; \text{otherwise} \end{array} \end{equation}" src="form_41.png"/>
+</p>
+ 
+<p class="definition">Definition at line <a class="el" href="_givens___rotation___matrix_8cpp_source.html#l00038">38</a> of file <a class="el" href="_givens___rotation___matrix_8cpp_source.html">Givens_Rotation_Matrix.cpp</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>combustion-packed-pellet-core-shell-particles/include/<a class="el" href="_givens___rotation___matrix_8hpp_source.html">Givens_Rotation_Matrix.hpp</a></li>
+<li>combustion-packed-pellet-core-shell-particles/src/<a class="el" href="_givens___rotation___matrix_8cpp_source.html">Givens_Rotation_Matrix.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

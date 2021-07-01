@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['tridiagonalmatrix_32',['TridiagonalMatrix',['../class_tridiagonal_matrix.html',1,'']]]
+  ['tridiagonalmatrix_36',['TridiagonalMatrix',['../class_tridiagonal_matrix.html',1,'']]]
 ];

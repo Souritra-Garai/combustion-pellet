@@ -16,6 +16,8 @@
 #ifndef __QR_SOLVER__
 #define __QR_SOLVER__
 
+#include "Lower_Triangular_Matrix.hpp"
+#include "GivensRotationMatrix.hpp"
 #include "Tridiagonal_Matrix.hpp"
 
 /**
@@ -24,7 +26,8 @@
  * where A is a n x n tridiagonal matrix and
  * x and b are n x 1 vectors
  */
-class QRSolver : public TridiagonalMatrix
+template <typename real_t>
+class QRSolver :
 {
     private :
 

@@ -1,0 +1,166 @@
+\hypertarget{class_g_matrix}{}\doxysection{G\+Matrix$<$ real\+\_\+t $>$ Class Template Reference}
+\label{class_g_matrix}\index{GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}}
+
+
+Class to implement a memory efficient Givens\textquotesingle{} Rotation Matrix that can vanish the element $ a_{k+1, k} $ of a R matrix $ A $.  
+
+
+
+
+{\ttfamily \#include $<$G\+\_\+\+Matrix.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_g_matrix_a58826463eef6ebeb006c4cb89123b13d}{G\+Matrix}} (\mbox{\hyperlink{class_r_matrix}{R\+Matrix}}$<$ real\+\_\+t $>$ \&matrix, unsigned int index)
+\begin{DoxyCompactList}\small\item\em Construct a new Givens Rotation Matrix to vanish the element at position $ (k+1, k) $ of R matrix. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_g_matrix_a0b6ea1ffe1b389199580a579fcccb479}{multiply}} (\mbox{\hyperlink{class_r_matrix}{R\+Matrix}}$<$ real\+\_\+t $>$ \&R)
+\begin{DoxyCompactList}\small\item\em Multiplies the Givens Rotation Matrix to the R Matrix and updates the R matrix in place. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_g_matrix_ac536fee15cd66784ac5d3acdef5a1397}{multiply\+Last\+Row}} (\mbox{\hyperlink{class_r_matrix}{R\+Matrix}}$<$ real\+\_\+t $>$ \&R)
+\begin{DoxyCompactList}\small\item\em Multiplies the Givens rotation matrix to the R matrix where the rotation matrix is formed to vanish the sub diagonal element of the last row $ (N, N-1) $ of the $ N \times N $ R matrix. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_g_matrix_aecbb22bc55e99718e3ba46882c20c4e9}{multiply}} (\mbox{\hyperlink{class_q_matrix}{Q\+Matrix}}$<$ real\+\_\+t $>$ \&Q)
+\begin{DoxyCompactList}\small\item\em Multiplies the Givens Rotation Matrix to the Q Matrix and updates the Q matrix in place. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_g_matrix_a4f004a7bc0c9717c4b852c51d66d946f}\label{class_g_matrix_a4f004a7bc0c9717c4b852c51d66d946f}} 
+real\+\_\+t \mbox{\hyperlink{class_g_matrix_a4f004a7bc0c9717c4b852c51d66d946f}{g\+\_\+k\+\_\+k}}
+\begin{DoxyCompactList}\small\item\em Element of Givens Rotation Matrix at position $ k, k $. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_g_matrix_a796c4c5096462586c6dff06c4eca49b6}\label{class_g_matrix_a796c4c5096462586c6dff06c4eca49b6}} 
+real\+\_\+t \mbox{\hyperlink{class_g_matrix_a796c4c5096462586c6dff06c4eca49b6}{g\+\_\+k\+\_\+kp1}}
+\begin{DoxyCompactList}\small\item\em Element of Givens Rotation Matrix at position $ k, k+1 $. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_g_matrix_a441f035d5a41f524bd279291cb7465de}\label{class_g_matrix_a441f035d5a41f524bd279291cb7465de}} 
+real\+\_\+t \mbox{\hyperlink{class_g_matrix_a441f035d5a41f524bd279291cb7465de}{g\+\_\+kp1\+\_\+k}}
+\begin{DoxyCompactList}\small\item\em Element of Givens Rotation Matrix at position $ k+1, k $. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_g_matrix_a8fc77043988f704daf1493dbd00d3718}\label{class_g_matrix_a8fc77043988f704daf1493dbd00d3718}} 
+real\+\_\+t \mbox{\hyperlink{class_g_matrix_a8fc77043988f704daf1493dbd00d3718}{g\+\_\+kp1\+\_\+kp1}}
+\begin{DoxyCompactList}\small\item\em Element of Givens Rotation Matrix at position $ k+1, k+1 $. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_g_matrix_aba063636265b37f2ba653a106f2486ea}\label{class_g_matrix_aba063636265b37f2ba653a106f2486ea}} 
+unsigned int \mbox{\hyperlink{class_g_matrix_aba063636265b37f2ba653a106f2486ea}{k}}
+\begin{DoxyCompactList}\small\item\em Index k, where we want to vanish the element at position $ k+1, k $. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename real\+\_\+t$>$\newline
+class G\+Matrix$<$ real\+\_\+t $>$}
+
+Class to implement a memory efficient Givens\textquotesingle{} Rotation Matrix that can vanish the element $ a_{k+1, k} $ of a R matrix $ A $. 
+
+A Givens rotation matrix is an orthogonal such that $ G_{N \times N} = [g_{ij}]_{N \times N} $ where ~\newline
+ \begin{equation} g_{ij} = \begin{array}{ll} 1 & i = j \ne k, k+1 \\ \cos{\theta} & i = j = k, k+1 \\ \sin{\theta} & i = k, j = k+1 \\ -\sin{\theta} & i = k+1, j = k \\ 0 & \text{otherwise} \end{array} \end{equation}
+
+When the Givens Rotation Matrix is multiplied to another matrix $ B_{N \times N} = [b_{i,j}]_{N \times N} $ \begin{equation} C_{N \times N} = G_{N \times N} \cdot B_{N \times N} \end{equation} \begin{equation} \Rightarrow c_{ij} = \sum_{l=1}^N g_{i,l} b_{l,j} \end{equation} \begin{equation} \Rightarrow c_{ij} = \begin{array}{ll} g_{k,k} b_{k,j} + g_{k,k+1} b_{k+1,j} & i=k \\ g_{k+1,k} b_{k,j} + g_{k+1,k+1} b_{k+1,j} & i=k+1 \\ b_{i,j} & \text{otherwise} \end{array} \end{equation}
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em real\+\_\+t} & float, double or long double data types to represent real numbers \\
+\hline
+\end{DoxyTemplParams}
+
+
+Definition at line 58 of file G\+\_\+\+Matrix.\+hpp.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_g_matrix_a58826463eef6ebeb006c4cb89123b13d}\label{class_g_matrix_a58826463eef6ebeb006c4cb89123b13d}} 
+\index{GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}!GMatrix@{GMatrix}}
+\index{GMatrix@{GMatrix}!GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{GMatrix()}{GMatrix()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+\mbox{\hyperlink{class_g_matrix}{G\+Matrix}}$<$ real\+\_\+t $>$\+::\mbox{\hyperlink{class_g_matrix}{G\+Matrix}} (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_r_matrix}{R\+Matrix}}$<$ real\+\_\+t $>$ \&}]{matrix,  }\item[{unsigned int}]{index }\end{DoxyParamCaption})}
+
+
+
+Construct a new Givens Rotation Matrix to vanish the element at position $ (k+1, k) $ of R matrix. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em R} & R matrix whose element at position $ (k+1, k) $ needs to be vanished \\
+\hline
+{\em index} & k \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 18 of file G\+\_\+\+Matrix.\+cpp.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_g_matrix_aecbb22bc55e99718e3ba46882c20c4e9}\label{class_g_matrix_aecbb22bc55e99718e3ba46882c20c4e9}} 
+\index{GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}!multiply@{multiply}}
+\index{multiply@{multiply}!GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{multiply()}{multiply()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+void \mbox{\hyperlink{class_g_matrix}{G\+Matrix}}$<$ real\+\_\+t $>$\+::multiply (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_q_matrix}{Q\+Matrix}}$<$ real\+\_\+t $>$ \&}]{Q }\end{DoxyParamCaption})}
+
+
+
+Multiplies the Givens Rotation Matrix to the Q Matrix and updates the Q matrix in place. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Q} & Q Matrix passed as reference\\
+\hline
+\end{DoxyParams}
+Q matrix may be represented as $ Q_{N \times N} = [q_{i,j}]_{N \times N} $ where \begin{eqnarray*} q_{i,j} = 0, & j > i \end{eqnarray*}
+
+Thus, when a rotation matrix is multiplied to Q matrix \begin{equation} C_{N \times N} = G_{N \times N} \cdot Q_{N \times N} \end{equation} \begin{equation} \Rightarrow c_{ij} = \sum_{l=1}^N g_{i,l} q_{l,j} \end{equation} \begin{equation} \Rightarrow c_{ij} = \begin{array}{ll} g_{k,k} l_{k,j} + g_{k,k+1} q_{k+1,j} & i=k \\ g_{k+1,k} l_{k,j} + g_{k+1,k+1} q_{k+1,j} & i=k+1 \\ q_{i,j} & \text{otherwise} \end{array} \end{equation} 
+
+Definition at line 40 of file G\+\_\+\+Matrix.\+cpp.
+
+\mbox{\Hypertarget{class_g_matrix_a0b6ea1ffe1b389199580a579fcccb479}\label{class_g_matrix_a0b6ea1ffe1b389199580a579fcccb479}} 
+\index{GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}!multiply@{multiply}}
+\index{multiply@{multiply}!GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{multiply()}{multiply()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+void \mbox{\hyperlink{class_g_matrix}{G\+Matrix}}$<$ real\+\_\+t $>$\+::multiply (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_r_matrix}{R\+Matrix}}$<$ real\+\_\+t $>$ \&}]{R }\end{DoxyParamCaption})}
+
+
+
+Multiplies the Givens Rotation Matrix to the R Matrix and updates the R matrix in place. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em R} & R Matrix that will be converted into upper tridiagonal matrix after multiplication\\
+\hline
+\end{DoxyParams}
+R matrix can be represented as $ R_{N \times N} = [r_{i,j}]_{N \times N} $ where \begin{equation} r_{i,j} = \begin{array}{lllll} 0 & \text{if} & j < i-1 & \text{or} & j > i+1 \end{array} \end{equation}
+
+Thus, upon multiplying the R matrix with the rotation matrix, we get matrix $ C_{N \times N} $
+
+\begin{equation} c_{ij} = \begin{array}{ll} g_{k,k} r_{k,j} + g_{k,k+1} r_{k+1,j} & i=k \\ g_{k+1,k} r_{k,j} + g_{k+1,k+1} r_{k+1,j} & i=k+1 \\ r_{i,j} & \text{otherwise} \end{array} \end{equation}
+
+\begin{equation} \Rightarrow c_{ij} = \begin{array}{lll} g_{k,k} r_{k,k-1} & i=k & j=k-1 \\ g_{k,k} r_{k,k} + g_{k,k+1} r_{k+1,k} & i=k & j=k \\ g_{k,k} r_{k,k+1} + g_{k,k+1} r_{k+1,k+1} & i=k & j=k+1 \\ g_{k,k+1} r_{k+1,k+2} & i=k & j=k+2 \\ g_{k+1,k} r_{k,k-1} & i=k+1 & j=k-1 \\ g_{k+1,k} r_{k,k} + g_{k+1,k+1} r_{k+1,k} & i=k+1 & j=k \\ g_{k+1,k} r_{k,k+1} + g_{k+1,k+1} r_{k+1,k+1} & i=k+1 & j=k+1 \\ g_{k+1,k+1} r_{k+1,k+2} & i=k+1 & j=k+2 \\ r_{i,j} & \text{otherwise} \end{array} \end{equation}
+
+But as we iterate over k and multiply the corresponding rotation marix, the sub-\/diagonal ( $ r_{i,i-1} $) becomes zero and the super-\/super-\/diagonal ( $ r_{i,i+2} $) fills up with non-\/zero values.
+
+\begin{equation} \Rightarrow c_{ij} = \begin{array}{lll} 0 & i=k & j=k-1 \\ g_{k,k} r_{k,k} + g_{k,k+1} r_{k+1,k} & i=k & j=k \\ g_{k,k} r_{k,k+1} + g_{k,k+1} r_{k+1,k+1} & i=k & j=k+1 \\ g_{k,k+1} r_{k+1,k+2} & i=k & j=k+2 \\ 0 & i=k+1 & j=k-1 \\ 0 & i=k+1 & j=k \\ g_{k+1,k} r_{k,k+1} + g_{k+1,k+1} r_{k+1,k+1} & i=k+1 & j=k+1 \\ g_{k+1,k+1} r_{k+1,k+2} & i=k+1 & j=k+2 \\ r_{i,j} & \text{otherwise} \end{array} \end{equation} 
+
+Definition at line 63 of file G\+\_\+\+Matrix.\+cpp.
+
+\mbox{\Hypertarget{class_g_matrix_ac536fee15cd66784ac5d3acdef5a1397}\label{class_g_matrix_ac536fee15cd66784ac5d3acdef5a1397}} 
+\index{GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}!multiplyLastRow@{multiplyLastRow}}
+\index{multiplyLastRow@{multiplyLastRow}!GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{multiplyLastRow()}{multiplyLastRow()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+void \mbox{\hyperlink{class_g_matrix}{G\+Matrix}}$<$ real\+\_\+t $>$\+::multiply\+Last\+Row (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_r_matrix}{R\+Matrix}}$<$ real\+\_\+t $>$ \&}]{R }\end{DoxyParamCaption})}
+
+
+
+Multiplies the Givens rotation matrix to the R matrix where the rotation matrix is formed to vanish the sub diagonal element of the last row $ (N, N-1) $ of the $ N \times N $ R matrix. 
+
+\begin{equation} \Rightarrow c_{ij} = \begin{array}{lll} 0 & i=k & j=k-1 \\ g_{N-1,N-1} r_{N-1,N-1} + g_{N-1,N} r_{N,N-1} & i=k & j=k \\ g_{N-1,N-1} r_{N-1,N} + g_{N-1,N} r_{N,N} & i=k & j=k+1 \\ 0 & i=k+1 & j=k-1 \\ 0 & i=k+1 & j=k \\ g_{N,N-1} r_{N-1,N} + g_{N,N} r_{N,N} & i=k+1 & j=k+1 \\ r_{i,j} & \text{otherwise} \end{array} \end{equation}
+
+
+\begin{DoxyParams}{Parameters}
+{\em R} & R Matrix that will be converted into upper tridiagonal matrix after multiplication \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/G\+\_\+\+Matrix.\+hpp\item 
+src/G\+\_\+\+Matrix.\+cpp\end{DoxyCompactItemize}

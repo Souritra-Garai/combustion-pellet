@@ -1,5 +1,5 @@
 /**
- * @file Tridiagonal_Matrix_Test.cpp
+ * @file R_Matrix_Test.cpp
  * @author Souritra Garai (you@domain.com)
  * @brief An example cpp program to test the TridiagonalMatrix clss
  * @version 0.1
@@ -13,13 +13,13 @@
 #include <iostream>
 #include <exception>
 
-#include "Tridiagonal_Matrix.hpp"
+#include "R_Matrix.hpp"
 
 int main(int argc, char const *argv[])
 {
     try
     {   
-        TridiagonalMatrix<float> A(5);
+        RMatrix<float> A(5);
 
         int k = 1;
         A.setElement(0, 0, k++);
@@ -35,13 +35,13 @@ int main(int argc, char const *argv[])
         A.setElement(4, 3, k++);
         A.setElement(4, 4, k++);
 
-        printf("Tridiagonal Matrix\n");
+        printf("R Matrix\n");
         A.printMatrix();
 
         printf("\n\nFlat Representation\n");
         A.print();
 
-        TridiagonalMatrix<long double> B(5);
+        RMatrix<long double> B(5);
 
         k = 1;
 
@@ -59,7 +59,7 @@ int main(int argc, char const *argv[])
 
         // B.setElement(1, 4, k++);
 
-        printf("\n\n\nUpper Tridiagonal Matrix\n");
+        printf("\n\n\nR Matrix\n");
         B.printMatrix();
 
         printf("\n\nFlat Representation\n");

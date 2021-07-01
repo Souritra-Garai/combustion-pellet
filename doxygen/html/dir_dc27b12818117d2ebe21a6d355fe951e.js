@@ -1,15 +1,13 @@
 var dir_dc27b12818117d2ebe21a6d355fe951e =
 [
-    [ "GivensRotationMatrix.hpp", "_givens_rotation_matrix_8hpp.html", [
-      [ "GivensRotationMatrix", "class_givens_rotation_matrix.html", "class_givens_rotation_matrix" ]
-    ] ],
-    [ "Lower_Triangular_Matrix.hpp", "_lower___triangular___matrix_8hpp.html", [
-      [ "LowerTriangularMatrix", "class_lower_triangular_matrix.html", "class_lower_triangular_matrix" ]
+    [ "G_Matrix.hpp", "_g___matrix_8hpp_source.html", null ],
+    [ "Q_Matrix.hpp", "_q___matrix_8hpp.html", [
+      [ "QMatrix", "class_q_matrix.html", "class_q_matrix" ]
     ] ],
     [ "QR_Solver.hpp", "_q_r___solver_8hpp.html", [
       [ "QRSolver", "class_q_r_solver.html", "class_q_r_solver" ]
     ] ],
-    [ "Tridiagonal_Matrix.hpp", "_tridiagonal___matrix_8hpp.html", [
-      [ "TridiagonalMatrix", "class_tridiagonal_matrix.html", "class_tridiagonal_matrix" ]
+    [ "R_Matrix.hpp", "_r___matrix_8hpp.html", [
+      [ "RMatrix", "class_r_matrix.html", "class_r_matrix" ]
     ] ]
 ];

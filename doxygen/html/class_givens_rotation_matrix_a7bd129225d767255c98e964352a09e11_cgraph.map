@@ -1,0 +1,4 @@
+<map id="GivensRotationMatrix::GivensRotationMatrix" name="GivensRotationMatrix::GivensRotationMatrix">
+<area shape="rect" id="node1" title="Construct a new Givens Rotation Matrix to vanish the element at position &#160;of tridiagonal matrix." alt="" coords="5,5,177,47"/>
+<area shape="rect" id="node2" href="$class_tridiagonal_matrix.html#a4abb5f559b7ab6a8735d67ff2c1df477" title="Get the i,j th element of 2D Tridiagonal Matrix." alt="" coords="225,5,369,47"/>
+</map>

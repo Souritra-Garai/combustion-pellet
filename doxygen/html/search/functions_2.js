@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['loadr_45',['loadR',['../class_q_r_solver.html#aa7a83179886e554f27f6f66447036b51',1,'QRSolver']]],
-  ['lowertriangularmatrix_46',['LowerTriangularMatrix',['../class_lower_triangular_matrix.html#aa4a86a0a1621f2aeb50ed26c8f3dd947',1,'LowerTriangularMatrix']]]
+  ['indexofzeroelement_46',['indexOfZeroElement',['../class_q_matrix.html#ad151d0a8b7547e3e6ca8879fad4b6396',1,'QMatrix::indexOfZeroElement()'],['../class_r_matrix.html#aaac646e41ffc28cc1d39cbf4f7d75728',1,'RMatrix::indexOfZeroElement()']]]
 ];

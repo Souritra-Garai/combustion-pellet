@@ -1,8 +1,8 @@
 /**
- * @file Tridiagonal_Matrix.hpp
+ * @file R_Matrix.hpp
  * @author Souritra Gari (souritra.garai@iitgn.ac.in)
  * @brief This header file serves the definition of an implementation
- * for a Tridiagonal Matrix
+ * for a R Matrix that is used for QR Factorization of a tridiagonal matrix
  * @version 0.1
  * @date 2021-06-24
  * 
@@ -15,7 +15,7 @@
 
 /**
  * @brief Class to implement a memory efficient
- * 2D Tridiagonal square matrix
+ * \f$ N \times N \f$ R matrix
  * 
  * The class is specifically built for implementation in a
  * QR factorization algorithm for solving matrix equations of the form
@@ -24,33 +24,33 @@
  * and \f$ (i,i+1) \f$) to an upper tridiagonal matrix (a matrix with 
  * non zero entries only at indices \f$ (i,i) \f$, \f$ (i,i+1) \f$ and \f$ (i,i+2) \f$).
  * Thus only indices \f$ (i,i-1) \f$, \f$ (i,i) \f$, \f$ (i,i+1) \f$ and
- * \f$ (i,i+2) \f$ are accessible for this matrix
+ * \f$ (i,i+2) \f$ are stored in memory for this matrix
  */
 template<typename real_t>
-class TridiagonalMatrix
+class RMatrix
 {
     public :
 
         /**
-         * @brief Construct a new Tridiagonal Matrix
+         * @brief Construct a new R Matrix
          * 
          * @param n Size of main diagonal of the 
-         * \f$ N \times N \f$ 2D Tridiagonal Matrix
+         * \f$ N \times N \f$ R Matrix
          */
-        TridiagonalMatrix(unsigned int n);
+        RMatrix(unsigned int n);
         
         /**
-         * @brief Destroy the Tridiagonal Matrix
+         * @brief Destroy the R Matrix
          * 
          */
-        ~TridiagonalMatrix();
+        ~RMatrix();
 
         /**
-         * @brief Get the i,j th element of 2D Tridiagonal Matrix
+         * @brief Get the i,j th element of R Matrix
          * 
          * @param row_index Row index i
          * @param column_index Column index j
-         * @return Value of the i,j th element of a 2D Tridiagonal Matrix
+         * @return Value of the i,j th element of a R Matrix
          */
         real_t getElement(
             unsigned int row_index,
@@ -58,7 +58,7 @@ class TridiagonalMatrix
         );
 
         /**
-         * @brief Set the value of the i,j th element of 2D Tridiagonal Matrix
+         * @brief Set the value of the i,j th element of R Matrix
          * 
          * @param row_index Row index i
          * @param column_index Column index j
@@ -71,13 +71,13 @@ class TridiagonalMatrix
         );
 
         /**
-         * @brief Prints the Tridiagonal Matrix in form of a 2D array
+         * @brief Prints the R Matrix in form of a 2D array
          * 
          */
         void printMatrix();
 
         /**
-         * @brief Prints the Triadiagonal Matrix in form of a flattened array
+         * @brief Prints the R Matrix in form of a flattened array
          * 
          */
         void print();
@@ -87,25 +87,25 @@ class TridiagonalMatrix
         
         /**
          * @brief Flattened array of size 4 * N to represent
-         * 2D Tridiagonal matrix of size \f$N \times N\f$
+         * R matrix of size \f$N \times N\f$
          * 
          */
         real_t *array;
 
         /**
          * @brief Size of main diagonal of the 
-         * \f$N \times N\f$ 2D Tridiagonal Matrix
+         * \f$N \times N\f$ R Matrix
          * 
          */
         const unsigned int N;
 
         /**
-         * @brief Get the index of the i,j th element of Tridiagonal 2D Matrix
+         * @brief Get the index of the i,j th element of R Matrix in
+         * the flattened array
          * 
          * @param row_index Row index i
          * @param column_index Column index j
-         * @return Returns the index in the the flattened array used to
-         * represent the 2D Tridiagonal Matrix
+         * @return Returns the index in the the flattened array
          */
         unsigned int getIndex(
             unsigned int row_index,
@@ -114,12 +114,12 @@ class TridiagonalMatrix
 
         /**
          * @brief Checks if the row index i and the column index j
-         * belong to a zero element of the tridiagonal matrix
+         * belong to a zero element of the R matrix
          * 
          * @param row_index 
          * @param column_index 
-         * @return true if i,j are indices of zero elements in a Tridiagonal matrix
-         * @return false if i,j are indicess of non-zero elements in a Tridiagonal matrix
+         * @return true if i,j are indices of zero elements in a R matrix
+         * @return false if i,j are indicess of non-zero elements in a R matrix
          */
         bool indexOfZeroElement(
             unsigned int row_index,

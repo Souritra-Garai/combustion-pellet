@@ -1,4 +1,7 @@
-<map id="src/QR_Solver_Example.cpp" name="src/QR_Solver_Example.cpp">
-<area shape="rect" id="node1" title="Example cpp file to test out QR_Solver functions." alt="" coords="5,5,208,32"/>
-<area shape="rect" id="node2" href="$_q_r___solver_8hpp.html" title="This header file defines a class for solving 2D matrix equations of the form A.x = b (where A is an n..." alt="" coords="48,80,165,107"/>
+<map id="combustion&#45;packed&#45;pellet&#45;core&#45;shell&#45;particles/examples/QR_Solver_Example.cpp" name="combustion&#45;packed&#45;pellet&#45;core&#45;shell&#45;particles/examples/QR_Solver_Example.cpp">
+<area shape="rect" id="node1" title="Example cpp file to test out QR_Solver functions." alt="" coords="226,5,446,61"/>
+<area shape="rect" id="node2" href="$_q_r___solver_8hpp.html" title="This header file defines a class for solving 2D matrix equations of the form A.x = b (where A is an n..." alt="" coords="277,109,395,136"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,184,216,211"/>
+<area shape="rect" id="node4" title=" " alt="" coords="240,184,432,211"/>
+<area shape="rect" id="node5" title=" " alt="" coords="456,184,627,211"/>
 </map>

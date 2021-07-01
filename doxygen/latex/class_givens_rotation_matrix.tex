@@ -7,38 +7,33 @@ Class to implement a memory efficient Givens\textquotesingle{} Rotation Matrix t
 
 
 
-{\ttfamily \#include $<$Givens\+Rotation\+Matrix.\+hpp$>$}
+{\ttfamily \#include $<$Givens\+\_\+\+Rotation\+\_\+\+Matrix.\+hpp$>$}
 
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\hyperlink{class_givens_rotation_matrix_adf1a4b0f85e97b7e560f351770dba8e8}{Givens\+Rotation\+Matrix}} ()
-\begin{DoxyCompactList}\small\item\em Construct a new Givens Rotation Matrix. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{class_givens_rotation_matrix_a79b341601a025800835ba788b7037b31}{setup\+Rotation\+Matrix}} (\mbox{\hyperlink{class_tridiagonal_matrix}{Tridiagonal\+Matrix}}$<$ real\+\_\+t $>$ \&matrix, unsigned int index)
-\begin{DoxyCompactList}\small\item\em Sets up the Givens Rotation Matrix to vanish the element at position $ (i+1, i) $ of tridiagonal matrix. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{class_givens_rotation_matrix_aacece0f31994bec31183938862f0f6ba}{multiply}} (\mbox{\hyperlink{class_tridiagonal_matrix}{Tridiagonal\+Matrix}}$<$ real\+\_\+t $>$ \&matrix)
-\begin{DoxyCompactList}\small\item\em Multiplies the Givens Rotation Matrix to the Tridiagonal Matrix and updates the tridiagonal matrix in place. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{class_givens_rotation_matrix_a69b69823ad8e0213a502c18983fd98e0}\label{class_givens_rotation_matrix_a69b69823ad8e0213a502c18983fd98e0}} 
-void {\bfseries multiply} (\mbox{\hyperlink{class_lower_triangular_matrix}{Lower\+Triangular\+Matrix}}$<$ real\+\_\+t $>$ \&matrix)
-\end{DoxyCompactItemize}
+\mbox{\hyperlink{class_givens_rotation_matrix_a7bd129225d767255c98e964352a09e11}{Givens\+Rotation\+Matrix}} (\mbox{\hyperlink{class_tridiagonal_matrix}{Tridiagonal\+Matrix}}$<$ real\+\_\+t $>$ \&matrix, unsigned int index)
+\begin{DoxyCompactList}\small\item\em Construct a new Givens Rotation Matrix to vanish the element at position $ (i+1, i) $ of tridiagonal matrix. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_givens_rotation_matrix_a69b69823ad8e0213a502c18983fd98e0}{multiply}} (\mbox{\hyperlink{class_lower_triangular_matrix}{Lower\+Triangular\+Matrix}}$<$ real\+\_\+t $>$ \&matrix)
+\begin{DoxyCompactList}\small\item\em Multiplies the Givens Rotation Matrix to the Tridiagonal Matrix and updates the tridiagonal matrix in place. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{class_givens_rotation_matrix_a0a57f9bd3a1c47505e1552930af7eb04}\label{class_givens_rotation_matrix_a0a57f9bd3a1c47505e1552930af7eb04}} 
-real\+\_\+t {\bfseries element\+\_\+i\+\_\+i}
-\item 
-\mbox{\Hypertarget{class_givens_rotation_matrix_aa09f2b8e498ca6d1845382a5f2e6a0c9}\label{class_givens_rotation_matrix_aa09f2b8e498ca6d1845382a5f2e6a0c9}} 
-real\+\_\+t {\bfseries element\+\_\+i\+\_\+ip1}
-\item 
-\mbox{\Hypertarget{class_givens_rotation_matrix_af1318018bf52e6c8447ce517368411fb}\label{class_givens_rotation_matrix_af1318018bf52e6c8447ce517368411fb}} 
-real\+\_\+t {\bfseries element\+\_\+ip1\+\_\+i}
-\item 
-\mbox{\Hypertarget{class_givens_rotation_matrix_ad21fafe089f6689ed951f31e4b230a5f}\label{class_givens_rotation_matrix_ad21fafe089f6689ed951f31e4b230a5f}} 
-real\+\_\+t {\bfseries element\+\_\+ip1\+\_\+ip1}
-\item 
-\mbox{\Hypertarget{class_givens_rotation_matrix_a42cda959236e41236e8b75534dc8d1c9}\label{class_givens_rotation_matrix_a42cda959236e41236e8b75534dc8d1c9}} 
-unsigned int {\bfseries i}
-\end{DoxyCompactItemize}
+\mbox{\Hypertarget{class_givens_rotation_matrix_a0b23a476d22c0b1d8f6d0b73ace6c080}\label{class_givens_rotation_matrix_a0b23a476d22c0b1d8f6d0b73ace6c080}} 
+real\+\_\+t \mbox{\hyperlink{class_givens_rotation_matrix_a0b23a476d22c0b1d8f6d0b73ace6c080}{element\+\_\+k\+\_\+k}}
+\begin{DoxyCompactList}\small\item\em Element of Givens Rotation Matrix at position $ k, k $. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_givens_rotation_matrix_a18c8fc34c0c34f476761e42ce6dc2f7c}\label{class_givens_rotation_matrix_a18c8fc34c0c34f476761e42ce6dc2f7c}} 
+real\+\_\+t \mbox{\hyperlink{class_givens_rotation_matrix_a18c8fc34c0c34f476761e42ce6dc2f7c}{element\+\_\+k\+\_\+kp1}}
+\begin{DoxyCompactList}\small\item\em Element of Givens Rotation Matrix at position $ k, k+1 $. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_givens_rotation_matrix_a8379c67a5e9d29d3cd37c6f5f7b2e71d}\label{class_givens_rotation_matrix_a8379c67a5e9d29d3cd37c6f5f7b2e71d}} 
+real\+\_\+t \mbox{\hyperlink{class_givens_rotation_matrix_a8379c67a5e9d29d3cd37c6f5f7b2e71d}{element\+\_\+kp1\+\_\+k}}
+\begin{DoxyCompactList}\small\item\em Element of Givens Rotation Matrix at position $ k+1, k $. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_givens_rotation_matrix_a1cf31c947cc5eba073e339863f524585}\label{class_givens_rotation_matrix_a1cf31c947cc5eba073e339863f524585}} 
+real\+\_\+t \mbox{\hyperlink{class_givens_rotation_matrix_a1cf31c947cc5eba073e339863f524585}{element\+\_\+kp1\+\_\+kp1}}
+\begin{DoxyCompactList}\small\item\em Element of Givens Rotation Matrix at position $ k+1, k+1 $. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_givens_rotation_matrix_a494c5863ed9c2145f44aa4a4f20940ed}\label{class_givens_rotation_matrix_a494c5863ed9c2145f44aa4a4f20940ed}} 
+unsigned int \mbox{\hyperlink{class_givens_rotation_matrix_a494c5863ed9c2145f44aa4a4f20940ed}{k}}
+\begin{DoxyCompactList}\small\item\em Index k, where we want to vanish the element at position $ k+1, k $. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -48,9 +43,9 @@ class Givens\+Rotation\+Matrix$<$ real\+\_\+t $>$}
 Class to implement a memory efficient Givens\textquotesingle{} Rotation Matrix that can vanish the element $ a_{k+1, k} $ of a tridiagonal matrix $ A $. 
 
 A Givens rotation matrix is an orthogonal such that $ G_{N \times N} = [g_{ij}]_{N \times N} $ where ~\newline
- \begin{equation} g_{ij} = \begin{array}{cc} 1 & i = j \ne k, k+1 \\ \cos{\theta} & i = j = k, k+1 \\ \sin{\theta} & i = k, j = k+1 \\ -\sin{\theta} & i = k+1, j = k \\ 0 & \textbf{otherwise} \end{array} \end{equation}
+ \begin{equation} g_{ij} = \begin{array}{cc} 1 & i = j \ne k, k+1 \\ \cos{\theta} & i = j = k, k+1 \\ \sin{\theta} & i = k, j = k+1 \\ -\sin{\theta} & i = k+1, j = k \\ 0 & \text{otherwise} \end{array} \end{equation}
 
-When the Givens Rotation Matrix is multiplied to another matrix $ B_{N \times N} = [b_{i,j}]_{N \times N} $ \begin{equation} C_{N \times N} = G_{N \times N} \cdot B_{N \times N} \end{equation} \begin{equation} \Rightarrow c_{ij} = \sum_{l=1}^N g_{i,l} b_{l,j} \end{equation} \begin{equation} \Rightarrow c_{ij} = \begin{array}{cc} g_{k,k} b_{k,j} + g_{k,k+1} b_{k+1,j} & i=k \\ g_{k+1,k} b_{k+1,j} + g_{k+1,k+1} b_{k+1,j} & i=k+1 \\ b_{i,j} & \textbf{otherwise} \end{array} \end{equation}
+When the Givens Rotation Matrix is multiplied to another matrix $ B_{N \times N} = [b_{i,j}]_{N \times N} $ \begin{equation} C_{N \times N} = G_{N \times N} \cdot B_{N \times N} \end{equation} \begin{equation} \Rightarrow c_{ij} = \sum_{l=1}^N g_{i,l} b_{l,j} \end{equation} \begin{equation} \Rightarrow c_{ij} = \begin{array}{cc} g_{k,k} b_{k,j} + g_{k,k+1} b_{k+1,j} & i=k \\ g_{k+1,k} b_{k,j} + g_{k+1,k+1} b_{k+1,j} & i=k+1 \\ b_{i,j} & \text{otherwise} \end{array} \end{equation}
 
 
 \begin{DoxyTemplParams}{Template Parameters}
@@ -59,51 +54,21 @@ When the Givens Rotation Matrix is multiplied to another matrix $ B_{N \times N}
 \end{DoxyTemplParams}
 
 
-Definition at line 57 of file Givens\+Rotation\+Matrix.\+hpp.
+Definition at line 57 of file Givens\+\_\+\+Rotation\+\_\+\+Matrix.\+hpp.
 
 
 
 \doxysubsection{Constructor \& Destructor Documentation}
-\mbox{\Hypertarget{class_givens_rotation_matrix_adf1a4b0f85e97b7e560f351770dba8e8}\label{class_givens_rotation_matrix_adf1a4b0f85e97b7e560f351770dba8e8}} 
+\mbox{\Hypertarget{class_givens_rotation_matrix_a7bd129225d767255c98e964352a09e11}\label{class_givens_rotation_matrix_a7bd129225d767255c98e964352a09e11}} 
 \index{GivensRotationMatrix$<$ real\_t $>$@{GivensRotationMatrix$<$ real\_t $>$}!GivensRotationMatrix@{GivensRotationMatrix}}
 \index{GivensRotationMatrix@{GivensRotationMatrix}!GivensRotationMatrix$<$ real\_t $>$@{GivensRotationMatrix$<$ real\_t $>$}}
 \doxysubsubsection{\texorpdfstring{GivensRotationMatrix()}{GivensRotationMatrix()}}
 {\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
-\mbox{\hyperlink{class_givens_rotation_matrix}{Givens\+Rotation\+Matrix}}$<$ real\+\_\+t $>$\+::\mbox{\hyperlink{class_givens_rotation_matrix}{Givens\+Rotation\+Matrix}} (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+\mbox{\hyperlink{class_givens_rotation_matrix}{Givens\+Rotation\+Matrix}}$<$ real\+\_\+t $>$\+::\mbox{\hyperlink{class_givens_rotation_matrix}{Givens\+Rotation\+Matrix}} (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_tridiagonal_matrix}{Tridiagonal\+Matrix}}$<$ real\+\_\+t $>$ \&}]{matrix,  }\item[{unsigned int}]{index }\end{DoxyParamCaption})}
 
 
 
-Construct a new Givens Rotation Matrix. 
-
-
-
-\doxysubsection{Member Function Documentation}
-\mbox{\Hypertarget{class_givens_rotation_matrix_aacece0f31994bec31183938862f0f6ba}\label{class_givens_rotation_matrix_aacece0f31994bec31183938862f0f6ba}} 
-\index{GivensRotationMatrix$<$ real\_t $>$@{GivensRotationMatrix$<$ real\_t $>$}!multiply@{multiply}}
-\index{multiply@{multiply}!GivensRotationMatrix$<$ real\_t $>$@{GivensRotationMatrix$<$ real\_t $>$}}
-\doxysubsubsection{\texorpdfstring{multiply()}{multiply()}}
-{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
-void \mbox{\hyperlink{class_givens_rotation_matrix}{Givens\+Rotation\+Matrix}}$<$ real\+\_\+t $>$\+::multiply (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_tridiagonal_matrix}{Tridiagonal\+Matrix}}$<$ real\+\_\+t $>$ \&}]{matrix }\end{DoxyParamCaption})}
-
-
-
-Multiplies the Givens Rotation Matrix to the Tridiagonal Matrix and updates the tridiagonal matrix in place. 
-
-
-\begin{DoxyParams}{Parameters}
-{\em matrix} & Tridiagonal Matrix that will be converted into upper tridiagonal matrix after multiplication\\
-\hline
-\end{DoxyParams}
-For multiplication with a Tridiagonal matrix \mbox{\Hypertarget{class_givens_rotation_matrix_a79b341601a025800835ba788b7037b31}\label{class_givens_rotation_matrix_a79b341601a025800835ba788b7037b31}} 
-\index{GivensRotationMatrix$<$ real\_t $>$@{GivensRotationMatrix$<$ real\_t $>$}!setupRotationMatrix@{setupRotationMatrix}}
-\index{setupRotationMatrix@{setupRotationMatrix}!GivensRotationMatrix$<$ real\_t $>$@{GivensRotationMatrix$<$ real\_t $>$}}
-\doxysubsubsection{\texorpdfstring{setupRotationMatrix()}{setupRotationMatrix()}}
-{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
-void \mbox{\hyperlink{class_givens_rotation_matrix}{Givens\+Rotation\+Matrix}}$<$ real\+\_\+t $>$\+::setup\+Rotation\+Matrix (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_tridiagonal_matrix}{Tridiagonal\+Matrix}}$<$ real\+\_\+t $>$ \&}]{matrix,  }\item[{unsigned int}]{index }\end{DoxyParamCaption})}
-
-
-
-Sets up the Givens Rotation Matrix to vanish the element at position $ (i+1, i) $ of tridiagonal matrix. 
+Construct a new Givens Rotation Matrix to vanish the element at position $ (i+1, i) $ of tridiagonal matrix. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -114,6 +79,44 @@ Sets up the Givens Rotation Matrix to vanish the element at position $ (i+1, i) 
 \end{DoxyParams}
 
 
-The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+Definition at line 16 of file Givens\+\_\+\+Rotation\+\_\+\+Matrix.\+cpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_givens_rotation_matrix_a7bd129225d767255c98e964352a09e11_cgraph}
+\end{center}
+\end{figure}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_givens_rotation_matrix_a69b69823ad8e0213a502c18983fd98e0}\label{class_givens_rotation_matrix_a69b69823ad8e0213a502c18983fd98e0}} 
+\index{GivensRotationMatrix$<$ real\_t $>$@{GivensRotationMatrix$<$ real\_t $>$}!multiply@{multiply}}
+\index{multiply@{multiply}!GivensRotationMatrix$<$ real\_t $>$@{GivensRotationMatrix$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{multiply()}{multiply()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+void \mbox{\hyperlink{class_givens_rotation_matrix}{Givens\+Rotation\+Matrix}}$<$ real\+\_\+t $>$\+::multiply (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_lower_triangular_matrix}{Lower\+Triangular\+Matrix}}$<$ real\+\_\+t $>$ \&}]{matrix }\end{DoxyParamCaption})}
+
+
+
+Multiplies the Givens Rotation Matrix to the Tridiagonal Matrix and updates the tridiagonal matrix in place. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em matrix} & Tridiagonal Matrix that will be converted into upper tridiagonal matrix after multiplication\\
+\hline
+\end{DoxyParams}
+A Tridiagonal matrix can be represented as $ T_{N \times N} = [t_{i,j}]_{N \times N} $ where \begin{eqnarray*} t_{i,j} = 0, & \text{if} j < i-1 \text{or} j > i+1 } Thus, upon multiplying the tridiagonal matrix with the rotation matrix, we get matrix \f$ C_{N \times N} \f$ \f{equation}{ c_{ij} = \begin{array}{cc} g_{k,k} t_{k,j} + g_{k,k+1} t_{k+1,j} & i=k \\ g_{k+1,k} t_{k,j} + g_{k+1,k+1} t_{k+1,j} & i=k+1 \\ t_{i,j} & \text{otherwise} \end{array} \f{equation}{ \Rightarrow c_{ij} = \begin{array}{cc} g_{k,k} t_{k,k-1} & i=k & j=k-1 \\ g_{k,k} t_{k,k} + g_{k,k+1} t_{k+1,k} & i=k & j=k \\ g_{k,k} t_{k,k+1} + g_{k,k+1} t_{k+1,k+1} & i=k & j=k+1 \\ g_{k,k+1} t_{k+1,k+2} & i=k & j=k+2 \\ g_{k+1,k} t_{k,k-1} & i=k+1 & j=k-1 \\ g_{k+1,k} t_{k,k} + g_{k+1,k+1} t_{k+1,k} & i=k+1 & j=k \\ g_{k+1,k} t_{k,k+1} + g_{k+1,k+1} t_{k+1,k+1} & i=k+1 & j=k+1 \\ g_{k+1,k+1} t_{k+1,k+2} & i=k+1 & j=k+2 \\ t_{i,j} & \text{otherwise} \end{array} But as we iterate over k and multiply the corresponding rotation marix, the sub-diagonal (\f$ t_{i,i-1} \f$) becomes zero and the super-super-diagonal (\f$ t_{i,i+2} \f$) fills up with non-zero values. \f{equation}{ \Rightarrow c_{ij} = \begin{array}{cc} 0 & i=k & j=k-1 \\ g_{k,k} t_{k,k} + g_{k,k+1} t_{k+1,k} & i=k & j=k \\ g_{k,k} t_{k,k+1} + g_{k,k+1} t_{k+1,k+1} & i=k & j=k+1 \\ g_{k,k+1} t_{k+1,k+2} & i=k & j=k+2 \\ 0 & i=k+1 & j=k-1 \\ 0 & i=k+1 & j=k \\ g_{k+1,k} t_{k,k+1} + g_{k+1,k+1} t_{k+1,k+1} & i=k+1 & j=k+1 \\ g_{k+1,k+1} t_{k+1,k+2} & i=k+1 & j=k+2 \\ t_{i,j} & \text{otherwise} \end{array} */ void multiply(TridiagonalMatrix<real_t> &matrix); /** @brief Multiplies the Givens Rotation Matrix to the Lower Triangular Matrix and updates the Lower Triangular matrix in place @param matrix Lower Triangular Matrix passed as reference A Lower Triangular may be represented as matrix \f$ L_{N \times N} = [l_{i,j}]_{N \times N} \f$ where \f{eqnarray*}{ l_{i,j} = 0, & j > i \end{eqnarray*}
+
+Thus, when a rotation matrix is multiplied to a lower triangular matrix \begin{equation} C_{N \times N} = G_{N \times N} \cdot L_{N \times N} \end{equation} \begin{equation} \Rightarrow c_{ij} = \sum_{l=1}^N g_{i,l} b_{l,j} \end{equation} \begin{equation} \Rightarrow c_{ij} = \begin{array}{cc} g_{k,k} l_{k,j} + g_{k,k+1} l_{k+1,j} & i=k \\ g_{k+1,k} l_{k,j} + g_{k+1,k+1} l_{k+1,j} & i=k+1 \\ l_{i,j} & \text{otherwise} \end{array} \end{equation} 
+
+Definition at line 38 of file Givens\+\_\+\+Rotation\+\_\+\+Matrix.\+cpp.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-combustion-\/packed-\/pellet-\/core-\/shell-\/particles/include/\mbox{\hyperlink{_givens_rotation_matrix_8hpp}{Givens\+Rotation\+Matrix.\+hpp}}\end{DoxyCompactItemize}
+combustion-\/packed-\/pellet-\/core-\/shell-\/particles/include/Givens\+\_\+\+Rotation\+\_\+\+Matrix.\+hpp\item 
+combustion-\/packed-\/pellet-\/core-\/shell-\/particles/src/Givens\+\_\+\+Rotation\+\_\+\+Matrix.\+cpp\end{DoxyCompactItemize}

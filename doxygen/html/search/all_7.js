@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['qr_5fsolver_2ehpp_17',['QR_Solver.hpp',['../_q_r___solver_8hpp.html',1,'']]],
-  ['qr_5fsolver_5fexample_2ecpp_18',['QR_Solver_Example.cpp',['../_q_r___solver___example_8cpp.html',1,'']]],
-  ['qrsolver_19',['QRSolver',['../class_q_r_solver.html',1,'QRSolver'],['../class_q_r_solver.html#a188245fec368a438a24ad41803392416',1,'QRSolver::QRSolver()']]]
+  ['multiply_13',['multiply',['../class_g_matrix.html#a0b6ea1ffe1b389199580a579fcccb479',1,'GMatrix::multiply(RMatrix&lt; real_t &gt; &amp;R)'],['../class_g_matrix.html#aecbb22bc55e99718e3ba46882c20c4e9',1,'GMatrix::multiply(QMatrix&lt; real_t &gt; &amp;Q)'],['../class_q_matrix.html#afcacd910dadef84123c9e591a031c96b',1,'QMatrix::multiply()']]],
+  ['multiplygivensmatrixwithq_14',['multiplyGivensMatrixWithQ',['../class_q_r_solver.html#aeb2eaae17428e1385ac31a9633be6057',1,'QRSolver']]],
+  ['multiplygivensmatrixwithr_15',['multiplyGivensMatrixWithR',['../class_q_r_solver.html#a5058e09989d0bc0b65d5714e6a2422c0',1,'QRSolver']]],
+  ['multiplylastrow_16',['multiplyLastRow',['../class_g_matrix.html#ac536fee15cd66784ac5d3acdef5a1397',1,'GMatrix']]]
 ];

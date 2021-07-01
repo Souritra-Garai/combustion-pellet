@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['qrsolver_31',['QRSolver',['../class_q_r_solver.html',1,'']]]
+  ['rmatrix_36',['RMatrix',['../class_r_matrix.html',1,'']]]
 ];

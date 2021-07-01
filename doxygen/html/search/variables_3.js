@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['my_5fsolver_45',['my_solver',['../d9/d29/_q_r___solver___example_8cpp.html#a88efa76c4d7acd5c231eaf1c90f8b6ab',1,'QR_Solver_Example.cpp']]]
+  ['n_68',['N',['../class_q_matrix.html#adf43586991614ffe0fd9d1655f6ea75e',1,'QMatrix::N()'],['../class_r_matrix.html#aaad87ea546bc9603f3abe1e05111f70e',1,'RMatrix::N()']]]
 ];

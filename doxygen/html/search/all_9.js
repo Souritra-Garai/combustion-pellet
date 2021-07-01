@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['tridiagonal_5fmatrix_2ecpp_23',['Tridiagonal_Matrix.cpp',['../_tridiagonal___matrix_8cpp.html',1,'']]],
-  ['tridiagonal_5fmatrix_2ehpp_24',['Tridiagonal_Matrix.hpp',['../_tridiagonal___matrix_8hpp.html',1,'']]],
-  ['tridiagonalmatrix_25',['TridiagonalMatrix',['../class_tridiagonal_matrix.html',1,'TridiagonalMatrix&lt; real_t &gt;'],['../class_tridiagonal_matrix.html#ad7946b7ae04b40d7cbc808e71fd0e318',1,'TridiagonalMatrix::TridiagonalMatrix()']]]
+  ['print_18',['print',['../class_r_matrix.html#ab1fa283ebf30ca34b13008daf81a8d80',1,'RMatrix']]],
+  ['printmatrix_19',['printMatrix',['../class_q_matrix.html#ae53991d5d273a97d772815da9b7c06b4',1,'QMatrix::printMatrix()'],['../class_r_matrix.html#ae61a15222e502a2590e9dcf3839113fa',1,'RMatrix::printMatrix()']]]
 ];

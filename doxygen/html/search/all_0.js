@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['array_0',['array',['../class_lower_triangular_matrix.html#a12e6c591cae5543ac324d885d7cf80ea',1,'LowerTriangularMatrix::array()'],['../class_tridiagonal_matrix.html#aa6a0721b21494cf05025a8d6469fb6ac',1,'TridiagonalMatrix::array()']]]
+  ['array_0',['array',['../class_q_matrix.html#abcf439ffa1a3d20312e9a8b4effd208e',1,'QMatrix::array()'],['../class_r_matrix.html#a62e118e7f1e6406ee2d4c6520a9821c9',1,'RMatrix::array()']]]
 ];
