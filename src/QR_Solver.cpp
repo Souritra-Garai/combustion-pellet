@@ -1,127 +1,140 @@
+/**
+ * @file QR_Solver.cpp
+ * @author Souritra Garai (souritra,garai@iitgn.ac.in)
+ * @brief Implementation of QR_Solver class
+ * @version 0.1
+ * @date 2021-07-01
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
 #include "QR_Solver.hpp"
 
+#include <stdio.h>
 #include <bits/stdc++.h>
 
-QRSolver::QRSolver(unsigned int n) :
-    // Call base class TridiagonalMatrix constructor in
-    // mem initialization list 
-    TridiagonalMatrix(n)
+template<typename real_t>
+QRSolver<real_t>::QRSolver(
+    unsigned int n
+) : // Initialise the base classes and N in the mem initialisation list
+    Q(n),
+    R(n),
+    N(n)
 {
-    // Allocate memory for Q matrix
-    Q = new real_t[N*N];
+    b = new real_t[N];
 }
 
-QRSolver::~QRSolver()
+template<typename real_t>
+QRSolver<real_t>::~QRSolver()
 {
-    // Deallocate memory assigned to Q matrix
-    delete [] Q;
+    delete [] b;
 }
 
-void QRSolver::loadR()
-{
-    // TridiagonalMatrix holds the R Matrix
-    // Get the corresponding elements from the Tridiagonal Matrix
+template<typename real_t>
+void QRSolver<real_t>::setEquation(
+    unsigned int i,
+    real_t e_val,
+    real_t f_val,
+    real_t g_val,
+    real_t b_val
+) {
+    R.setElement(i, i-1, e_val);
+    R.setElement(i, i,   f_val);
+    R.setElement(i, i+1, g_val);
 
-    // Row k
-    // r_{k,k-1} is already zero
-    R_k_k       = getElement(k, k);
-    R_k_kp1     = getElement(k, k+1);
-    // Row k+1
-    R_kp1_k     = getElement(k+1, k);
-    R_kp1_kp1   = getElement(k+1, k+1);
-    R_kp1_kp2   = getElement(k+1, k+2);
+    b[i] = b_val;
 }
 
-void QRSolver::setupGivensRotationMatrix()
-{
-    // 
-    real_t hypotenuse = hypotl(R_k_k, R_kp1_k);
-        
-    real_t cos_theta = R_k_k    / hypotenuse;
-    real_t sin_theta = R_kp1_k  / hypotenuse;
+template<typename real_t>
+void QRSolver<real_t>::setEquationFirstRow(
+    real_t f_val,
+    real_t g_val,
+    real_t b_val
+) {
+    R.setElement(0, 0, f_val);
+    R.setElement(0, 1, g_val);
 
-    G_k_k    = cos_theta;
-    G_k_kp1  = sin_theta;
-
-    G_kp1_k      = - sin_theta;
-    G_kp1_kp1    =   cos_theta;
+    b[0] = b_val;
 }
 
-void QRSolver::multiplyGivensMatrixWithR()
-{
-    // A = [a_i_j]_nxn
-    // B = [b_i_j]_nxn
-    // C = [c_i_j]_nxn = A . B
-    // c_i_j = sum_over_l a_i_l * b_l_j
+template<typename real_t>
+void QRSolver<real_t>::setEquationLastRow(
+    real_t e_val,
+    real_t f_val,
+    real_t b_val
+) {
+    R.setElement(N-1, N-2, e_val);
+    R.setElement(N-1, N-1, f_val);
 
-    // a_i_j =  1,          i = j != k, k+1
-    //          a_k_k,      i = j = k
-    //          a_k_kp1,    i = k, j = k + 1
-    //          a_kp1_k,    i = k + 1, j = k
-    //          a_kp1_kp1,  i = j = k + 1
-
-    // c_i_j =  b_i_j,                                  i != k, k+1
-    //          a_k_k * b_k_j   + a_k_kp1 * b_kp1_j     i = k
-    //          a_kp1_k * b_k_j + a_kp1_kp1 * b_kp1_j   i = k + 1
-
-    // b_i_j =  b_i_im1,    j = i - 1
-    //          b_i_i,      j = i
-    //          b_i_ip1,    j = 1 + 1
-
-    // c_i_j =  b_i_im1,                                    j = i - 1, i != k, k+1
-    //          b_i_i,                                      j = i, i != k, k+1
-    //          b_i_ip1,                                    j = i + 1, i != k, k+1
-    //          a_k_k * b_k_km1                             i = k, j = k - 1
-    //          a_k_k * b_k_k + a_k_kp1 * b_kp1_k           i = j = k
-    //          a_k_k * b_k_kp1 + a_k_kp1 * b_kp1_kp1       i = k, j = k + 1
-    //          a_k_kp1 * b_kp1_kp2                         i = k, j = k + 2
-    //          a_kp1_k * b_k_km1                           i = k + 1, j = k - 1
-    //          a_kp1_k * b_k_k + a_kp1_kp1 * b_kp1_k       i = k + 1, j = k
-    //          a_kp1_k * b_k_kp1 + a_kp1_kp1 * b_kp1_kp1   i = j = k + 1
-    //          a_kp1_k * b_k_kp2 + a_kp1_kp1 * b_kp1_kp2   i = k + 1, j = k + 2
-
-    setElement(k,   k,      G_k_k * R_k_k   + G_k_kp1 * R_kp1_k);
-    setElement(k,   k+1,    G_k_k * R_k_kp1 + G_k_kp1 * R_kp1_kp1);
-    setElement(k,   k+2,    G_k_kp1 * R_kp1_kp2);
-
-    setElement(k+1, k+1,    G_kp1_k * R_k_kp1 + G_kp1_kp1 * R_kp1_kp1);
-    setElement(k+1, k+2,    G_kp1_kp1 * R_kp1_kp2);
+    b[N-1] = b_val;
 }
 
-void QRSolver::multiplyGivensMatrixWithQ()
+template<typename real_t>
+void QRSolver<real_t>::printMatrixEquation()
 {
-    #pragma omp parallel for
+    printf("Matrix Eqn A.x = b\n");
+    printf("\nA_{%d \\times %d}\n", N, N);
 
-        for (int j = 0; j < k+1; j++)
-        {
-            real_t Q_k_j    = Q[getIndex(k, j)];
-            real_t Q_kp1_j  = Q[getIndex(k+1, j)];
-            
-            Q[getIndex(k, j)]      = G_k_k * Q_k_j     + G_k_kp1 * Q_kp1_j;
-            Q[getIndex(k+1, j)]    = G_kp1_k * Q_k_j   + G_kp1_kp1 * Q_kp1_j;
-        }
+    R.printMatrix();
+
+    printf("\nb_{%d \\times 1}\n", N);
+
+    for (k = 0; k < N; k++) printf("%Lf\n", (long double) b[k]);
 }
 
-void QRSolver::QRfactorize(
-)
+template<typename real_t>
+void QRSolver<real_t>::QRFactorize()
 {
-    initQ();
+    Q.identity();
 
-    for (int k = 0; k < N-2; k++)
+    for (k = 0; k < N-2; k++)
     {
-        ;
+        GMatrix<real_t> G(R, k);
+
+        G.multiply(R);
+        G.multiply(Q);
     }
+
+    GMatrix<real_t> G(R, k);
+
+    G.multiplyLastRow(R);
+    G.multiply(Q);
 }
 
-
-
-void QRSolver::initQ()
+template<typename real_t>
+void QRSolver<real_t>::printQRMatrices()
 {
-    memset(Q, 0, sizeof(Q));
+    printf("A = Q.R\n");
 
-    #pragma omp parallel for
+    printf("\nQ^T_{%d \\times %d}\n", N, N);
+    Q.printMatrix();
 
-        for (int i = 0; i < N; i++)
-
-            Q[getIndex(i, i)] = 0.0;
+    printf("\nR_{%d \\times %d}\n", N, N);
+    R.printMatrix();
 }
+
+template<typename real_t>
+void QRSolver<real_t>::getSolution(
+    real_t *x
+) {
+    memset(x, 0, N * sizeof(real_t));
+
+    Q.multiply(b, x);
+
+    x[N-1] = x[N-1] / R.getElement(N-1, N-1);
+
+    x[N-2] = (x[N-2] - R.getElement(N-2, N-1) * x[N-1]) / R.getElement(N-2, N-2);
+
+    for (k = N-3; k > 0; k--)
+    {
+        x[k] = (x[k] - R.getElement(k, k+1) * x[k+1] - R.getElement(k, k+2) * x[k+2]) / R.getElement(k, k);
+    }
+
+    x[0] = (x[0] - R.getElement(0, 1) * x[1] - R.getElement(0, 2) * x[2]) / R.getElement(0, 0);
+
+}
+
+template class QRSolver<long double>;
+template class QRSolver<double>;
+template class QRSolver<float>;

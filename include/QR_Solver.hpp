@@ -16,103 +16,84 @@
 #ifndef __QR_SOLVER__
 #define __QR_SOLVER__
 
-#include "Lower_Triangular_Matrix.hpp"
-#include "GivensRotationMatrix.hpp"
-#include "Tridiagonal_Matrix.hpp"
+#include "Q_Matrix.hpp"
+#include "R_Matrix.hpp"
+#include "G_Matrix.hpp"
 
 /**
  * @brief Class to implement QR factorization algorithm
- * for solving matrix equations of the A.x = b
- * where A is a n x n tridiagonal matrix and
- * x and b are n x 1 vectors
+ * for solving matrix equations of the \f$ A \cdot x = b \f$
+ * where \f$ A \f$ is a \f$ N \times N \f$ tridiagonal matrix and
+ * \f$ x \f$ and \f$ b \f$ are \f$ N \times 1 \f$ vectors
+ * 
+ * @tparam real_t 
  */
 template <typename real_t>
-class QRSolver :
+class QRSolver
 {
     private :
 
-        // Orthogonal 2D Matrix Q in the A = Q.R factorization
-        // implemented as a pointer to linear array of size \f$ N^2 \f$
-        real_t *Q;
+        QMatrix<real_t> Q;
 
-        // Variables to temporary hold non-trivial elements of 
-        // Givens' rotation matrix used to vanish element \f$ r_{k+1,k} \f$
-        real_t G_k_k;       // Value of \f$ g_{k,k} \f$
-        real_t G_k_kp1;     // Value of \f$ g_{k,k+1} \f$
+        RMatrix<real_t> R;
 
-        real_t G_kp1_k;     // Value of \f$ g_{k+1,k} \f$
-        real_t G_kp1_kp1;   // Value of \f$ g_{k+1,k+1} \f$
+        /**
+         * @brief Number of rows \f$ N \f$ of the matrix \f$ A \f$
+         */
+        const unsigned int N;
 
-        // Variables to temporary hold values of R matrix for multiplying
-        // with Givens' rotation matrix used to vanish element \f$ r_{k+1,k} \f$
-        real_t R_k_k;       // Value of \f$ r_{k,k} \f$
-        real_t R_k_kp1;     // Value of \f$ r_{k,k+1} \f$
+        /**
+         * @brief One dimensional array to store \f$ N \times N \f$
+         * vector \f$ b \f$
+         */
+        real_t *b;
 
-        real_t R_kp1_k;     // Value of \f$ r_{k+1,k} \f$
-        real_t R_kp1_kp1;   // Value of \f$ r_{k+1,k+1} \f$
-        real_t R_kp1_kp2;   // Value of \f$ r_{k+1,k+2} \f$
-
-        // Iterator
+        /**
+         * @brief Iterator
+         */
         unsigned int k;
-
-        /**
-         * @brief Loads the values of R matrix that will change during multiplication
-         * with Givens' rotation matrix to temporary variables
-         */
-        void loadR();
-
-        /**
-         * @brief Setup Givens' rotation matrix
-         */
-        void setupGivensRotationMatrix();
-
-        /**
-         * @brief Multiplies the Givens rotation matrix with
-         * R matrix and updates its value
-         */
-        void multiplyGivensMatrixWithR();
-        
-        /**
-         * @brief Multiplies the Givens rotation matrix with
-         * R matrix and updates its value
-         */
-        void multiplyGivensMatrixWithQ();
-
-        /**
-         * @brief Get the index in a flattened linear array representation
-         * of a 2D matrix
-         * 
-         * @param row_index Row index i of the desired element
-         * @param column_index Column index j of the desired element
-         * @return Index in a linear array of the i,j element of
-         * a 2D matrix implemented using the linear array
-         */
-        inline unsigned int getIndex(
-            unsigned int row_index,
-            unsigned int column_index    
-        ) { 
-            // Row major implementation of Q matrix
-            return row_index * N + column_index;
-        }
        
     public :
 
         /**
          * @brief Construct a new QRSolver object
          * 
-         * @param N 
+         * @param N Size of the matrix equations
          */
         QRSolver(unsigned int N);
 
         /**
          * @brief Destroy the QRSolver object
-         * 
          */
         ~QRSolver();
 
-        void QRfactorize();
+        void setEquation(
+            unsigned int index,
+            real_t e,
+            real_t f,
+            real_t g,
+            real_t b
+        );
 
-        void initQ();
+        void setEquationFirstRow(
+            real_t f,
+            real_t g,
+            real_t b
+        );
+
+        void setEquationLastRow(
+            real_t e,
+            real_t f,
+            real_t b
+        );
+
+        void printMatrixEquation();
+
+        void QRFactorize();
+
+        void printQRMatrices();
+
+        void getSolution(real_t *x);
 };
 
 #endif
