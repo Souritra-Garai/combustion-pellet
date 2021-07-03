@@ -2,7 +2,7 @@
 \label{class_q_matrix}\index{QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}}
 
 
-Class to implement a memory efficient model of $ N \times $ Q Matrix.  
+Class to implement a memory efficient model of $ N \times N $ Q Matrix.  
 
 
 
@@ -24,9 +24,9 @@ void \mbox{\hyperlink{class_q_matrix_acd1eca818c55f95b51c9ba3eeac5719f}{set\+Ele
 \mbox{\Hypertarget{class_q_matrix_ae53991d5d273a97d772815da9b7c06b4}\label{class_q_matrix_ae53991d5d273a97d772815da9b7c06b4}} 
 void \mbox{\hyperlink{class_q_matrix_ae53991d5d273a97d772815da9b7c06b4}{print\+Matrix}} ()
 \begin{DoxyCompactList}\small\item\em Prints the Q Matrix in form of a 2D array. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{class_q_matrix_ada0e7a1ea1805b0d9e9b259bae48ee83}\label{class_q_matrix_ada0e7a1ea1805b0d9e9b259bae48ee83}} 
-void \mbox{\hyperlink{class_q_matrix_ada0e7a1ea1805b0d9e9b259bae48ee83}{fill\+Zeroes}} ()
-\begin{DoxyCompactList}\small\item\em Fills zeros in all the position of the Q Matrix. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_q_matrix_a9381df253f547d689d09648416170b02}\label{class_q_matrix_a9381df253f547d689d09648416170b02}} 
+void \mbox{\hyperlink{class_q_matrix_a9381df253f547d689d09648416170b02}{identity}} ()
+\begin{DoxyCompactList}\small\item\em Makes Q matrix an identity matrix. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{class_q_matrix_afcacd910dadef84123c9e591a031c96b}{multiply}} (real\+\_\+t $\ast$b, real\+\_\+t $\ast$x)
 \begin{DoxyCompactList}\small\item\em Multiplies the Q matrix with the column vector b and stores the result in the column vector x. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Private Member Functions}
@@ -51,7 +51,7 @@ const unsigned int \mbox{\hyperlink{class_q_matrix_adf43586991614ffe0fd9d1655f6e
 \subsubsection*{template$<$typename real\+\_\+t$>$\newline
 class Q\+Matrix$<$ real\+\_\+t $>$}
 
-Class to implement a memory efficient model of $ N \times $ Q Matrix. 
+Class to implement a memory efficient model of $ N \times N $ Q Matrix. 
 
 
 \begin{DoxyTemplParams}{Template Parameters}
@@ -185,7 +185,7 @@ Multiplies the Q matrix with the column vector b and stores the result in the co
 \end{DoxyParams}
 
 
-Definition at line 127 of file Q\+\_\+\+Matrix.\+cpp.
+Definition at line 132 of file Q\+\_\+\+Matrix.\+cpp.
 
 \mbox{\Hypertarget{class_q_matrix_acd1eca818c55f95b51c9ba3eeac5719f}\label{class_q_matrix_acd1eca818c55f95b51c9ba3eeac5719f}} 
 \index{QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}!setElement@{setElement}}
@@ -215,5 +215,5 @@ Definition at line 80 of file Q\+\_\+\+Matrix.\+cpp.
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-include/\mbox{\hyperlink{_q___matrix_8hpp}{Q\+\_\+\+Matrix.\+hpp}}\item 
-src/Q\+\_\+\+Matrix.\+cpp\end{DoxyCompactItemize}
+include/qrsolver/\mbox{\hyperlink{_q___matrix_8hpp}{Q\+\_\+\+Matrix.\+hpp}}\item 
+src/qrsolver/\mbox{\hyperlink{_q___matrix_8cpp}{Q\+\_\+\+Matrix.\+cpp}}\end{DoxyCompactItemize}

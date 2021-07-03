@@ -1,55 +1,73 @@
-\indexentry{GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}|hyperpage}{7}
-\indexentry{GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}!GMatrix@{GMatrix}|hyperpage}{8}
-\indexentry{GMatrix@{GMatrix}!GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}|hyperpage}{8}
-\indexentry{GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}!multiply@{multiply}|hyperpage}{9}
-\indexentry{multiply@{multiply}!GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}|hyperpage}{9}
-\indexentry{GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}!multiply@{multiply}|hyperpage}{9}
-\indexentry{multiply@{multiply}!GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}|hyperpage}{9}
-\indexentry{GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}!multiplyLastRow@{multiplyLastRow}|hyperpage}{10}
-\indexentry{multiplyLastRow@{multiplyLastRow}!GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}|hyperpage}{10}
-\indexentry{QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}|hyperpage}{11}
-\indexentry{QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}!QMatrix@{QMatrix}|hyperpage}{12}
-\indexentry{QMatrix@{QMatrix}!QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}|hyperpage}{12}
-\indexentry{QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}!getElement@{getElement}|hyperpage}{12}
-\indexentry{getElement@{getElement}!QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}|hyperpage}{12}
-\indexentry{QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}!getIndex@{getIndex}|hyperpage}{13}
-\indexentry{getIndex@{getIndex}!QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}|hyperpage}{13}
-\indexentry{QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}!indexOfZeroElement@{indexOfZeroElement}|hyperpage}{13}
-\indexentry{indexOfZeroElement@{indexOfZeroElement}!QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}|hyperpage}{13}
-\indexentry{QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}!multiply@{multiply}|hyperpage}{13}
-\indexentry{multiply@{multiply}!QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}|hyperpage}{13}
-\indexentry{QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}!setElement@{setElement}|hyperpage}{14}
-\indexentry{setElement@{setElement}!QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}|hyperpage}{14}
-\indexentry{QRSolver$<$ real\_t $>$@{QRSolver$<$ real\_t $>$}|hyperpage}{14}
-\indexentry{QRSolver$<$ real\_t $>$@{QRSolver$<$ real\_t $>$}!QRSolver@{QRSolver}|hyperpage}{15}
-\indexentry{QRSolver@{QRSolver}!QRSolver$<$ real\_t $>$@{QRSolver$<$ real\_t $>$}|hyperpage}{15}
-\indexentry{QRSolver$<$ real\_t $>$@{QRSolver$<$ real\_t $>$}!````~QRSolver@{$\sim$QRSolver}|hyperpage}{17}
-\indexentry{````~QRSolver@{$\sim$QRSolver}!QRSolver$<$ real\_t $>$@{QRSolver$<$ real\_t $>$}|hyperpage}{17}
-\indexentry{QRSolver$<$ real\_t $>$@{QRSolver$<$ real\_t $>$}!getIndex@{getIndex}|hyperpage}{17}
-\indexentry{getIndex@{getIndex}!QRSolver$<$ real\_t $>$@{QRSolver$<$ real\_t $>$}|hyperpage}{17}
-\indexentry{RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}|hyperpage}{18}
-\indexentry{RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}!RMatrix@{RMatrix}|hyperpage}{19}
-\indexentry{RMatrix@{RMatrix}!RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}|hyperpage}{19}
-\indexentry{RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}!````~RMatrix@{$\sim$RMatrix}|hyperpage}{19}
-\indexentry{````~RMatrix@{$\sim$RMatrix}!RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}|hyperpage}{19}
-\indexentry{RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}!getElement@{getElement}|hyperpage}{19}
-\indexentry{getElement@{getElement}!RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}|hyperpage}{19}
-\indexentry{RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}!getIndex@{getIndex}|hyperpage}{20}
-\indexentry{getIndex@{getIndex}!RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}|hyperpage}{20}
-\indexentry{RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}!indexOfZeroElement@{indexOfZeroElement}|hyperpage}{20}
-\indexentry{indexOfZeroElement@{indexOfZeroElement}!RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}|hyperpage}{20}
-\indexentry{RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}!print@{print}|hyperpage}{20}
-\indexentry{print@{print}!RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}|hyperpage}{20}
-\indexentry{RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}!printMatrix@{printMatrix}|hyperpage}{21}
-\indexentry{printMatrix@{printMatrix}!RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}|hyperpage}{21}
-\indexentry{RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}!setElement@{setElement}|hyperpage}{21}
-\indexentry{setElement@{setElement}!RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}|hyperpage}{21}
-\indexentry{RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}!array@{array}|hyperpage}{21}
-\indexentry{array@{array}!RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}|hyperpage}{21}
-\indexentry{RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}!N@{N}|hyperpage}{22}
-\indexentry{N@{N}!RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}|hyperpage}{22}
-\indexentry{examples/QR\_Solver\_Example.cpp@{examples/QR\_Solver\_Example.cpp}|hyperpage}{23}
-\indexentry{include/Q\_Matrix.hpp@{include/Q\_Matrix.hpp}|hyperpage}{24}
-\indexentry{include/QR\_Solver.hpp@{include/QR\_Solver.hpp}|hyperpage}{25}
-\indexentry{include/R\_Matrix.hpp@{include/R\_Matrix.hpp}|hyperpage}{26}
-\indexentry{src/R\_Matrix.cpp@{src/R\_Matrix.cpp}|hyperpage}{26}
+\indexentry{QR\_Factorization.py@{QR\_Factorization.py}|hyperpage}{9}
+\indexentry{GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}|hyperpage}{11}
+\indexentry{GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}!GMatrix@{GMatrix}|hyperpage}{12}
+\indexentry{GMatrix@{GMatrix}!GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}|hyperpage}{12}
+\indexentry{GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}!multiply@{multiply}|hyperpage}{13}
+\indexentry{multiply@{multiply}!GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}|hyperpage}{13}
+\indexentry{GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}!multiply@{multiply}|hyperpage}{13}
+\indexentry{multiply@{multiply}!GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}|hyperpage}{13}
+\indexentry{GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}!multiplyLastRow@{multiplyLastRow}|hyperpage}{14}
+\indexentry{multiplyLastRow@{multiplyLastRow}!GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}|hyperpage}{14}
+\indexentry{QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}|hyperpage}{15}
+\indexentry{QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}!QMatrix@{QMatrix}|hyperpage}{16}
+\indexentry{QMatrix@{QMatrix}!QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}|hyperpage}{16}
+\indexentry{QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}!getElement@{getElement}|hyperpage}{16}
+\indexentry{getElement@{getElement}!QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}|hyperpage}{16}
+\indexentry{QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}!getIndex@{getIndex}|hyperpage}{17}
+\indexentry{getIndex@{getIndex}!QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}|hyperpage}{17}
+\indexentry{QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}!indexOfZeroElement@{indexOfZeroElement}|hyperpage}{17}
+\indexentry{indexOfZeroElement@{indexOfZeroElement}!QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}|hyperpage}{17}
+\indexentry{QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}!multiply@{multiply}|hyperpage}{17}
+\indexentry{multiply@{multiply}!QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}|hyperpage}{17}
+\indexentry{QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}!setElement@{setElement}|hyperpage}{18}
+\indexentry{setElement@{setElement}!QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}|hyperpage}{18}
+\indexentry{QRSolver$<$ real\_t $>$@{QRSolver$<$ real\_t $>$}|hyperpage}{18}
+\indexentry{QRSolver$<$ real\_t $>$@{QRSolver$<$ real\_t $>$}!QRSolver@{QRSolver}|hyperpage}{20}
+\indexentry{QRSolver@{QRSolver}!QRSolver$<$ real\_t $>$@{QRSolver$<$ real\_t $>$}|hyperpage}{20}
+\indexentry{QRSolver$<$ real\_t $>$@{QRSolver$<$ real\_t $>$}!getSolution@{getSolution}|hyperpage}{20}
+\indexentry{getSolution@{getSolution}!QRSolver$<$ real\_t $>$@{QRSolver$<$ real\_t $>$}|hyperpage}{20}
+\indexentry{QRSolver$<$ real\_t $>$@{QRSolver$<$ real\_t $>$}!printMatrixEquation@{printMatrixEquation}|hyperpage}{20}
+\indexentry{printMatrixEquation@{printMatrixEquation}!QRSolver$<$ real\_t $>$@{QRSolver$<$ real\_t $>$}|hyperpage}{20}
+\indexentry{QRSolver$<$ real\_t $>$@{QRSolver$<$ real\_t $>$}!printQRMatrices@{printQRMatrices}|hyperpage}{21}
+\indexentry{printQRMatrices@{printQRMatrices}!QRSolver$<$ real\_t $>$@{QRSolver$<$ real\_t $>$}|hyperpage}{21}
+\indexentry{QRSolver$<$ real\_t $>$@{QRSolver$<$ real\_t $>$}!setEquation@{setEquation}|hyperpage}{21}
+\indexentry{setEquation@{setEquation}!QRSolver$<$ real\_t $>$@{QRSolver$<$ real\_t $>$}|hyperpage}{21}
+\indexentry{QRSolver$<$ real\_t $>$@{QRSolver$<$ real\_t $>$}!setEquationFirstRow@{setEquationFirstRow}|hyperpage}{21}
+\indexentry{setEquationFirstRow@{setEquationFirstRow}!QRSolver$<$ real\_t $>$@{QRSolver$<$ real\_t $>$}|hyperpage}{21}
+\indexentry{QRSolver$<$ real\_t $>$@{QRSolver$<$ real\_t $>$}!setEquationLastRow@{setEquationLastRow}|hyperpage}{22}
+\indexentry{setEquationLastRow@{setEquationLastRow}!QRSolver$<$ real\_t $>$@{QRSolver$<$ real\_t $>$}|hyperpage}{22}
+\indexentry{QRSolver$<$ real\_t $>$@{QRSolver$<$ real\_t $>$}!R@{R}|hyperpage}{22}
+\indexentry{R@{R}!QRSolver$<$ real\_t $>$@{QRSolver$<$ real\_t $>$}|hyperpage}{22}
+\indexentry{RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}|hyperpage}{23}
+\indexentry{RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}!RMatrix@{RMatrix}|hyperpage}{24}
+\indexentry{RMatrix@{RMatrix}!RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}|hyperpage}{24}
+\indexentry{RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}!````~RMatrix@{$\sim$RMatrix}|hyperpage}{24}
+\indexentry{````~RMatrix@{$\sim$RMatrix}!RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}|hyperpage}{24}
+\indexentry{RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}!getElement@{getElement}|hyperpage}{24}
+\indexentry{getElement@{getElement}!RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}|hyperpage}{24}
+\indexentry{RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}!getIndex@{getIndex}|hyperpage}{25}
+\indexentry{getIndex@{getIndex}!RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}|hyperpage}{25}
+\indexentry{RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}!indexOfZeroElement@{indexOfZeroElement}|hyperpage}{25}
+\indexentry{indexOfZeroElement@{indexOfZeroElement}!RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}|hyperpage}{25}
+\indexentry{RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}!print@{print}|hyperpage}{25}
+\indexentry{print@{print}!RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}|hyperpage}{25}
+\indexentry{RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}!printMatrix@{printMatrix}|hyperpage}{26}
+\indexentry{printMatrix@{printMatrix}!RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}|hyperpage}{26}
+\indexentry{RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}!setElement@{setElement}|hyperpage}{26}
+\indexentry{setElement@{setElement}!RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}|hyperpage}{26}
+\indexentry{RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}!array@{array}|hyperpage}{26}
+\indexentry{array@{array}!RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}|hyperpage}{26}
+\indexentry{RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}!N@{N}|hyperpage}{27}
+\indexentry{N@{N}!RMatrix$<$ real\_t $>$@{RMatrix$<$ real\_t $>$}|hyperpage}{27}
+\indexentry{examples/qrsolver/G\_Matrix\_Example.cpp@{examples/qrsolver/G\_Matrix\_Example.cpp}|hyperpage}{29}
+\indexentry{examples/qrsolver/Q\_Matrix\_Example.cpp@{examples/qrsolver/Q\_Matrix\_Example.cpp}|hyperpage}{30}
+\indexentry{examples/qrsolver/QR\_Solver\_Example.cpp@{examples/qrsolver/QR\_Solver\_Example.cpp}|hyperpage}{31}
+\indexentry{examples/qrsolver/R\_Matrix\_Example.cpp@{examples/qrsolver/R\_Matrix\_Example.cpp}|hyperpage}{32}
+\indexentry{include/qrsolver/G\_Matrix.hpp@{include/qrsolver/G\_Matrix.hpp}|hyperpage}{33}
+\indexentry{include/qrsolver/Q\_Matrix.hpp@{include/qrsolver/Q\_Matrix.hpp}|hyperpage}{34}
+\indexentry{include/qrsolver/QR\_Solver.hpp@{include/qrsolver/QR\_Solver.hpp}|hyperpage}{35}
+\indexentry{include/qrsolver/R\_Matrix.hpp@{include/qrsolver/R\_Matrix.hpp}|hyperpage}{36}
+\indexentry{src/qrsolver/G\_Matrix.cpp@{src/qrsolver/G\_Matrix.cpp}|hyperpage}{36}
+\indexentry{src/qrsolver/Q\_Matrix.cpp@{src/qrsolver/Q\_Matrix.cpp}|hyperpage}{37}
+\indexentry{src/qrsolver/QR\_Solver.cpp@{src/qrsolver/QR\_Solver.cpp}|hyperpage}{38}
+\indexentry{src/qrsolver/R\_Matrix.cpp@{src/qrsolver/R\_Matrix.cpp}|hyperpage}{39}

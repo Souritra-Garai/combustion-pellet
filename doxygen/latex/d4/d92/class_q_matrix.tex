@@ -1,0 +1,219 @@
+\hypertarget{class_q_matrix}{}\doxysection{Q\+Matrix$<$ real\+\_\+t $>$ Class Template Reference}
+\label{class_q_matrix}\index{QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}}
+
+
+Class to implement a memory efficient model of $ N \times N $ Q Matrix.  
+
+
+
+
+{\ttfamily \#include $<$Q\+\_\+\+Matrix.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_q_matrix_a07ab791c68539f01b8a58deac7ca99e8}{Q\+Matrix}} (unsigned int n)
+\begin{DoxyCompactList}\small\item\em Construct a new Q Matrix. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_q_matrix_aede193f0a5340c8cd719e1c208016be9}\label{class_q_matrix_aede193f0a5340c8cd719e1c208016be9}} 
+\mbox{\hyperlink{class_q_matrix_aede193f0a5340c8cd719e1c208016be9}{$\sim$\+Q\+Matrix}} ()
+\begin{DoxyCompactList}\small\item\em Destroy the Q Matrix object. \end{DoxyCompactList}\item 
+real\+\_\+t \mbox{\hyperlink{class_q_matrix_ae16db630e70a423ace4d8fe13279063d}{get\+Element}} (unsigned int row\+\_\+index, unsigned int column\+\_\+index)
+\begin{DoxyCompactList}\small\item\em Get the i,j th element of the Q Matrix. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_q_matrix_acd1eca818c55f95b51c9ba3eeac5719f}{set\+Element}} (unsigned int row\+\_\+index, unsigned int column\+\_\+index, real\+\_\+t value)
+\begin{DoxyCompactList}\small\item\em Set the value of the i,j th element of the Q Matrix. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_q_matrix_ae53991d5d273a97d772815da9b7c06b4}\label{class_q_matrix_ae53991d5d273a97d772815da9b7c06b4}} 
+void \mbox{\hyperlink{class_q_matrix_ae53991d5d273a97d772815da9b7c06b4}{print\+Matrix}} ()
+\begin{DoxyCompactList}\small\item\em Prints the Q Matrix in form of a 2D array. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_q_matrix_a9381df253f547d689d09648416170b02}\label{class_q_matrix_a9381df253f547d689d09648416170b02}} 
+void \mbox{\hyperlink{class_q_matrix_a9381df253f547d689d09648416170b02}{identity}} ()
+\begin{DoxyCompactList}\small\item\em Makes Q matrix an identity matrix. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_q_matrix_afcacd910dadef84123c9e591a031c96b}{multiply}} (real\+\_\+t $\ast$b, real\+\_\+t $\ast$x)
+\begin{DoxyCompactList}\small\item\em Multiplies the Q matrix with the column vector b and stores the result in the column vector x. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+unsigned int \mbox{\hyperlink{class_q_matrix_a6ca24bf6565627e955ce240fe90ee0fd}{get\+Index}} (unsigned int row\+\_\+index, unsigned int column\+\_\+index)
+\begin{DoxyCompactList}\small\item\em Get the index of i,j th element of Q matrix in the flattened array. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_q_matrix_ad151d0a8b7547e3e6ca8879fad4b6396}{index\+Of\+Zero\+Element}} (unsigned int row\+\_\+index, unsigned int column\+\_\+index)
+\begin{DoxyCompactList}\small\item\em Checks if the row index i and the column index j belong to a zero element of the Q matrix. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_q_matrix_abcf439ffa1a3d20312e9a8b4effd208e}\label{class_q_matrix_abcf439ffa1a3d20312e9a8b4effd208e}} 
+real\+\_\+t $\ast$ \mbox{\hyperlink{class_q_matrix_abcf439ffa1a3d20312e9a8b4effd208e}{array}}
+\begin{DoxyCompactList}\small\item\em One dimensional array to store only non zero elements of the lower triangular matrix. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_q_matrix_adf43586991614ffe0fd9d1655f6ea75e}\label{class_q_matrix_adf43586991614ffe0fd9d1655f6ea75e}} 
+const unsigned int \mbox{\hyperlink{class_q_matrix_adf43586991614ffe0fd9d1655f6ea75e}{N}}
+\begin{DoxyCompactList}\small\item\em Number of rows in a $ N \times N $ square matrix. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename real\+\_\+t$>$\newline
+class Q\+Matrix$<$ real\+\_\+t $>$}
+
+Class to implement a memory efficient model of $ N \times N $ Q Matrix. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em real\+\_\+t} & float, double or long double data types to represent real numbers \\
+\hline
+\end{DoxyTemplParams}
+
+
+Definition at line 25 of file Q\+\_\+\+Matrix.\+hpp.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_q_matrix_a07ab791c68539f01b8a58deac7ca99e8}\label{class_q_matrix_a07ab791c68539f01b8a58deac7ca99e8}} 
+\index{QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}!QMatrix@{QMatrix}}
+\index{QMatrix@{QMatrix}!QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{QMatrix()}{QMatrix()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+\mbox{\hyperlink{class_q_matrix}{Q\+Matrix}}$<$ real\+\_\+t $>$\+::\mbox{\hyperlink{class_q_matrix}{Q\+Matrix}} (\begin{DoxyParamCaption}\item[{unsigned int}]{n }\end{DoxyParamCaption})}
+
+
+
+Construct a new Q Matrix. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em n} & Number of rows in the $ N \times N $ square matrix \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 21 of file Q\+\_\+\+Matrix.\+cpp.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_q_matrix_ae16db630e70a423ace4d8fe13279063d}\label{class_q_matrix_ae16db630e70a423ace4d8fe13279063d}} 
+\index{QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}!getElement@{getElement}}
+\index{getElement@{getElement}!QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{getElement()}{getElement()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+real\+\_\+t \mbox{\hyperlink{class_q_matrix}{Q\+Matrix}}$<$ real\+\_\+t $>$\+::get\+Element (\begin{DoxyParamCaption}\item[{unsigned int}]{row\+\_\+index,  }\item[{unsigned int}]{column\+\_\+index }\end{DoxyParamCaption})}
+
+
+
+Get the i,j th element of the Q Matrix. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em row\+\_\+index} & Row index i \\
+\hline
+{\em column\+\_\+index} & Column index j \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Value of the i,j th element of the Q Matrix 
+\end{DoxyReturn}
+
+
+Definition at line 62 of file Q\+\_\+\+Matrix.\+cpp.
+
+\mbox{\Hypertarget{class_q_matrix_a6ca24bf6565627e955ce240fe90ee0fd}\label{class_q_matrix_a6ca24bf6565627e955ce240fe90ee0fd}} 
+\index{QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}!getIndex@{getIndex}}
+\index{getIndex@{getIndex}!QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{getIndex()}{getIndex()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+unsigned int \mbox{\hyperlink{class_q_matrix}{Q\+Matrix}}$<$ real\+\_\+t $>$\+::get\+Index (\begin{DoxyParamCaption}\item[{unsigned int}]{row\+\_\+index,  }\item[{unsigned int}]{column\+\_\+index }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the index of i,j th element of Q matrix in the flattened array. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em row\+\_\+index} & Row index i \\
+\hline
+{\em column\+\_\+index} & Column index j \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Index of the i,j th element in the flattened array 
+\end{DoxyReturn}
+
+
+Definition at line 41 of file Q\+\_\+\+Matrix.\+cpp.
+
+\mbox{\Hypertarget{class_q_matrix_ad151d0a8b7547e3e6ca8879fad4b6396}\label{class_q_matrix_ad151d0a8b7547e3e6ca8879fad4b6396}} 
+\index{QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}!indexOfZeroElement@{indexOfZeroElement}}
+\index{indexOfZeroElement@{indexOfZeroElement}!QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{indexOfZeroElement()}{indexOfZeroElement()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+bool \mbox{\hyperlink{class_q_matrix}{Q\+Matrix}}$<$ real\+\_\+t $>$\+::index\+Of\+Zero\+Element (\begin{DoxyParamCaption}\item[{unsigned int}]{row\+\_\+index,  }\item[{unsigned int}]{column\+\_\+index }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Checks if the row index i and the column index j belong to a zero element of the Q matrix. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em row\+\_\+index} & Row index i \\
+\hline
+{\em column\+\_\+index} & Column index j \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if i,j are indices of zero elements in a Q matrix 
+
+false if i,j are indices of non zero elements in a Q matrix 
+\end{DoxyReturn}
+
+
+Definition at line 52 of file Q\+\_\+\+Matrix.\+cpp.
+
+\mbox{\Hypertarget{class_q_matrix_afcacd910dadef84123c9e591a031c96b}\label{class_q_matrix_afcacd910dadef84123c9e591a031c96b}} 
+\index{QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}!multiply@{multiply}}
+\index{multiply@{multiply}!QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{multiply()}{multiply()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+void \mbox{\hyperlink{class_q_matrix}{Q\+Matrix}}$<$ real\+\_\+t $>$\+::multiply (\begin{DoxyParamCaption}\item[{real\+\_\+t $\ast$}]{b,  }\item[{real\+\_\+t $\ast$}]{x }\end{DoxyParamCaption})}
+
+
+
+Multiplies the Q matrix with the column vector b and stores the result in the column vector x. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em b} & \\
+\hline
+{\em x} & \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 132 of file Q\+\_\+\+Matrix.\+cpp.
+
+\mbox{\Hypertarget{class_q_matrix_acd1eca818c55f95b51c9ba3eeac5719f}\label{class_q_matrix_acd1eca818c55f95b51c9ba3eeac5719f}} 
+\index{QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}!setElement@{setElement}}
+\index{setElement@{setElement}!QMatrix$<$ real\_t $>$@{QMatrix$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{setElement()}{setElement()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+void \mbox{\hyperlink{class_q_matrix}{Q\+Matrix}}$<$ real\+\_\+t $>$\+::set\+Element (\begin{DoxyParamCaption}\item[{unsigned int}]{row\+\_\+index,  }\item[{unsigned int}]{column\+\_\+index,  }\item[{real\+\_\+t}]{value }\end{DoxyParamCaption})}
+
+
+
+Set the value of the i,j th element of the Q Matrix. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em row\+\_\+index} & Row index i \\
+\hline
+{\em column\+\_\+index} & Column index j \\
+\hline
+{\em value} & Value to be set at the i,j th position \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 80 of file Q\+\_\+\+Matrix.\+cpp.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{_q___matrix_8hpp}{Q\+\_\+\+Matrix.\+hpp}}\item 
+src/\mbox{\hyperlink{_q___matrix_8cpp}{Q\+\_\+\+Matrix.\+cpp}}\end{DoxyCompactItemize}

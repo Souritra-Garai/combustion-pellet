@@ -2,7 +2,7 @@
 \label{class_g_matrix}\index{GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}}
 
 
-Class to implement a memory efficient Givens\textquotesingle{} Rotation Matrix that can vanish the element $ a_{k+1, k} $ of a R matrix $ A $.  
+Class to implement a memory efficient Givens\textquotesingle{} Rotation Matrix that can vanish the element $ a_{k+1, k} $ of a matrix $ A $.  
 
 
 
@@ -44,7 +44,7 @@ unsigned int \mbox{\hyperlink{class_g_matrix_aba063636265b37f2ba653a106f2486ea}{
 \subsubsection*{template$<$typename real\+\_\+t$>$\newline
 class G\+Matrix$<$ real\+\_\+t $>$}
 
-Class to implement a memory efficient Givens\textquotesingle{} Rotation Matrix that can vanish the element $ a_{k+1, k} $ of a R matrix $ A $. 
+Class to implement a memory efficient Givens\textquotesingle{} Rotation Matrix that can vanish the element $ a_{k+1, k} $ of a matrix $ A $. 
 
 A Givens rotation matrix is an orthogonal such that $ G_{N \times N} = [g_{ij}]_{N \times N} $ where ~\newline
  \begin{equation} g_{ij} = \begin{array}{ll} 1 & i = j \ne k, k+1 \\ \cos{\theta} & i = j = k, k+1 \\ \sin{\theta} & i = k, j = k+1 \\ -\sin{\theta} & i = k+1, j = k \\ 0 & \text{otherwise} \end{array} \end{equation}
@@ -108,7 +108,7 @@ Q matrix may be represented as $ Q_{N \times N} = [q_{i,j}]_{N \times N} $ where
 
 Thus, when a rotation matrix is multiplied to Q matrix \begin{equation} C_{N \times N} = G_{N \times N} \cdot Q_{N \times N} \end{equation} \begin{equation} \Rightarrow c_{ij} = \sum_{l=1}^N g_{i,l} q_{l,j} \end{equation} \begin{equation} \Rightarrow c_{ij} = \begin{array}{ll} g_{k,k} l_{k,j} + g_{k,k+1} q_{k+1,j} & i=k \\ g_{k+1,k} l_{k,j} + g_{k+1,k+1} q_{k+1,j} & i=k+1 \\ q_{i,j} & \text{otherwise} \end{array} \end{equation} 
 
-Definition at line 40 of file G\+\_\+\+Matrix.\+cpp.
+Definition at line 49 of file G\+\_\+\+Matrix.\+cpp.
 
 \mbox{\Hypertarget{class_g_matrix_a0b6ea1ffe1b389199580a579fcccb479}\label{class_g_matrix_a0b6ea1ffe1b389199580a579fcccb479}} 
 \index{GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}!multiply@{multiply}}
@@ -138,7 +138,7 @@ But as we iterate over k and multiply the corresponding rotation marix, the sub-
 
 \begin{equation} \Rightarrow c_{ij} = \begin{array}{lll} 0 & i=k & j=k-1 \\ g_{k,k} r_{k,k} + g_{k,k+1} r_{k+1,k} & i=k & j=k \\ g_{k,k} r_{k,k+1} + g_{k,k+1} r_{k+1,k+1} & i=k & j=k+1 \\ g_{k,k+1} r_{k+1,k+2} & i=k & j=k+2 \\ 0 & i=k+1 & j=k-1 \\ 0 & i=k+1 & j=k \\ g_{k+1,k} r_{k,k+1} + g_{k+1,k+1} r_{k+1,k+1} & i=k+1 & j=k+1 \\ g_{k+1,k+1} r_{k+1,k+2} & i=k+1 & j=k+2 \\ r_{i,j} & \text{otherwise} \end{array} \end{equation} 
 
-Definition at line 63 of file G\+\_\+\+Matrix.\+cpp.
+Definition at line 80 of file G\+\_\+\+Matrix.\+cpp.
 
 \mbox{\Hypertarget{class_g_matrix_ac536fee15cd66784ac5d3acdef5a1397}\label{class_g_matrix_ac536fee15cd66784ac5d3acdef5a1397}} 
 \index{GMatrix$<$ real\_t $>$@{GMatrix$<$ real\_t $>$}!multiplyLastRow@{multiplyLastRow}}
@@ -160,7 +160,11 @@ Multiplies the Givens rotation matrix to the R matrix where the rotation matrix 
 \end{DoxyParams}
 
 
+Definition at line 135 of file G\+\_\+\+Matrix.\+cpp.
+
+
+
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-include/G\+\_\+\+Matrix.\+hpp\item 
-src/G\+\_\+\+Matrix.\+cpp\end{DoxyCompactItemize}
+include/qrsolver/\mbox{\hyperlink{_g___matrix_8hpp}{G\+\_\+\+Matrix.\+hpp}}\item 
+src/qrsolver/\mbox{\hyperlink{_g___matrix_8cpp}{G\+\_\+\+Matrix.\+cpp}}\end{DoxyCompactItemize}

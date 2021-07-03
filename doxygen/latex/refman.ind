@@ -1,103 +1,127 @@
 \begin{theindex}
 
-  \item {$\sim$QRSolver}
-    \subitem {QRSolver$<$ real\_t $>$}, \hyperpage{17}
   \item {$\sim$RMatrix}
-    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{19}
+    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{24}
 
   \indexspace
 
   \item {array}
-    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{21}
+    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{26}
 
   \indexspace
 
-  \item {examples/QR\_Solver\_Example.cpp}, \hyperpage{23}
+  \item {examples/qrsolver/G\_Matrix\_Example.cpp}, \hyperpage{29}
+  \item {examples/qrsolver/Q\_Matrix\_Example.cpp}, \hyperpage{30}
+  \item {examples/qrsolver/QR\_Solver\_Example.cpp}, \hyperpage{31}
+  \item {examples/qrsolver/R\_Matrix\_Example.cpp}, \hyperpage{32}
 
   \indexspace
 
   \item {getElement}
-    \subitem {QMatrix$<$ real\_t $>$}, \hyperpage{12}
-    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{19}
+    \subitem {QMatrix$<$ real\_t $>$}, \hyperpage{16}
+    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{24}
   \item {getIndex}
-    \subitem {QMatrix$<$ real\_t $>$}, \hyperpage{13}
-    \subitem {QRSolver$<$ real\_t $>$}, \hyperpage{17}
-    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{20}
+    \subitem {QMatrix$<$ real\_t $>$}, \hyperpage{17}
+    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{25}
+  \item {getSolution}
+    \subitem {QRSolver$<$ real\_t $>$}, \hyperpage{20}
   \item {GMatrix}
-    \subitem {GMatrix$<$ real\_t $>$}, \hyperpage{8}
-  \item {GMatrix$<$ real\_t $>$}, \hyperpage{7}
-    \subitem {GMatrix}, \hyperpage{8}
-    \subitem {multiply}, \hyperpage{9}
-    \subitem {multiplyLastRow}, \hyperpage{10}
+    \subitem {GMatrix$<$ real\_t $>$}, \hyperpage{12}
+  \item {GMatrix$<$ real\_t $>$}, \hyperpage{11}
+    \subitem {GMatrix}, \hyperpage{12}
+    \subitem {multiply}, \hyperpage{13}
+    \subitem {multiplyLastRow}, \hyperpage{14}
 
   \indexspace
 
-  \item {include/Q\_Matrix.hpp}, \hyperpage{24}
-  \item {include/QR\_Solver.hpp}, \hyperpage{25}
-  \item {include/R\_Matrix.hpp}, \hyperpage{26}
+  \item {include/qrsolver/G\_Matrix.hpp}, \hyperpage{33}
+  \item {include/qrsolver/Q\_Matrix.hpp}, \hyperpage{34}
+  \item {include/qrsolver/QR\_Solver.hpp}, \hyperpage{35}
+  \item {include/qrsolver/R\_Matrix.hpp}, \hyperpage{36}
   \item {indexOfZeroElement}
-    \subitem {QMatrix$<$ real\_t $>$}, \hyperpage{13}
-    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{20}
+    \subitem {QMatrix$<$ real\_t $>$}, \hyperpage{17}
+    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{25}
 
   \indexspace
 
   \item {multiply}
-    \subitem {GMatrix$<$ real\_t $>$}, \hyperpage{9}
-    \subitem {QMatrix$<$ real\_t $>$}, \hyperpage{13}
+    \subitem {GMatrix$<$ real\_t $>$}, \hyperpage{13}
+    \subitem {QMatrix$<$ real\_t $>$}, \hyperpage{17}
   \item {multiplyLastRow}
-    \subitem {GMatrix$<$ real\_t $>$}, \hyperpage{10}
+    \subitem {GMatrix$<$ real\_t $>$}, \hyperpage{14}
 
   \indexspace
 
   \item {N}
-    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{22}
+    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{27}
 
   \indexspace
 
   \item {print}
-    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{20}
+    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{25}
   \item {printMatrix}
-    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{21}
+    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{26}
+  \item {printMatrixEquation}
+    \subitem {QRSolver$<$ real\_t $>$}, \hyperpage{20}
+  \item {printQRMatrices}
+    \subitem {QRSolver$<$ real\_t $>$}, \hyperpage{21}
 
   \indexspace
 
   \item {QMatrix}
-    \subitem {QMatrix$<$ real\_t $>$}, \hyperpage{12}
-  \item {QMatrix$<$ real\_t $>$}, \hyperpage{11}
-    \subitem {getElement}, \hyperpage{12}
-    \subitem {getIndex}, \hyperpage{13}
-    \subitem {indexOfZeroElement}, \hyperpage{13}
-    \subitem {multiply}, \hyperpage{13}
-    \subitem {QMatrix}, \hyperpage{12}
-    \subitem {setElement}, \hyperpage{14}
-  \item {QRSolver}
-    \subitem {QRSolver$<$ real\_t $>$}, \hyperpage{15}
-  \item {QRSolver$<$ real\_t $>$}, \hyperpage{14}
-    \subitem {$\sim$QRSolver}, \hyperpage{17}
+    \subitem {QMatrix$<$ real\_t $>$}, \hyperpage{16}
+  \item {QMatrix$<$ real\_t $>$}, \hyperpage{15}
+    \subitem {getElement}, \hyperpage{16}
     \subitem {getIndex}, \hyperpage{17}
-    \subitem {QRSolver}, \hyperpage{15}
+    \subitem {indexOfZeroElement}, \hyperpage{17}
+    \subitem {multiply}, \hyperpage{17}
+    \subitem {QMatrix}, \hyperpage{16}
+    \subitem {setElement}, \hyperpage{18}
+  \item {QR\_Factorization.py}, \hyperpage{9}
+  \item {QRSolver}
+    \subitem {QRSolver$<$ real\_t $>$}, \hyperpage{20}
+  \item {QRSolver$<$ real\_t $>$}, \hyperpage{18}
+    \subitem {getSolution}, \hyperpage{20}
+    \subitem {printMatrixEquation}, \hyperpage{20}
+    \subitem {printQRMatrices}, \hyperpage{21}
+    \subitem {QRSolver}, \hyperpage{20}
+    \subitem {R}, \hyperpage{22}
+    \subitem {setEquation}, \hyperpage{21}
+    \subitem {setEquationFirstRow}, \hyperpage{21}
+    \subitem {setEquationLastRow}, \hyperpage{22}
 
   \indexspace
 
+  \item {R}
+    \subitem {QRSolver$<$ real\_t $>$}, \hyperpage{22}
   \item {RMatrix}
-    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{19}
-  \item {RMatrix$<$ real\_t $>$}, \hyperpage{18}
-    \subitem {$\sim$RMatrix}, \hyperpage{19}
-    \subitem {array}, \hyperpage{21}
-    \subitem {getElement}, \hyperpage{19}
-    \subitem {getIndex}, \hyperpage{20}
-    \subitem {indexOfZeroElement}, \hyperpage{20}
-    \subitem {N}, \hyperpage{22}
-    \subitem {print}, \hyperpage{20}
-    \subitem {printMatrix}, \hyperpage{21}
-    \subitem {RMatrix}, \hyperpage{19}
-    \subitem {setElement}, \hyperpage{21}
+    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{24}
+  \item {RMatrix$<$ real\_t $>$}, \hyperpage{23}
+    \subitem {$\sim$RMatrix}, \hyperpage{24}
+    \subitem {array}, \hyperpage{26}
+    \subitem {getElement}, \hyperpage{24}
+    \subitem {getIndex}, \hyperpage{25}
+    \subitem {indexOfZeroElement}, \hyperpage{25}
+    \subitem {N}, \hyperpage{27}
+    \subitem {print}, \hyperpage{25}
+    \subitem {printMatrix}, \hyperpage{26}
+    \subitem {RMatrix}, \hyperpage{24}
+    \subitem {setElement}, \hyperpage{26}
 
   \indexspace
 
   \item {setElement}
-    \subitem {QMatrix$<$ real\_t $>$}, \hyperpage{14}
-    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{21}
-  \item {src/R\_Matrix.cpp}, \hyperpage{26}
+    \subitem {QMatrix$<$ real\_t $>$}, \hyperpage{18}
+    \subitem {RMatrix$<$ real\_t $>$}, \hyperpage{26}
+  \item {setEquation}
+    \subitem {QRSolver$<$ real\_t $>$}, \hyperpage{21}
+  \item {setEquationFirstRow}
+    \subitem {QRSolver$<$ real\_t $>$}, \hyperpage{21}
+  \item {setEquationLastRow}
+    \subitem {QRSolver$<$ real\_t $>$}, \hyperpage{22}
+  \item {src/qrsolver/G\_Matrix.cpp}, \hyperpage{36}
+  \item {src/qrsolver/Q\_Matrix.cpp}, \hyperpage{37}
+  \item {src/qrsolver/QR\_Solver.cpp}, \hyperpage{38}
+  \item {src/qrsolver/R\_Matrix.cpp}, \hyperpage{39}
 
 \end{theindex}
