@@ -10,12 +10,16 @@ INCDIR := include
 BINDIR := bin
 EXMDIR := examples
 BUILDDIR := build
+
 QRSDIR := qrsolver
+TRPDIR := thermo-physical-properties
 
 # Finding all source and object files
 SRCEXT := cpp
 SOURCES := $(shell find $(SRCDIR) $(LIBDIR) -type f -name *.$(SRCEXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
+
+QRSOBJS := $(BUILDDIR)/$(QRSDIR)/QR_Solver.o $(BUILDDIR)/$(QRSDIR)/G_Matrix.o $(BUILDDIR)/$(QRSDIR)/Q_Matrix.o $(BUILDDIR)/$(QRSDIR)/R_Matrix.o
 
 # Flags required for compiler
 CFLAGS := -fopenmp
@@ -31,6 +35,19 @@ $(BUILDDIR)/main.o : $(SRCDIR)/main.cpp
 	@mkdir -p $(BUILDDIR);
 	@echo "\nCompiling main...";
 	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/main.cpp -o $(BUILDDIR)/main.o
+
+# ----------------------------------------------------------------------------------------------------------
+# Building Examples
+
+Substance_Example : $(BUILDDIR)/$(TRPDIR)/Substance_Example.o
+	@mkdir -p $(BINDIR)/$(TRPDIR);
+	@echo "\nLinking Substance_Example...";
+	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(TRPDIR)/Substance_Example.o -o $(BINDIR)/$(TRPDIR)/Substance_Example
+
+$(BUILDDIR)/$(TRPDIR)/Substance_Example.o : $(EXMDIR)/$(TRPDIR)/Substance_Example.cpp $(INCDIR)/$(TRPDIR)/Substance.hpp
+	@mkdir -p $(BUILDDIR)/$(TRPDIR);
+	@echo "\nCompiling Substance_Example...";
+	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(TRPDIR)/Substance_Example.cpp -o $(BUILDDIR)/$(TRPDIR)/Substance_Example.o
 
 # ----------------------------------------------------------------------------------------------------------
 # Building QR Factorization solver
@@ -89,10 +106,10 @@ $(BUILDDIR)/$(QRSDIR)/G_Matrix_Example.o : $(EXMDIR)/$(QRSDIR)/G_Matrix_Example.
 	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(QRSDIR)/G_Matrix_Example.cpp -o $(BUILDDIR)/$(QRSDIR)/G_Matrix_Example.o
 
 # Builds the example for QR Solver
-QR_Solver_Example : $(BUILDDIR)/$(QRSDIR)/QR_Solver_Example.o $(BUILDDIR)/$(QRSDIR)/QR_Solver.o $(BUILDDIR)/$(QRSDIR)/G_Matrix.o $(BUILDDIR)/$(QRSDIR)/Q_Matrix.o $(BUILDDIR)/$(QRSDIR)/R_Matrix.o
+QR_Solver_Example : $(BUILDDIR)/$(QRSDIR)/QR_Solver_Example.o $(QRSOBJS)
 	@mkdir -p $(BINDIR)/$(QRSDIR);
 	@echo "\nBuilding QR_Solver_Example...";
-	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(QRSDIR)/QR_Solver_Example.o $(BUILDDIR)/$(QRSDIR)/QR_Solver.o $(BUILDDIR)/$(QRSDIR)/G_Matrix.o $(BUILDDIR)/$(QRSDIR)/Q_Matrix.o $(BUILDDIR)/$(QRSDIR)/R_Matrix.o -o $(BINDIR)/$(QRSDIR)/QR_Solver_Example
+	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(QRSDIR)/QR_Solver_Example.o $(QRSOBJS) -o $(BINDIR)/$(QRSDIR)/QR_Solver_Example
 
 $(BUILDDIR)/$(QRSDIR)/QR_Solver_Example.o : $(EXMDIR)/$(QRSDIR)/QR_Solver_Example.cpp $(INCDIR)/$(QRSDIR)/QR_Solver.hpp
 	@mkdir -p $(BUILDDIR)/$(QRSDIR);
