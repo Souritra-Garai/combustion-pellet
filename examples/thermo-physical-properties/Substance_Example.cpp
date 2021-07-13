@@ -17,6 +17,8 @@ Substance<float> Water(1000, 4180, 18E-3, 10);
 
 int main(int argc, char const *argv[])
 {
+    std::cout << "Enthalpy\t:\t" << Water.getEnthalpy(373) << "\tJ/kg" << std::endl;
+    
     Water.printProperties(std::cout);
     
     return 0;
