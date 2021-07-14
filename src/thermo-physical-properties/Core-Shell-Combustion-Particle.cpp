@@ -17,35 +17,19 @@ template<typename real_t>
 CoreShellCombustionParticle<real_t>::CoreShellCombustionParticle(
     Substance<real_t> core_material,
     Substance<real_t> shell_material,
-    Substance<real_t> product_material
+    Substance<real_t> product_material,
+    real_t D_o,
+    real_t E_a
 ) : reactant_A(core_material),
     reactant_B(shell_material),
-    product(product_material)
+    product_AB(product_material)
 {
-    setMassFractionCoreMaterial(0.5);
-    setMassFractionShellMaterial(0.5);
-    setMassFractionProductMaterial(0);
-}
+    mass_fraction_reactant_A = 0.5;
+    mass_fraction_reactant_B = 0.5;
+    mass_fraction_product_AB = 0;
 
-template<typename real_t>
-void CoreShellCombustionParticle<real_t>::setMassFractionCoreMaterial(
-    real_t mass_fraction
-) {
-    mass_fraction_reactant_A = mass_fraction;
-}
-
-template<typename real_t>
-void CoreShellCombustionParticle<real_t>::setMassFractionShellMaterial(
-    real_t mass_fraction
-) {
-    mass_fraction_reactant_B = mass_fraction;
-}
-
-template<typename real_t>
-void CoreShellCombustionParticle<real_t>::setMassFractionProductMaterial(
-    real_t mass_fraction
-) {
-    mass_fraction_product = mass_fraction;
+    pre_exponential_factor = D_o;
+    activation_energy = E_a;
 }
 
 template<typename real_t>
@@ -58,30 +42,30 @@ void CoreShellCombustionParticle<real_t>::printProperties(
     
     output_stream << "Heat Conductivity\t:\t" << getHeatConductivity() << "\tW/m" << std::endl;
     
-    output_stream << "Core Material\nMass Fraction\t:\t" << getMassFractionCoreMaterial() << std::endl;
+    output_stream << "Core Material\nMass Fraction\t:\t" << mass_fraction_reactant_A << std::endl;
 
     reactant_A.printProperties(output_stream);
 
-    output_stream << "Shell Material\nMass Fraction\t:\t" << getMassFractionShellMaterial() << std::endl;
+    output_stream << "Shell Material\nMass Fraction\t:\t" << mass_fraction_reactant_B << std::endl;
 
     reactant_B.printProperties(output_stream);
 
-    output_stream << "Product Material\nMass Fraction\t:\t" << getMassFractionProductMaterial() << std::endl;
+    output_stream << "Product Material\nMass Fraction\t:\t" << mass_fraction_product_AB << std::endl;
 
-    product.printProperties(output_stream);
+    product_AB.printProperties(output_stream);
 }
 
 template<typename real_t>
 real_t CoreShellCombustionParticle<real_t>::getDensity()
 {
     return 
-        getMassFractionCoreMaterial()    * reactant_A.getDensity() +
-        getMassFractionShellMaterial()   * reactant_B.getDensity() +
-        getMassFractionProductMaterial() * product.getDensity();
+        mass_fraction_reactant_A * reactant_A.getDensity() +
+        mass_fraction_reactant_B * reactant_B.getDensity() +
+        mass_fraction_product_AB * product_AB.getDensity();
 }
 
 template<typename real_t>
-real_t CoreShellCombustionParticle<real_t>::getDiffusionConstant(real_t T)
+real_t CoreShellCombustionParticle<real_t>::getDiffusivity(real_t T)
 {
     return pre_exponential_factor * exp(- activation_energy / (8.314 * T));
 }
@@ -90,45 +74,27 @@ template<typename real_t>
 real_t CoreShellCombustionParticle<real_t>::getHeatCapacity()
 {
     return 
-        getMassFractionCoreMaterial()    * reactant_A.getHeatCapacity() +
-        getMassFractionShellMaterial()   * reactant_B.getHeatCapacity() +
-        getMassFractionProductMaterial() * product.getHeatCapacity(); 
+        mass_fraction_reactant_A * reactant_A.getHeatCapacity() +
+        mass_fraction_reactant_B * reactant_B.getHeatCapacity() +
+        mass_fraction_product_AB * product_AB.getHeatCapacity(); 
 }
 
 template<typename real_t>
 real_t CoreShellCombustionParticle<real_t>::getHeatConductivity()
 {
     return
-        getMassFractionCoreMaterial()    * reactant_A.getHeatConductivity() +
-        getMassFractionShellMaterial()   * reactant_B.getHeatConductivity() +
-        getMassFractionProductMaterial() * product.getHeatConductivity();
-}
-
-template<typename real_t>
-real_t CoreShellCombustionParticle<real_t>::getMassFractionCoreMaterial()
-{
-    return mass_fraction_reactant_A;
-}
-
-template<typename real_t>
-real_t CoreShellCombustionParticle<real_t>::getMassFractionProductMaterial()
-{
-    return mass_fraction_product;
-}
-
-template<typename real_t>
-real_t CoreShellCombustionParticle<real_t>::getMassFractionShellMaterial()
-{
-    return mass_fraction_reactant_B;
+        mass_fraction_reactant_A * reactant_A.getHeatConductivity() +
+        mass_fraction_reactant_B * reactant_B.getHeatConductivity() +
+        mass_fraction_product_AB * product_AB.getHeatConductivity();
 }
 
 template<typename real_t>
 real_t CoreShellCombustionParticle<real_t>::getEnthalpy(real_t T)
 {
     return
-        getMassFractionCoreMaterial()    * reactant_A.getEnthalpy(T) +
-        getMassFractionShellMaterial()   * reactant_B.getEnthalpy(T) +
-        getMassFractionProductMaterial() * product.getEnthalpy(T);
+        mass_fraction_reactant_A * reactant_A.getEnthalpy(T) +
+        mass_fraction_reactant_B * reactant_B.getEnthalpy(T) +
+        mass_fraction_product_AB * product_AB.getEnthalpy(T);
 }
 
 template class CoreShellCombustionParticle<float>;

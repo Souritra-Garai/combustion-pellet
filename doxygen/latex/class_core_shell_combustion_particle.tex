@@ -1,0 +1,232 @@
+\hypertarget{class_core_shell_combustion_particle}{}\doxysection{Core\+Shell\+Combustion\+Particle$<$ real\+\_\+t $>$ Class Template Reference}
+\label{class_core_shell_combustion_particle}\index{CoreShellCombustionParticle$<$ real\_t $>$@{CoreShellCombustionParticle$<$ real\_t $>$}}
+
+
+Class to represent Core-\/\+Shell Particle with functions estimate thermodynamic properties for varying composition and temperature.  
+
+
+
+
+{\ttfamily \#include $<$Core-\/\+Shell-\/\+Combustion-\/\+Particle.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_core_shell_combustion_particle_a4684dca323514ccfa6731fb2986528f2}{Core\+Shell\+Combustion\+Particle}} (\mbox{\hyperlink{class_substance}{Substance}}$<$ real\+\_\+t $>$ core\+\_\+material, \mbox{\hyperlink{class_substance}{Substance}}$<$ real\+\_\+t $>$ shell\+\_\+material, \mbox{\hyperlink{class_substance}{Substance}}$<$ real\+\_\+t $>$ product\+\_\+material, real\+\_\+t diffusivity\+\_\+pre\+\_\+exponential\+\_\+factor, real\+\_\+t diffusivity\+\_\+activation\+\_\+energy)
+\begin{DoxyCompactList}\small\item\em Construct a new Core Shell Combustion Particle object. \end{DoxyCompactList}\item 
+real\+\_\+t \mbox{\hyperlink{class_core_shell_combustion_particle_a216013c37f5447713f30c9ae24054c2f}{get\+Density}} ()
+\begin{DoxyCompactList}\small\item\em Get the Density of the Particle. \end{DoxyCompactList}\item 
+real\+\_\+t \mbox{\hyperlink{class_core_shell_combustion_particle_a004051c0eb5de733d35e1cef3a2901ec}{get\+Heat\+Capacity}} ()
+\begin{DoxyCompactList}\small\item\em Get the Heat Capacity of the particle. \end{DoxyCompactList}\item 
+real\+\_\+t \mbox{\hyperlink{class_core_shell_combustion_particle_ab482284fe54f42d14785acdcb7816f8b}{get\+Heat\+Conductivity}} ()
+\begin{DoxyCompactList}\small\item\em Get the Heat Conductivity of the particle. \end{DoxyCompactList}\item 
+real\+\_\+t \mbox{\hyperlink{class_core_shell_combustion_particle_a747df7d86c4a265f73e36b77cc012775}{get\+Enthalpy}} (real\+\_\+t temperature)
+\begin{DoxyCompactList}\small\item\em Get the Enthalpy of the particle. \end{DoxyCompactList}\item 
+real\+\_\+t \mbox{\hyperlink{class_core_shell_combustion_particle_adae95aa4dce77d99ecd31bc65566446d}{get\+Diffusivity}} (real\+\_\+t temperature)
+\begin{DoxyCompactList}\small\item\em Get the Diffusivity for the interdiffusion of the core and shell material. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_core_shell_combustion_particle_a043a0b016c5f637a96634363566f080a}{print\+Properties}} (std\+::ostream \&output\+\_\+stream)
+\begin{DoxyCompactList}\small\item\em Print the properties of the substance to the given stream. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_core_shell_combustion_particle_a716b22489280ecd7c89ad02c02a45fc1}\label{class_core_shell_combustion_particle_a716b22489280ecd7c89ad02c02a45fc1}} 
+real\+\_\+t \mbox{\hyperlink{class_core_shell_combustion_particle_a716b22489280ecd7c89ad02c02a45fc1}{mass\+\_\+fraction\+\_\+reactant\+\_\+A}}
+\begin{DoxyCompactList}\small\item\em Mass fraction of reactant A. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_core_shell_combustion_particle_a34e303a0f1cd2865821e8ff5a6479870}\label{class_core_shell_combustion_particle_a34e303a0f1cd2865821e8ff5a6479870}} 
+real\+\_\+t \mbox{\hyperlink{class_core_shell_combustion_particle_a34e303a0f1cd2865821e8ff5a6479870}{mass\+\_\+fraction\+\_\+reactant\+\_\+B}}
+\begin{DoxyCompactList}\small\item\em Mass fraction of reactant B. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_core_shell_combustion_particle_acbb3c2405e58a840bcb695e714e56737}\label{class_core_shell_combustion_particle_acbb3c2405e58a840bcb695e714e56737}} 
+real\+\_\+t \mbox{\hyperlink{class_core_shell_combustion_particle_acbb3c2405e58a840bcb695e714e56737}{mass\+\_\+fraction\+\_\+product\+\_\+\+AB}}
+\begin{DoxyCompactList}\small\item\em Mass fraction of product AB. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_core_shell_combustion_particle_a60619c54d18b0ba08b49c45ff0a5ce3b}\label{class_core_shell_combustion_particle_a60619c54d18b0ba08b49c45ff0a5ce3b}} 
+real\+\_\+t \mbox{\hyperlink{class_core_shell_combustion_particle_a60619c54d18b0ba08b49c45ff0a5ce3b}{pre\+\_\+exponential\+\_\+factor}}
+\begin{DoxyCompactList}\small\item\em Pre exponential factor for Arrhenius Diffusivity model. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_core_shell_combustion_particle_a0ac36a8a5c221e275d0100f9e1393d72}\label{class_core_shell_combustion_particle_a0ac36a8a5c221e275d0100f9e1393d72}} 
+real\+\_\+t \mbox{\hyperlink{class_core_shell_combustion_particle_a0ac36a8a5c221e275d0100f9e1393d72}{activation\+\_\+energy}}
+\begin{DoxyCompactList}\small\item\em Activation energy for Arrhenius Diffusivity model. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_core_shell_combustion_particle_a01828b42f8c0ac77906ececa2296f074}\label{class_core_shell_combustion_particle_a01828b42f8c0ac77906ececa2296f074}} 
+\mbox{\hyperlink{class_substance}{Substance}}$<$ real\+\_\+t $>$ \mbox{\hyperlink{class_core_shell_combustion_particle_a01828b42f8c0ac77906ececa2296f074}{reactant\+\_\+A}}
+\begin{DoxyCompactList}\small\item\em Reactant A substance initially present in the core. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_core_shell_combustion_particle_a4aec66cb2db21816b2215cb6c72e297f}\label{class_core_shell_combustion_particle_a4aec66cb2db21816b2215cb6c72e297f}} 
+\mbox{\hyperlink{class_substance}{Substance}}$<$ real\+\_\+t $>$ \mbox{\hyperlink{class_core_shell_combustion_particle_a4aec66cb2db21816b2215cb6c72e297f}{reactant\+\_\+B}}
+\begin{DoxyCompactList}\small\item\em Reactant B substance initially present in the shell. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_core_shell_combustion_particle_ac28ad559fec24d870312518f0af8e544}\label{class_core_shell_combustion_particle_ac28ad559fec24d870312518f0af8e544}} 
+\mbox{\hyperlink{class_substance}{Substance}}$<$ real\+\_\+t $>$ \mbox{\hyperlink{class_core_shell_combustion_particle_ac28ad559fec24d870312518f0af8e544}{product\+\_\+\+AB}}
+\begin{DoxyCompactList}\small\item\em Product AB substance. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename real\+\_\+t$>$\newline
+class Core\+Shell\+Combustion\+Particle$<$ real\+\_\+t $>$}
+
+Class to represent Core-\/\+Shell Particle with functions estimate thermodynamic properties for varying composition and temperature. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em real\+\_\+t} & \\
+\hline
+\end{DoxyTemplParams}
+
+
+Definition at line 28 of file Core-\/\+Shell-\/\+Combustion-\/\+Particle.\+hpp.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_core_shell_combustion_particle_a4684dca323514ccfa6731fb2986528f2}\label{class_core_shell_combustion_particle_a4684dca323514ccfa6731fb2986528f2}} 
+\index{CoreShellCombustionParticle$<$ real\_t $>$@{CoreShellCombustionParticle$<$ real\_t $>$}!CoreShellCombustionParticle@{CoreShellCombustionParticle}}
+\index{CoreShellCombustionParticle@{CoreShellCombustionParticle}!CoreShellCombustionParticle$<$ real\_t $>$@{CoreShellCombustionParticle$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{CoreShellCombustionParticle()}{CoreShellCombustionParticle()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+\mbox{\hyperlink{class_core_shell_combustion_particle}{Core\+Shell\+Combustion\+Particle}}$<$ real\+\_\+t $>$\+::\mbox{\hyperlink{class_core_shell_combustion_particle}{Core\+Shell\+Combustion\+Particle}} (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_substance}{Substance}}$<$ real\+\_\+t $>$}]{core\+\_\+material,  }\item[{\mbox{\hyperlink{class_substance}{Substance}}$<$ real\+\_\+t $>$}]{shell\+\_\+material,  }\item[{\mbox{\hyperlink{class_substance}{Substance}}$<$ real\+\_\+t $>$}]{product\+\_\+material,  }\item[{real\+\_\+t}]{diffusivity\+\_\+pre\+\_\+exponential\+\_\+factor,  }\item[{real\+\_\+t}]{diffusivity\+\_\+activation\+\_\+energy }\end{DoxyParamCaption})}
+
+
+
+Construct a new Core Shell Combustion Particle object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em core\+\_\+material} & \mbox{\hyperlink{class_substance}{Substance}} that forms the core material \\
+\hline
+{\em shell\+\_\+material} & \mbox{\hyperlink{class_substance}{Substance}} that forms the shell material \\
+\hline
+{\em product\+\_\+material} & \mbox{\hyperlink{class_substance}{Substance}} that is produced as a result of the reaction of the core and shell material \\
+\hline
+{\em diffusivity\+\_\+pre\+\_\+exponential\+\_\+factor} & Pre-\/exponential factor in the Arrhenius model for diffusivity \\
+\hline
+{\em diffusivity\+\_\+activation\+\_\+energy} & Activation energy in the Arrhenius model for diffusivity \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 17 of file Core-\/\+Shell-\/\+Combustion-\/\+Particle.\+cpp.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_core_shell_combustion_particle_a216013c37f5447713f30c9ae24054c2f}\label{class_core_shell_combustion_particle_a216013c37f5447713f30c9ae24054c2f}} 
+\index{CoreShellCombustionParticle$<$ real\_t $>$@{CoreShellCombustionParticle$<$ real\_t $>$}!getDensity@{getDensity}}
+\index{getDensity@{getDensity}!CoreShellCombustionParticle$<$ real\_t $>$@{CoreShellCombustionParticle$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{getDensity()}{getDensity()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+real\+\_\+t \mbox{\hyperlink{class_core_shell_combustion_particle}{Core\+Shell\+Combustion\+Particle}}$<$ real\+\_\+t $>$\+::get\+Density}
+
+
+
+Get the Density of the Particle. 
+
+\begin{DoxyReturn}{Returns}
+real\+\_\+t Density of the particle 
+\end{DoxyReturn}
+
+
+Definition at line 59 of file Core-\/\+Shell-\/\+Combustion-\/\+Particle.\+cpp.
+
+\mbox{\Hypertarget{class_core_shell_combustion_particle_adae95aa4dce77d99ecd31bc65566446d}\label{class_core_shell_combustion_particle_adae95aa4dce77d99ecd31bc65566446d}} 
+\index{CoreShellCombustionParticle$<$ real\_t $>$@{CoreShellCombustionParticle$<$ real\_t $>$}!getDiffusivity@{getDiffusivity}}
+\index{getDiffusivity@{getDiffusivity}!CoreShellCombustionParticle$<$ real\_t $>$@{CoreShellCombustionParticle$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{getDiffusivity()}{getDiffusivity()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+real\+\_\+t \mbox{\hyperlink{class_core_shell_combustion_particle}{Core\+Shell\+Combustion\+Particle}}$<$ real\+\_\+t $>$\+::get\+Diffusivity (\begin{DoxyParamCaption}\item[{real\+\_\+t}]{temperature }\end{DoxyParamCaption})}
+
+
+
+Get the Diffusivity for the interdiffusion of the core and shell material. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em temperature} & Overall temperature of the particle \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+real\+\_\+t Diffusivity for interdiffusion model at the specified temperature 
+\end{DoxyReturn}
+
+
+Definition at line 68 of file Core-\/\+Shell-\/\+Combustion-\/\+Particle.\+cpp.
+
+\mbox{\Hypertarget{class_core_shell_combustion_particle_a747df7d86c4a265f73e36b77cc012775}\label{class_core_shell_combustion_particle_a747df7d86c4a265f73e36b77cc012775}} 
+\index{CoreShellCombustionParticle$<$ real\_t $>$@{CoreShellCombustionParticle$<$ real\_t $>$}!getEnthalpy@{getEnthalpy}}
+\index{getEnthalpy@{getEnthalpy}!CoreShellCombustionParticle$<$ real\_t $>$@{CoreShellCombustionParticle$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{getEnthalpy()}{getEnthalpy()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+real\+\_\+t \mbox{\hyperlink{class_core_shell_combustion_particle}{Core\+Shell\+Combustion\+Particle}}$<$ real\+\_\+t $>$\+::get\+Enthalpy (\begin{DoxyParamCaption}\item[{real\+\_\+t}]{temperature }\end{DoxyParamCaption})}
+
+
+
+Get the Enthalpy of the particle. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em temperature} & Overall temperature of the particle \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+real\+\_\+t Enthalpy of the particle at the specified temperature 
+\end{DoxyReturn}
+
+
+Definition at line 92 of file Core-\/\+Shell-\/\+Combustion-\/\+Particle.\+cpp.
+
+\mbox{\Hypertarget{class_core_shell_combustion_particle_a004051c0eb5de733d35e1cef3a2901ec}\label{class_core_shell_combustion_particle_a004051c0eb5de733d35e1cef3a2901ec}} 
+\index{CoreShellCombustionParticle$<$ real\_t $>$@{CoreShellCombustionParticle$<$ real\_t $>$}!getHeatCapacity@{getHeatCapacity}}
+\index{getHeatCapacity@{getHeatCapacity}!CoreShellCombustionParticle$<$ real\_t $>$@{CoreShellCombustionParticle$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{getHeatCapacity()}{getHeatCapacity()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+real\+\_\+t \mbox{\hyperlink{class_core_shell_combustion_particle}{Core\+Shell\+Combustion\+Particle}}$<$ real\+\_\+t $>$\+::get\+Heat\+Capacity}
+
+
+
+Get the Heat Capacity of the particle. 
+
+\begin{DoxyReturn}{Returns}
+real\+\_\+t Heat capacity of the particle 
+\end{DoxyReturn}
+
+
+Definition at line 74 of file Core-\/\+Shell-\/\+Combustion-\/\+Particle.\+cpp.
+
+\mbox{\Hypertarget{class_core_shell_combustion_particle_ab482284fe54f42d14785acdcb7816f8b}\label{class_core_shell_combustion_particle_ab482284fe54f42d14785acdcb7816f8b}} 
+\index{CoreShellCombustionParticle$<$ real\_t $>$@{CoreShellCombustionParticle$<$ real\_t $>$}!getHeatConductivity@{getHeatConductivity}}
+\index{getHeatConductivity@{getHeatConductivity}!CoreShellCombustionParticle$<$ real\_t $>$@{CoreShellCombustionParticle$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{getHeatConductivity()}{getHeatConductivity()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+real\+\_\+t \mbox{\hyperlink{class_core_shell_combustion_particle}{Core\+Shell\+Combustion\+Particle}}$<$ real\+\_\+t $>$\+::get\+Heat\+Conductivity}
+
+
+
+Get the Heat Conductivity of the particle. 
+
+\begin{DoxyReturn}{Returns}
+real\+\_\+t Heat capacity of the particle 
+\end{DoxyReturn}
+
+
+Definition at line 83 of file Core-\/\+Shell-\/\+Combustion-\/\+Particle.\+cpp.
+
+\mbox{\Hypertarget{class_core_shell_combustion_particle_a043a0b016c5f637a96634363566f080a}\label{class_core_shell_combustion_particle_a043a0b016c5f637a96634363566f080a}} 
+\index{CoreShellCombustionParticle$<$ real\_t $>$@{CoreShellCombustionParticle$<$ real\_t $>$}!printProperties@{printProperties}}
+\index{printProperties@{printProperties}!CoreShellCombustionParticle$<$ real\_t $>$@{CoreShellCombustionParticle$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{printProperties()}{printProperties()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+void \mbox{\hyperlink{class_core_shell_combustion_particle}{Core\+Shell\+Combustion\+Particle}}$<$ real\+\_\+t $>$\+::print\+Properties (\begin{DoxyParamCaption}\item[{std\+::ostream \&}]{output\+\_\+stream }\end{DoxyParamCaption})}
+
+
+
+Print the properties of the substance to the given stream. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em output\+\_\+stream} & Stream to which the properties are printed \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 36 of file Core-\/\+Shell-\/\+Combustion-\/\+Particle.\+cpp.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/thermo-\/physical-\/properties/\mbox{\hyperlink{_core-_shell-_combustion-_particle_8hpp}{Core-\/\+Shell-\/\+Combustion-\/\+Particle.\+hpp}}\item 
+src/thermo-\/physical-\/properties/\mbox{\hyperlink{_core-_shell-_combustion-_particle_8cpp}{Core-\/\+Shell-\/\+Combustion-\/\+Particle.\+cpp}}\end{DoxyCompactItemize}

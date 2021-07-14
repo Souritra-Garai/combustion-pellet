@@ -1,0 +1,253 @@
+\hypertarget{class_substance}{}\doxysection{Substance$<$ real\+\_\+t $>$ Class Template Reference}
+\label{class_substance}\index{Substance$<$ real\_t $>$@{Substance$<$ real\_t $>$}}
+
+
+Class to represent a pure substance.  
+
+
+
+
+{\ttfamily \#include $<$Substance.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_substance_ac931305e04e988edc4d3d926b2cb6e3a}{Substance}} (real\+\_\+t density, real\+\_\+t heat\+\_\+capacity, real\+\_\+t molecular\+\_\+weight, real\+\_\+t heat\+\_\+conductivity, real\+\_\+t standard\+\_\+enthalpy\+\_\+of\+\_\+formation=0)
+\begin{DoxyCompactList}\small\item\em Construct a new \mbox{\hyperlink{class_substance}{Substance}}. \end{DoxyCompactList}\item 
+real\+\_\+t \mbox{\hyperlink{class_substance_aedc62fb71132220d5780333fe36bd04d}{get\+Density}} ()
+\begin{DoxyCompactList}\small\item\em Get the Density in. \end{DoxyCompactList}\item 
+real\+\_\+t \mbox{\hyperlink{class_substance_adc3066863a7f01ef5606f19b7a4c6ea2}{get\+Heat\+Capacity}} ()
+\begin{DoxyCompactList}\small\item\em Get the Heat Capacity. \end{DoxyCompactList}\item 
+real\+\_\+t \mbox{\hyperlink{class_substance_adf0d8fcf7ac3b4f15bdcd117a7a7030d}{get\+Molecular\+Weight}} ()
+\begin{DoxyCompactList}\small\item\em Get the Molecular Weight. \end{DoxyCompactList}\item 
+real\+\_\+t \mbox{\hyperlink{class_substance_a2e694511c460d3559e7e11321fa86392}{get\+Heat\+Conductivity}} ()
+\begin{DoxyCompactList}\small\item\em Get the Heat Conductivity. \end{DoxyCompactList}\item 
+real\+\_\+t \mbox{\hyperlink{class_substance_a0694f5742129fd5d21164aed2b05d5a6}{get\+Standard\+Enthalpy\+Of\+Formation}} ()
+\begin{DoxyCompactList}\small\item\em Get the Standard Enthalpy Of Formation. \end{DoxyCompactList}\item 
+real\+\_\+t \mbox{\hyperlink{class_substance_a337d6bc6dc004c9939714bfd08381e72}{get\+Enthalpy}} (real\+\_\+t Temperature)
+\begin{DoxyCompactList}\small\item\em Get the Enthalpy of the substance with respect to the T\+\_\+\+R\+EF. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_substance_ae7cf111f12e1b242f05229c48e20b0dd}{print\+Properties}} (std\+::ostream \&output\+\_\+stream)
+\begin{DoxyCompactList}\small\item\em Print the properties of the substance to the given stream. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_substance_abdb0ebd23808c5bd6f52179e8ed88962}\label{class_substance_abdb0ebd23808c5bd6f52179e8ed88962}} 
+const real\+\_\+t \mbox{\hyperlink{class_substance_abdb0ebd23808c5bd6f52179e8ed88962}{\+\_\+density}}
+\begin{DoxyCompactList}\small\item\em Density of the substance. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_substance_aa75fff96fb1dea646b64b73facdfa271}\label{class_substance_aa75fff96fb1dea646b64b73facdfa271}} 
+const real\+\_\+t \mbox{\hyperlink{class_substance_aa75fff96fb1dea646b64b73facdfa271}{\+\_\+heat\+\_\+capacity}}
+\begin{DoxyCompactList}\small\item\em Heat capacity of the substance. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_substance_ad5c8fce2cf0fecf6985ef2a56660bd70}\label{class_substance_ad5c8fce2cf0fecf6985ef2a56660bd70}} 
+const real\+\_\+t \mbox{\hyperlink{class_substance_ad5c8fce2cf0fecf6985ef2a56660bd70}{\+\_\+molecular\+\_\+weight}}
+\begin{DoxyCompactList}\small\item\em Molecular Weight of the substance. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_substance_a00603b52ef72458ba74f62e69e130309}\label{class_substance_a00603b52ef72458ba74f62e69e130309}} 
+const real\+\_\+t \mbox{\hyperlink{class_substance_a00603b52ef72458ba74f62e69e130309}{\+\_\+heat\+\_\+conductivity}}
+\begin{DoxyCompactList}\small\item\em Heat Conductivity of the substance. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_substance_add9eeabd37eaaa15848c7bf4d5765647}\label{class_substance_add9eeabd37eaaa15848c7bf4d5765647}} 
+const real\+\_\+t \mbox{\hyperlink{class_substance_add9eeabd37eaaa15848c7bf4d5765647}{\+\_\+std\+\_\+enthalpy\+\_\+formation}}
+\begin{DoxyCompactList}\small\item\em Standard Enthalpy of Formation of the substance. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename real\+\_\+t$>$\newline
+class Substance$<$ real\+\_\+t $>$}
+
+Class to represent a pure substance. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em real\+\_\+t} & \\
+\hline
+\end{DoxyTemplParams}
+
+
+Definition at line 27 of file Substance.\+hpp.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_substance_ac931305e04e988edc4d3d926b2cb6e3a}\label{class_substance_ac931305e04e988edc4d3d926b2cb6e3a}} 
+\index{Substance$<$ real\_t $>$@{Substance$<$ real\_t $>$}!Substance@{Substance}}
+\index{Substance@{Substance}!Substance$<$ real\_t $>$@{Substance$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{Substance()}{Substance()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+\mbox{\hyperlink{class_substance}{Substance}}$<$ real\+\_\+t $>$\+::\mbox{\hyperlink{class_substance}{Substance}} (\begin{DoxyParamCaption}\item[{real\+\_\+t}]{density,  }\item[{real\+\_\+t}]{heat\+\_\+capacity,  }\item[{real\+\_\+t}]{molecular\+\_\+weight,  }\item[{real\+\_\+t}]{heat\+\_\+conductivity,  }\item[{real\+\_\+t}]{standard\+\_\+enthalpy\+\_\+of\+\_\+formation = {\ttfamily 0} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Construct a new \mbox{\hyperlink{class_substance}{Substance}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em density} & Density of the substance in $ kg / m^3 $ \\
+\hline
+{\em heat\+\_\+capacity} & Heat capacity of the substance in $ J / kg-K $ \\
+\hline
+{\em molecular\+\_\+weight} & Molecular weight of the substance in $ kg / mol $ \\
+\hline
+{\em heat\+\_\+conductivity} & Heat conductivity of the substance in $ W / m $ \\
+\hline
+{\em standard\+\_\+enthalpy\+\_\+of\+\_\+formation} & Standard enthalpy of formation of the substance at 298 K in $ J / kg $ \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 40 of file Substance.\+hpp.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_substance_aedc62fb71132220d5780333fe36bd04d}\label{class_substance_aedc62fb71132220d5780333fe36bd04d}} 
+\index{Substance$<$ real\_t $>$@{Substance$<$ real\_t $>$}!getDensity@{getDensity}}
+\index{getDensity@{getDensity}!Substance$<$ real\_t $>$@{Substance$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{getDensity()}{getDensity()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+real\+\_\+t \mbox{\hyperlink{class_substance}{Substance}}$<$ real\+\_\+t $>$\+::get\+Density (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the Density in. 
+
+\begin{DoxyReturn}{Returns}
+real\+\_\+t Density of the substance 
+\end{DoxyReturn}
+
+
+Definition at line 58 of file Substance.\+hpp.
+
+\mbox{\Hypertarget{class_substance_a337d6bc6dc004c9939714bfd08381e72}\label{class_substance_a337d6bc6dc004c9939714bfd08381e72}} 
+\index{Substance$<$ real\_t $>$@{Substance$<$ real\_t $>$}!getEnthalpy@{getEnthalpy}}
+\index{getEnthalpy@{getEnthalpy}!Substance$<$ real\_t $>$@{Substance$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{getEnthalpy()}{getEnthalpy()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+real\+\_\+t \mbox{\hyperlink{class_substance}{Substance}}$<$ real\+\_\+t $>$\+::get\+Enthalpy (\begin{DoxyParamCaption}\item[{real\+\_\+t}]{Temperature }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the Enthalpy of the substance with respect to the T\+\_\+\+R\+EF. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Temperature} & Temperature at which enthalpy of the object needs to be evaluated \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+real\+\_\+t Enthalpy of the substance in J / kg 
+\end{DoxyReturn}
+
+
+Definition at line 94 of file Substance.\+hpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_substance_a337d6bc6dc004c9939714bfd08381e72_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{class_substance_adc3066863a7f01ef5606f19b7a4c6ea2}\label{class_substance_adc3066863a7f01ef5606f19b7a4c6ea2}} 
+\index{Substance$<$ real\_t $>$@{Substance$<$ real\_t $>$}!getHeatCapacity@{getHeatCapacity}}
+\index{getHeatCapacity@{getHeatCapacity}!Substance$<$ real\_t $>$@{Substance$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{getHeatCapacity()}{getHeatCapacity()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+real\+\_\+t \mbox{\hyperlink{class_substance}{Substance}}$<$ real\+\_\+t $>$\+::get\+Heat\+Capacity (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the Heat Capacity. 
+
+\begin{DoxyReturn}{Returns}
+real\+\_\+t Heat Capacity of the substance 
+\end{DoxyReturn}
+
+
+Definition at line 65 of file Substance.\+hpp.
+
+\mbox{\Hypertarget{class_substance_a2e694511c460d3559e7e11321fa86392}\label{class_substance_a2e694511c460d3559e7e11321fa86392}} 
+\index{Substance$<$ real\_t $>$@{Substance$<$ real\_t $>$}!getHeatConductivity@{getHeatConductivity}}
+\index{getHeatConductivity@{getHeatConductivity}!Substance$<$ real\_t $>$@{Substance$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{getHeatConductivity()}{getHeatConductivity()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+real\+\_\+t \mbox{\hyperlink{class_substance}{Substance}}$<$ real\+\_\+t $>$\+::get\+Heat\+Conductivity (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the Heat Conductivity. 
+
+\begin{DoxyReturn}{Returns}
+real\+\_\+t Heat Conductivity of the substance 
+\end{DoxyReturn}
+
+
+Definition at line 79 of file Substance.\+hpp.
+
+\mbox{\Hypertarget{class_substance_adf0d8fcf7ac3b4f15bdcd117a7a7030d}\label{class_substance_adf0d8fcf7ac3b4f15bdcd117a7a7030d}} 
+\index{Substance$<$ real\_t $>$@{Substance$<$ real\_t $>$}!getMolecularWeight@{getMolecularWeight}}
+\index{getMolecularWeight@{getMolecularWeight}!Substance$<$ real\_t $>$@{Substance$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{getMolecularWeight()}{getMolecularWeight()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+real\+\_\+t \mbox{\hyperlink{class_substance}{Substance}}$<$ real\+\_\+t $>$\+::get\+Molecular\+Weight (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the Molecular Weight. 
+
+\begin{DoxyReturn}{Returns}
+real\+\_\+t Molecular Weight of the substance 
+\end{DoxyReturn}
+
+
+Definition at line 72 of file Substance.\+hpp.
+
+\mbox{\Hypertarget{class_substance_a0694f5742129fd5d21164aed2b05d5a6}\label{class_substance_a0694f5742129fd5d21164aed2b05d5a6}} 
+\index{Substance$<$ real\_t $>$@{Substance$<$ real\_t $>$}!getStandardEnthalpyOfFormation@{getStandardEnthalpyOfFormation}}
+\index{getStandardEnthalpyOfFormation@{getStandardEnthalpyOfFormation}!Substance$<$ real\_t $>$@{Substance$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{getStandardEnthalpyOfFormation()}{getStandardEnthalpyOfFormation()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+real\+\_\+t \mbox{\hyperlink{class_substance}{Substance}}$<$ real\+\_\+t $>$\+::get\+Standard\+Enthalpy\+Of\+Formation (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the Standard Enthalpy Of Formation. 
+
+\begin{DoxyReturn}{Returns}
+real\+\_\+t Standard Enthalpy of Formation of the substance 
+\end{DoxyReturn}
+
+
+Definition at line 86 of file Substance.\+hpp.
+
+\mbox{\Hypertarget{class_substance_ae7cf111f12e1b242f05229c48e20b0dd}\label{class_substance_ae7cf111f12e1b242f05229c48e20b0dd}} 
+\index{Substance$<$ real\_t $>$@{Substance$<$ real\_t $>$}!printProperties@{printProperties}}
+\index{printProperties@{printProperties}!Substance$<$ real\_t $>$@{Substance$<$ real\_t $>$}}
+\doxysubsubsection{\texorpdfstring{printProperties()}{printProperties()}}
+{\footnotesize\ttfamily template$<$typename real\+\_\+t $>$ \\
+void \mbox{\hyperlink{class_substance}{Substance}}$<$ real\+\_\+t $>$\+::print\+Properties (\begin{DoxyParamCaption}\item[{std\+::ostream \&}]{output\+\_\+stream }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Print the properties of the substance to the given stream. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em output\+\_\+stream} & Stream to which the properties are printed \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 104 of file Substance.\+hpp.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_substance_ae7cf111f12e1b242f05229c48e20b0dd_cgraph}
+\end{center}
+\end{figure}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/thermo-\/physical-\/properties/\mbox{\hyperlink{_substance_8hpp}{Substance.\+hpp}}\end{DoxyCompactItemize}

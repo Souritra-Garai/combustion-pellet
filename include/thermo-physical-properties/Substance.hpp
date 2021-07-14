@@ -97,9 +97,9 @@ class Substance
         }
 
         /**
-         * @brief 
+         * @brief Print the properties of the substance to the given stream
          * 
-         * @param output_stream 
+         * @param output_stream Stream to which the properties are printed
          */
         void printProperties(std::ostream &output_stream)
         {
