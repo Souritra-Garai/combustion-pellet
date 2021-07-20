@@ -13,13 +13,21 @@ BUILDDIR := build
 
 QRSDIR := qrsolver
 TRPDIR := thermo-physical-properties
+PDEDIR := pde-problems
 
 # Finding all source and object files
 SRCEXT := cpp
 SOURCES := $(shell find $(SRCDIR) $(LIBDIR) -type f -name *.$(SRCEXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 
-QRSOBJS := $(BUILDDIR)/$(QRSDIR)/QR_Solver.o $(BUILDDIR)/$(QRSDIR)/G_Matrix.o $(BUILDDIR)/$(QRSDIR)/Q_Matrix.o $(BUILDDIR)/$(QRSDIR)/R_Matrix.o
+QRSSRCS := $(shell find $(SRCDIR)/$(QRSDIR) -type f -name *.$(SRCEXT))
+QRSOBJS := $(patsubst $(SRCDIR)/%, $(BUILDDIR)/%, $(QRSSRCS:.$(SRCEXT)=.o))
+
+TRPSRCS := $(shell find $(SRCDIR)/$(TRPDIR) -type f -name *.$(SRCEXT))
+TRPOBJS := $(patsubst $(SRCDIR)/%, $(BUILDDIR)/%, $(TRPSRCS:.$(SRCEXT)=.o))
+
+PDESRCS := $(shell find $(SRCDIR)/$(PDEDIR) -type f -name *.$(SRCEXT))
+PDEOBJS := $(patsubst $(SRCDIR)/%, $(BUILDDIR)/%, $(PDESRCS:.$(SRCEXT)=.o))
 
 # Flags required for compiler
 CFLAGS := -fopenmp
@@ -41,8 +49,27 @@ $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o : $(INCDIR)/$(TRPDIR)/Cor
 	@echo "\nCompiling Core-Shell-Combustion-Particle..."
 	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.cpp -o $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o
 
+$(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o : $(INCDIR)/$(PDEDIR)/Core-Shell-Diffusion.hpp $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp $(INCDIR)/$(QRSDIR)/QR_Solver.hpp $(SRCDIR)/$(PDEDIR)/Core-Shell-Diffusion.cpp
+	@mkdir -p $(BUILDDIR)/$(PDEDIR);
+	@echo "\nCompiling Core-Shell-Diffusion..."
+	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/$(PDEDIR)/Core-Shell-Diffusion.cpp -o $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o
+
 # ----------------------------------------------------------------------------------------------------------
-# Building Examples
+# Building PDE Problems Examples
+
+Core-Shell-Diffusion_Example : $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o $(PDEOBJS) $(TRPOBJS) $(QRSOBJS)
+	@mkdir -p $(BINDIR)/$(PDEDIR);
+	@echo "\nLinking Core-Shell-Diffusion_Example...";
+	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o $(PDEOBJS) $(TRPOBJS) $(QRSOBJS) -o $(BINDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example
+
+$(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o : $(EXMDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.cpp $(INCDIR)/$(PDEDIR)/Core-Shell-Diffusion.hpp $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp $(INCDIR)/$(TRPDIR)/Substance.hpp
+	@mkdir -p $(BUILDDIR)/$(PDEDIR);
+	@echo "\nCompiling Core-Shell-Diffusion_Example...";
+	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.cpp -o $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o
+
+
+# ----------------------------------------------------------------------------------------------------------
+# Building Thermo-Physical Properties Examples
 
 Substance_Example : $(BUILDDIR)/$(TRPDIR)/Substance_Example.o
 	@mkdir -p $(BINDIR)/$(TRPDIR);
@@ -131,6 +158,8 @@ $(BUILDDIR)/$(QRSDIR)/QR_Solver_Example.o : $(EXMDIR)/$(QRSDIR)/QR_Solver_Exampl
 	@echo "\nCompiling QR_Solver_Example...";
 	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(QRSDIR)/QR_Solver_Example.cpp -o $(BUILDDIR)/$(QRSDIR)/QR_Solver_Example.o
 
+# ----------------------------------------------------------------------------------------------------------------------
+# Clean everything
 
 clean:
 	@echo "\nCleaning...";

@@ -43,30 +43,24 @@ class CoreShellCombustionParticle
         real_t mass_fraction_product_AB;
 
         /**
-         * @brief Pre exponential factor for 
-         * Arrhenius Diffusivity model
-         */
-        real_t pre_exponential_factor;
-        /**
-         * @brief Activation energy for 
-         * Arrhenius Diffusivity model
-         */
-        real_t activation_energy;
-
-        /**
          * @brief Reactant A substance
          * initially present in the core
          */
-        Substance<real_t> reactant_A;
+        Substance<real_t> *const reactant_A;
         /**
          * @brief Reactant B substance
          * initially present in the shell
          */
-        Substance<real_t> reactant_B;
+        Substance<real_t> *const reactant_B;
         /**
          * @brief Product AB substance 
          */
-        Substance<real_t> product_AB;
+        Substance<real_t> *const product_AB;
+
+        real_t *const overall_radius;
+        real_t *const core_radius;
+
+        real_t
 
     public :
 
@@ -80,11 +74,11 @@ class CoreShellCombustionParticle
          * @param diffusivity_activation_energy Activation energy in the Arrhenius model for diffusivity
          */
         CoreShellCombustionParticle(
-            Substance<real_t> core_material,
-            Substance<real_t> shell_material,
-            Substance<real_t> product_material,
-            real_t diffusivity_pre_exponential_factor,
-            real_t diffusivity_activation_energy
+            Substance<real_t> &core_material,
+            Substance<real_t> &shell_material,
+            Substance<real_t> &product_material,
+            real_t &particle_radius,
+            real_t &core_radius
         );
 
         /**
@@ -115,15 +109,6 @@ class CoreShellCombustionParticle
          * @return real_t Enthalpy of the particle at the specified temperature
          */
         real_t getEnthalpy(real_t temperature);
-
-        /**
-         * @brief Get the Diffusivity for the interdiffusion of the core and shell
-         * material
-         * 
-         * @param temperature Overall temperature of the particle
-         * @return real_t Diffusivity for interdiffusion model at the specified temperature
-         */
-        real_t getDiffusivity(real_t temperature);
 
         /**
          * @brief Print the properties of the substance to the given stream

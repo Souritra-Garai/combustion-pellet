@@ -18,7 +18,7 @@ Substance<float> A(10, 10, 10, 10);
 Substance<float> B(10, 10, 10, 10);
 Substance<float> AB(10, 10, 10, 10, -120);
 
-CoreShellCombustionParticle<float> AB_particle(A, B, AB, 10, 10);
+CoreShellCombustionParticle<float> AB_particle(A, B, AB, 1, 1);
 
 int main(int argc, char const *argv[])
 {
