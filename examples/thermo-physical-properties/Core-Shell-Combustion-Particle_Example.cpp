@@ -22,7 +22,7 @@ float core_radius = 32.5E-6;
 float overall_radius = 39.5E-6;
 float mass = calcMassCoreShellParticle<float>(Al, Ni, overall_radius, core_radius);
 
-CoreShellCombustionParticle<float> AB_particle(
+CoreShellCombustionParticle<float> Ni_clad_Al_particle(
     Al, Ni, NiAl, 
     overall_radius,
     core_radius,
@@ -31,7 +31,7 @@ CoreShellCombustionParticle<float> AB_particle(
 
 int main(int argc, char const *argv[])
 {
-    std::cout << "Enthalpy\t:\t" << AB_particle.getEnthalpy(350) << "\tJ / kg" << std::endl;
-    AB_particle.printProperties(std::cout);
+    std::cout << "Enthalpy\t:\t" << Ni_clad_Al_particle.getEnthalpy(350) << "\tJ / kg" << std::endl;
+    Ni_clad_Al_particle.printProperties(std::cout);
     return 0;
 }

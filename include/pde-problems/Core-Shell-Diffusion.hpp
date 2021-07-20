@@ -48,9 +48,7 @@ class CoreShellDiffusion : public CoreShellCombustionParticle<real_t>
 
         CoreShellDiffusion(
             CoreShellCombustionParticle<real_t> combustion_particle,
-            size_t number_of_grid_points,
-            real_t particle_radius,
-            real_t core_radius
+            size_t number_of_grid_points
         );
 
         ~CoreShellDiffusion();

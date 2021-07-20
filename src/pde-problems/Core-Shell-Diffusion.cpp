@@ -13,38 +13,31 @@
 
 #include <math.h>
 
+#include <iostream>
+
 template<typename real_t>
 CoreShellDiffusion<real_t>::CoreShellDiffusion(
     CoreShellCombustionParticle<real_t> combustion_particle,
-    size_t number_of_grid_points,
-    real_t particle_radius,
-    real_t core_radius
+    size_t number_of_grid_points
 ) : CoreShellCombustionParticle<real_t>(combustion_particle),
     N(number_of_grid_points)
 {
     concentration_array_A = new real_t[N];
     concentration_array_B = new real_t[N];
 
-    radius = particle_radius;
-
-    Delta_r = radius / (N-1);
-    
-    mass = (4.0 * M_PI / 3.0) * (
-        this->reactant_A.getDensity() * pow(core_radius, 3) +
-        this->reactant_B.getDensity() * (pow(particle_radius, 3) - pow(core_radius, 3))
-    );
+    Delta_r = (*(this->overall_radius)) / (N-1);
 
     for (size_t i = 0; i < N; i++)
     {
-        if (getRadialCoordinate(i) <= core_radius)
+        if (getRadialCoordinate(i) <= (*(this->core_radius)))
         {
-            concentration_array_A[i] = this->reactant_A.getDensity() / this->reactant_A.getMolecularWeight();
+            concentration_array_A[i] = this->reactant_A->getDensity() / this->reactant_A->getMolecularWeight();
             concentration_array_B[i] = 0;
         }
         else
         {
             concentration_array_A[i] = 0;
-            concentration_array_B[i] = this->reactant_B.getDensity() / this->reactant_B.getMolecularWeight();
+            concentration_array_B[i] = this->reactant_B->getDensity() / this->reactant_B->getMolecularWeight();
         }
     }
     
@@ -93,10 +86,12 @@ void CoreShellDiffusion<real_t>::calcMassFractions()
                 std::min(concentration_array_A[i], concentration_array_B[i]) * pow(getRadialCoordinate(i), 2) +
                 std::min(concentration_array_A[i+1], concentration_array_B[i+1]) * pow(getRadialCoordinate(i+1), 2);
         }
+
+    std::cout << this->mass;
     
-    this->mass_fraction_reactant_A = 0.5 * 4.0 * M_PI * Delta_r * Y_A  * this->reactant_A.getMolecularWeight() / mass;
-    this->mass_fraction_reactant_B = 0.5 * 4.0 * M_PI * Delta_r * Y_B  * this->reactant_B.getMolecularWeight() / mass;
-    this->mass_fraction_product_AB = 0.5 * 4.0 * M_PI * Delta_r * Y_AB * this->product_AB.getMolecularWeight() / mass;
+    this->mass_fraction_reactant_A = 0.5 * 4.0 * M_PI * Delta_r * Y_A  * this->reactant_A->getMolecularWeight() / this->mass;
+    this->mass_fraction_reactant_B = 0.5 * 4.0 * M_PI * Delta_r * Y_B  * this->reactant_B->getMolecularWeight() / this->mass;
+    this->mass_fraction_product_AB = 0.5 * 4.0 * M_PI * Delta_r * Y_AB * this->product_AB->getMolecularWeight() / this->mass;
 }
 
 template class CoreShellDiffusion<float>;
