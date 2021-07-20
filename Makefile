@@ -88,7 +88,7 @@ Core-Shell-Combustion-Particle_Example : $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combus
 
 $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle_Example.o : $(EXMDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle_Example.cpp $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp
 	@mkdir -p $(BUILDDIR)/$(TRPDIR);
-	@echo "\nCompiling Core-Shell-Combustion-Particle...";
+	@echo "\nCompiling Core-Shell-Combustion-Particle_Example...";
 	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle_Example.cpp -o $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle_Example.o
 
 # ----------------------------------------------------------------------------------------------------------
