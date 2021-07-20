@@ -15,9 +15,7 @@
 #include "thermo-physical-properties/Core-Shell-Combustion-Particle.hpp"
 #include "pde-problems/Core-Shell-Diffusion.hpp"
 
-Substance<long double> Al(2700, 897, 26.98, 239);
-Substance<long double> Ni(8902, 440, 58.69, 90.7);
-Substance<long double> NiAl(5900, 717, 85.675, 115, -118.4);
+
 
 CoreShellCombustionParticle<long double> Ni_clad_Al_particle(
     Al, Ni, NiAl, 2.56E-6, 102.191E3

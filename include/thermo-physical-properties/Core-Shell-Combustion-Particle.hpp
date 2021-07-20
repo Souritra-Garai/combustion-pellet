@@ -57,10 +57,19 @@ class CoreShellCombustionParticle
          */
         Substance<real_t> *const product_AB;
 
+        /**
+         * @brief Overall radius of the core-sheel particle
+         */
         real_t *const overall_radius;
+        /**
+         * @brief Radius of the core of the core sheel particle
+         */
         real_t *const core_radius;
 
-        real_t
+        /**
+         * @brief Mass of the core-shell particle
+         */
+        real_t *const mass;
 
     public :
 
@@ -70,15 +79,17 @@ class CoreShellCombustionParticle
          * @param core_material Substance that forms the core material
          * @param shell_material Substance that forms the shell material
          * @param product_material Substance that is produced as a result of the reaction of the core and shell material
-         * @param diffusivity_pre_exponential_factor Pre-exponential factor in the Arrhenius model for diffusivity
-         * @param diffusivity_activation_energy Activation energy in the Arrhenius model for diffusivity
+         * @param particle_radius Overall radius of the particle
+         * @param core_radius Radius of the core of the Core Shell Particle
+         * @param mass Mass of the particle
          */
         CoreShellCombustionParticle(
             Substance<real_t> &core_material,
             Substance<real_t> &shell_material,
             Substance<real_t> &product_material,
             real_t &particle_radius,
-            real_t &core_radius
+            real_t &core_radius,
+            real_t &mass
         );
 
         /**
@@ -117,5 +128,24 @@ class CoreShellCombustionParticle
          */
         void printProperties(std::ostream &output_stream);
 };
+
+
+/**
+ * @brief Function to calculate mass of core shell type particle
+ * 
+ * @tparam real_t 
+ * @param core_material Substance forming the core of the core shell particle
+ * @param shell_material Substance forming the shell of the core shell particle
+ * @param overall_radius Overall radius of the core shell particle
+ * @param core_radius Radius of the core of the core sheel particle
+ * @return real_t Mass of the core sheel particle
+ */
+template<typename real_t>
+real_t calcMassCoreShellParticle(
+    Substance<real_t> core_material,
+    Substance<real_t> shell_material,
+    real_t overall_radius,
+    real_t core_radius
+);
 
 #endif
