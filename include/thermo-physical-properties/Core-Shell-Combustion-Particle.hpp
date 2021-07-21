@@ -32,49 +32,103 @@ class CoreShellCombustionParticle
         /**
          * @brief Mass fraction of reactant A
          */
-        real_t mass_fraction_core_material;
+        real_t _mass_fraction_core_material;
         /**
          * @brief Mass fraction of reactant B
          */
-        real_t mass_fraction_shell_material;
+        real_t _mass_fraction_shell_material;
         /**
          * @brief Mass fraction of product AB
          */
-        real_t mass_fraction_product_material;
-
-    public :
+        real_t _mass_fraction_product_material;
 
         /**
          * @brief Reactant A substance
          * initially present in the core
          */
-        static Substance<real_t> core_material;
+        static Substance<real_t> _core_material;
         /**
          * @brief Reactant B substance
          * initially present in the shell
          */
-        static Substance<real_t> shell_material;
+        static Substance<real_t> _shell_material;
         /**
          * @brief Product AB substance 
          */
-        static Substance<real_t> product_material;
+        static Substance<real_t> _product_material;
 
         /**
          * @brief Overall radius of the Core-Shell Particle
          */
-        static real_t overall_radius;
+        static real_t _overall_radius;
         /**
          * @brief Core radius of the Core-Shell Particle
          * 
          */
-        static real_t core_radius;
+        static real_t _core_radius;
 
         /**
          * @brief Mass of the Core-Shell Particle
          */
-        static real_t mass;
+        static real_t _mass;
 
+    public :
+
+        /**
+         * @brief Set up Core Shell Combustion Particle 
+         * 
+         * @param core_material Substance that forms the core of the core-shell particle
+         * @param shell_material Substance that forms the shell of the core-shell particle
+         * @param product_material Substance that is produced upon reaction of the core and shell materials
+         * @param overall_radius Overall radius of the core-shell particle in m
+         * @param core_radius Radius of the core of the particle in m
+         */
+        static void setUpCoreShellCombustionParticle(
+            Substance<real_t> core_material,
+            Substance<real_t> shell_material,
+            Substance<real_t> product_material,
+            real_t overall_radius,
+            real_t core_radius
+        );
+
+        /**
+         * @brief Function to calculate volume of the core
+         * of the core-shell particle
+         * @return real_t Volume of the core in \f$ m^3 \f$
+         */
+        static real_t calcCoreVolume();
+        /**
+         * @brief Function to calculate volume of the shell
+         * of the core-shell particle
+         * @return real_t Volume of the shell in \f$ m^3 \f$
+         */
+        static real_t calcShellVolume();
+
+        /**
+         * @brief Function to calculate the mass of the core
+         * of the core-shell particle
+         * @return real_t Mass of the core in kg
+         */
+        static real_t calcCoreMass();
+        /**
+         * @brief Function to calculate the mass of the shell
+         * of the core-shell particle
+         * @return real_t Mass of the shell in kg
+         */
+        static real_t calcShellMass();
+        /**
+         * @brief Function to calculate the mass of the
+         * core-shell particle
+         * @return real_t Mass of the core-shell particle in kg
+         */
+        static real_t calcParticleMass();
+
+        /**
+         * @brief Construct a new Core Shell Combustion Particle
+         */
         CoreShellCombustionParticle();
+
+        real_t getMass();
 
         /**
          * @brief Get the Density of the Particle
@@ -111,29 +165,6 @@ class CoreShellCombustionParticle
          * @param output_stream Stream to which the properties are printed
          */
         void printProperties(std::ostream &output_stream);
-
-        static void setUpCoreShellParticle(
-            Substance<real_t> core_material,
-            Substance<real_t> shell_material,
-            real_t overall_radius,
-            real_t core_radius
-        );
 };
-
-template<typename real_t>
-real_t calcMassCoreShellParticle(
-    Substance<real_t> core_material,
-    Substance<real_t> shell_material,
-    real_t overall_radius,
-    real_t core_radius
-);
-
-template<typename real_t> Substance<real_t> CoreShellCombustionParticle<real_t>::core_material = Substance<real_t>(0, 0, 0, 0, 0);
-template<typename real_t> Substance<real_t> CoreShellCombustionParticle<real_t>::shell_material = Substance<real_t>(0, 0, 0, 0, 0);
-template<typename real_t> Substance<real_t> CoreShellCombustionParticle<real_t>::product_material = Substance<real_t>(0, 0, 0, 0, 0);
-
-template<typename real_t> real_t CoreShellCombustionParticle<real_t>::overall_radius = 0;
-template<typename real_t> real_t CoreShellCombustionParticle<real_t>::core_radius = 0;
-template<typename real_t> real_t CoreShellCombustionParticle<real_t>::mass = 0;
 
 #endif

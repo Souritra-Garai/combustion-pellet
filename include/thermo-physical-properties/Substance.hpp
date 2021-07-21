@@ -29,19 +29,19 @@ class Substance
     public :
 
         /**
-         * @brief Construct a new Substance
+         * @brief uct a new Substance
          * 
          * @param density Density of the substance in \f$ kg / m^3 \f$
          * @param heat_capacity Heat capacity of the substance in \f$ J / kg-K \f$
          * @param molecular_weight Molecular weight of the substance in \f$ kg / mol \f$
-         * @param heat_conductivity Heat conductivity of the substance in \f$ W / m \f$
+         * @param heat_conductivity Heat conductivity of the substance in \f$ W / m-K \f$
          * @param standard_enthalpy_of_formation Standard enthalpy of formation of the substance at 298 K in \f$ J / kg \f$
          */
         Substance(
-            real_t density,
-            real_t heat_capacity,
-            real_t molecular_weight,
-            real_t heat_conductivity,
+            real_t density = 0,
+            real_t heat_capacity = 0,
+            real_t molecular_weight = 0,
+            real_t heat_conductivity = 0,
             real_t standard_enthalpy_of_formation = 0
         ) : _density(density),
             _heat_capacity(heat_capacity),
@@ -55,14 +55,14 @@ class Substance
          * 
          * @return real_t Density of the substance
          */
-        inline real_t getDensity()          { return _density; }
+        inline real_t getDensity()  { return _density; }
 
         /**
          * @brief Get the Heat Capacity
          * 
          * @return real_t Heat Capacity of the substance
          */
-        inline real_t getHeatCapacity()     { return _heat_capacity; }
+        inline real_t getHeatCapacity() { return _heat_capacity; }
 
         /**
          * @brief Get the Molecular Weight
@@ -115,27 +115,27 @@ class Substance
         /**
          * @brief Density of the substance
          */
-        const real_t _density;
+        real_t _density;
 
         /**
          * @brief Heat capacity of the substance
          */
-        const real_t _heat_capacity;
+        real_t _heat_capacity;
 
         /**
          * @brief Molecular Weight of the substance
          */
-        const real_t _molecular_weight;
+        real_t _molecular_weight;
 
         /**
          * @brief Heat Conductivity of the substance
          */
-        const real_t _heat_conductivity;
+        real_t _heat_conductivity;
 
         /**
          * @brief Standard Enthalpy of Formation of the substance
          */
-        const real_t _std_enthalpy_formation;
+        real_t _std_enthalpy_formation;
 };
 
 #endif

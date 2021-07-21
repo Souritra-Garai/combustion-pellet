@@ -30,21 +30,21 @@ CoreShellDiffusion<real_t>::CoreShellDiffusion(
     Delta_r = radius / (N-1);
     
     mass = (4.0 * M_PI / 3.0) * (
-        this->core_material.getDensity() * pow(core_radius, 3) +
-        this->shell_material.getDensity() * (pow(particle_radius, 3) - pow(core_radius, 3))
+        this->_core_material.getDensity() * pow(core_radius, 3) +
+        this->_shell_material.getDensity() * (pow(particle_radius, 3) - pow(core_radius, 3))
     );
 
     for (size_t i = 0; i < N; i++)
     {
         if (getRadialCoordinate(i) <= core_radius)
         {
-            concentration_array_A[i] = this->core_material.getDensity() / this->core_material.getMolecularWeight();
+            concentration_array_A[i] = this->_core_material.getDensity() / this->_core_material.getMolecularWeight();
             concentration_array_B[i] = 0;
         }
         else
         {
             concentration_array_A[i] = 0;
-            concentration_array_B[i] = this->shell_material.getDensity() / this->shell_material.getMolecularWeight();
+            concentration_array_B[i] = this->_shell_material.getDensity() / this->_shell_material.getMolecularWeight();
         }
     }
     
@@ -94,9 +94,9 @@ void CoreShellDiffusion<real_t>::calcMassFractions()
                 std::min(concentration_array_A[i+1], concentration_array_B[i+1]) * pow(getRadialCoordinate(i+1), 2);
         }
     
-    this->mass_fraction_core_material = 0.5 * 4.0 * M_PI * Delta_r * Y_A  * this->core_material.getMolecularWeight() / mass;
-    this->mass_fraction_shell_material = 0.5 * 4.0 * M_PI * Delta_r * Y_B  * this->shell_material.getMolecularWeight() / mass;
-    this->mass_fraction_product_material = 0.5 * 4.0 * M_PI * Delta_r * Y_AB * this->product_material.getMolecularWeight() / mass;
+    this->_mass_fraction_core_material =    0.5 * 4.0 * M_PI * Delta_r * Y_A  * this->_core_material.getMolecularWeight()    / mass;
+    this->_mass_fraction_shell_material =   0.5 * 4.0 * M_PI * Delta_r * Y_B  * this->_shell_material.getMolecularWeight()   / mass;
+    this->_mass_fraction_product_material = 0.5 * 4.0 * M_PI * Delta_r * Y_AB * this->_product_material.getMolecularWeight() / mass;
 }
 
 template class CoreShellDiffusion<float>;
