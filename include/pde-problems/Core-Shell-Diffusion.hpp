@@ -20,25 +20,25 @@ class CoreShellDiffusion : public CoreShellCombustionParticle<real_t>
 {
     private :
 
-        const size_t  N;
+        size_t _N;
 
-        real_t * concentration_array_A;
-        real_t * concentration_array_B;
+        real_t * _concentration_array_A;
+        real_t * _concentration_array_B;
 
-        real_t radius;
-        real_t Delta_r;
-        real_t mass;
+        real_t _delta_r;
 
         /**
          * @brief Pre exponential factor for 
          * Arrhenius Diffusivity model
          */
-        real_t pre_exponential_factor;
+        real_t _pre_exponential_factor;
         /**
          * @brief Activation energy for 
          * Arrhenius Diffusivity model
          */
-        real_t activation_energy;
+        real_t _activation_energy;
+
+        QRSolver<real_t> _solver;
 
         real_t getRadialCoordinate(size_t index);
 

@@ -21,7 +21,8 @@
 /**
  * @brief Class to represent a pure substance
  * 
- * @tparam real_t 
+ * @tparam real_t float, double or long double data types
+ * to represent real numbers
  */
 template <typename real_t>
 class Substance

@@ -2,3 +2,8 @@
 
 bin/
 build/
+
+doxygen/*
+# Whitelist some doxygen files
+!doxygen/Doxyfile
+!doxygen/latex/refman.pdf

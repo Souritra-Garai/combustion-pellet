@@ -20,9 +20,10 @@
 
 /**
  * @brief Class to represent Core-Shell Particle with functions to
- * estimate thermodynamic properties for varying composition and temperature
- * 
- * @tparam real_t 
+ * estimate thermodynamic properties for varying composition 
+ * and temperature
+ * @tparam real_t float, double or long double data types
+ * to represent real numbers
  */
 template<typename real_t>
 class CoreShellCombustionParticle
@@ -30,30 +31,35 @@ class CoreShellCombustionParticle
     protected :
 
         /**
-         * @brief Mass fraction of reactant A
+         * @brief Mass fraction of substance present at
+         * the core of the core-shell particle
          */
         real_t _mass_fraction_core_material;
         /**
-         * @brief Mass fraction of reactant B
+         * @brief Mass fraction of substance present in
+         * the shell of the core-shell particle
          */
         real_t _mass_fraction_shell_material;
         /**
-         * @brief Mass fraction of product AB
+         * @brief Mass fraction of substance formed as
+         * a product of the reaction between core and
+         * shell substances
          */
         real_t _mass_fraction_product_material;
 
         /**
-         * @brief Reactant A substance
-         * initially present in the core
+         * @brief Substance present in the core of 
+         * the core-shell particle
          */
         static Substance<real_t> _core_material;
         /**
-         * @brief Reactant B substance
-         * initially present in the shell
+         * @brief Substance present in the shell of
+         * the core-shell particle
          */
         static Substance<real_t> _shell_material;
         /**
-         * @brief Product AB substance 
+         * @brief Substance formed upon reaction of
+         * the core and shell substances
          */
         static Substance<real_t> _product_material;
 
@@ -63,7 +69,6 @@ class CoreShellCombustionParticle
         static real_t _overall_radius;
         /**
          * @brief Core radius of the Core-Shell Particle
-         * 
          */
         static real_t _core_radius;
 
@@ -127,8 +132,6 @@ class CoreShellCombustionParticle
          * @brief Construct a new Core Shell Combustion Particle
          */
         CoreShellCombustionParticle();
-
-        real_t getMass();
 
         /**
          * @brief Get the Density of the Particle
