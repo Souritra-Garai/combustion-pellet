@@ -52,37 +52,44 @@ class Substance
         { ;}
         
         /**
-         * @brief Get the Density in 
+         * @brief Get the Density of the substance
          * 
-         * @return real_t Density of the substance
+         * @return real_t Density in \f$ kg / m^3 \f$
          */
         inline real_t getDensity()  { return _density; }
 
         /**
-         * @brief Get the Heat Capacity
+         * @brief Get the Heat Capacity of the substance
          * 
-         * @return real_t Heat Capacity of the substance
+         * @return real_t Heat Capacity in \f$ J / kg-K \f$
          */
         inline real_t getHeatCapacity() { return _heat_capacity; }
 
         /**
-         * @brief Get the Molecular Weight
+         * @brief Get the Molecular Weight of the weight
          * 
-         * @return real_t Molecular Weight of the substance
+         * @return real_t Molecular Weight in \f$ kg / mol. \f$
          */
         inline real_t getMolecularWeight()  { return _molecular_weight; }
 
         /**
-         * @brief Get the Heat Conductivity
+         * @brief Get the Molar Density of the substance
          * 
-         * @return real_t Heat Conductivity of the substance
+         * @return real_t Density in \f$ mol. / m^3 \f$
+         */
+        inline real_t getMolarDensity() { return _density / _molecular_weight; }
+
+        /**
+         * @brief Get the Heat Conductivity of the substance
+         * 
+         * @return real_t Heat Conductivity in \f$ W / m-K \f$
          */
         inline real_t getHeatConductivity() { return _heat_conductivity; }
 
         /**
-         * @brief Get the Standard Enthalpy Of Formation 
+         * @brief Get the Standard Enthalpy Of Formation of the substance
          * 
-         * @return real_t Standard Enthalpy of Formation of the substance
+         * @return real_t Standard Enthalpy of Formation of in \f$ J / kg \f$
          */
         inline real_t getStandardEnthalpyOfFormation() { return _std_enthalpy_formation; }
 
@@ -107,7 +114,7 @@ class Substance
             output_stream << "Density\t\t\t\t:\t" << getDensity() << "\tkg/m3" << std::endl;
             output_stream << "Heat Capacity\t\t\t:\t" << getHeatCapacity() << "\tJ/kg-K" << std::endl;
             output_stream << "Molecular Weight\t\t:\t" << getMolecularWeight() << "\tkg/mol" << std::endl;
-            output_stream << "Heat Conductivity\t\t:\t" << getHeatConductivity() << "\tW/m" << std::endl;
+            output_stream << "Heat Conductivity\t\t:\t" << getHeatConductivity() << "\tW/m-K" << std::endl;
             output_stream << "Standard Enthalpy of Formation\t:\t" << getStandardEnthalpyOfFormation() << "\tJ/kg" << std::endl;
         }
 

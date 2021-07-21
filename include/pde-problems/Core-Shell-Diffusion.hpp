@@ -20,40 +20,36 @@ class CoreShellDiffusion : public CoreShellCombustionParticle<real_t>
 {
     private :
 
-        size_t _N;
-
-        real_t * _concentration_array_A;
-        real_t * _concentration_array_B;
-
-        real_t _delta_r;
+        static size_t _n;
+        static real_t _delta_r;
 
         /**
          * @brief Pre exponential factor for 
          * Arrhenius Diffusivity model
          */
-        real_t _pre_exponential_factor;
+        static real_t _pre_exponential_factor;
         /**
          * @brief Activation energy for 
          * Arrhenius Diffusivity model
          */
-        real_t _activation_energy;
+        static real_t _activation_energy;
 
-        QRSolver<real_t> _solver;
+        real_t * _concentration_array_A;
+        real_t * _concentration_array_B;
 
-        real_t getRadialCoordinate(size_t index);
-
-        void calcMassFractions();
+        QRSolver<real_t> _solver_A;
+        QRSolver<real_t> _solver_B;
 
     public :
 
-        CoreShellDiffusion(
-            CoreShellCombustionParticle<real_t> combustion_particle,
-            size_t number_of_grid_points,
-            real_t particle_radius,
-            real_t core_radius
-        );
-
+        CoreShellDiffusion();
         ~CoreShellDiffusion();
+
+        static void setGridSize(size_t n);
+        static void setDiffusivityParameters(
+            real_t pre_exponential_constant,
+            real_t activation_energy
+        );
 
         /**
          * @brief Get the Diffusivity for the interdiffusion of the core and shell
@@ -62,7 +58,11 @@ class CoreShellDiffusion : public CoreShellCombustionParticle<real_t>
          * @param temperature Overall temperature of the particle
          * @return real_t Diffusivity for interdiffusion model at the specified temperature
          */
-        real_t getDiffusivity(real_t temperature);
+        static real_t getDiffusivity(real_t temperature);
+
+        static real_t getRadialCoordinate(size_t index);
+        
+        void calcMassFractions();
 };
 
 #endif
