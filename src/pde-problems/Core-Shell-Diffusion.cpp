@@ -155,7 +155,21 @@ template<typename real_t>
 void CoreShellDiffusion<real_t>::solveEquations()
 {
     _solver_A.getSolution(_concentration_array_A);
-    _solver_B.getSolution(_concentration_array_B);   
+    _solver_B.getSolution(_concentration_array_B);
+
+    calcMassFractions();
+}
+
+template<typename real_t>
+void CoreShellDiffusion<real_t>::printConcentrationProfiles(std::ostream &output_stream)
+{
+    for (size_t i = 0; i < _n; i++) output_stream << _concentration_array_A[i] << '\t';
+
+    output_stream << std::endl;
+
+    for (size_t i = 0; i < _n; i++) output_stream << _concentration_array_B[i] << '\t';
+
+    output_stream << std::endl;
 }
 
 template class CoreShellDiffusion<float>;

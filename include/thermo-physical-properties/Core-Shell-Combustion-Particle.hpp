@@ -168,6 +168,12 @@ class CoreShellCombustionParticle
          * @param output_stream Stream to which the properties are printed
          */
         void printProperties(std::ostream &output_stream);
+
+        bool isCombustionComplete(real_t tolerance = 1E-3);
+
+        real_t getMassFractionsCoreMaterial();
+        real_t getMassFractionsShellMaterial();
+        real_t getMassFractionsProductMaterial();
 };
 
 #endif

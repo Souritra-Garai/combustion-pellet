@@ -156,6 +156,31 @@ real_t CoreShellCombustionParticle<real_t>::getEnthalpy(real_t T)
 }
 
 template<typename real_t>
+bool CoreShellCombustionParticle<real_t>::isCombustionComplete(real_t tol)
+{
+    // printf("%lf, %lf", _mass_fraction_shell_material, _mass_fraction_core_material);
+    return _mass_fraction_core_material < tol || _mass_fraction_shell_material < tol;
+}
+
+template<typename real_t>
+real_t CoreShellCombustionParticle<real_t>::getMassFractionsCoreMaterial()
+{
+    return _mass_fraction_core_material;
+}
+
+template<typename real_t>
+real_t CoreShellCombustionParticle<real_t>::getMassFractionsShellMaterial()
+{
+    return _mass_fraction_shell_material;
+}
+
+template<typename real_t>
+real_t CoreShellCombustionParticle<real_t>::getMassFractionsProductMaterial()
+{
+    return _mass_fraction_product_material;
+}
+
+template<typename real_t>
 void CoreShellCombustionParticle<real_t>::printProperties(
     std::ostream &output_stream
 ) {
@@ -168,13 +193,13 @@ void CoreShellCombustionParticle<real_t>::printProperties(
     output_stream << "Heat Capacity\t\t:\t" << getHeatCapacity() << "\tJ/kg-K" << std::endl;
     output_stream << "Heat Conductivity\t:\t" << getHeatConductivity() << "\tW/m" << std::endl;
 
-    output_stream << "\nCore Material\nMass Fraction\t:\t" << _mass_fraction_core_material << std::endl;
+    output_stream << "\nCore Material\nMass Fraction\t:\t" << getMassFractionsCoreMaterial() << std::endl;
     _core_material.printProperties(output_stream);
 
-    output_stream << "\nShell Material\nMass Fraction\t:\t" << _mass_fraction_shell_material << std::endl;
+    output_stream << "\nShell Material\nMass Fraction\t:\t" << getMassFractionsShellMaterial() << std::endl;
     _shell_material.printProperties(output_stream);
 
-    output_stream << "\nProduct Material\nMass Fraction\t:\t" << _mass_fraction_product_material << std::endl;
+    output_stream << "\nProduct Material\nMass Fraction\t:\t" << getMassFractionsProductMaterial() << std::endl;
     _product_material.printProperties(output_stream);
 }
 

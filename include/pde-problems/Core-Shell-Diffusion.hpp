@@ -59,6 +59,8 @@ class CoreShellDiffusion : public CoreShellCombustionParticle<real_t>
 
         void setUpEquations(real_t temperature);
         void solveEquations();
+
+        void printConcentrationProfiles(std::ostream &output_stream);
 };
 
 #endif
