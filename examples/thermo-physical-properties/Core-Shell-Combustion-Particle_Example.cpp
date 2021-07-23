@@ -14,7 +14,7 @@
 #include "thermo-physical-properties/Core-Shell-Combustion-Particle.hpp"
 
 Substance<float> Al(2700, 897, 26.98, 239);
-Substance<float> Ni(8902, 440, 58.69, 90.7);
+Substance<float> Ni(8908, 440, 58.69, 90.7);
 Substance<float> NiAl(5900, 717, 85.675, 115, -118.4);
 
 float core_radius = 32.5E-6;

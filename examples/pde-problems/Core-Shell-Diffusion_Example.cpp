@@ -15,20 +15,26 @@
 #include "thermo-physical-properties/Core-Shell-Combustion-Particle.hpp"
 #include "pde-problems/Core-Shell-Diffusion.hpp"
 
-Substance<long double> Al(2700, 897, 26.98, 239);
-Substance<long double> Ni(8902, 440, 58.69, 90.7);
-Substance<long double> NiAl(5900, 717, 85.675, 115, -118.4);
+Substance<float> Al(2700, 897, 26.98, 239);
+Substance<float> Ni(8902, 440, 58.69, 90.7);
+Substance<float> NiAl(5900, 717, 85.675, 115, -118.4);
 
-CoreShellCombustionParticle<long double> Ni_clad_Al_particle(
-    Al, Ni, NiAl, 2.56E-6, 102.191E3
-);
-
-CoreShellDiffusion<long double> Ni_clad_Al_particle_diffusion(
-    Ni_clad_Al_particle, 1001, 32.5E-6, 30.5E-6
-);
+float core_radius = 32.5E-6;
+float overall_radius = 39.5E-6;
 
 int main(int argc, char const *argv[])
 {
-    Ni_clad_Al_particle_diffusion.printProperties(std::cout);
+    CoreShellDiffusion<float>::setUpCoreShellCombustionParticle(
+        Al, Ni, NiAl,
+        overall_radius, core_radius
+    );
+
+    CoreShellDiffusion<float>::setGridSize(100001);
+    CoreShellDiffusion<float>::setTimeStep(0.001);
+
+    CoreShellDiffusion<float> Ni_clad_Al_particle;
+
+    Ni_clad_Al_particle.printProperties(std::cout);
+
     return 0;
 }

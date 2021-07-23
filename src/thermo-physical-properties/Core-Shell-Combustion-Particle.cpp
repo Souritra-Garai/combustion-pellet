@@ -111,10 +111,11 @@ template<typename real_t>
 real_t CoreShellCombustionParticle<real_t>::getDensity()
 {
     // \f$ \rho = \sum_{k \in \left\{ Core, Shell, Product \right}} Y_k \rho_k \f$
-    return 
-        _mass_fraction_core_material    * _core_material.getDensity() +
-        _mass_fraction_shell_material   * _shell_material.getDensity() +
-        _mass_fraction_product_material * _product_material.getDensity();
+    return 1.0 / (
+        _mass_fraction_core_material    / _core_material.getDensity() +
+        _mass_fraction_shell_material   / _shell_material.getDensity() +
+        _mass_fraction_product_material / _product_material.getDensity()
+    );
 }
 
 // Take weighted sum of heat capacities of core, shell and product materials
@@ -136,8 +137,8 @@ real_t CoreShellCombustionParticle<real_t>::getHeatConductivity()
 {
     // \f$ \lambda = \sum_{k \in \left\{ Core, Shell, Product \right}} Y_k \lambda_k \f$
     return
-        _mass_fraction_core_material * _core_material.getHeatConductivity() +
-        _mass_fraction_shell_material * _shell_material.getHeatConductivity() +
+        _mass_fraction_core_material    * _core_material.getHeatConductivity() +
+        _mass_fraction_shell_material   * _shell_material.getHeatConductivity() +
         _mass_fraction_product_material * _product_material.getHeatConductivity();
 }
 
@@ -149,8 +150,8 @@ real_t CoreShellCombustionParticle<real_t>::getEnthalpy(real_t T)
     // \f$ h \left( T \right) 
     // = \sum_{k \in \left\{ Core, Shell, Product \right}} Y_k h_k \left( T \right)\f$
     return
-        _mass_fraction_core_material * _core_material.getEnthalpy(T) +
-        _mass_fraction_shell_material * _shell_material.getEnthalpy(T) +
+        _mass_fraction_core_material    * _core_material.getEnthalpy(T) +
+        _mass_fraction_shell_material   * _shell_material.getEnthalpy(T) +
         _mass_fraction_product_material * _product_material.getEnthalpy(T);
 }
 
