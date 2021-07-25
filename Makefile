@@ -14,6 +14,7 @@ BUILDDIR := build
 QRSDIR := qrsolver
 TRPDIR := thermo-physical-properties
 PDEDIR := pde-problems
+UTILDIR := utilities
 
 # Finding all source and object files
 SRCEXT := cpp
@@ -28,6 +29,9 @@ TRPOBJS := $(patsubst $(SRCDIR)/%, $(BUILDDIR)/%, $(TRPSRCS:.$(SRCEXT)=.o))
 
 PDESRCS := $(shell find $(SRCDIR)/$(PDEDIR) -type f -name *.$(SRCEXT))
 PDEOBJS := $(patsubst $(SRCDIR)/%, $(BUILDDIR)/%, $(PDESRCS:.$(SRCEXT)=.o))
+
+UTILSRCS := $(shell find $(SRCDIR)/$(UTILDIR) -type f -name *.$(SRCEXT))
+UTILOBJS := $(patsubst $(SRCDIR)/%, $(BUILDDIR)/%, $(UTILSRCS:.$(SRCEXT)=.o))
 
 # Flags required for compiler
 CFLAGS := -fopenmp
@@ -46,23 +50,28 @@ $(BUILDDIR)/main.o : $(SRCDIR)/main.cpp
 
 $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o : $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp $(INCDIR)/$(TRPDIR)/Substance.hpp $(SRCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.cpp
 	@mkdir -p $(BUILDDIR)/$(TRPDIR);
-	@echo "\nCompiling Core-Shell-Combustion-Particle..."
+	@echo "\nCompiling Core-Shell-Combustion-Particle...";
 	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.cpp -o $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o
 
 $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o : $(INCDIR)/$(PDEDIR)/Core-Shell-Diffusion.hpp $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp $(INCDIR)/$(QRSDIR)/QR_Solver.hpp $(SRCDIR)/$(PDEDIR)/Core-Shell-Diffusion.cpp
 	@mkdir -p $(BUILDDIR)/$(PDEDIR);
-	@echo "\nCompiling Core-Shell-Diffusion..."
+	@echo "\nCompiling Core-Shell-Diffusion...";
 	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/$(PDEDIR)/Core-Shell-Diffusion.cpp -o $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o
+
+$(BUILDDIR)/$(UTILDIR)/Keyboard_Interrupt.o : $(INCDIR)/$(UTILDIR)/Keyboard_Interrupt.hpp $(SRCDIR)/$(UTILDIR)/Keyboard_Interrupt.cpp
+	@mkdir -p $(BUILDDIR)/$(UTILDIR);
+	@echo "\nCompiling Keyboard_Interrupt..."
+	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/$(UTILDIR)/Keyboard_Interrupt.cpp -o $(BUILDDIR)/$(UTILDIR)/Keyboard_Interrupt.o
 
 # ----------------------------------------------------------------------------------------------------------
 # Building PDE Problems Examples
 
-Core-Shell-Diffusion_Example : $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o $(PDEOBJS) $(TRPOBJS) $(QRSOBJS)
+Core-Shell-Diffusion_Example : $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o $(PDEOBJS) $(TRPOBJS) $(QRSOBJS) $(UTILOBJS)
 	@mkdir -p $(BINDIR)/$(PDEDIR);
 	@echo "\nLinking Core-Shell-Diffusion_Example...";
-	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o $(PDEOBJS) $(TRPOBJS) $(QRSOBJS) -o $(BINDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example
+	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o $(PDEOBJS) $(TRPOBJS) $(QRSOBJS) $(UTILOBJS) -o $(BINDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example
 
-$(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o : $(EXMDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.cpp $(INCDIR)/$(PDEDIR)/Core-Shell-Diffusion.hpp $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp $(INCDIR)/$(TRPDIR)/Substance.hpp
+$(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o : $(EXMDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.cpp $(INCDIR)/$(PDEDIR)/Core-Shell-Diffusion.hpp $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp $(INCDIR)/$(TRPDIR)/Substance.hpp $(INCDIR)/$(UTILDIR)/Keyboard_Interrupt.hpp
 	@mkdir -p $(BUILDDIR)/$(PDEDIR);
 	@echo "\nCompiling Core-Shell-Diffusion_Example...";
 	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.cpp -o $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o
