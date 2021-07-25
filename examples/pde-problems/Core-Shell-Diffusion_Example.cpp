@@ -33,7 +33,7 @@ int main(int argc, char const *argv[])
         overall_radius, core_radius
     );
 
-    CoreShellDiffusion<float>::setGridSize(101);
+    CoreShellDiffusion<float>::setGridSize(1001);
     CoreShellDiffusion<float>::setTimeStep(0.000001);
 
     CoreShellDiffusion<float>::setDiffusivityParameters(2.56E-6, 102.191E3);
@@ -48,6 +48,7 @@ int main(int argc, char const *argv[])
     std::cout << "\tAl : " << Ni_clad_Al_particle.getMassFractionsCoreMaterial();
     std::cout << "\tNi : " << Ni_clad_Al_particle.getMassFractionsShellMaterial();
     std::cout << "\tNiAl : " << Ni_clad_Al_particle.getMassFractionsProductMaterial();
+    std::cout << "\tMass : " << Ni_clad_Al_particle.numCalcMass();
     std::cout << std::endl;
 
     float temperature = 1600;
@@ -66,6 +67,8 @@ int main(int argc, char const *argv[])
                 std::cout << "\tAl : " << Ni_clad_Al_particle.getMassFractionsCoreMaterial();
                 std::cout << "\tNi : " << Ni_clad_Al_particle.getMassFractionsShellMaterial();
                 std::cout << "\tNiAl : " << Ni_clad_Al_particle.getMassFractionsProductMaterial();
+                std::cout << "\tMass : " << Ni_clad_Al_particle.numCalcCoreMass();
+                std::cout << "\tMass : " << Ni_clad_Al_particle.numCalcShellMass();
                 std::cout << std::endl;
 
                 // Ni_clad_Al_particle.printConcentrationProfiles(std::cout);
@@ -78,9 +81,11 @@ int main(int argc, char const *argv[])
         std::cout << "\tAl : " << Ni_clad_Al_particle.getMassFractionsCoreMaterial();
         std::cout << "\tNi : " << Ni_clad_Al_particle.getMassFractionsShellMaterial();
         std::cout << "\tNiAl : " << Ni_clad_Al_particle.getMassFractionsProductMaterial();
+        std::cout << "\tMass : " << Ni_clad_Al_particle.numCalcCoreMass();
+        std::cout << "\tMass : " << Ni_clad_Al_particle.numCalcShellMass();
         std::cout << std::endl;
 
-        Ni_clad_Al_particle.printConcentrationProfiles(std::cout);
+        // Ni_clad_Al_particle.printConcentrationProfiles(std::cout);
     }
 
     catch (InterruptException& e)
@@ -91,6 +96,8 @@ int main(int argc, char const *argv[])
         std::cout << "\tAl : " << Ni_clad_Al_particle.getMassFractionsCoreMaterial();
         std::cout << "\tNi : " << Ni_clad_Al_particle.getMassFractionsShellMaterial();
         std::cout << "\tNiAl : " << Ni_clad_Al_particle.getMassFractionsProductMaterial();
+        std::cout << "\tMass : " << Ni_clad_Al_particle.numCalcCoreMass();
+        std::cout << "\tMass : " << Ni_clad_Al_particle.numCalcShellMass();
         std::cout << std::endl;
 
         return 1;

@@ -43,7 +43,7 @@ void CoreShellDiffusion<real_t>::setGridSize(size_t n)
 template<typename real_t>
 real_t CoreShellDiffusion<real_t>::getRadialCoordinate(size_t i)
 {
-    return CoreShellCombustionParticle<real_t>::_overall_radius * ((real_t) i / (real_t) (_n-1));
+    return CoreShellCombustionParticle<real_t>::_overall_radius * ((real_t) i) / ((real_t) (_n-1));
 }
 
 template<typename real_t>
@@ -67,13 +67,13 @@ CoreShellDiffusion<real_t>::CoreShellDiffusion() :
         {
             if (getRadialCoordinate(i) < this->_core_radius)
             {
-                _concentration_array_A[i] = this->_core_material.getMolarDensity();
+                _concentration_array_A[i] = this->_core_material.getDensity();
                 _concentration_array_B[i] = 0;
             }
             else
             {
                 _concentration_array_A[i] = 0;
-                _concentration_array_B[i] = this->_shell_material.getMolarDensity();
+                _concentration_array_B[i] = this->_shell_material.getDensity();
             }
         }
 }
@@ -88,19 +88,67 @@ CoreShellDiffusion<real_t>::~CoreShellDiffusion()
 template<typename real_t>
 inline real_t CoreShellDiffusion<real_t>::getRxnConcA(size_t i)
 {
-    return std::max(_concentration_array_A[i] - _concentration_array_B[i], (real_t) 0.0);
+    return std::max(_concentration_array_A[i] / this->_core_material.getMolecularWeight() - _concentration_array_B[i] / this->_shell_material.getMolecularWeight(), (real_t) 0.0);
 }
 
 template<typename real_t>
 inline real_t CoreShellDiffusion<real_t>::getRxnConcB(size_t i)
 {
-    return std::max(_concentration_array_B[i] - _concentration_array_A[i], (real_t) 0.0);
+    return std::max(_concentration_array_B[i] / this->_shell_material.getMolecularWeight() - _concentration_array_A[i] / this->_core_material.getMolecularWeight(), (real_t) 0.0);
 }
 
 template<typename real_t>
 inline real_t CoreShellDiffusion<real_t>::getRxnConcAB(size_t i)
 {
-    return std::min(_concentration_array_A[i], _concentration_array_B[i]);
+    return std::min(_concentration_array_A[i] / this->_core_material.getMolecularWeight(), _concentration_array_B[i] / this->_shell_material.getMolecularWeight());
+}
+
+template<typename real_t>
+real_t CoreShellDiffusion<real_t>::numCalcMass()
+{
+    real_t m = 0;
+
+    #pragma omp parallel for reduction(+:m)
+
+        for (size_t i = 0; i < _n-1; i++)
+        {
+            m += 4 * M_PI * (_concentration_array_A[i] * pow(getRadialCoordinate(i), 2) + _concentration_array_A[i+1] * pow(getRadialCoordinate(i), 2)) * _delta_r;
+            m += 4 * M_PI * (_concentration_array_B[i] * pow(getRadialCoordinate(i), 2) + _concentration_array_B[i+1] * pow(getRadialCoordinate(i), 2)) * _delta_r;
+        }
+
+    return m;
+}
+
+template<typename real_t>
+real_t CoreShellDiffusion<real_t>::numCalcCoreMass()
+{
+    real_t m = 0;
+
+    #pragma omp parallel for reduction(+:m)
+
+        for (size_t i = 0; i < _n-1; i++)
+        {
+            m += 4 * M_PI * (_concentration_array_A[i] * pow(getRadialCoordinate(i), 2) + _concentration_array_A[i+1] * pow(getRadialCoordinate(i), 2)) * _delta_r;
+            // m += 4 * M_PI * (_concentration_array_B[i] * pow(getRadialCoordinate(i), 2) + _concentration_array_B[i+1] * pow(getRadialCoordinate(i), 2)) * _delta_r;
+        }
+
+    return m;
+}
+
+template<typename real_t>
+real_t CoreShellDiffusion<real_t>::numCalcShellMass()
+{
+    real_t m = 0;
+
+    #pragma omp parallel for reduction(+:m)
+
+        for (size_t i = 0; i < _n-1; i++)
+        {
+            // m += 4 * M_PI * (_concentration_array_A[i] * pow(getRadialCoordinate(i), 2) + _concentration_array_A[i+1] * pow(getRadialCoordinate(i), 2)) * _delta_r;
+            m += 4 * M_PI * (_concentration_array_B[i] * pow(getRadialCoordinate(i), 2) + _concentration_array_B[i+1] * pow(getRadialCoordinate(i), 2)) * _delta_r;
+        }
+
+    return m;
 }
 
 template<typename real_t>
@@ -143,8 +191,8 @@ void CoreShellDiffusion<real_t>::setUpEquations(real_t T)
             real_t f = coefficient1 + coefficient2 + coefficient3;
             real_t g = - coefficient1;
 
-            _solver_A.setEquation(i, e, f, g, coefficient2 * _concentration_array_A[i]);
-            _solver_B.setEquation(i, e, f, g, coefficient2 * _concentration_array_B[i]);
+            _solver_A.setEquation(i, g, f, e, coefficient2 * _concentration_array_A[i]);
+            _solver_B.setEquation(i, g, f, e, coefficient2 * _concentration_array_B[i]);
         }
 
     _solver_A.setEquationLastRow(-1, 1, 0);

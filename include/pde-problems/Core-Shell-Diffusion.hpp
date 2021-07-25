@@ -61,6 +61,10 @@ class CoreShellDiffusion : public CoreShellCombustionParticle<real_t>
         void solveEquations();
 
         void printConcentrationProfiles(std::ostream &output_stream);
+        
+        real_t numCalcMass();
+        real_t numCalcCoreMass();
+        real_t numCalcShellMass();
 };
 
 #endif
