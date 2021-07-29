@@ -10,12 +10,15 @@
  */
 
 #include <iostream>
+#include <omp.h>
 
 #include "thermo-physical-properties/Substance.hpp"
+#include "thermo-physical-properties/Arrhenius_Diffusivity_Model.hpp"
 #include "thermo-physical-properties/Core-Shell-Combustion-Particle.hpp"
 #include "pde-problems/Core-Shell-Diffusion.hpp"
 
 #include "utilities/Keyboard_Interrupt.hpp"
+#include "utilities/File_Generator.hpp"
 
 #define MAX_ITER 10000
 
@@ -26,6 +29,8 @@ Substance<float> NiAl(5900, 717, 85.67E-3, 115, -118.4E3 / 85.67E-3);
 float core_radius = 32.5E-6;
 float overall_radius = 39.5E-6;
 
+void printState(size_t iteration_number, CoreShellDiffusion<float> &particle);
+
 int main(int argc, char const *argv[])
 {
     CoreShellDiffusion<float>::setUpCoreShellCombustionParticle(
@@ -33,75 +38,121 @@ int main(int argc, char const *argv[])
         overall_radius, core_radius
     );
 
-    CoreShellDiffusion<float>::setGridSize(1001);
-    CoreShellDiffusion<float>::setTimeStep(0.000001);
+    CoreShellDiffusion<float>::setGridSize(101);
+    CoreShellDiffusion<float>::setTimeStep(0.0001);
 
-    CoreShellDiffusion<float>::setDiffusivityParameters(2.56E-6, 102.191E3);
+    ArrheniusDiffusivityModel<float> diffusivity_model(2.56E-6, 102.191E3);
 
     CoreShellDiffusion<float> Ni_clad_Al_particle;
 
+    FileGenerator file_generator;
+
+    std::ofstream config_file = file_generator.getTXTFile("diffusion_config");
+    std::ofstream conc_A_file = file_generator.getCSVFile("concentration_A");
+    std::ofstream conc_B_file = file_generator.getCSVFile("concentration_B");
+    std::ofstream state_file = file_generator.getCSVFile("mass_fractions");
+
     Ni_clad_Al_particle.printProperties(std::cout);
+    Ni_clad_Al_particle.printProperties(config_file);
+    config_file.close();
 
     size_t __iter = 1;
 
-    std::cout << "Iteration # " << 0;
-    std::cout << "\tAl : " << Ni_clad_Al_particle.getMassFractionsCoreMaterial();
-    std::cout << "\tNi : " << Ni_clad_Al_particle.getMassFractionsShellMaterial();
-    std::cout << "\tNiAl : " << Ni_clad_Al_particle.getMassFractionsProductMaterial();
-    std::cout << "\tMass : " << Ni_clad_Al_particle.numCalcMass();
-    std::cout << std::endl;
+    printState(0, Ni_clad_Al_particle);
+    state_file << "Al, Ni, NiAl, Sum\n";
 
     float temperature = 1600;
+    float diffusivity = diffusivity_model.getDiffusivity(temperature);
 
     setUpKeyboardInterrupt();
-
+    
     try
     {
         while (!Ni_clad_Al_particle.isCombustionComplete() && __iter <= MAX_ITER)
         {
-            Ni_clad_Al_particle.setUpEquations(temperature);
+            Ni_clad_Al_particle.setUpEquations(diffusivity);
             Ni_clad_Al_particle.solveEquations();
 
-            if (__iter % 100 == 0) {
-                std::cout << "Iteration # " << __iter;
-                std::cout << "\tAl : " << Ni_clad_Al_particle.getMassFractionsCoreMaterial();
-                std::cout << "\tNi : " << Ni_clad_Al_particle.getMassFractionsShellMaterial();
-                std::cout << "\tNiAl : " << Ni_clad_Al_particle.getMassFractionsProductMaterial();
-                std::cout << "\tMass : " << Ni_clad_Al_particle.numCalcCoreMass();
-                std::cout << "\tMass : " << Ni_clad_Al_particle.numCalcShellMass();
-                std::cout << std::endl;
+            float Y_Al = Ni_clad_Al_particle.getMassFractionsCoreMaterial();
+            float Y_Ni = Ni_clad_Al_particle.getMassFractionsShellMaterial();
+            float Y_NiAl = Ni_clad_Al_particle.getMassFractionsProductMaterial();
 
-                // Ni_clad_Al_particle.printConcentrationProfiles(std::cout);
+            state_file << Y_Al << ',' << Y_Ni << ',' << Y_NiAl << ',' << Y_Al + Y_Ni + Y_NiAl << std::endl;
+
+            Ni_clad_Al_particle.printConcentrationProfileA(conc_A_file, ',');
+            Ni_clad_Al_particle.printConcentrationProfileB(conc_B_file, ',');
+
+            if (__iter % 20 == 0)
+            {
+                printState(__iter, Ni_clad_Al_particle);
             }
 
             __iter++;
         }
-
-        std::cout << "Iteration # " << __iter;
-        std::cout << "\tAl : " << Ni_clad_Al_particle.getMassFractionsCoreMaterial();
-        std::cout << "\tNi : " << Ni_clad_Al_particle.getMassFractionsShellMaterial();
-        std::cout << "\tNiAl : " << Ni_clad_Al_particle.getMassFractionsProductMaterial();
-        std::cout << "\tMass : " << Ni_clad_Al_particle.numCalcCoreMass();
-        std::cout << "\tMass : " << Ni_clad_Al_particle.numCalcShellMass();
-        std::cout << std::endl;
-
-        // Ni_clad_Al_particle.printConcentrationProfiles(std::cout);
     }
 
     catch (InterruptException& e)
     {
         std::cout << "\nCaught signal " << e.S << std::endl;
 
-        std::cout << "Iteration # " << __iter;
-        std::cout << "\tAl : " << Ni_clad_Al_particle.getMassFractionsCoreMaterial();
-        std::cout << "\tNi : " << Ni_clad_Al_particle.getMassFractionsShellMaterial();
-        std::cout << "\tNiAl : " << Ni_clad_Al_particle.getMassFractionsProductMaterial();
-        std::cout << "\tMass : " << Ni_clad_Al_particle.numCalcCoreMass();
-        std::cout << "\tMass : " << Ni_clad_Al_particle.numCalcShellMass();
-        std::cout << std::endl;
+        printState(__iter, Ni_clad_Al_particle);
+        Ni_clad_Al_particle.setUpEquations(diffusivity);
+        Ni_clad_Al_particle.solveEquations();
+
+        float Y_Al = Ni_clad_Al_particle.getMassFractionsCoreMaterial();
+        float Y_Ni = Ni_clad_Al_particle.getMassFractionsShellMaterial();
+        float Y_NiAl = Ni_clad_Al_particle.getMassFractionsProductMaterial();
+
+        state_file << Y_Al << ',' << Y_Ni << ',' << Y_NiAl << ',' << Y_Al + Y_Ni + Y_NiAl << std::endl;
+
+        Ni_clad_Al_particle.printConcentrationProfileA(conc_A_file, ',');
+        Ni_clad_Al_particle.printConcentrationProfileB(conc_B_file, ',');
+
+        conc_A_file.close();
+        conc_B_file.close();
+        state_file.close();
 
         return 1;
     }
+
+    printState(__iter, Ni_clad_Al_particle);
+    Ni_clad_Al_particle.setUpEquations(diffusivity);
+    Ni_clad_Al_particle.solveEquations();
+
+    float Y_Al = Ni_clad_Al_particle.getMassFractionsCoreMaterial();
+    float Y_Ni = Ni_clad_Al_particle.getMassFractionsShellMaterial();
+    float Y_NiAl = Ni_clad_Al_particle.getMassFractionsProductMaterial();
+
+    state_file << Y_Al << ',' << Y_Ni << ',' << Y_NiAl << ',' << Y_Al + Y_Ni + Y_NiAl << std::endl;
+
+    Ni_clad_Al_particle.printConcentrationProfileA(conc_A_file, ',');
+    Ni_clad_Al_particle.printConcentrationProfileB(conc_B_file, ',');
+
+    conc_A_file.close();
+    conc_B_file.close();
+    state_file.close();
     
     return 0;
+}
+
+void printState(size_t iteration_number, CoreShellDiffusion<float> &particle)
+{
+    std::cout << "Iteration # " << iteration_number;
+    float Y_Al = particle.getMassFractionsCoreMaterial();
+    float Y_Ni = particle.getMassFractionsShellMaterial();
+    float Y_NiAl = particle.getMassFractionsProductMaterial();
+
+    std::cout << "\tAl : " << Y_Al;
+    std::cout << "\tNi : " << Y_Ni;
+    std::cout << "\tNiAl : " << Y_NiAl;
+    std::cout << "\tSum : " << Y_Al + Y_Ni + Y_NiAl;
+
+    float m_Al = particle.numCalcCoreMass();
+    float m_Ni = particle.numCalcShellMass();
+
+    std::cout << "\tAl Mass : " << m_Al;
+    std::cout << "\tNi Mass : " << m_Ni;
+    std::cout << "\tSum : " << m_Al + m_Ni;
+
+    std::cout << std::endl;
 }

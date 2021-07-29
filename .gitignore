@@ -3,6 +3,8 @@
 bin/
 build/
 
+solutions
+
 doxygen/*
 # Whitelist some doxygen files
 !doxygen/Doxyfile
