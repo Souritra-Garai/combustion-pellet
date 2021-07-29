@@ -169,6 +169,15 @@ class CoreShellCombustionParticle
          */
         void printProperties(std::ostream &output_stream);
 
+        /**
+         * @brief Determine whether combustion is complete based on
+         * remaining reaction mass fractions of reactant substances
+         * 
+         * @param tolerance Mass fraction of reactant is assumed zero 
+         * if less than this value
+         * @return true Combustion is complete (one or more reactants have depleted)
+         * @return false Combustion is incomplete
+         */
         bool isCombustionComplete(real_t tolerance = 1E-3);
 
         real_t getMassFractionsCoreMaterial();

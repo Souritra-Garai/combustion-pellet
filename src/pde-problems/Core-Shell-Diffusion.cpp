@@ -122,7 +122,7 @@ inline real_t CoreShellDiffusion<real_t>::getRxnConcAB(size_t i)
 }
 
 template<typename real_t>
-real_t CoreShellDiffusion<real_t>::numCalcCoreMass()
+real_t CoreShellDiffusion<real_t>::getDiffusionMassA()
 {
     /**
      * Using the trapezoidal rule
@@ -149,7 +149,7 @@ real_t CoreShellDiffusion<real_t>::numCalcCoreMass()
 }
 
 template<typename real_t>
-real_t CoreShellDiffusion<real_t>::numCalcShellMass()
+real_t CoreShellDiffusion<real_t>::getDiffusionMassB()
 {
     /**
      * Using the trapezoidal rule
@@ -176,33 +176,54 @@ real_t CoreShellDiffusion<real_t>::numCalcShellMass()
 }
 
 template<typename real_t>
-void CoreShellDiffusion<real_t>::calcMassFractions()
+void CoreShellDiffusion<real_t>::calcRxnMassFractions()
 {
+    // \f$ Y_A  = 4 \pi \Delta r \cdot \frac{\left(MW\right)_{A}}{m_P}  \left\{ \frac{1}{2} \max{\left(C_{A,N} - C_{B,N}, 0\right)} \cdot r_P^2 + \sum_{i=1}^{N-1} \max{\left(C_{A,i} - C_{B,i}, 0\right)} \cdot r_i^2 \right\} \f$
+    // \f$ Y_B  = 4 \pi \Delta r \cdot \frac{\left(MW\right)_{B}}{m_P}  \left\{ \frac{1}{2} \max{\left(C_{B,N} - C_{A,N}, 0\right)} \cdot r_P^2 + \sum_{i=1}^{N-1} \max{\left(C_{B,i} - C_{A,i}, 0\right)} \cdot r_i^2 \right\} \f$
+    // \f$ Y_AB = 4 \pi \Delta r \cdot \frac{\left(MW\right)_{AB}}{m_P} \left\{ \frac{1}{2} \min{\left(C_{A,N}, C_{B,N}\right)} \cdot r_P^2 + \sum_{i=1}^{N-1} \min{\left(C_{A,i}, C_{B,i}\right)} \cdot r_i^2 \right\} \f$
+    
+    // Performing the above summation
+
+    // Initialising the sums with the term for grid point # N    
+    
+    // Calculate \f$ r^2 \f$
+    real_t r2 = pow(this->_overall_radius, 2);
+    // Intialise the sums without the common multiplicative factors
     real_t Y_A  = 0.5 * getRxnConcA(_n-1)  * pow(this->_overall_radius, 2);
     real_t Y_B  = 0.5 * getRxnConcB(_n-1)  * pow(this->_overall_radius, 2);
     real_t Y_AB = 0.5 * getRxnConcAB(_n-1) * pow(this->_overall_radius, 2);
     
-    #pragma omp parallel for reduction(+:Y_A, Y_B, Y_AB)
-    
+    // Parallelizing the summation loop
+    // Create private copies for Y_A, Y_B and Y_AB; and
+    // sum the copies at the end
+    #pragma omp parallel for reduction(+:Y_A, Y_B, Y_AB) private(r2)
+        // Summing over all grid points except the first and the last
         for (size_t i = 1; i < _n-1; i++)
         {
-            real_t r2 = pow(getRadialCoordinate(i), 2);
-            
+            // Calculate \f$ r^2 \f$
+            r2 = pow(getRadialCoordinate(i), 2);
+            // Add the specific terms for the summation
             Y_A  += getRxnConcA(i)  * r2;
             Y_B  += getRxnConcB(i)  * r2;
             Y_AB += getRxnConcAB(i) * r2;
         }
     
+    // Update the reaction mass fractions of the core-shell combustion particle
+
+    // Multiply the summations with the required factors and divide
+    // by the total mass of the particle calculated during initialisation
     this->_mass_fraction_core_material    = 4.0 * M_PI * _delta_r * Y_A  * this->_core_material.getMolecularWeight()    / this->_mass;
     this->_mass_fraction_shell_material   = 4.0 * M_PI * _delta_r * Y_B  * this->_shell_material.getMolecularWeight()   / this->_mass;
     this->_mass_fraction_product_material = 4.0 * M_PI * _delta_r * Y_AB * this->_product_material.getMolecularWeight() / this->_mass;
 
-    // Y_A  *= 4.0 * M_PI * _delta_r * this->_core_material.getMolecularWeight()    / this->_mass;
-    // Y_B  *= 4.0 * M_PI * _delta_r * this->_shell_material.getMolecularWeight()   / this->_mass;
-    // Y_AB *= 4.0 * M_PI * _delta_r * this->_product_material.getMolecularWeight() / this->_mass;
-
+    // // Multiply the summations with the required factors
+    // Y_A  *= 4.0 * M_PI * _delta_r * this->_core_material.getMolecularWeight();
+    // Y_B  *= 4.0 * M_PI * _delta_r * this->_shell_material.getMolecularWeight();
+    // Y_AB *= 4.0 * M_PI * _delta_r * this->_product_material.getMolecularWeight();
+    
+    // // Add the summations to get the total mass
     // float sum = Y_A + Y_B + Y_AB;
-
+    // // Divide by the sum of the summations to get the mass fractions
     // this->_mass_fraction_core_material    = Y_A  / sum;
     // this->_mass_fraction_shell_material   = Y_B  / sum;
     // this->_mass_fraction_product_material = Y_AB / sum;
@@ -211,26 +232,62 @@ void CoreShellDiffusion<real_t>::calcMassFractions()
 template<typename real_t>
 void CoreShellDiffusion<real_t>::setUpEquations(real_t D)
 {
-    real_t coefficient1 = D / pow(_delta_r, 2);
-    real_t coefficient2 = 1.0 / _delta_t;
+    // \f$ \Rightarrow -
+    // \mathcal{D} \cdot \left( \frac{r_{i+1}}{\Delta r \cdot r_i} \right)^2 \cdot C_{k,i+1}^n +
+    // \left\{ \frac{1}{\Delta t} + \mathcal{D} \cdot \left( \frac{r_{i+1}}{\Delta r \cdot r_i} \right)^2 + \frac{\mathcal{D}}{\left(\Delta r\right)^2} \right\} \cdot C_{k,i}^n \\ -
+    // \frac{\mathcal{D}}{\left(\Delta r\right)^2} \cdot C_{k,i-1}^n
+    // = \frac{C_{k,i}^{n-1}}{\Delta t} \f$
 
+    // We can calculate the coefficients in three parts to avoid repetitive calculations
+
+    // Coefficient 1 = \f$ \frac{\mathcal{D\left(T\right)}}{\left(\Delta r\right)^2} \f$
+    real_t coefficient1 = D / pow(_delta_r, 2);
+    // Coefficient 2 = \f$ \frac{1}{\Delta t} \f$
+    real_t coefficient2 = 1.0 / _delta_t;
+    // Coefficient 3 = \f$ \mathcal{D} \cdot \left( \frac{r_{i+1}}{\Delta r \cdot r_i} \right)^2 \f$
+    real_t coefficient3;
+
+    // Set zero flux boundary condition at grid point # 0
+    // \f$ C_{k,1}^n - C_{k,0}^n = 0 \f$
     _solver_A.setEquationFirstRow(1, -1, 0);
     _solver_B.setEquationFirstRow(1, -1, 0);
 
-    #pragma omp parallel for
-    
+    // Parallely setup the matrix for the linear algebra solver
+    // As coefficient 3 is different for every grid point,
+    // it needs to be calculated for each row 
+    // and hence every thread needs a private copy
+    #pragma omp parallel for private(coefficient3)
+        // Iteratively set up the discretized governing diffusion equation
+        // for all grid points except the grid points # 0 and N, where
+        // zero flux boundary conditions apply
         for (size_t i = 1; i < _n - 1; i++)
         {
-            real_t coefficient3 = coefficient1 * pow(getRadialCoordinate(i+1) / getRadialCoordinate(i), 2);
+            // Calculating coefficient 3 for the current grid point
+            coefficient3 = coefficient1 * pow(getRadialCoordinate(i+1) / getRadialCoordinate(i), 2);
 
-            real_t e = - coefficient3;
-            real_t f = coefficient1 + coefficient2 + coefficient3;
-            real_t g = - coefficient1;
+            // Set up row for matrix equation representing 
+            // diffusion of substance A
+            _solver_A.setEquation(
+                i, 
+                - coefficient1, 
+                coefficient1 + coefficient2 + coefficient3, 
+                - coefficient3, 
+                coefficient2 * _concentration_array_A[i]
+            );
 
-            _solver_A.setEquation(i, g, f, e, coefficient2 * _concentration_array_A[i]);
-            _solver_B.setEquation(i, g, f, e, coefficient2 * _concentration_array_B[i]);
+            // Set up row for matrix equation representing 
+            // diffusion of substance B
+            _solver_B.setEquation(
+                i, 
+                - coefficient1, 
+                coefficient1 + coefficient2 + coefficient3, 
+                - coefficient3, 
+                coefficient2 * _concentration_array_B[i]
+            );
         }
 
+    // Set zero flux boundary condition at grid point # N
+    // C_{k,N}^n - C_{k,N-1}^n = 0
     _solver_A.setEquationLastRow(-1, 1, 0);
     _solver_B.setEquationLastRow(-1, 1, 0);
 }
@@ -238,26 +295,91 @@ void CoreShellDiffusion<real_t>::setUpEquations(real_t D)
 template<typename real_t>
 void CoreShellDiffusion<real_t>::solveEquations()
 {
-    _solver_A.getSolution(_concentration_array_A);
-    _solver_B.getSolution(_concentration_array_B);
+    // Parallelly solve the two linear algebra problems
+    #pragma omp parallel sections
+    {
+        // Parallel section for substance A
+        #pragma omp section
+            // Solve the matrix equation representing diffusion of substance A
+            // and save the solution in array A
+            _solver_A.getSolution(_concentration_array_A);
 
-    calcMassFractions();
+        // Parallel section for substance B
+        #pragma omp section
+            // Solve the matrix equation representing diffusion of substance B
+            // and save the solution in array B
+            _solver_B.getSolution(_concentration_array_B);
+    }
+
+    // Calculate the reaction mass fractions
+    // and update the same for the core-shell combustion particle
+    calcRxnMassFractions();
 }
 
 template<typename real_t>
 void CoreShellDiffusion<real_t>::printConcentrationProfileA(std::ostream &output_stream, char delimiter)
 {
+    // Shift the array elements into the output stream followed by a delimter
     for (size_t i = 0; i < _n-1; i++) output_stream << _concentration_array_A[i] << delimiter;
-
+    // For the last element shift an endline instead of the delimiter
     output_stream << _concentration_array_A[_n-1] << std::endl;
 }
 
 template<typename real_t>
 void CoreShellDiffusion<real_t>::printConcentrationProfileB(std::ostream &output_stream, char delimiter)
 {
+    // Shift the array elements into the output stream followed by a delimter
     for (size_t i = 0; i < _n-1; i++) output_stream << _concentration_array_B[i] << delimiter;
-
+    // For the last element shift an endline instead of the delimiter
     output_stream << _concentration_array_B[_n-1] << std::endl;
+}
+
+template<typename real_t>
+void CoreShellDiffusion<real_t>::copyFrom(CoreShellDiffusion<real_t> &diffusion_problem)
+{
+    // Parallelize the copying operation
+    #pragma omp parallel for
+        // For each element in the concentration array
+        // copy the corresponding values
+        for (size_t i = 0; i < _n; i++)
+        {
+            _concentration_array_A[i] = diffusion_problem._concentration_array_A[i];
+            _concentration_array_B[i] = diffusion_problem._concentration_array_B[i];
+        }
+
+    // Update reaction mass fractions of the particle
+    this->_mass_fraction_core_material    = diffusion_problem._mass_fraction_core_material;
+    this->_mass_fraction_shell_material   = diffusion_problem._mass_fraction_shell_material;
+    this->_mass_fraction_product_material = diffusion_problem._mass_fraction_product_material;
+}
+
+template<typename real_t>
+void CoreShellDiffusion<real_t>::copyTo(CoreShellDiffusion<real_t> &diffusion_problem)
+{
+    // Parallelize the copying operation
+    #pragma omp parallel for
+        // For each element in the concentration array
+        // copy the corresponding values
+        for (size_t i = 0; i < _n; i++)
+        {
+            diffusion_problem._concentration_array_A[i] = _concentration_array_A[i];
+            diffusion_problem._concentration_array_B[i] = _concentration_array_B[i];
+        }
+
+    // Update reaction mass fractions of the particle
+    diffusion_problem._mass_fraction_core_material    = this->_mass_fraction_core_material;
+    diffusion_problem._mass_fraction_shell_material   = this->_mass_fraction_shell_material;
+    diffusion_problem._mass_fraction_product_material = this->_mass_fraction_product_material;
+}
+
+template<typename real_t>
+void CoreShellDiffusion<real_t>::printConfiguration(std::ostream &output_stream)
+{
+    output_stream << "Time Step\t:\t" << _delta_t << "\ts" << std::endl;
+
+    output_stream << "Number of Grid Points\t:\t" << _n << std::endl;
+
+    output_stream << "Grid Size\t:\t" << _delta_r << std::endl;
 }
 
 template class CoreShellDiffusion<float>;

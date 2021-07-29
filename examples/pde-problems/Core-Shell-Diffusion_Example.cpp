@@ -43,7 +43,7 @@ int main(int argc, char const *argv[])
 
     ArrheniusDiffusivityModel<float> diffusivity_model(2.56E-6, 102.191E3);
 
-    CoreShellDiffusion<float> Ni_clad_Al_particle;
+    CoreShellDiffusion<float> Ni_clad_Al_particle, Ni_clad_Al_particle_copy;
 
     FileGenerator file_generator;
 
@@ -68,23 +68,28 @@ int main(int argc, char const *argv[])
     
     try
     {
-        while (!Ni_clad_Al_particle.isCombustionComplete() && __iter <= MAX_ITER)
+        while (!Ni_clad_Al_particle_copy.isCombustionComplete() && __iter <= MAX_ITER)
         {
             Ni_clad_Al_particle.setUpEquations(diffusivity);
             Ni_clad_Al_particle.solveEquations();
 
-            float Y_Al = Ni_clad_Al_particle.getMassFractionsCoreMaterial();
-            float Y_Ni = Ni_clad_Al_particle.getMassFractionsShellMaterial();
-            float Y_NiAl = Ni_clad_Al_particle.getMassFractionsProductMaterial();
+            Ni_clad_Al_particle.copyTo(Ni_clad_Al_particle_copy);
+
+            Ni_clad_Al_particle_copy.setUpEquations(diffusivity);
+            Ni_clad_Al_particle_copy.solveEquations();
+
+            float Y_Al = Ni_clad_Al_particle_copy.getMassFractionsCoreMaterial();
+            float Y_Ni = Ni_clad_Al_particle_copy.getMassFractionsShellMaterial();
+            float Y_NiAl = Ni_clad_Al_particle_copy.getMassFractionsProductMaterial();
 
             state_file << Y_Al << ',' << Y_Ni << ',' << Y_NiAl << ',' << Y_Al + Y_Ni + Y_NiAl << std::endl;
 
-            Ni_clad_Al_particle.printConcentrationProfileA(conc_A_file, ',');
-            Ni_clad_Al_particle.printConcentrationProfileB(conc_B_file, ',');
+            Ni_clad_Al_particle_copy.printConcentrationProfileA(conc_A_file, ',');
+            Ni_clad_Al_particle_copy.printConcentrationProfileB(conc_B_file, ',');
 
             if (__iter % 20 == 0)
             {
-                printState(__iter, Ni_clad_Al_particle);
+                printState(__iter, Ni_clad_Al_particle_copy);
             }
 
             __iter++;
@@ -95,18 +100,16 @@ int main(int argc, char const *argv[])
     {
         std::cout << "\nCaught signal " << e.S << std::endl;
 
-        printState(__iter, Ni_clad_Al_particle);
-        Ni_clad_Al_particle.setUpEquations(diffusivity);
-        Ni_clad_Al_particle.solveEquations();
+        printState(__iter, Ni_clad_Al_particle_copy);
 
-        float Y_Al = Ni_clad_Al_particle.getMassFractionsCoreMaterial();
-        float Y_Ni = Ni_clad_Al_particle.getMassFractionsShellMaterial();
-        float Y_NiAl = Ni_clad_Al_particle.getMassFractionsProductMaterial();
+        float Y_Al = Ni_clad_Al_particle_copy.getMassFractionsCoreMaterial();
+        float Y_Ni = Ni_clad_Al_particle_copy.getMassFractionsShellMaterial();
+        float Y_NiAl = Ni_clad_Al_particle_copy.getMassFractionsProductMaterial();
 
         state_file << Y_Al << ',' << Y_Ni << ',' << Y_NiAl << ',' << Y_Al + Y_Ni + Y_NiAl << std::endl;
 
-        Ni_clad_Al_particle.printConcentrationProfileA(conc_A_file, ',');
-        Ni_clad_Al_particle.printConcentrationProfileB(conc_B_file, ',');
+        Ni_clad_Al_particle_copy.printConcentrationProfileA(conc_A_file, ',');
+        Ni_clad_Al_particle_copy.printConcentrationProfileB(conc_B_file, ',');
 
         conc_A_file.close();
         conc_B_file.close();
@@ -116,17 +119,15 @@ int main(int argc, char const *argv[])
     }
 
     printState(__iter, Ni_clad_Al_particle);
-    Ni_clad_Al_particle.setUpEquations(diffusivity);
-    Ni_clad_Al_particle.solveEquations();
 
-    float Y_Al = Ni_clad_Al_particle.getMassFractionsCoreMaterial();
-    float Y_Ni = Ni_clad_Al_particle.getMassFractionsShellMaterial();
-    float Y_NiAl = Ni_clad_Al_particle.getMassFractionsProductMaterial();
+    float Y_Al = Ni_clad_Al_particle_copy.getMassFractionsCoreMaterial();
+    float Y_Ni = Ni_clad_Al_particle_copy.getMassFractionsShellMaterial();
+    float Y_NiAl = Ni_clad_Al_particle_copy.getMassFractionsProductMaterial();
 
     state_file << Y_Al << ',' << Y_Ni << ',' << Y_NiAl << ',' << Y_Al + Y_Ni + Y_NiAl << std::endl;
 
-    Ni_clad_Al_particle.printConcentrationProfileA(conc_A_file, ',');
-    Ni_clad_Al_particle.printConcentrationProfileB(conc_B_file, ',');
+    Ni_clad_Al_particle_copy.printConcentrationProfileA(conc_A_file, ',');
+    Ni_clad_Al_particle_copy.printConcentrationProfileB(conc_B_file, ',');
 
     conc_A_file.close();
     conc_B_file.close();
@@ -147,8 +148,8 @@ void printState(size_t iteration_number, CoreShellDiffusion<float> &particle)
     std::cout << "\tNiAl : " << Y_NiAl;
     std::cout << "\tSum : " << Y_Al + Y_Ni + Y_NiAl;
 
-    float m_Al = particle.numCalcCoreMass();
-    float m_Ni = particle.numCalcShellMass();
+    float m_Al = particle.getDiffusionMassA();
+    float m_Ni = particle.getDiffusionMassB();
 
     std::cout << "\tAl Mass : " << m_Al;
     std::cout << "\tNi Mass : " << m_Ni;

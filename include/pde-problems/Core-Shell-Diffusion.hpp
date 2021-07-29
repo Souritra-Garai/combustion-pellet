@@ -78,10 +78,10 @@ class CoreShellDiffusion : public CoreShellCombustionParticle<real_t>
         static real_t getRadialCoordinate(size_t index);
         
         /**
-         * @brief Calculate mass fractions of the substances A, B and AB
-         * in the particle and set the mass fraction varibles to the calculated values
+         * @brief Calculate reaction mass fractions of the substances A, B and AB
+         * in the particle and set the mass fraction variables to the calculated values
          */
-        void calcMassFractions();
+        void calcRxnMassFractions();
 
         /**
          * @brief Get the reaction concentration of substance A
@@ -158,19 +158,41 @@ class CoreShellDiffusion : public CoreShellCombustionParticle<real_t>
         void printConcentrationProfileB(std::ostream &output_stream, char delimiter = '\t');
         
         /**
-         * @brief Numerically evaluate the diffusion mass of the substance A
-         * initially at the core of the particle
-         * @return real_t Mass of the substance initially at the core, at the
-         * current state in \f$ kg \f$
+         * @brief Get the Diffusion Mass of substance A (initially present in core)
+         * 
+         * @return real_t Numerically evaluate and return the diffusion mass 
+         * of the substance B in \f$ kg \f$
          */
-        real_t numCalcCoreMass();
+        real_t getDiffusionMassA();
+
         /**
-         * @brief Numerically evaluate the diffusion mass of the substance B
-         * initially in the shell
-         * @return real_t Mass of the substance initially in the shell, at the
-         * current state in \f$ kg \f$
+         * @brief Get the Diffusion Mass of substatance B (initially present in shell)
+         * 
+         * @return real_t Numerically evaluate and return the diffusion mass 
+         * of the substance B in \f$ kg \f$
          */
-        real_t numCalcShellMass();
+        real_t getDiffusionMassB();
+
+        /**
+         * @brief Copy the state of diffusion and reaction from the argument
+         * 
+         * @param diffusion_problem Copy from the diffusion_problem object to the calling object
+         */
+        void copyFrom(CoreShellDiffusion<real_t> & diffusion_problem);
+
+        /**
+         * @brief Copy the state of diffusion and reaction to the argument
+         * 
+         * @param diffusion_problem Copy to the diffusion_problem object from the calling object
+         */
+        void copyTo(CoreShellDiffusion<real_t> & diffusion_problem);
+        
+        /**
+         * @brief Print the PDE solver configuration to the output stream
+         * 
+         * @param output_stream Stream to which configuration is printed
+         */
+        void printConfiguration(std::ostream &output_stream);
 };
 
 #endif
