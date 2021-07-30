@@ -53,6 +53,11 @@ $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o : $(INCDIR)/$(TRPDIR)/Cor
 	@echo "\nCompiling Core-Shell-Combustion-Particle...";
 	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.cpp -o $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o
 
+$(BUILDDIR)/$(TRPDIR)/Packed-Pellet.o : $(INCDIR)/$(TRPDIR)/Packed-Pellet.hpp $(INCDIR)/$(PDEDIR)/Core-Shell-Diffusion.hpp $(INCDIR)/$(TRPDIR)/Substance.hpp $(SRCDIR)/$(TRPDIR)/Packed-Pellet.cpp
+	@mkdir -p $(BUILDDIR)/$(TRPDIR);
+	@echo "\nCompiling Packed-Pellet...";
+	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/$(TRPDIR)/Packed-Pellet.cpp -o $(BUILDDIR)/$(TRPDIR)/Packed-Pellet.o
+
 $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o : $(INCDIR)/$(PDEDIR)/Core-Shell-Diffusion.hpp $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp $(INCDIR)/$(QRSDIR)/QR_Solver.hpp $(SRCDIR)/$(PDEDIR)/Core-Shell-Diffusion.cpp
 	@mkdir -p $(BUILDDIR)/$(PDEDIR);
 	@echo "\nCompiling Core-Shell-Diffusion...";
@@ -72,7 +77,7 @@ $(BUILDDIR)/$(UTILDIR)/File_Generator.o : $(INCDIR)/$(UTILDIR)/File_Generator.hp
 	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/$(UTILDIR)/File_Generator.cpp -o $(BUILDDIR)/$(UTILDIR)/File_Generator.o
 
 # ----------------------------------------------------------------------------------------------------------
-# Building PDE Problems Examples
+# Building PDE Problem Examples
 
 Core-Shell-Diffusion_Example : $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o $(PDEOBJS) $(TRPOBJS) $(QRSOBJS) $(UTILOBJS)
 	@mkdir -p $(BINDIR)/$(PDEDIR);
@@ -106,6 +111,16 @@ $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle_Example.o : $(EXMDIR)/$(TRP
 	@mkdir -p $(BUILDDIR)/$(TRPDIR);
 	@echo "\nCompiling Core-Shell-Combustion-Particle_Example...";
 	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle_Example.cpp -o $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle_Example.o
+
+Packed-Pellet_Example : $(BUILDDIR)/$(TRPDIR)/Packed-Pellet_Example.o $(BUILDDIR)/$(TRPDIR)/Packed-Pellet.o $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o $(QRSOBJS)
+	@mkdir -p $(BINDIR)/$(TRPDIR);
+	@echo "\nLinking Packed-Pellet_Example...";
+	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(TRPDIR)/Packed-Pellet_Example.o $(BUILDDIR)/$(TRPDIR)/Packed-Pellet.o $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o $(QRSOBJS) -o $(BINDIR)/$(TRPDIR)/Packed-Pellet_Example
+
+$(BUILDDIR)/$(TRPDIR)/Packed-Pellet_Example.o : $(EXMDIR)/$(TRPDIR)/Packed-Pellet_Example.cpp $(INCDIR)/$(TRPDIR)/Packed-Pellet.hpp $(INCDIR)/$(TRPDIR)/Substance.hpp $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp $(INCDIR)/$(PDEDIR)/Core-Shell-Diffusion.hpp
+	@mkdir -p $(BUILDDIR)/$(TRPDIR);
+	@echo "\nCompiling Packed-Pellet_Example...";
+	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(TRPDIR)/Packed-Pellet_Example.cpp -o $(BUILDDIR)/$(TRPDIR)/Packed-Pellet_Example.o
 
 # ----------------------------------------------------------------------------------------------------------
 # Building QR Factorization solver
