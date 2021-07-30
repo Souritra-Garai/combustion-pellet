@@ -15,7 +15,7 @@
 #include <ostream>
 
 #include "thermo-physical-properties/Substance.hpp"
-#include "pde-problems/Core-Shell-Diffusion.hpp"
+#include "thermo-physical-properties/Core-Shell-Combustion-Particle.hpp"
 
 template<typename real_t>
 class PackedPellet
@@ -60,11 +60,11 @@ class PackedPellet
 
         real_t getDensity();
 
-        real_t getHeatCapacity(CoreShellDiffusion<real_t> &particle);
+        real_t getHeatCapacity(CoreShellCombustionParticle<real_t> *ptr_2_particle);
 
-        real_t getHeatConductivity(CoreShellDiffusion<real_t> &particle);
+        real_t getHeatConductivity(CoreShellCombustionParticle<real_t> *ptr_2_particle);
 
-        real_t getEnthalpy(CoreShellDiffusion<real_t> &particle, real_t temperature);
+        real_t getEnthalpy(CoreShellCombustionParticle<real_t> *ptr_2_particle, real_t temperature);
 
         void printProperties(std::ostream &output_stream);
 };

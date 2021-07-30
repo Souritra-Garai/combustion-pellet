@@ -77,16 +77,16 @@ real_t PackedPellet<real_t>::getDensity()
 }
 
 template<typename real_t>
-real_t PackedPellet<real_t>::getHeatCapacity(CoreShellDiffusion<real_t> &particle)
+real_t PackedPellet<real_t>::getHeatCapacity(CoreShellCombustionParticle<real_t> *ptr_2_particle)
 {
-    return _particle_mass_fractions * particle.getHeatCapacity() +
+    return _particle_mass_fractions * ptr_2_particle->getHeatCapacity() +
     (1.0 - _particle_mass_fractions) * _degassing_fluid.getHeatCapacity();
 }
 
 template<typename real_t>
-real_t PackedPellet<real_t>::getHeatConductivity(CoreShellDiffusion<real_t> &particle)
+real_t PackedPellet<real_t>::getHeatConductivity(CoreShellCombustionParticle<real_t> *ptr_2_particle)
 {    
-    real_t lambda_p = particle.getHeatConductivity();
+    real_t lambda_p = ptr_2_particle->getHeatConductivity();
     real_t lambda_f = _degassing_fluid.getHeatConductivity();
 
     real_t D =
@@ -102,28 +102,28 @@ real_t PackedPellet<real_t>::getHeatConductivity(CoreShellDiffusion<real_t> &par
 }
 
 template<typename real_t>
-real_t PackedPellet<real_t>::getEnthalpy(CoreShellDiffusion<real_t> &particle, real_t T)
+real_t PackedPellet<real_t>::getEnthalpy(CoreShellCombustionParticle<real_t> *ptr_2_particle, real_t T)
 {
-    return _particle_mass_fractions * particle.getEnthalpy(T) +
+    return _particle_mass_fractions * ptr_2_particle->getEnthalpy(T) +
     (1.0 - _particle_mass_fractions) * _degassing_fluid.getEnthalpy(T);
 }
 
 template<typename real_t>
 void PackedPellet<real_t>::printProperties(std::ostream &output_stream)
 {
-    output_stream << "Length\t:\t" << _length << "\tm" << std::endl;
+    output_stream << "Length\t\t:\t" << _length << "\tm" << std::endl;
     output_stream << "Diameter\t:\t" << _diameter << "\tm" << std::endl;
 
     output_stream << "\nAmbient Heat Loss Parameters" << std::endl;
     output_stream << "Convective Heat Transfer Coefficient\t:\t" << _convective_heat_transfer_coefficient << "\tW/m2-K" << std::endl;
-    output_stream << "Radiative emissivity\t:\t" << _radiative_emissivity << std::endl;
-    output_stream << "Ambient Temperature\t:\t" << _ambient_temperature << "\tK" << std::endl;
+    output_stream << "Radiative emissivity\t\t\t:\t" << _radiative_emissivity << std::endl;
+    output_stream << "Ambient Temperature\t\t\t:\t" << _ambient_temperature << "\tK" << std::endl;
 
-    CoreShellDiffusion<real_t> particle;
+    CoreShellCombustionParticle<real_t> particle;
 
-    output_stream << "Density\t\t\t\t:\t" << getDensity() << "\tkg/m3" << std::endl;
-    output_stream << "Heat Capacity\t\t\t:\t" << getHeatCapacity(particle) << "\tJ/kg-K" << std::endl;
-    output_stream << "Heat Conductivity\t\t:\t" << getHeatConductivity(particle) << "\tW/m-K" << std::endl;
+    output_stream << "\nDensity\t\t\t\t:\t" << getDensity() << "\tkg/m3" << std::endl;
+    output_stream << "Heat Capacity\t\t\t:\t" << getHeatCapacity(&particle) << "\tJ/kg-K" << std::endl;
+    output_stream << "Heat Conductivity\t\t:\t" << getHeatConductivity(&particle) << "\tW/m-K" << std::endl;
 
     output_stream << "\nParticle Properties" << std::endl;
     output_stream << "Particle Volume Fraction\t:\t" << _particle_volume_fractions << std::endl;
