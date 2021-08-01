@@ -185,4 +185,23 @@ class CoreShellCombustionParticle
         real_t getMassFractionsProductMaterial();
 };
 
+
+/**
+ * @brief Function to calculate mass of core shell type particle
+ * 
+ * @tparam real_t 
+ * @param core_material Substance forming the core of the core shell particle
+ * @param shell_material Substance forming the shell of the core shell particle
+ * @param overall_radius Overall radius of the core shell particle
+ * @param core_radius Radius of the core of the core sheel particle
+ * @return real_t Mass of the core sheel particle
+ */
+template<typename real_t>
+real_t calcMassCoreShellParticle(
+    Substance<real_t> core_material,
+    Substance<real_t> shell_material,
+    real_t overall_radius,
+    real_t core_radius
+);
+
 #endif

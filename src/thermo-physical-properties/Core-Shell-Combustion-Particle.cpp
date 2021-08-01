@@ -206,3 +206,40 @@ void CoreShellCombustionParticle<real_t>::printProperties(
 template class CoreShellCombustionParticle<float>;
 template class CoreShellCombustionParticle<double>;
 template class CoreShellCombustionParticle<long double>;
+
+template<typename real_t>
+real_t calcMassCoreShellParticle(
+    Substance<real_t> core_material,
+    Substance<real_t> shell_material,
+    real_t overall_radius,
+    real_t core_radius
+) {
+    return (4.0 * M_PI / 3.0) * (
+        core_material.getDensity() * pow(core_radius, 3) +
+        shell_material.getDensity() * (pow(overall_radius, 3) - pow(core_radius, 3))
+    );
+}
+
+template
+float calcMassCoreShellParticle(
+    Substance<float> core_material,
+    Substance<float> shell_material,
+    float overall_radius,
+    float core_radius
+);
+
+template
+double calcMassCoreShellParticle(
+    Substance<double> core_material,
+    Substance<double> shell_material,
+    double overall_radius,
+    double core_radius
+);
+
+template
+long double calcMassCoreShellParticle(
+    Substance<long double> core_material,
+    Substance<long double> shell_material,
+    long double overall_radius,
+    long double core_radius
+);
