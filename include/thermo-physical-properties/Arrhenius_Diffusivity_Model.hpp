@@ -17,9 +17,11 @@
 #include <math.h>
 
 /**
- * @brief 
+ * @brief Class representing Arrhenius rate law type model for
+ * diffusivity coefficient in Fick's Diffusion Law
  * 
- * @tparam real_t 
+ * @tparam real_t real_t float, double or long double data types
+ * to represent real numbers
  */
 template<typename real_t>
 class ArrheniusDiffusivityModel
@@ -39,15 +41,26 @@ class ArrheniusDiffusivityModel
 
     public:
         
+        /**
+         * @brief Construct a new Arrhenius Diffusivity Model object
+         * 
+         * @param pre_exponential_factor Pre-exponential factor in Arrhenius model
+         * @param activation_energy Activation energy in Arrhenius model
+         */
         ArrheniusDiffusivityModel(
             real_t pre_exponential_factor,
             real_t activation_energy
         ) {
-            setDiffusivityParameters(pre_exponential_factor, activation_energy);
+            // Set the Arrhenius model paramemters
+            setParameters(pre_exponential_factor, activation_energy);
         }
 
+        /**
+         * @brief Construct a new Arrhenius Diffusivity Model object
+         */
         ArrheniusDiffusivityModel() {
-            setDiffusivityParameters(0, 0);
+            // Set the Arrhenius model parameters to zero
+            setParameters(0, 0);
         }
 
         /**
@@ -55,7 +68,7 @@ class ArrheniusDiffusivityModel
          * @param pre_exponential_factor Pre-exponential factor in \f$ m^2 / s \f$
          * @param activation_energy Activation energy in \f$ J / mol \f$
          */
-        void setDiffusivityParameters(
+        void setParameters(
             real_t pre_exponential_factor,
             real_t activation_energy
         ) {

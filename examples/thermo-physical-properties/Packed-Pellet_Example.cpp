@@ -33,14 +33,13 @@ int main(int argc, char const *argv[])
     CoreShellDiffusion<float> particle;
 
     PackedPellet<float>::setPelletDimensions(pellet_length, pellet_diameter);
-    PackedPellet<float>::setAmbientHeatLossProperties(19.68, 0.25, 298);
+    PackedPellet<float>::setAmbientHeatLossParameters(19.68, 0.25, 298);
     PackedPellet<float>::setDegassingFluid(Ar);
 
     PackedPellet<float> pellet(0.5);
     
     pellet.printProperties(std::cout);
 
-    std::cout << "\n\nEnthalpy\t:\t" << pellet.getEnthalpy(&particle, 373) << "\tJ/kg" << std::endl;   
-
+    std::cout << "\n\nEnthalpy\t:\t" << pellet.getEnthalpy(&particle, T_REF) << "\tJ/kg" << std::endl;  
     return 0;
 }
