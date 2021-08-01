@@ -9,17 +9,17 @@
  * 
  */
 
-
 #include <iostream>
 
 #include "thermo-physical-properties/Core-Shell-Combustion-Particle.hpp"
 
 Substance<float> Al(2700, 897, 26.98, 239);
-Substance<float> Ni(8902, 440, 58.69, 90.7);
+Substance<float> Ni(8908, 440, 58.69, 90.7);
 Substance<float> NiAl(5900, 717, 85.675, 115, -118.4);
 
 float core_radius = 32.5E-6;
 float overall_radius = 39.5E-6;
+<<<<<<< HEAD
 float mass = calcMassCoreShellParticle<float>(Al, Ni, overall_radius, core_radius);
 
 CoreShellCombustionParticle<float> Ni_clad_Al_particle(
@@ -33,5 +33,21 @@ int main(int argc, char const *argv[])
 {
     std::cout << "Enthalpy\t:\t" << Ni_clad_Al_particle.getEnthalpy(350) << "\tJ / kg" << std::endl;
     Ni_clad_Al_particle.printProperties(std::cout);
+=======
+
+int main(int argc, char const *argv[])
+{
+    CoreShellCombustionParticle<float>::setUpCoreShellCombustionParticle(
+        Al, Ni, NiAl,
+        overall_radius, core_radius
+    );
+
+    CoreShellCombustionParticle<float> Ni_clad_Al_particle;
+
+    std::cout << "Enthalpy\t:\t" << Ni_clad_Al_particle.getEnthalpy(373) << "\tJ/kg" << std::endl << std::endl;
+
+    Ni_clad_Al_particle.printProperties(std::cout);
+
+>>>>>>> e50687727b5eaa493f71bb16dd468c52d2256b8d
     return 0;
 }

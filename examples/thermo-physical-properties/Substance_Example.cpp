@@ -13,7 +13,7 @@
 
 #include "thermo-physical-properties/Substance.hpp"
 
-Substance<float> Water(1000, 4180, 18E-3, 10);
+Substance<float> Water(1000.0, 4184.0, 18E-3, 0.599, -285.82E3);
 
 int main(int argc, char const *argv[])
 {
