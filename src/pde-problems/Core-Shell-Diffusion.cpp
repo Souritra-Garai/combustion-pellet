@@ -207,8 +207,6 @@ void CoreShellDiffusion<real_t>::calcRxnMassFractions()
             Y_B  += getRxnConcB(i)  * r2;
             Y_AB += getRxnConcAB(i) * r2;
         }
-
-    std::cout << this->mass;
     
     // Update the reaction mass fractions of the core-shell combustion particle
 

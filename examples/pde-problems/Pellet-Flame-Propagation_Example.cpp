@@ -1,0 +1,97 @@
+#include <iostream>
+#include <omp.h>
+
+#include "thermo-physical-properties/Substance.hpp"
+#include "thermo-physical-properties/Arrhenius_Diffusivity_Model.hpp"
+
+#include "pde-problems/Core-Shell-Diffusion.hpp"
+#include "pde-problems/Pellet-Flame-Propagation.hpp"
+
+#include "utilities/File_Generator.hpp"
+#include "utilities/Keyboard_Interrupt.hpp"
+
+#define MAX_ITER 2
+
+Substance<float> Al(2700, 897, 26.98E-3, 239);
+Substance<float> Ni(8902, 440, 58.69E-3, 90.7);
+Substance<float> NiAl(5900, 717, 85.67E-3, 115, -118.4E3 / 85.67E-3);
+
+float core_radius = 32.5E-6;
+float overall_radius = 39.5E-6;
+
+Substance<float> Ar(0.5, 520, 39.95E-3, 0.3, 0);
+
+float pellet_length = 6.35E-3;
+float pellet_diameter = 6.35E-3;
+
+ArrheniusDiffusivityModel<float> diffusivity_model(2.56E-6, 102.191E3);
+
+void printState(size_t iteration_number, PelletFlamePropagation<float> &pellet);
+
+int main(int argc, char const *argv[])
+{
+    CoreShellDiffusion<float>::setUpCoreShellCombustionParticle(
+        Al, Ni, NiAl,
+        overall_radius, core_radius
+    );
+
+    CoreShellDiffusion<float>::setGridSize(1001);
+    // CoreShellDiffusion<float>::setTimeStep(0.0001);
+
+    PelletFlamePropagation<float>::setPelletDimensions(pellet_length, pellet_diameter);
+    PelletFlamePropagation<float>::setAmbientHeatLossParameters(19.68, 0.25, 298);
+    PelletFlamePropagation<float>::setDegassingFluid(Ar);
+
+    PelletFlamePropagation<float>::setGridSize(5);
+    PelletFlamePropagation<float>::setTimeStep(0.001);
+    PelletFlamePropagation<float>::setIgnitionParameters(933.0, 0.1 * pellet_length);
+
+    PelletFlamePropagation<float> combustion_pellet(0.5);
+    combustion_pellet.setDiffusivityModel(diffusivity_model);
+
+    combustion_pellet.printProperties(std::cout);
+
+    size_t __iter = 1;
+
+    printState(0, combustion_pellet);
+
+    setUpKeyboardInterrupt();
+    
+    try
+    {
+        while (!combustion_pellet.isCombustionComplete() && __iter <= MAX_ITER)
+        {
+            combustion_pellet.setUpEquations();
+            combustion_pellet.solveEquations();
+
+            if (__iter % 1 == 0)
+            {
+                printState(__iter, combustion_pellet);
+            }
+
+            __iter++;
+        }
+    }
+
+    catch (InterruptException& e)
+    {
+        std::cout << "\nCaught signal " << e.S << std::endl;
+
+        printState(__iter, combustion_pellet);
+
+        return 1;
+    }
+
+    printState(__iter, combustion_pellet);
+    
+    return 0;
+}
+
+void printState(size_t iteration_number, PelletFlamePropagation<float> &pellet)
+{
+    std::cout << "Iteration # " << iteration_number << "\t";
+    
+    pellet.printTemperatureProfile(std::cout);
+
+    std::cout << std::endl;
+}
