@@ -33,7 +33,8 @@ class LinearExpression {
 template<typename real_t>
 class PelletFlamePropagation : public PackedPellet<real_t>
 {
-    private:
+    public:
+
     
         static size_t _n;
         static real_t _delta_x;
@@ -74,8 +75,6 @@ class PelletFlamePropagation : public PackedPellet<real_t>
 
         void updateParticlesState();
 
-    public:
-
         static void setGridSize(size_t N);
         static void setTimeStep(real_t delta_t);
 
@@ -96,6 +95,8 @@ class PelletFlamePropagation : public PackedPellet<real_t>
         bool isCombustionComplete();
 
         void printTemperatureProfile(std::ostream &output_stream, char delimiter = '\t');
+
+        void initializePellet();
 };
 
 #endif

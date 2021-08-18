@@ -193,6 +193,8 @@ class CoreShellDiffusion : public CoreShellCombustionParticle<real_t>
          * @param output_stream Stream to which configuration is printed
          */
         void printConfiguration(std::ostream &output_stream);
+
+        void initializeParticle();
 };
 
 #endif

@@ -56,28 +56,7 @@ CoreShellDiffusion<real_t>::CoreShellDiffusion() : // Mem initialization list
     _concentration_array_A = new real_t[_n];
     _concentration_array_B = new real_t[_n];
 
-    // Parallelize for loops
-    #pragma omp parallel for
-
-        // Loop over the grid points to initialize the concentration of the
-        // substances A and B
-        for (size_t i = 0; i < _n; i++)
-        {
-            // Only substance A is present in the core (\f$ r < r_C \f$)
-            if (getRadialCoordinate(i) < this->_core_radius)
-            {
-                // Concentration of pure substance A is its molar density
-                _concentration_array_A[i] = this->_core_material.getMolarDensity();
-                _concentration_array_B[i] = 0;
-            }
-            // Only substance B is present in the shell (\f$ r > r_V \f$)
-            else
-            {
-                // Concentration of pure substance B is its molar density
-                _concentration_array_A[i] = 0;
-                _concentration_array_B[i] = this->_shell_material.getMolarDensity();
-            }
-        }
+    initializeParticle();
 }
 
 template<typename real_t>
@@ -380,6 +359,33 @@ void CoreShellDiffusion<real_t>::printConfiguration(std::ostream &output_stream)
     output_stream << "Number of Grid Points\t:\t" << _n << std::endl;
 
     output_stream << "Grid Size\t:\t" << _delta_r << std::endl;
+}
+
+template<typename real_t>
+void CoreShellDiffusion<real_t>::initializeParticle()
+{
+    // Parallelize for loops
+    #pragma omp parallel for
+
+        // Loop over the grid points to initialize the concentration of the
+        // substances A and B
+        for (size_t i = 0; i < _n; i++)
+        {
+            // Only substance A is present in the core (\f$ r < r_C \f$)
+            if (getRadialCoordinate(i) < this->_core_radius)
+            {
+                // Concentration of pure substance A is its molar density
+                _concentration_array_A[i] = this->_core_material.getMolarDensity();
+                _concentration_array_B[i] = 0;
+            }
+            // Only substance B is present in the shell (\f$ r > r_V \f$)
+            else
+            {
+                // Concentration of pure substance B is its molar density
+                _concentration_array_A[i] = 0;
+                _concentration_array_B[i] = this->_shell_material.getMolarDensity();
+            }
+        }
 }
 
 template class CoreShellDiffusion<float>;

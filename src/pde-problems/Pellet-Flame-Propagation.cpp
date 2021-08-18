@@ -11,8 +11,6 @@
 
 #include <math.h>
 
-// #include <iostream>
-
 #include "pde-problems/Pellet-Flame-Propagation.hpp"
 
 #define STEFAN_BOLTZMANN_CONSTANT 5.670374419E-8 // W / m2 - K4
@@ -41,8 +39,8 @@ void PelletFlamePropagation<real_t>::setGridSize(size_t N)
 template<typename real_t>
 void PelletFlamePropagation<real_t>::setTimeStep(real_t delta_t)
 {
-    CoreShellDiffusion<real_t>::setTimeStep(_delta_t);
     _delta_t = delta_t;
+    CoreShellDiffusion<real_t>::setTimeStep(_delta_t);
 }
 
 template<typename real_t>
@@ -72,6 +70,8 @@ PelletFlamePropagation<real_t>::PelletFlamePropagation(
 
         else _temperature_array[i] = this->_ambient_temperature;
     }
+
+    updateParticlesState();
 }
 
 template<typename real_t>
@@ -127,8 +127,11 @@ LinearExpression<real_t> PelletFlamePropagation<real_t>::calcTransientTerm(size_
 
     if (inReactionZone(i))
     {
-        expression.coefficient += this->_particle_mass_fractions * getParticleEnthalpyTemperatureDerivative(i) / _delta_t;
-        expression.constant += this->_particle_mass_fractions * getParticleEnthalpyTimeDerivative(i);
+        real_t particle_enthalpy_temperature_derivative = getParticleEnthalpyTemperatureDerivative(i);
+        real_t particle_enthalpy_time_derivative = getParticleEnthalpyTimeDerivative(i);
+        
+        expression.coefficient += this->_particle_mass_fractions * particle_enthalpy_temperature_derivative / _delta_t;
+        expression.constant += this->_particle_mass_fractions * particle_enthalpy_time_derivative;
     }
 
     expression.constant += expression.coefficient * _temperature_array[i];
@@ -207,8 +210,6 @@ void PelletFlamePropagation<real_t>::setUpEquations()
         }
 
     setUpBoundaryConditionXN();
-
-    _solver.printMatrixEquation();
 }
 
 template<typename real_t>
@@ -259,6 +260,28 @@ bool PelletFlamePropagation<real_t>::isCombustionComplete()
     }
 
     return flag;
+}
+
+template<typename real_t>
+void PelletFlamePropagation<real_t>::initializePellet()
+{
+    _temperature_array[0] = _ignition_temperature;
+
+    #pragma omp parallel for
+    
+        for (size_t i = 1; i < _n-1; i++)
+        {
+            if (getxCoordinate(i) < _ignition_length) _temperature_array[i] = _ignition_temperature;
+
+            else _temperature_array[i] = this->_ambient_temperature;
+
+            _particles_array[i].initializeParticle();
+            
+            _curr_particles_array[i].initializeParticle();
+            _prev_particles_array[i].initializeParticle();
+        }
+
+    _temperature_array[_n-1] = this->_ambient_temperature;
 }
 
 template class PelletFlamePropagation<float>;
