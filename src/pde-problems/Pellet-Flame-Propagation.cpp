@@ -11,15 +11,28 @@
 
 #include <math.h>
 
+#include <iostream>
+
 #include "pde-problems/Pellet-Flame-Propagation.hpp"
 
 #define STEFAN_BOLTZMANN_CONSTANT 5.670374419E-8 // W / m2 - K4
 
+/**
+ * @brief Get an infinitesimal increment change in the value of variable
+ * 
+ * @tparam real_t float, double or long double data types
+ * to represent real numbers
+ * @param variable Value in which incremental change is required
+ * @param tol Tolerance for incremental change
+ * @return real_t Value of infinitesimal change in the variable
+ */
 template<typename real_t>
 real_t getInfinitesimalIncrement(
     real_t variable,
     real_t tol = 1E-5
 ) {
+    // If variable is greater than 1 return the tolerance,
+    // else multiply the value with tolerance and return the value
     return variable > 1.0 ? tol : variable * tol;
 }
 
@@ -64,14 +77,7 @@ PelletFlamePropagation<real_t>::PelletFlamePropagation(
     _prev_particles_array = new CoreShellDiffusion<real_t>[_n];
     _curr_particles_array = new CoreShellDiffusion<real_t>[_n];
 
-    for (size_t i = 0; i < _n; i++)
-    {
-        if (getxCoordinate(i) < _ignition_length) _temperature_array[i] = _ignition_temperature;
-
-        else _temperature_array[i] = this->_ambient_temperature;
-    }
-
-    updateParticlesState();
+    initializePellet();
 }
 
 template<typename real_t>
@@ -94,9 +100,18 @@ void PelletFlamePropagation<real_t>::setDiffusivityModel(
 template<typename real_t>
 real_t PelletFlamePropagation<real_t>::getParticleEnthalpyTemperatureDerivative(size_t i)
 {
-    real_t delta_T = getInfinitesimalIncrement(_temperature_array[i]);
+    real_t delta_T = getInfinitesimalIncrement(_temperature_array[i], (real_t) 1);
 
-    _prev_particles_array[i].setUpEquations(_diffusivity_model.getDiffusivity(_temperature_array[i] + delta_T));
+    real_t D = _diffusivity_model.getDiffusivity(_temperature_array[i] + delta_T);
+
+    // #pragma omp critical    
+    // {
+    //     std::cout << "\t\tParticle # " << i << std::endl;
+    //     std::cout << "\t\t\tDiffusivity : " << D << "\t";
+    //     std::cout << "\t\t\tNormal : " << _diffusivity_model.getDiffusivity(_temperature_array[i]) << std::endl;
+    // }
+
+    _prev_particles_array[i].setUpEquations(D);
     _prev_particles_array[i].solveEquations();
 
     return
@@ -108,8 +123,10 @@ real_t PelletFlamePropagation<real_t>::getParticleEnthalpyTemperatureDerivative(
 template<typename real_t>
 real_t PelletFlamePropagation<real_t>::getParticleEnthalpyTimeDerivative(size_t i)
 {
-    _curr_particles_array[i].setUpEquations(_diffusivity_model.getDiffusivity(_temperature_array[i]));
-    _prev_particles_array[i].solveEquations();
+    real_t D = _diffusivity_model.getDiffusivity(_temperature_array[i]);
+
+    _curr_particles_array[i].setUpEquations(D);
+    _curr_particles_array[i].solveEquations();
 
     return
     (   _curr_particles_array[i].getEnthalpy(_temperature_array[i]) -
@@ -130,8 +147,14 @@ LinearExpression<real_t> PelletFlamePropagation<real_t>::calcTransientTerm(size_
         real_t particle_enthalpy_temperature_derivative = getParticleEnthalpyTemperatureDerivative(i);
         real_t particle_enthalpy_time_derivative = getParticleEnthalpyTimeDerivative(i);
         
+        // std::cout << "\tParticle # " << i << std::endl;
+        // std::cout << "\t\tdudT : " << particle_enthalpy_temperature_derivative / _delta_t << std::endl;
+        // std::cout << "\t\tdudt : " << particle_enthalpy_time_derivative << std::endl;
+
         expression.coefficient += this->_particle_mass_fractions * particle_enthalpy_temperature_derivative / _delta_t;
-        expression.constant += this->_particle_mass_fractions * particle_enthalpy_time_derivative;
+        expression.constant += - this->_particle_mass_fractions * particle_enthalpy_time_derivative;
+
+        // expression.constant += - this->_particle_mass_fractions * (_curr_particles_array[i].getEnthalpy(_temperature_array[i]) - _prev_particles_array[i].getEnthalpy(_temperature_array[i])) / _delta_t;
     }
 
     expression.constant += expression.coefficient * _temperature_array[i];
@@ -210,6 +233,8 @@ void PelletFlamePropagation<real_t>::setUpEquations()
         }
 
     setUpBoundaryConditionXN();
+
+    // _solver.printMatrixEquation();
 }
 
 template<typename real_t>
@@ -265,13 +290,13 @@ bool PelletFlamePropagation<real_t>::isCombustionComplete()
 template<typename real_t>
 void PelletFlamePropagation<real_t>::initializePellet()
 {
-    _temperature_array[0] = _ignition_temperature;
+    _temperature_array[0] = 1200;
 
     #pragma omp parallel for
     
         for (size_t i = 1; i < _n-1; i++)
         {
-            if (getxCoordinate(i) < _ignition_length) _temperature_array[i] = _ignition_temperature;
+            if (getxCoordinate(i) < _ignition_length) _temperature_array[i] = 1200;
 
             else _temperature_array[i] = this->_ambient_temperature;
 

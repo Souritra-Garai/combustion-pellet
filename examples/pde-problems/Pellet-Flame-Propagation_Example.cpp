@@ -10,10 +10,10 @@
 #include "utilities/File_Generator.hpp"
 #include "utilities/Keyboard_Interrupt.hpp"
 
-#define MAX_ITER 100
+#define MAX_ITER 30000
 
-Substance<float> Al(2700, 897, 26.98E-3, 239);
-Substance<float> Ni(8902, 440, 58.69E-3, 90.7);
+Substance<float> Al(2700, 1060, 26.98E-3, 220);
+Substance<float> Ni(8902, 440, 58.69E-3, 66);
 Substance<float> NiAl(5900, 717, 85.67E-3, 115, -118.4E3 / 85.67E-3);
 
 float core_radius = 32.5E-6;
@@ -24,7 +24,7 @@ Substance<float> Ar(0.5, 520, 39.95E-3, 0.3, 0);
 float pellet_length = 6.35E-3;
 float pellet_diameter = 6.35E-3;
 
-ArrheniusDiffusivityModel<float> diffusivity_model(2.56E-6, 102.191E3);
+ArrheniusDiffusivityModel<float> diffusivity_model(9.54E-7, 26E3); //2.56E-6, 102.191E3); //
 
 void printState(size_t iteration_number, PelletFlamePropagation<float> &pellet);
 
@@ -42,9 +42,9 @@ int main(int argc, char const *argv[])
     PelletFlamePropagation<float>::setAmbientHeatLossParameters(0, 0, 298);
     PelletFlamePropagation<float>::setDegassingFluid(Ar);
 
-    PelletFlamePropagation<float>::setGridSize(101);
+    PelletFlamePropagation<float>::setGridSize(11);
     PelletFlamePropagation<float>::setTimeStep(0.0001);
-    PelletFlamePropagation<float>::setIgnitionParameters(1500.0, 0.5 * pellet_length);
+    PelletFlamePropagation<float>::setIgnitionParameters(933, 0.5 * pellet_length);
 
     // omp_set_num_threads(1);
 
@@ -56,8 +56,11 @@ int main(int argc, char const *argv[])
     FileGenerator file_generator;
 
     std::ofstream temperature_file = file_generator.getCSVFile("temperature");
+    std::ofstream config_file = file_generator.getTXTFile("combustion_config");
 
-    combustion_pellet.printProperties(std::cout);
+    combustion_pellet.printProperties(config_file);
+    config_file.close();
+
     std::cout << std::endl;
 
     size_t __iter = 1;
@@ -78,7 +81,7 @@ int main(int argc, char const *argv[])
             if (__iter % 1 == 0)
             {
                 std::cout << "Iteration # " << __iter << std::endl;
-                // printState(__iter, combustion_pellet);
+                printState(__iter, combustion_pellet);
             }
 
             __iter++;
@@ -98,7 +101,7 @@ int main(int argc, char const *argv[])
         return 1;
     }
 
-    printState(__iter, combustion_pellet);
+    printState(__iter-1, combustion_pellet);
     
     combustion_pellet.printTemperatureProfile(temperature_file, ',');
     temperature_file.close();

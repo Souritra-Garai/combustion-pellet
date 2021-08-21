@@ -81,7 +81,7 @@ void RMatrix<real_t>::printMatrix()
         for (int j = 0; j < N; j++)
         {
             // Print i,j th element of the matrix
-            printf("%Lf\t", (long double) getElement(i, j));
+            printf("%LE\t", (long double) getElement(i, j));
             // getElement takes care of zero elements of the matrix
         }
         // Print a newline character at teh end of each row

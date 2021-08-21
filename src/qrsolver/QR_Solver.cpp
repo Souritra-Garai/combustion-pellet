@@ -100,7 +100,7 @@ void QRSolver<real_t>::printMatrixEquation()
 
     printf("\nb_{%d \\times 1}\n", N);
     // Print \f$ b \f$ vector
-    for (k = 0; k < N; k++) printf("%Lf\n", (long double) b[k]);
+    for (k = 0; k < N; k++) printf("%LE\n", (long double) b[k]);
 }
 
 template<typename real_t>
@@ -176,6 +176,7 @@ void QRSolver<real_t>::getSolution(
     for (k = N-3; k > 0; k--)
     {
         x[k] = (x[k] - R.getElement(k, k+1) * x[k+1] - R.getElement(k, k+2) * x[k+2]) / R.getElement(k, k);
+        R.setElement(k, k+2, 0);
     }
     
     // k is an unsigned int, hence cannot be less than 0
@@ -183,6 +184,7 @@ void QRSolver<real_t>::getSolution(
     // and it bypasses the k >= 0 criteria to stop iterations
     // Hence, the iteration corresponding to k = 0 is handled outside the loop
     x[0] = (x[0] - R.getElement(0, 1) * x[1] - R.getElement(0, 2) * x[2]) / R.getElement(0, 0);
+    R.setElement(0, 2, 0);
 }
 
 template class QRSolver<long double>;

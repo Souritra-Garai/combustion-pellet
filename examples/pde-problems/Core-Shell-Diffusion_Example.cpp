@@ -29,6 +29,8 @@ Substance<float> NiAl(5900, 717, 85.67E-3, 115, -118.4E3 / 85.67E-3);
 float core_radius = 32.5E-6;
 float overall_radius = 39.5E-6;
 
+float gen_NiAl;
+
 void printState(size_t iteration_number, CoreShellDiffusion<float> &particle);
 
 int main(int argc, char const *argv[])
@@ -44,6 +46,8 @@ int main(int argc, char const *argv[])
     ArrheniusDiffusivityModel<float> diffusivity_model(2.56E-6, 102.191E3);
 
     CoreShellDiffusion<float> Ni_clad_Al_particle, Ni_clad_Al_particle_copy;
+
+    gen_NiAl = Ni_clad_Al_particle.getEnthalpy(1600);
 
     FileGenerator file_generator;
 
@@ -61,7 +65,7 @@ int main(int argc, char const *argv[])
     printState(0, Ni_clad_Al_particle);
     state_file << "Al, Ni, NiAl, Sum\n";
 
-    float temperature = 1600;
+    float temperature = 1400;
     float diffusivity = diffusivity_model.getDiffusivity(temperature);
 
     setUpKeyboardInterrupt();
@@ -148,12 +152,8 @@ void printState(size_t iteration_number, CoreShellDiffusion<float> &particle)
     std::cout << "\tNiAl : " << Y_NiAl;
     std::cout << "\tSum : " << Y_Al + Y_Ni + Y_NiAl;
 
-    float m_Al = particle.getDiffusionMassA();
-    float m_Ni = particle.getDiffusionMassB();
-
-    std::cout << "\tAl Mass : " << m_Al;
-    std::cout << "\tNi Mass : " << m_Ni;
-    std::cout << "\tSum : " << m_Al + m_Ni;
+    std::cout << "\t Production : " << (particle.getEnthalpy(1600) - gen_NiAl) / 0.001;
+    gen_NiAl = particle.getEnthalpy(1600);   
 
     std::cout << std::endl;
 }

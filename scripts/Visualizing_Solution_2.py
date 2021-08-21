@@ -69,8 +69,8 @@ for i in range(n):
 # ax1.plot(x, T[3*N//4], label=u"Time t = {:.3f} seconds".format(t[3*N//4]))
 ax1.plot(x, T[N-1], label=u"Time t = {:.3f} seconds".format(t[N-1]))
 
-ax1.set_xlabel('t (s)')
-ax1.set_ylabel('x (m)')
+ax1.set_xlabel('x (m)')
+ax1.set_ylabel('T (K)')
 # ax1.set_zlabel('Temperature (K)')
 
 ax1.set_title('Temperature Evolution in the Pellet')
