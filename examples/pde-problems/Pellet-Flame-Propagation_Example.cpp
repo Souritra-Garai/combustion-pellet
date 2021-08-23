@@ -24,7 +24,7 @@ Substance<float> Ar(0.5, 520, 39.95E-3, 0.3, 0);
 float pellet_length = 6.35E-3;
 float pellet_diameter = 6.35E-3;
 
-ArrheniusDiffusivityModel<float> diffusivity_model(9.54E-7, 26E3); //2.56E-6, 102.191E3); //
+ArrheniusDiffusivityModel<float> diffusivity_model(2.56E-6, 102.191E3); //(9.54E-7, 26E3); //
 
 void printState(size_t iteration_number, PelletFlamePropagation<float> &pellet);
 
@@ -42,7 +42,7 @@ int main(int argc, char const *argv[])
     PelletFlamePropagation<float>::setAmbientHeatLossParameters(0, 0, 298);
     PelletFlamePropagation<float>::setDegassingFluid(Ar);
 
-    PelletFlamePropagation<float>::setGridSize(11);
+    PelletFlamePropagation<float>::setGridSize(1001);
     PelletFlamePropagation<float>::setTimeStep(0.0001);
     PelletFlamePropagation<float>::setIgnitionParameters(933, 0.5 * pellet_length);
 
