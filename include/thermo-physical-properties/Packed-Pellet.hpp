@@ -54,10 +54,16 @@ class PackedPellet
          * atmosphere occurs
          */
         static real_t _radiative_emissivity;
+        
         /**
          * @brief Temperature of surrounding atmosphere in \f$ K \f$
          */
         static real_t _ambient_temperature;
+
+        /**
+         * @brief Temperature at which reactions begin in the pellet
+         */
+        static real_t _ignition_temperature;
 
         /**
          * @brief Fluid (gas) filling the voids of the packed pellet
@@ -127,11 +133,21 @@ class PackedPellet
          * coefficient for heat loss to surrounding atmosphere via convection
          * @param radiative_emissivity Emissivity for the surface of the cylinder
          * through which radiative heat loss to the surrounding atmosphere occurs
-         * @param ambient_temperature Temperature of surrounding atmosphere
          */
         static void setAmbientHeatLossParameters(
             real_t convective_heat_transfer_coefficient,
-            real_t radiative_emissivity,
+            real_t radiative_emissivity
+        );
+
+        /**
+         * @brief Set the Temperature Parameters for the pellet
+         * 
+         * @param ignition_temperature Temperature at which reactions of energetic 
+         * particles begin inside the pellet
+         * @param ambient_temperature Temperature of surrounding atmosphere
+         */
+        static void setTemperatureParameters(
+            real_t ignition_temperature,
             real_t ambient_temperature
         );
 

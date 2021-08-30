@@ -10,7 +10,7 @@
 #include "utilities/File_Generator.hpp"
 #include "utilities/Keyboard_Interrupt.hpp"
 
-#define MAX_ITER 30000
+#define MAX_ITER 3000
 
 Substance<float> Al(2700, 1060, 26.98E-3, 220);
 Substance<float> Ni(8902, 440, 58.69E-3, 66);
@@ -24,7 +24,8 @@ Substance<float> Ar(0.5, 520, 39.95E-3, 0.3, 0);
 float pellet_length = 6.35E-3;
 float pellet_diameter = 6.35E-3;
 
-ArrheniusDiffusivityModel<float> diffusivity_model(2.56E-6, 102.191E3); //(9.54E-7, 26E3); //
+ArrheniusDiffusivityModel<float> Alawieh_diffusivity(2.56E-6, 102.191E3);
+ArrheniusDiffusivityModel<float> Du_diffusivity(9.54E-8, 26E3);
 
 void printState(size_t iteration_number, PelletFlamePropagation<float> &pellet);
 
@@ -39,17 +40,19 @@ int main(int argc, char const *argv[])
     // CoreShellDiffusion<float>::setTimeStep(0.0001);
 
     PelletFlamePropagation<float>::setPelletDimensions(pellet_length, pellet_diameter);
-    PelletFlamePropagation<float>::setAmbientHeatLossParameters(0, 0, 298);
+    PelletFlamePropagation<float>::setAmbientHeatLossParameters(0, 0);
+    PelletFlamePropagation<float>::setTemperatureParameters(933, 298);
     PelletFlamePropagation<float>::setDegassingFluid(Ar);
 
-    PelletFlamePropagation<float>::setGridSize(1001);
-    PelletFlamePropagation<float>::setTimeStep(0.0001);
-    PelletFlamePropagation<float>::setIgnitionParameters(933, 0.5 * pellet_length);
+    PelletFlamePropagation<float>::setGridSize(11);
+    PelletFlamePropagation<float>::setTimeStep(0.001);
+    PelletFlamePropagation<float>::setInfinitesimalChangeTemperature(0.001);
+    PelletFlamePropagation<float>::setInitialIgnitionParameters(1500, 0.5 * pellet_length);
 
     // omp_set_num_threads(1);
 
     PelletFlamePropagation<float> combustion_pellet(0.5);
-    combustion_pellet.setDiffusivityModel(diffusivity_model);
+    combustion_pellet.setDiffusivityModel(Alawieh_diffusivity);
 
     combustion_pellet.initializePellet();
 
@@ -78,10 +81,10 @@ int main(int argc, char const *argv[])
 
             combustion_pellet.printTemperatureProfile(temperature_file, ',');
 
-            if (__iter % 1 == 0)
+            if (__iter % 30 == 0)
             {
                 std::cout << "Iteration # " << __iter << std::endl;
-                printState(__iter, combustion_pellet);
+                // printState(__iter, combustion_pellet);
             }
 
             __iter++;

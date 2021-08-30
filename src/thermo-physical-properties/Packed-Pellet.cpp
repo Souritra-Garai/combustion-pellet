@@ -23,17 +23,21 @@
 // Only one copy of these variables are shared across all classes
 
 // Length of pellet in \f$ m \f$
-template<typename real_t> real_t PackedPellet<real_t>::_length = 0;
+template<typename real_t> real_t PackedPellet<real_t>::_length = 1.0;
 // Diameter of pellet in \f$ m \f$
-template<typename real_t> real_t PackedPellet<real_t>::_diameter = 0;
+template<typename real_t> real_t PackedPellet<real_t>::_diameter = 1.0;
 
 // Ambient heat loss parameters
 // Convective heat transfer coefficient
 template<typename real_t> real_t PackedPellet<real_t>::_convective_heat_transfer_coefficient = 0;
 // Emissivity
 template<typename real_t> real_t PackedPellet<real_t>::_radiative_emissivity = 0;
-// Ambient temperature
-template<typename real_t> real_t PackedPellet<real_t>::_ambient_temperature = 0;
+
+// Ambient temperature in K
+template<typename real_t> real_t PackedPellet<real_t>::_ambient_temperature = 298.0;
+
+// Ignition temperature of the energetic particles in K
+template<typename real_t> real_t PackedPellet<real_t>::_ignition_temperature = 298.0;
 
 // Substance filling the voids in the packed pellet
 template<typename real_t> Substance<real_t> PackedPellet<real_t>::_degassing_fluid;
@@ -55,14 +59,22 @@ void PackedPellet<real_t>::setPelletDimensions(
 template<typename real_t>
 void PackedPellet<real_t>::setAmbientHeatLossParameters(
     real_t convective_heat_transfer_coefficient,
-    real_t radiative_emissivity,
-    real_t ambient_temperature
+    real_t radiative_emissivity
 ) {
     // Set static member variable - convective heat transfer coefficient
     _convective_heat_transfer_coefficient = convective_heat_transfer_coefficient;
     // Set static member variable - emissivity for radiative heat loss
     _radiative_emissivity = radiative_emissivity;
-    // Set static member variable - length of the pellets
+}
+
+template<typename real_t>
+void PackedPellet<real_t>::setTemperatureParameters(
+    real_t ignition_temperature,
+    real_t ambient_temperature
+) {
+    // Set static member variable - ignition temperature
+    _ignition_temperature = ignition_temperature;
+    // Set static member variable - ambient temperature
     _ambient_temperature = ambient_temperature;
 }
 

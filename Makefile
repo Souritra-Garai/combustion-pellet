@@ -34,7 +34,7 @@ UTILSRCS := $(shell find $(SRCDIR)/$(UTILDIR) -type f -name *.$(SRCEXT))
 UTILOBJS := $(patsubst $(SRCDIR)/%, $(BUILDDIR)/%, $(UTILSRCS:.$(SRCEXT)=.o))
 
 # Flags required for compiler
-CFLAGS := -fopenmp
+CFLAGS := -fopenmp -O2
 LIB := -lm
 INC := -I $(INCDIR)
 

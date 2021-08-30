@@ -33,7 +33,8 @@ int main(int argc, char const *argv[])
     CoreShellDiffusion<float> particle;
 
     PackedPellet<float>::setPelletDimensions(pellet_length, pellet_diameter);
-    PackedPellet<float>::setAmbientHeatLossParameters(19.68, 0.25, 298);
+    PackedPellet<float>::setAmbientHeatLossParameters(19.68, 0.25);
+    PackedPellet<float>::setTemperatureParameters(933.0, 298.0);
     PackedPellet<float>::setDegassingFluid(Ar);
 
     PackedPellet<float> pellet(0.5);

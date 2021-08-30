@@ -66,7 +66,7 @@ ax1.set_zlabel('Temperature (K)')
 
 ax1.set_title('Temperature Evolution in the Pellet')
 
-# ax1.set_zlim([250, 2500])
+ax1.set_zlim([250, 10000])
 # ax.set_zscale('log')
 
 # ax2 = fig.add_subplot(1, 2, 2)
