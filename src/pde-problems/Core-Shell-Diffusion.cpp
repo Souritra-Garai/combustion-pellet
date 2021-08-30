@@ -175,7 +175,7 @@ void CoreShellDiffusion<real_t>::calcRxnMassFractions()
     // Parallelizing the summation loop
     // Create private copies for Y_A, Y_B and Y_AB; and
     // sum the copies at the end
-    #pragma omp parallel for reduction(+:Y_A, Y_B, Y_AB) private(r2)
+    #pragma omp parallel for reduction(+:Y_A, Y_B, Y_AB) private(r2) num_threads(4) schedule(static, 250)
         // Summing over all grid points except the first and the last
         for (size_t i = 1; i < _n-1; i++)
         {
@@ -235,7 +235,7 @@ void CoreShellDiffusion<real_t>::setUpEquations(real_t D)
     // As coefficient 3 is different for every grid point,
     // it needs to be calculated for each row 
     // and hence every thread needs a private copy
-    #pragma omp parallel for private(coefficient3)
+    #pragma omp parallel for private(coefficient3) num_threads(4) schedule(static, 250)
         // Iteratively set up the discretized governing diffusion equation
         // for all grid points except the grid points # 0 and N, where
         // zero flux boundary conditions apply
@@ -317,7 +317,7 @@ template<typename real_t>
 void CoreShellDiffusion<real_t>::copyFrom(CoreShellDiffusion<real_t> &diffusion_problem)
 {
     // Parallelize the copying operation
-    #pragma omp parallel for
+    #pragma omp parallel for num_threads(4) schedule(static, 250)
         // For each element in the concentration array
         // copy the corresponding values
         for (size_t i = 0; i < _n; i++)
@@ -336,7 +336,7 @@ template<typename real_t>
 void CoreShellDiffusion<real_t>::copyTo(CoreShellDiffusion<real_t> &diffusion_problem)
 {
     // Parallelize the copying operation
-    #pragma omp parallel for
+    #pragma omp parallel for num_threads(4) schedule(static, 250)
         // For each element in the concentration array
         // copy the corresponding values
         for (size_t i = 0; i < _n; i++)
@@ -365,7 +365,7 @@ template<typename real_t>
 void CoreShellDiffusion<real_t>::initializeParticle()
 {
     // Parallelize for loops
-    #pragma omp parallel for
+    #pragma omp parallel for num_threads(4) schedule(static, 250)
 
         // Loop over the grid points to initialize the concentration of the
         // substances A and B
