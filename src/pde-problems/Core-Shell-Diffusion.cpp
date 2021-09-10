@@ -11,16 +11,22 @@
 
 #include "pde-problems/Core-Shell-Diffusion.hpp"
 
+// Required for pow function
 #include <math.h>
 
+/******************************************************************************************************************/
 // Instatiating static member variables of CoreShellDiffusion Class
+
 // Time step interval duration
 template<typename real_t> real_t CoreShellDiffusion<real_t>::_delta_t = 0;
 // Grid size
-template<typename real_t> size_t CoreShellDiffusion<real_t>::_n = 1;
+template<typename real_t> size_t CoreShellDiffusion<real_t>::_n = 2;
 template<typename real_t> real_t CoreShellDiffusion<real_t>::_delta_r = 0;
+/******************************************************************************************************************/
 
+/******************************************************************************************************************/
 // Defining static member functions of CoreShellDiffusion Class
+
 // Setting time step interval duration
 template<typename real_t>
 void CoreShellDiffusion<real_t>::setTimeStep(real_t Dt) {_delta_t = Dt;}
@@ -46,6 +52,20 @@ real_t CoreShellDiffusion<real_t>::getRadialCoordinate(size_t i)
 }
 
 template<typename real_t>
+void CoreShellDiffusion<real_t>::printConfiguration(std::ostream &output_stream)
+{
+    output_stream << "Time Step\t:\t" << _delta_t << "\ts" << std::endl;
+
+    output_stream << "Number of Grid Points\t:\t" << _n << std::endl;
+
+    output_stream << "Grid Size\t:\t" << _delta_r << "\tm" << std::endl;
+}
+/******************************************************************************************************************/
+
+/******************************************************************************************************************/
+// Constructors and destructors
+
+template<typename real_t>
 CoreShellDiffusion<real_t>::CoreShellDiffusion() : // Mem initialization list
     CoreShellCombustionParticle<real_t>(),  // Call the constructor of the base class
     // Initialize solvers
@@ -66,93 +86,10 @@ CoreShellDiffusion<real_t>::~CoreShellDiffusion()
     delete [] _concentration_array_A;
     delete [] _concentration_array_B;
 }
+/******************************************************************************************************************/
 
-template<typename real_t>
-inline real_t CoreShellDiffusion<real_t>::getRxnConcA(size_t i)
-{
-    // If molar concentration of A < molar concentration of B
-    // All of A exists as AB => 0 concentration of pure A
-    // Else all of B exists as AB
-    // => molar concentration of AB = molar concentration of B (w.r.t. diffusion)
-    // => molar concentration of A = molar concentration of A (w.r.t. diffusion) - molar concentration of B (w.r.t. diffusion)
-    return std::max(_concentration_array_A[i]  - _concentration_array_B[i], (real_t) 0.0);
-}
-
-template<typename real_t>
-inline real_t CoreShellDiffusion<real_t>::getRxnConcB(size_t i)
-{
-    // If molar concentration of B < molar concentration of A
-    // All of B exists as AB => 0 concentration of pure B
-    // Else all of A exists as AB
-    // => molar concentration of AB = molar concentration of A (w.r.t. diffusion)
-    // => molar concentration of B = molar concentration of B (w.r.t. diffusion) - molar concentration of A (w.r.t. diffusion)
-    return std::max(_concentration_array_B[i] - _concentration_array_A[i], (real_t) 0.0);
-}
-
-template<typename real_t>
-inline real_t CoreShellDiffusion<real_t>::getRxnConcAB(size_t i)
-{
-    // If molar concentration of A < molar concentration of B
-    // All of A exists as AB 
-    // => molar concentration of AB = molar concentration of A (w.r.t. diffusion)
-    // Else all of B exists as AB
-    // => molar concentration of AB = molar concentration of B (w.r.t. diffusion)
-    return std::min(_concentration_array_A[i], _concentration_array_B[i]);
-}
-
-template<typename real_t>
-real_t CoreShellDiffusion<real_t>::getDiffusionMassA()
-{
-    /**
-     * Using the trapezoidal rule
-     * \f{equation}{ m_A = \left( MW \right)_A \sum_{i=0}^{n-1} 4 \pi \cdot \frac{1}{2} \left( C_{A,i} r_i^2 + C_{A,i+1} r_{i+1}^2 \right) \Delta r \f}
-     * \f{equation}{     = 4 \pi \left( MW \right)_A \Delta r \left\{ \frac{1}{2} C_{A,n}r_p^2 + \sum_{i=1}^{n-1} C_{A,i} r_i^2 \right\} \f}
-     */
-    
-    // Initialise variable to store the integral
-    // with the value \f$ \frac{1}{2} C_{A,n}r_n^2 \f$
-    real_t sum = 0.5 * _concentration_array_A[_n-1] * pow(this->_overall_radius, 2);
-
-    // Parallelize the loop
-    // create private copies for the variable sum
-    // and add all of them together at the end (reduction clause)
-    #pragma omp parallel for reduction(+:sum)
-        // Iterate over all the grid points but the last
-        for (size_t i = 0; i < _n-1; i++)
-        {
-            // Cumulatively add the term \f$ C_{A,i} r_i^2 \f$
-            sum += _concentration_array_A[i] * pow(getRadialCoordinate(i), 2);
-        }
-    // Multiply the constant factors in the summation
-    return 4.0 * M_PI * this->_core_material.getMolecularWeight() * _delta_r * sum;
-}
-
-template<typename real_t>
-real_t CoreShellDiffusion<real_t>::getDiffusionMassB()
-{
-    /**
-     * Using the trapezoidal rule
-     * \f{equation}{ m_A = \left( MW \right)_A \sum_{i=0}^{n-1} 4 \pi \cdot \frac{1}{2} \left( C_{A,i} r_i^2 + C_{A,i+1} r_{i+1}^2 \right) \Delta r \f}
-     * \f{equation}{     = 4 \pi \left( MW \right)_A \Delta r \left\{ \frac{1}{2} C_{A,n}r_p^2 + \sum_{i=1}^{n-1} C_{A,i} r_i^2 \right\} \f}
-     */
-    
-    // Initialise variable to store the integral
-    // with the value \f$ \frac{1}{2} C_{A,n}r_n^2 \f$
-    real_t sum = 0.5 * _concentration_array_B[_n-1] * pow(this->_overall_radius, 2);
-
-    // Parallelize the loop
-    // create private copies for the variable sum
-    // and add all of them together at the end (reduction clause)
-    #pragma omp parallel for reduction(+:sum)
-        // Iterate over all the grid points but the last
-        for (size_t i = 0; i < _n-1; i++)
-        {
-            // Cumulatively add the term \f$ C_{A,i} r_i^2 \f$
-            sum += _concentration_array_B[i] * pow(getRadialCoordinate(i), 2);
-        }
-    // Multiply the constant factors in the summation
-    return 4.0 * M_PI * this->_shell_material.getMolecularWeight() * _delta_r * sum;
-}
+/******************************************************************************************************************/
+// Defining private member functions
 
 template<typename real_t>
 void CoreShellDiffusion<real_t>::calcRxnMassFractions()
@@ -206,6 +143,70 @@ void CoreShellDiffusion<real_t>::calcRxnMassFractions()
     // this->_mass_fraction_core_material    = Y_A  / sum;
     // this->_mass_fraction_shell_material   = Y_B  / sum;
     // this->_mass_fraction_product_material = Y_AB / sum;
+}
+
+template<typename real_t>
+inline real_t CoreShellDiffusion<real_t>::getRxnConcA(size_t i)
+{
+    // If molar concentration of A < molar concentration of B
+    // All of A exists as AB => 0 concentration of pure A
+    // Else all of B exists as AB
+    // => molar concentration of AB = molar concentration of B (w.r.t. diffusion)
+    // => molar concentration of A = molar concentration of A (w.r.t. diffusion) - molar concentration of B (w.r.t. diffusion)
+    return std::max(_concentration_array_A[i]  - _concentration_array_B[i], (real_t) 0.0);
+}
+
+template<typename real_t>
+inline real_t CoreShellDiffusion<real_t>::getRxnConcB(size_t i)
+{
+    // If molar concentration of B < molar concentration of A
+    // All of B exists as AB => 0 concentration of pure B
+    // Else all of A exists as AB
+    // => molar concentration of AB = molar concentration of A (w.r.t. diffusion)
+    // => molar concentration of B = molar concentration of B (w.r.t. diffusion) - molar concentration of A (w.r.t. diffusion)
+    return std::max(_concentration_array_B[i] - _concentration_array_A[i], (real_t) 0.0);
+}
+
+template<typename real_t>
+inline real_t CoreShellDiffusion<real_t>::getRxnConcAB(size_t i)
+{
+    // If molar concentration of A < molar concentration of B
+    // All of A exists as AB 
+    // => molar concentration of AB = molar concentration of A (w.r.t. diffusion)
+    // Else all of B exists as AB
+    // => molar concentration of AB = molar concentration of B (w.r.t. diffusion)
+    return std::min(_concentration_array_A[i], _concentration_array_B[i]);
+}
+/******************************************************************************************************************/
+
+/******************************************************************************************************************/
+// Defining public member functions
+
+template<typename real_t>
+void CoreShellDiffusion<real_t>::initializeParticle()
+{
+    // Parallelize for loops
+    #pragma omp parallel for num_threads(4) schedule(static, 250)
+
+        // Loop over the grid points to initialize the concentration of the
+        // substances A and B
+        for (size_t i = 0; i < _n; i++)
+        {
+            // Only substance A is present in the core (\f$ r < r_C \f$)
+            if (getRadialCoordinate(i) < this->_core_radius)
+            {
+                // Concentration of pure substance A is its molar density
+                _concentration_array_A[i] = this->_core_material.getMolarDensity();
+                _concentration_array_B[i] = 0;
+            }
+            // Only substance B is present in the shell (\f$ r > r_V \f$)
+            else
+            {
+                // Concentration of pure substance B is its molar density
+                _concentration_array_A[i] = 0;
+                _concentration_array_B[i] = this->_shell_material.getMolarDensity();
+            }
+        }
 }
 
 template<typename real_t>
@@ -296,21 +297,57 @@ void CoreShellDiffusion<real_t>::solveEquations()
 }
 
 template<typename real_t>
-void CoreShellDiffusion<real_t>::printConcentrationProfileA(std::ostream &output_stream, char delimiter)
+real_t CoreShellDiffusion<real_t>::getDiffusionMassA()
 {
-    // Shift the array elements into the output stream followed by a delimter
-    for (size_t i = 0; i < _n-1; i++) output_stream << _concentration_array_A[i] << delimiter;
-    // For the last element shift an endline instead of the delimiter
-    output_stream << _concentration_array_A[_n-1] << std::endl;
+    /**
+     * Using the trapezoidal rule
+     * \f{equation}{ m_A = \left( MW \right)_A \sum_{i=0}^{n-1} 4 \pi \cdot \frac{1}{2} \left( C_{A,i} r_i^2 + C_{A,i+1} r_{i+1}^2 \right) \Delta r \f}
+     * \f{equation}{     = 4 \pi \left( MW \right)_A \Delta r \left\{ \frac{1}{2} C_{A,n}r_p^2 + \sum_{i=1}^{n-1} C_{A,i} r_i^2 \right\} \f}
+     */
+    
+    // Initialise variable to store the integral
+    // with the value \f$ \frac{1}{2} C_{A,n}r_n^2 \f$
+    real_t sum = 0.5 * _concentration_array_A[_n-1] * pow(this->_overall_radius, 2);
+
+    // Parallelize the loop
+    // create private copies for the variable sum
+    // and add all of them together at the end (reduction clause)
+    #pragma omp parallel for reduction(+:sum)
+        // Iterate over all the grid points but the last
+        for (size_t i = 0; i < _n-1; i++)
+        {
+            // Cumulatively add the term \f$ C_{A,i} r_i^2 \f$
+            sum += _concentration_array_A[i] * pow(getRadialCoordinate(i), 2);
+        }
+    // Multiply the constant factors in the summation
+    return 4.0 * M_PI * this->_core_material.getMolecularWeight() * _delta_r * sum;
 }
 
 template<typename real_t>
-void CoreShellDiffusion<real_t>::printConcentrationProfileB(std::ostream &output_stream, char delimiter)
+real_t CoreShellDiffusion<real_t>::getDiffusionMassB()
 {
-    // Shift the array elements into the output stream followed by a delimter
-    for (size_t i = 0; i < _n-1; i++) output_stream << _concentration_array_B[i] << delimiter;
-    // For the last element shift an endline instead of the delimiter
-    output_stream << _concentration_array_B[_n-1] << std::endl;
+    /**
+     * Using the trapezoidal rule
+     * \f{equation}{ m_A = \left( MW \right)_A \sum_{i=0}^{n-1} 4 \pi \cdot \frac{1}{2} \left( C_{A,i} r_i^2 + C_{A,i+1} r_{i+1}^2 \right) \Delta r \f}
+     * \f{equation}{     = 4 \pi \left( MW \right)_A \Delta r \left\{ \frac{1}{2} C_{A,n}r_p^2 + \sum_{i=1}^{n-1} C_{A,i} r_i^2 \right\} \f}
+     */
+    
+    // Initialise variable to store the integral
+    // with the value \f$ \frac{1}{2} C_{A,n}r_n^2 \f$
+    real_t sum = 0.5 * _concentration_array_B[_n-1] * pow(this->_overall_radius, 2);
+
+    // Parallelize the loop
+    // create private copies for the variable sum
+    // and add all of them together at the end (reduction clause)
+    #pragma omp parallel for reduction(+:sum)
+        // Iterate over all the grid points but the last
+        for (size_t i = 0; i < _n-1; i++)
+        {
+            // Cumulatively add the term \f$ C_{A,i} r_i^2 \f$
+            sum += _concentration_array_B[i] * pow(getRadialCoordinate(i), 2);
+        }
+    // Multiply the constant factors in the summation
+    return 4.0 * M_PI * this->_shell_material.getMolecularWeight() * _delta_r * sum;
 }
 
 template<typename real_t>
@@ -352,42 +389,47 @@ void CoreShellDiffusion<real_t>::copyTo(CoreShellDiffusion<real_t> &diffusion_pr
 }
 
 template<typename real_t>
-void CoreShellDiffusion<real_t>::printConfiguration(std::ostream &output_stream)
+void CoreShellDiffusion<real_t>::printConcentrationProfileA(std::ostream &output_stream, char delimiter, real_t curr_time)
 {
-    output_stream << "Time Step\t:\t" << _delta_t << "\ts" << std::endl;
+    // First print the current time, followed by the temperature profile
+    output_stream << curr_time << delimiter;
 
-    output_stream << "Number of Grid Points\t:\t" << _n << std::endl;
-
-    output_stream << "Grid Size\t:\t" << _delta_r << std::endl;
+    // Shift the array elements into the output stream followed by a delimter
+    for (size_t i = 0; i < _n-1; i++) output_stream << _concentration_array_A[i] << delimiter;
+    // For the last element shift an endline instead of the delimiter
+    output_stream << _concentration_array_A[_n-1] << std::endl;
 }
 
 template<typename real_t>
-void CoreShellDiffusion<real_t>::initializeParticle()
+void CoreShellDiffusion<real_t>::printConcentrationProfileB(std::ostream &output_stream, char delimiter, real_t curr_time)
 {
-    // Parallelize for loops
-    #pragma omp parallel for num_threads(4) schedule(static, 250)
-
-        // Loop over the grid points to initialize the concentration of the
-        // substances A and B
-        for (size_t i = 0; i < _n; i++)
-        {
-            // Only substance A is present in the core (\f$ r < r_C \f$)
-            if (getRadialCoordinate(i) < this->_core_radius)
-            {
-                // Concentration of pure substance A is its molar density
-                _concentration_array_A[i] = this->_core_material.getMolarDensity();
-                _concentration_array_B[i] = 0;
-            }
-            // Only substance B is present in the shell (\f$ r > r_V \f$)
-            else
-            {
-                // Concentration of pure substance B is its molar density
-                _concentration_array_A[i] = 0;
-                _concentration_array_B[i] = this->_shell_material.getMolarDensity();
-            }
-        }
+    // First print the current time, followed by the temperature profile
+    output_stream << curr_time << delimiter;
+    
+    // Shift the array elements into the output stream followed by a delimter
+    for (size_t i = 0; i < _n-1; i++) output_stream << _concentration_array_B[i] << delimiter;
+    // For the last element shift an endline instead of the delimiter
+    output_stream << _concentration_array_B[_n-1] << std::endl;
 }
 
+template<typename real_t>
+void CoreShellDiffusion<real_t>::printGridPoints(
+    std::ostream &output_stream,
+    char delimiter
+) {
+    // First value is NaN since first column stores the time
+    output_stream << NAN << delimiter;
+
+    // Print the r-coordinate of the grid point followed by the delimiter for all
+    // except the last grid point
+    for (size_t i = 0; i < _n - 1; i++) output_stream << getRadialCoordinate(i) << delimiter;
+    // For the last grid point print the x-coordinate followed by endline
+    output_stream << getRadialCoordinate(_n-1) << std::endl;
+}
+/******************************************************************************************************************/
+
+/******************************************************************************************************************/
+// Create classes for float, double and long double data types
 template class CoreShellDiffusion<float>;
 template class CoreShellDiffusion<double>;
 template class CoreShellDiffusion<long double>;

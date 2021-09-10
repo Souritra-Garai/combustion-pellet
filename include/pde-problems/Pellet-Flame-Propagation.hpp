@@ -104,6 +104,11 @@ class PelletFlamePropagation : public PackedPellet<real_t>
         static real_t _initial_ignition_temperature;
 
         /**
+         * @brief Stores the time evolved since the zeroth iteration
+         */
+        real_t _time;
+
+        /**
          * @brief Array to store temperature at each grid point of the pellet
          */
         real_t * _temperature_array;
@@ -311,6 +316,21 @@ class PelletFlamePropagation : public PackedPellet<real_t>
          * @param delimiter Character to separate two consecutive values of temperature
          */
         void printTemperatureProfile(std::ostream &output_stream, char delimiter = '\t');
+        
+        /**
+         * @brief Print the configuration of the PDE solver to the output stream
+         * 
+         * @param output_stream Output stream where the configuration details will be printed
+         */
+        void printConfiguration(std::ostream &output_stream);
+
+        /**
+         * @brief Prints the x-coordinates of the grid points in the discretized pellet
+         * 
+         * @param output_stream Output stream where the coordinates will be printed
+         * @param delimiter Character to separate two consecutive values of temperature
+         */
+        void printGridPoints(std::ostream &output_stream, char delimiter = '\t');
 };
 
 #endif

@@ -85,6 +85,24 @@ class ArrheniusDiffusivityModel
         real_t getDiffusivity(real_t temperature) {
             return _pre_exponential_factor * exp(- _activation_energy / (8.314 * temperature));
         }
+
+        /**
+         * @brief Get the Pre Exponential Factor
+         * 
+         * @return real_t Pre Exponential Factor
+         */
+        real_t getPreExponentialFactor() {
+            return _pre_exponential_factor;
+        }
+
+        /**
+         * @brief Get the Activation Energy
+         * 
+         * @return real_t Activation Energy
+         */
+        real_t getActivationEnergy() {
+            return _activation_energy;
+        }
 };
 
 #endif

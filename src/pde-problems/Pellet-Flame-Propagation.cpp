@@ -400,6 +400,9 @@ void PelletFlamePropagation<real_t>::initializePellet()
     // Initialize the temperature and energetic particle at each grid point
     // with the specified initial conditions
 
+    // Set time to 0
+    _time = 0;
+
     // Set temperature at grid point \f$ x = 0 \f$ to the initial ignition temperature
     _temperature_array[0] = _initial_ignition_temperature;
 
@@ -493,23 +496,12 @@ void PelletFlamePropagation<real_t>::setUpEquations()
 template<typename real_t>
 void PelletFlamePropagation<real_t>::solveEquations()
 {
+    _time += _delta_t;
     // Solve the matrix equation
     _solver.getSolution(_temperature_array);
     // Update the state of the energetic particles
     // using the temperature at the present step
     updateParticlesState();
-}
-
-template<typename real_t>
-void PelletFlamePropagation<real_t>::printTemperatureProfile(
-    std::ostream &output_stream,
-    char delimiter
-) {
-    // Print the temperature followed by the delimiter for all except
-    // the last grid point
-    for (size_t i = 0; i < _m -1; i++) output_stream << _temperature_array[i] << delimiter;
-    // For the last grid point print the temperature followed by endline
-    output_stream << _temperature_array[_m-1] << std::endl;
 }
 
 template<typename real_t>
@@ -529,6 +521,60 @@ bool PelletFlamePropagation<real_t>::isCombustionComplete()
     }
     // Return whether combustion is complete or not
     return flag;
+}
+
+template<typename real_t>
+void PelletFlamePropagation<real_t>::printTemperatureProfile(
+    std::ostream &output_stream,
+    char delimiter
+) {
+    // First print the current time, followed by the temperature profile
+    output_stream << _time;
+    
+    // Print the temperature followed by the delimiter for all except
+    // the last grid point
+    for (size_t i = 0; i < _m -1; i++) output_stream << _temperature_array[i] << delimiter;
+    // For the last grid point print the temperature followed by endline
+    output_stream << _temperature_array[_m-1] << std::endl;
+}
+
+template<typename real_t>
+void PelletFlamePropagation<real_t>::printGridPoints(
+    std::ostream &output_stream,
+    char delimiter
+) {
+    // First value is NaN since first column stores the time
+    output_stream << NAN << delimiter;
+
+    // Print the x-coordinate of the grid point followed by the delimiter for all
+    // except the last grid point
+    for (size_t i = 0; i < _m - 1; i++) output_stream << getXCoordinate(i) << delimiter;
+    // For the last grid point print the x-coordinate followed by endline
+    output_stream << getXCoordinate(_m-1) << std::endl;
+}
+
+template<typename real_t>
+void PelletFlamePropagation<real_t>::printConfiguration(
+    std::ostream &output_stream
+) {
+    output_stream << "Time Step\t:\t" << _delta_t << "\ts" << std::endl;
+
+    output_stream << "Number of Grid Points\t:\t" << _m << std::endl;
+
+    output_stream << "Grid Size\t:\t" << _delta_x << "\tm" << std::endl;
+
+    output_stream << "Delta T\t:\t" << _delta_T << "\tK" << std::endl;
+
+    output_stream << "Initial Ignitiion Parameters" << std::endl;
+    output_stream << "\tTemperature\t:\t" << _initial_ignition_temperature << "\tK" << std::endl;
+    output_stream << "\tLength\t:\t" << _initial_ignition_length << "\tm" << std::endl;
+
+    output_stream << "Core-Shell Particle Diffusivity Parameter" << std::endl;
+    output_stream << "\tPre Exponential Factor\t:\t" << _diffusivity_model.getPreExponentialFactor() << "\tm2 / s" << std::endl;
+    output_stream << "\tActivation Energy\t:\t" << _diffusivity_model.getActivationEnergy() << "\tJ / mol." << std::endl;
+
+    output_stream << "Core-Shell Particle Diffusion Solver Parameters" << std::endl;
+    _particles_array->printConfiguration(output_stream);
 }
 
 /******************************************************************************************************************/

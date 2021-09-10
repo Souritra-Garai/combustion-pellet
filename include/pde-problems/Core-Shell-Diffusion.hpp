@@ -135,6 +135,19 @@ class CoreShellDiffusion : public CoreShellCombustionParticle<real_t>
         static void setTimeStep(real_t Delta_t);
 
         /**
+         * @brief Print the PDE solver configuration to the output stream
+         * 
+         * @param output_stream Stream to which configuration is printed
+         */
+        static void printConfiguration(std::ostream &output_stream);
+
+        /**
+         * @brief Initialize the concentration of the species in the core and shell
+         * regions of the particle
+         */
+        void initializeParticle();
+
+        /**
          * @brief Set up the matrix equation for diffusion over one time step
          * @param diffusivity Value of diffusivity in \f$ m^2 / s \f$
          */
@@ -144,19 +157,6 @@ class CoreShellDiffusion : public CoreShellCombustionParticle<real_t>
          */
         void solveEquations();
 
-        /**
-         * @brief Print the diffusion concentration profile of substance A to the output stream
-         * @param output_stream ostream object
-         * @param delimiter Delimiter to separate consecutive values
-         */
-        void printConcentrationProfileA(std::ostream &output_stream, char delimiter = '\t');
-        /**
-         * @brief Print the diffusion concentration profile of substance B to the output stream
-         * @param output_stream ostream object
-         * @param delimiter Delimiter to separate consecutive values
-         */
-        void printConcentrationProfileB(std::ostream &output_stream, char delimiter = '\t');
-        
         /**
          * @brief Get the Diffusion Mass of substance A (initially present in core)
          * 
@@ -186,15 +186,27 @@ class CoreShellDiffusion : public CoreShellCombustionParticle<real_t>
          * @param diffusion_problem Copy to the diffusion_problem object from the calling object
          */
         void copyTo(CoreShellDiffusion<real_t> & diffusion_problem);
-        
-        /**
-         * @brief Print the PDE solver configuration to the output stream
-         * 
-         * @param output_stream Stream to which configuration is printed
-         */
-        void printConfiguration(std::ostream &output_stream);
 
-        void initializeParticle();
+        /**
+         * @brief Print the diffusion concentration profile of substance A to the output stream
+         * @param output_stream ostream object
+         * @param delimiter Delimiter to separate consecutive values
+         */
+        void printConcentrationProfileA(std::ostream &output_stream, char delimiter = '\t', real_t curr_time = 0);
+        /**
+         * @brief Print the diffusion concentration profile of substance B to the output stream
+         * @param output_stream ostream object
+         * @param delimiter Delimiter to separate consecutive values
+         */
+        void printConcentrationProfileB(std::ostream &output_stream, char delimiter = '\t', real_t curr_time = 0);
+
+        /**
+         * @brief Prints the r-coordinates of the grid points in the discretized spherical particle
+         * 
+         * @param output_stream Output stream where the coordinates will be printed
+         * @param delimiter Character to separate two consecutive values of temperature
+         */
+        void printGridPoints(std::ostream &output_stream, char delimiter = '\t');
 };
 
 #endif

@@ -44,15 +44,15 @@ int main(int argc, char const *argv[])
     PelletFlamePropagation<float>::setTemperatureParameters(933, 298);
     PelletFlamePropagation<float>::setDegassingFluid(Ar);
 
-    PelletFlamePropagation<float>::setGridSize(11);
-    PelletFlamePropagation<float>::setTimeStep(0.001);
-    PelletFlamePropagation<float>::setInfinitesimalChangeTemperature(0.001);
-    PelletFlamePropagation<float>::setInitialIgnitionParameters(1500, 0.5 * pellet_length);
+    PelletFlamePropagation<float>::setGridSize(101);
+    PelletFlamePropagation<float>::setTimeStep(0.0001);
+    PelletFlamePropagation<float>::setInfinitesimalChangeTemperature(0.1);
+    PelletFlamePropagation<float>::setInitialIgnitionParameters(1911, 0.1 * pellet_length);
 
     // omp_set_num_threads(1);
 
     PelletFlamePropagation<float> combustion_pellet(0.5);
-    combustion_pellet.setDiffusivityModel(Alawieh_diffusivity);
+    combustion_pellet.setDiffusivityModel(Du_diffusivity);
 
     combustion_pellet.initializePellet();
 
