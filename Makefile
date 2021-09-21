@@ -113,6 +113,16 @@ $(BUILDDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.o : $(EXMDIR)/$(PDEDIR)/P
 # ----------------------------------------------------------------------------------------------------------
 # Building Thermo-Physical Properties Examples
 
+Phase_Example : $(BUILDDIR)/$(TRPDIR)/Phase_Example.o $(UTILOBJS)
+	@mkdir -p $(BINDIR)/$(TRPDIR);
+	@echo "\nLinking Phase_Example...";
+	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(TRPDIR)/Phase_Example.o $(UTILOBJS) -o $(BINDIR)/$(TRPDIR)/Phase_Example
+
+$(BUILDDIR)/$(TRPDIR)/Phase_Example.o : $(EXMDIR)/$(TRPDIR)/Phase_Example.cpp $(INCDIR)/$(TRPDIR)/Phase.hpp $(INCDIR)/$(UTILDIR)/File_Generator.hpp
+	@mkdir -p $(BUILDDIR)/$(TRPDIR);
+	@echo "\nCompiling Phase_Example...";
+	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(TRPDIR)/Phase_Example.cpp -o $(BUILDDIR)/$(TRPDIR)/Phase_Example.o
+
 Substance_Example : $(BUILDDIR)/$(TRPDIR)/Substance_Example.o
 	@mkdir -p $(BINDIR)/$(TRPDIR);
 	@echo "\nLinking Substance_Example...";
