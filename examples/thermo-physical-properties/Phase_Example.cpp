@@ -10,13 +10,13 @@ InternalEnergy<double> internal_energy_solid_Al(
     8.560423,
     3.427370,
    -0.277375,
-   -9.147187,
-    61.90981
+   -9.147187
 );
 
 ThermalConductivityQuadraticPolynomial<double> thermal_conductivity_solid_Al(248.0, -0.067, 0.0);
 
 Phase<double> solid_Al(
+    2700.0,
     internal_energy_solid_Al,
     thermal_conductivity_solid_Al,
     0,

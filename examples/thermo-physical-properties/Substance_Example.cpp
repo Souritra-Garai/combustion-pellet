@@ -9,17 +9,25 @@
  * 
  */
 
-#include <iostream>
+#include <fstream>
 
-#include "thermo-physical-properties/Substance.hpp"
-
-Substance<float> Water(1000.0, 4184.0, 18E-3, 0.599, -285.82E3);
+#include "utilities/File_Generator.hpp"
+#include "substances/Aluminium.hpp"
 
 int main(int argc, char const *argv[])
 {
-    std::cout << "Enthalpy\t:\t" << Water.getEnthalpy(373) << "\tJ/kg" << std::endl;
+    FileGenerator file_generator;
+
+    std::ofstream my_file = file_generator.getCSVFile("Thermo_Physical_Properties");
     
-    Water.printProperties(std::cout);
+    my_file << "Temperature (K)," << "Heat Capacity (J / kg-K)," << "Internal Energy (J / kg)," << "Thermal Conductivity (W / m - K)" << std::endl;
+
+    for (double temperature = 920; temperature <= 940; temperature += 0.01)
+    {
+        my_file << temperature << ',' << Aluminium.getHeatCapacity(temperature) << ',' << Aluminium.getInternalEnergy(temperature) << ',' << Aluminium.getThermalConductivity(temperature) << std::endl;
+    }
+
+    my_file.close();
     
     return 0;
 }

@@ -33,6 +33,8 @@ PDEOBJS := $(patsubst $(SRCDIR)/%, $(BUILDDIR)/%, $(PDESRCS:.$(SRCEXT)=.o))
 UTILSRCS := $(shell find $(SRCDIR)/$(UTILDIR) -type f -name *.$(SRCEXT))
 UTILOBJS := $(patsubst $(SRCDIR)/%, $(BUILDDIR)/%, $(UTILSRCS:.$(SRCEXT)=.o))
 
+SUBSTANCE_HPP := $(INCDIR)/$(TRPDIR)/Substance.hpp $(INCDIR)/$(TRPDIR)/Phase.hpp $(INCDIR)/$(TRPDIR)/Internal_Energy.hpp $(INCDIR)/$(TRPDIR)/Thermal_Conductivity.hpp $(INCDIR)/substances/Aluminium.hpp
+
 # Flags required for compiler
 CFLAGS := -fopenmp -O2
 LIB := -lm
@@ -123,12 +125,12 @@ $(BUILDDIR)/$(TRPDIR)/Phase_Example.o : $(EXMDIR)/$(TRPDIR)/Phase_Example.cpp $(
 	@echo "\nCompiling Phase_Example...";
 	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(TRPDIR)/Phase_Example.cpp -o $(BUILDDIR)/$(TRPDIR)/Phase_Example.o
 
-Substance_Example : $(BUILDDIR)/$(TRPDIR)/Substance_Example.o
+Substance_Example : $(BUILDDIR)/$(TRPDIR)/Substance_Example.o $(UTILOBJS)
 	@mkdir -p $(BINDIR)/$(TRPDIR);
 	@echo "\nLinking Substance_Example...";
-	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(TRPDIR)/Substance_Example.o -o $(BINDIR)/$(TRPDIR)/Substance_Example
+	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(TRPDIR)/Substance_Example.o $(UTILOBJS) -o $(BINDIR)/$(TRPDIR)/Substance_Example
 
-$(BUILDDIR)/$(TRPDIR)/Substance_Example.o : $(EXMDIR)/$(TRPDIR)/Substance_Example.cpp $(INCDIR)/$(TRPDIR)/Substance.hpp
+$(BUILDDIR)/$(TRPDIR)/Substance_Example.o : $(EXMDIR)/$(TRPDIR)/Substance_Example.cpp $(SUBSTANCE_HPP) $(INCDIR)/$(UTILDIR)/File_Generator.hpp
 	@mkdir -p $(BUILDDIR)/$(TRPDIR);
 	@echo "\nCompiling Substance_Example...";
 	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(TRPDIR)/Substance_Example.cpp -o $(BUILDDIR)/$(TRPDIR)/Substance_Example.o

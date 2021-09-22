@@ -13,137 +13,90 @@
 #ifndef __SUBSTANCE__
 #define __SUBSTANCE__
 
-#define T_REF 298.15 // Reference temperature for enthalpy in K
-
-// Required for << operator for printing to file / screen
+// Required for printing to file / screen
 #include <ostream>
 
-/**
- * @brief Class to represent a pure substance
- * 
- * @tparam real_t float, double or long double data types
- * to represent real numbers
- */
+#include <thermo-physical-properties/Phase.hpp>
+
 template <typename real_t>
 class Substance
 {
-    public :
-
-        /**
-         * @brief uct a new Substance
-         * 
-         * @param density Density of the substance in \f$ kg / m^3 \f$
-         * @param heat_capacity Heat capacity of the substance in \f$ J / kg-K \f$
-         * @param molecular_weight Molecular weight of the substance in \f$ kg / mol \f$
-         * @param heat_conductivity Heat conductivity of the substance in \f$ W / m-K \f$
-         * @param standard_enthalpy_of_formation Standard enthalpy of formation of the substance at 298 K in \f$ J / kg \f$
-         */
-        Substance(
-            real_t density = 0,
-            real_t heat_capacity = 0,
-            real_t molecular_weight = 0,
-            real_t heat_conductivity = 0,
-            real_t standard_enthalpy_of_formation = 0
-        ) : _density(density),
-            _heat_capacity(heat_capacity),
-            _molecular_weight(molecular_weight),
-            _heat_conductivity(heat_conductivity),
-            _std_enthalpy_formation(standard_enthalpy_of_formation)
-        { ;}
-        
-        /**
-         * @brief Get the Density of the substance
-         * 
-         * @return real_t Density in \f$ kg / m^3 \f$
-         */
-        inline real_t getDensity()  { return _density; }
-
-        /**
-         * @brief Get the Heat Capacity of the substance
-         * 
-         * @return real_t Heat Capacity in \f$ J / kg-K \f$
-         */
-        inline real_t getHeatCapacity() { return _heat_capacity; }
-
-        /**
-         * @brief Get the Molecular Weight of the weight
-         * 
-         * @return real_t Molecular Weight in \f$ kg / mol. \f$
-         */
-        inline real_t getMolecularWeight()  { return _molecular_weight; }
-
-        /**
-         * @brief Get the Molar Density of the substance
-         * 
-         * @return real_t Density in \f$ mol. / m^3 \f$
-         */
-        inline real_t getMolarDensity() { return _density / _molecular_weight; }
-
-        /**
-         * @brief Get the Heat Conductivity of the substance
-         * 
-         * @return real_t Heat Conductivity in \f$ W / m-K \f$
-         */
-        inline real_t getHeatConductivity() { return _heat_conductivity; }
-
-        /**
-         * @brief Get the Standard Enthalpy Of Formation of the substance
-         * 
-         * @return real_t Standard Enthalpy of Formation of in \f$ J / kg \f$
-         */
-        inline real_t getStandardEnthalpyOfFormation() { return _std_enthalpy_formation; }
-
-        /**
-         * @brief Get the Enthalpy of the substance with respect to the T_REF
-         * 
-         * @param Temperature Temperature at which enthalpy of the object needs to be evaluated
-         * @return real_t Enthalpy of the substance in J / kg
-         */
-        inline real_t getEnthalpy(real_t Temperature)
-        {
-            return getStandardEnthalpyOfFormation() + getHeatCapacity() * (Temperature - T_REF);
-        }
-
-        /**
-         * @brief Print the properties of the substance to the given stream
-         * 
-         * @param output_stream Stream to which the properties are printed
-         */
-        void printProperties(std::ostream &output_stream)
-        {
-            output_stream << "Density\t\t\t\t:\t" << getDensity() << "\tkg/m3" << std::endl;
-            output_stream << "Heat Capacity\t\t\t:\t" << getHeatCapacity() << "\tJ/kg-K" << std::endl;
-            output_stream << "Molecular Weight\t\t:\t" << getMolecularWeight() << "\tkg/mol" << std::endl;
-            output_stream << "Heat Conductivity\t\t:\t" << getHeatConductivity() << "\tW/m-K" << std::endl;
-            output_stream << "Standard Enthalpy of Formation\t:\t" << getStandardEnthalpyOfFormation() << "\tJ/kg" << std::endl;
-        }
-
     private :
 
-        /**
-         * @brief Density of the substance
-         */
-        real_t _density;
+        unsigned int _num_phases;
 
-        /**
-         * @brief Heat capacity of the substance
-         */
-        real_t _heat_capacity;
+        Phase<real_t> *_phases;
 
-        /**
-         * @brief Molecular Weight of the substance
-         */
-        real_t _molecular_weight;
+        real_t _molar_mass;
 
-        /**
-         * @brief Heat Conductivity of the substance
-         */
-        real_t _heat_conductivity;
+    public :
 
-        /**
-         * @brief Standard Enthalpy of Formation of the substance
-         */
-        real_t _std_enthalpy_formation;
+        Substance(
+            unsigned int number_of_phases,
+            Phase<real_t> array_of_phases[],
+            real_t molar_mass
+        ) {
+            _num_phases = number_of_phases;
+            _phases = array_of_phases;
+            
+            _molar_mass = molar_mass;
+        }
+        
+        real_t getDensity(real_t temperature)
+        {
+            real_t density = 0;
+            
+            for (unsigned int i = 0; i < _num_phases; i++)
+            {
+                density += _phases[i].getDensity(temperature);
+            }
+
+            return density;
+        }
+        
+        real_t getMolarMass()  { return _molar_mass; }
+
+        
+        real_t getMolarDensity(real_t temperature)
+        { 
+            return getDensity(temperature) / getMolarMass();
+        }
+
+        real_t getHeatCapacity(real_t temperature)
+        {
+            real_t heat_capacity = 0;
+
+            for (unsigned int i = 0; i < _num_phases; i++)
+            {
+                heat_capacity += _phases[i].getHeatCapacity(temperature);
+            }
+
+            return heat_capacity;
+        }
+
+        real_t getInternalEnergy(real_t temperature)
+        {
+            real_t internal_energy = 0;
+
+            for (unsigned int i = 0; i < _num_phases; i++)
+            {
+                internal_energy += _phases[i].getInternalEnergy(temperature);
+            }
+
+            return internal_energy;
+        }
+
+        real_t getThermalConductivity(real_t temperature)
+        { 
+            real_t heat_conductivity = 0;
+
+            for (unsigned int i = 0; i < _num_phases; i++)
+            {
+                heat_conductivity += _phases[i].getThermalConductivity(temperature);
+            }
+
+            return heat_conductivity;
+        }
 };
 
 #endif

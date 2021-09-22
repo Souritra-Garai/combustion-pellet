@@ -21,9 +21,12 @@ template<typename real_t>
 class Phase
 {
     private:
-    
+
         InternalEnergy<real_t> &_internal_energy;
+
         ThermalConductivityQuadraticPolynomial<real_t> &_thermal_conductivity;
+    
+        real_t _density;
         
         real_t _temperature_lower_bound;
         real_t _temperature_upper_bound;
@@ -45,6 +48,7 @@ class Phase
     public:
 
         Phase(
+            real_t density,
             InternalEnergy<real_t> &internal_energy,
             ThermalConductivityQuadraticPolynomial<real_t> &thermal_conductivity,
             real_t temperature_lower_bound = 0,
@@ -53,10 +57,20 @@ class Phase
         ) : _internal_energy(internal_energy),
             _thermal_conductivity(thermal_conductivity)
         {
+            _density = density;
+
             _temperature_lower_bound = temperature_lower_bound;
             _temperature_upper_bound = temeprature_upper_bound;
 
             _sharpness_coefficient = sharpness_coefficient;
+        }
+
+        real_t getDensity(real_t temperature) 
+        {
+            return _density * (
+                _getSigmoid(temperature, _temperature_lower_bound, _sharpness_coefficient) -
+                _getSigmoid(temperature, _temperature_upper_bound, _sharpness_coefficient)
+            );
         }
 
         real_t getInternalEnergy(real_t temperature)
@@ -80,10 +94,10 @@ class Phase
 
         real_t getThermalConductivity(real_t temperature)
         {
-            return _thermal_conductivity.getThermalConductivity(temperature); // * (
-            //     _getSigmoid(temperature, _temperature_lower_bound, _sharpness_coefficient) -
-            //     _getSigmoid(temperature, _temperature_upper_bound, _sharpness_coefficient)
-            // );
+            return _thermal_conductivity.getThermalConductivity(temperature) * (
+                _getSigmoid(temperature, _temperature_lower_bound, _sharpness_coefficient) -
+                _getSigmoid(temperature, _temperature_upper_bound, _sharpness_coefficient)
+            );
         }
 };
 

@@ -25,8 +25,6 @@ class InternalEnergy
         real_t _D;
         real_t _E;
         real_t _F;
-        real_t _G;
-        real_t _H;
 
     public:
         
@@ -36,9 +34,7 @@ class InternalEnergy
             real_t C = 0,
             real_t D = 0,
             real_t E = 0,
-            real_t F = 0,
-            real_t G = 0,
-            real_t H = 0
+            real_t F = 0
         )
         {
             _A = A;
@@ -47,25 +43,27 @@ class InternalEnergy
             _D = D;
             _E = E;
             _F = F;
-            _G = G;
-            _H = H;
         }
 
         real_t getInternalEnergy(real_t temperature)
         {
+            temperature /= 1000;
+
             // A*t + B*t2/2 + C*t3/3 + D*t4/4 − E/t + F − H
             return
                 _A * temperature +
                 _B * pow(temperature, 2) / 2 +
                 _C * pow(temperature, 3) / 3 +
-                _D * pow(temperature, 4) / 4 +
+                _D * pow(temperature, 4) / 4 -
                 _E / temperature +
-                _F - _H
+                _F
             ;
         }
 
         real_t getHeatCapacity(real_t temperature)
         {
+            temperature /= 1000;
+            
             // A + B*t + C*t2 + D*t3 + E/t2
             return 
                 _A +
