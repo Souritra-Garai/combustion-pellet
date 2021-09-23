@@ -35,7 +35,7 @@ Phase<double> solid_Al(
     2700.0,
     internal_energy_solid_Al,
     thermal_conductivity_solid_Al,
-    0,
+    273.0,
     933.47,
     SHARPNESS_COEFFICIENT_AL
 );
@@ -51,6 +51,6 @@ Phase<double> liquid_Al(
 
 Phase<double> phases_Al[] = {solid_Al, liquid_Al};
 
-Substance<double> Aluminium(2, phases_Al, 26.9815386);
+Substance<double> Aluminium(2, phases_Al, 26.9815386E-3);
 
 #endif

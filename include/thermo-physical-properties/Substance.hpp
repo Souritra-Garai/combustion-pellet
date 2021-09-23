@@ -71,7 +71,7 @@ class Substance
                 heat_capacity += _phases[i].getHeatCapacity(temperature);
             }
 
-            return heat_capacity;
+            return heat_capacity / getMolarMass();
         }
 
         real_t getInternalEnergy(real_t temperature)
@@ -83,7 +83,7 @@ class Substance
                 internal_energy += _phases[i].getInternalEnergy(temperature);
             }
 
-            return internal_energy;
+            return internal_energy / getMolarMass();
         }
 
         real_t getThermalConductivity(real_t temperature)

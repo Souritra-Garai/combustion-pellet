@@ -1,5 +1,5 @@
-#ifndef __ALUMINIUM__
-#define __ALUMINIUM__
+#ifndef __NICKEL__
+#define __NICKEL__
 
 #include "thermo-physical-properties/Thermal_Conductivity.hpp"
 #include "thermo-physical-properties/Internal_Energy.hpp"
@@ -7,50 +7,88 @@
 
 #include "thermo-physical-properties/Substance.hpp"
 
-#define SHARPNESS_COEFFICIENT_AL 100.0
+#define SHARPNESS_COEFFICIENT_NI 100.0
 
-InternalEnergy<double> internal_energy_solid_Al(
-    28.08920,
-   -5.414849,
-    8.560423,
-    3.427370,
-   -0.277375,
-   -9.147187
+InternalEnergy<double> internal_energy_solid_Ni_1(
+    13.69160,
+    82.46509,
+   -174.9548,
+    161.6011,
+   -0.092417,
+   -6.833644
 );
 
-InternalEnergy<double> internal_energy_liquid_Al(
-    31.75104,
-    3.935826E-8,
-   -1.786515E-8,
-    2.694171E-9,
-    5.480037E-9,
-   -0.945684
-);
-
-ThermalConductivityQuadraticPolynomial<double> thermal_conductivity_solid_Al(248.0, -0.067, 0.0);
-
-ThermalConductivityQuadraticPolynomial<double> thermal_conductivity_liquid_Al(33.9, 7.892E-2, -2.099E-5);
-
-Phase<double> solid_Al(
-    2700.0,
-    internal_energy_solid_Al,
-    thermal_conductivity_solid_Al,
+InternalEnergy<double> internal_energy_solid_Ni_2(
+    1248.045,
+   -1257.510,
     0,
-    933.47,
-    SHARPNESS_COEFFICIENT_AL
+    0,
+   -165.1266,
+   -788.8263
 );
 
-Phase<double> liquid_Al(
-    2375.0,
-    internal_energy_liquid_Al,
-    thermal_conductivity_liquid_Al,
-    933.47,
+InternalEnergy<double> internal_energy_solid_Ni_3(
+    16.49839,
+    18.74913,
+   -6.639841,
+    1.717278,
+    1.872051,
+   -0.467675
+);
+
+InternalEnergy<double> internal_energy_liquid_Ni(
+    38.91103,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+   -2.722630
+);
+
+ThermalConductivityQuadraticPolynomial<double> thermal_conductivity_solid_Ni_1(107, -0.096, 3.2E-5);
+
+ThermalConductivityQuadraticPolynomial<double> thermal_conductivity_solid_Ni_2_3(59.5, -7.67E-3, 1.7E-5);
+
+ThermalConductivityQuadraticPolynomial<double> thermal_conductivity_liquid_Ni(33.9, 7.892E-2, -2.099E-5);
+
+Phase<double> solid_Ni_1(
+    8902.0,
+    internal_energy_solid_Ni_1,
+    thermal_conductivity_solid_Ni_1,
+    273.0,
+    600.0,
+    SHARPNESS_COEFFICIENT_NI
+);
+
+Phase<double> solid_Ni_2(
+    8902.0,
+    internal_energy_solid_Ni_2,
+    thermal_conductivity_solid_Ni_2_3,
+    600.0,
+    700.0,
+    SHARPNESS_COEFFICIENT_NI
+);
+
+Phase<double> solid_Ni_3(
+    8902.0,
+    internal_energy_solid_Ni_3,
+    thermal_conductivity_solid_Ni_2_3,
+    700.0,
+    1728.0,
+    SHARPNESS_COEFFICIENT_NI
+);
+
+Phase<double> liquid_Ni(
+    7810.0,
+    internal_energy_liquid_Ni,
+    thermal_conductivity_liquid_Ni,
+    1728.0,
     INFINITY,
-    SHARPNESS_COEFFICIENT_AL
+    SHARPNESS_COEFFICIENT_NI
 );
 
-Phase<double> phases_Al[] = {solid_Al, liquid_Al};
+Phase<double> phases_Ni[] = {solid_Ni_1, solid_Ni_2, solid_Ni_3, liquid_Ni};
 
-Substance<double> Aluminium(2, phases_Al, 26.9815386);
+Substance<double> Nickel(4, phases_Ni, 58.6934E-3);
 
 #endif

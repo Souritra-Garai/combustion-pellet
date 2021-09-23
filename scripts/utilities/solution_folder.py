@@ -4,7 +4,7 @@ import os
 import sys
 
 # The path to the solution folder
-soln_path = os.path.join(os.path.dirname(os.path.split(sys.path[0])[0]), 'solutions')
+soln_path = os.path.join(os.path.dirname(os.path.split(sys.path[1])[0]), 'solutions')
 
 # Get the full path to the solution folder_name
 def getpath(folder_name) :

@@ -50,14 +50,14 @@ class InternalEnergy
             temperature /= 1000;
 
             // A*t + B*t2/2 + C*t3/3 + D*t4/4 − E/t + F − H
-            return
+            return 1000.0 * (
                 _A * temperature +
                 _B * pow(temperature, 2) / 2 +
                 _C * pow(temperature, 3) / 3 +
                 _D * pow(temperature, 4) / 4 -
                 _E / temperature +
                 _F
-            ;
+            );
         }
 
         real_t getHeatCapacity(real_t temperature)

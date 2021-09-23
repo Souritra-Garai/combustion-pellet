@@ -9,3 +9,5 @@ doxygen/*
 # Whitelist some doxygen files
 !doxygen/Doxyfile
 !doxygen/latex/refman.pdf
+
+__pycache__
