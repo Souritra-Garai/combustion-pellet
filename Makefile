@@ -92,12 +92,12 @@ $(BUILDDIR)/$(UTILDIR)/File_Generator.o : $(INCDIR)/$(UTILDIR)/File_Generator.hp
 # ----------------------------------------------------------------------------------------------------------
 # Building PDE Problem Examples
 
-Core-Shell-Diffusion_Example : $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o $(PDEOBJS) $(TRPOBJS) $(QRSOBJS) $(UTILOBJS)
+Core-Shell-Diffusion_Example : $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o $(QRSOBJS) $(UTILOBJS)
 	@mkdir -p $(BINDIR)/$(PDEDIR);
 	@echo "\nLinking Core-Shell-Diffusion_Example...";
-	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o $(PDEOBJS) $(TRPOBJS) $(QRSOBJS) $(UTILOBJS) -o $(BINDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example
+	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o $(QRSOBJS) $(UTILOBJS) -o $(BINDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example
 
-$(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o : $(EXMDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.cpp $(INCDIR)/$(PDEDIR)/Core-Shell-Diffusion.hpp $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp $(INCDIR)/$(TRPDIR)/Substance.hpp $(INCDIR)/$(UTILDIR)/Keyboard_Interrupt.hpp $(INCDIR)/$(UTILDIR)/File_Generator.hpp
+$(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o : $(EXMDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.cpp $(INCDIR)/$(PDEDIR)/Core-Shell-Diffusion.hpp $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp $(SUBSTANCE_HPP) $(INCDIR)/$(UTILDIR)/Keyboard_Interrupt.hpp $(INCDIR)/$(UTILDIR)/File_Generator.hpp
 	@mkdir -p $(BUILDDIR)/$(PDEDIR);
 	@echo "\nCompiling Core-Shell-Diffusion_Example...";
 	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.cpp -o $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o
@@ -140,7 +140,7 @@ Core-Shell-Combustion-Particle_Example : $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combus
 	@echo "\nLinking Core-Shell-Combustion-Particle_Example...";
 	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle_Example.o $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o -o $(BINDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle_Example
 
-$(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle_Example.o : $(EXMDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle_Example.cpp $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp
+$(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle_Example.o : $(EXMDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle_Example.cpp $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp $(SUBSTANCE_HPP)
 	@mkdir -p $(BUILDDIR)/$(TRPDIR);
 	@echo "\nCompiling Core-Shell-Combustion-Particle_Example...";
 	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle_Example.cpp -o $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle_Example.o

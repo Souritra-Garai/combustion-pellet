@@ -185,7 +185,7 @@ class PackedPellet
          * that represents the state of all particles in the pellet
          * @return real_t Mean heat conductivity of the pellet in \f$ W / m - K \f$
          */
-        real_t getHeatConductivity(CoreShellCombustionParticle<real_t> *ptr_2_particle);
+        real_t getThermalConductivity(CoreShellCombustionParticle<real_t> *ptr_2_particle);
 
         /**
          * @brief Get he mean enthalpy at a point in the pellet, at the specified temperature,
@@ -197,7 +197,7 @@ class PackedPellet
          * @param temperature Temperature at which enthalpy is evaluated \f$ K \f$
          * @return real_t Mean enthalpy of the pellet in \f$ J / kg \f$
          */
-        real_t getEnthalpy(CoreShellCombustionParticle<real_t> *ptr_2_particle, real_t temperature);
+        real_t getInternalEnergy(CoreShellCombustionParticle<real_t> *ptr_2_particle, real_t temperature);
 
         /**
          * @brief Print the properties of the pellet (evaluated at the initial condition)

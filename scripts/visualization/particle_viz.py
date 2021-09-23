@@ -115,7 +115,12 @@ if __name__ == '__main__' :
 
     from matplotlib.animation import FuncAnimation, FFMpegWriter
 
-    from utilities.solution_folder import getlatestfolder, getpath
+    import os
+    import sys
+
+    sys.path.insert(0, os.path.dirname(os.path.split(sys.path[0])[0]))
+
+    from scripts.utilities.solution_folder import getlatestfolder, getpath
 
     particle = ParticleDiffusion3D(getlatestfolder(), 10000, [0,0,0], 1E6)
 
@@ -149,10 +154,10 @@ if __name__ == '__main__' :
 
         return particle.update(i)
 
-    my_anim = FuncAnimation(fig, update, 5000, blit=False, interval = 1)
+    my_anim = FuncAnimation(fig, update, np.arange(start=0, stop=5000, step=100), blit=False, interval = 1)
 
-    # plt.show()
+    plt.show()
 
-    writervideo = FFMpegWriter(fps=60)
-    my_anim.save('Core_Shell_Particle_Diffusion.mp4', writer=writervideo)
-    plt.close()
+    # writervideo = FFMpegWriter(fps=60)
+    # my_anim.save('Core_Shell_Particle_Diffusion.mp4', writer=writervideo)
+    # plt.close()

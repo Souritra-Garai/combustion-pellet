@@ -12,6 +12,10 @@
 #include <iostream>
 #include <omp.h>
 
+#include "substances/Aluminium.hpp"
+#include "substances/Nickel.hpp"
+#include "substances/NickelAluminide.hpp"
+
 #include "thermo-physical-properties/Substance.hpp"
 #include "thermo-physical-properties/Arrhenius_Diffusivity_Model.hpp"
 #include "thermo-physical-properties/Core-Shell-Combustion-Particle.hpp"
@@ -23,29 +27,25 @@
 #define MAX_ITER 5000
 #define Dt 0.0001
 
-Substance<float> Al(2700, 897, 26.98E-3, 239);
-Substance<float> Ni(8902, 440, 58.69E-3, 90.7);
-Substance<float> NiAl(5900, 717, 85.67E-3, 115, -118.4E3 / 85.67E-3);
+double core_radius = 32.5E-6;
+double overall_radius = 39.5E-6;
 
-float core_radius = 32.5E-6;
-float overall_radius = 39.5E-6;
+ArrheniusDiffusivityModel<double> Alawieh_diffusivity(2.56E-6, 102.191E3);
+ArrheniusDiffusivityModel<double> Du_diffusivity(9.54E-8, 26E3);
 
-ArrheniusDiffusivityModel<float> Alawieh_diffusivity(2.56E-6, 102.191E3);
-ArrheniusDiffusivityModel<float> Du_diffusivity(9.54E-8, 26E3);
-
-void printState(size_t iteration_number, CoreShellDiffusion<float> &particle);
+void printState(size_t iteration_number, CoreShellDiffusion<double> &particle);
 
 int main(int argc, char const *argv[])
 {
-    CoreShellDiffusion<float>::setUpCoreShellCombustionParticle(
-        Al, Ni, NiAl,
+    CoreShellDiffusion<double>::setUpCoreShellCombustionParticle(
+        Aluminium, Nickel, NickelAluminide,
         overall_radius, core_radius
     );
 
-    CoreShellDiffusion<float>::setGridSize(1001);
-    CoreShellDiffusion<float>::setTimeStep(Dt);
+    CoreShellDiffusion<double>::setGridSize(1001);
+    CoreShellDiffusion<double>::setTimeStep(Dt);
 
-    CoreShellDiffusion<float> Ni_clad_Al_particle;
+    CoreShellDiffusion<double> Ni_clad_Al_particle;
 
     FileGenerator file_generator;
 
@@ -61,8 +61,8 @@ int main(int argc, char const *argv[])
 
     size_t __iter = 1;
 
-    float temperature = 1400;
-    float diffusivity = Alawieh_diffusivity.getDiffusivity(temperature);
+    double temperature = 1400;
+    double diffusivity = Alawieh_diffusivity.getDiffusivity(temperature);
 
     setUpKeyboardInterrupt();
     
@@ -101,11 +101,11 @@ int main(int argc, char const *argv[])
     return 0;
 }
 
-void printState(size_t iteration_number, CoreShellDiffusion<float> &particle)
+void printState(size_t iteration_number, CoreShellDiffusion<double> &particle)
 {
-    float Y_Al = particle.getMassFractionsCoreMaterial();
-    float Y_Ni = particle.getMassFractionsShellMaterial();
-    float Y_NiAl = particle.getMassFractionsProductMaterial();
+    double Y_Al = particle.getMassFractionsCoreMaterial();
+    double Y_Ni = particle.getMassFractionsShellMaterial();
+    double Y_NiAl = particle.getMassFractionsProductMaterial();
 
     std::cout << "Iteration # " << iteration_number;
 

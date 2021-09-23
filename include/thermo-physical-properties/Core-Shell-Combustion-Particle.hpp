@@ -51,17 +51,17 @@ class CoreShellCombustionParticle
          * @brief Substance present in the core of 
          * the core-shell particle
          */
-        static Substance<real_t> _core_material;
+        static Substance<real_t> *_core_material;
         /**
          * @brief Substance present in the shell of
          * the core-shell particle
          */
-        static Substance<real_t> _shell_material;
+        static Substance<real_t> *_shell_material;
         /**
          * @brief Substance formed upon reaction of
          * the core and shell substances
          */
-        static Substance<real_t> _product_material;
+        static Substance<real_t> *_product_material;
 
         /**
          * @brief Overall radius of the Core-Shell Particle
@@ -89,9 +89,9 @@ class CoreShellCombustionParticle
          * @param core_radius Radius of the core of the particle in m
          */
         static void setUpCoreShellCombustionParticle(
-            Substance<real_t> core_material,
-            Substance<real_t> shell_material,
-            Substance<real_t> product_material,
+            Substance<real_t> &core_material,
+            Substance<real_t> &shell_material,
+            Substance<real_t> &product_material,
             real_t overall_radius,
             real_t core_radius
         );
@@ -138,21 +138,21 @@ class CoreShellCombustionParticle
          * 
          * @return real_t Density of the particle
          */
-        real_t getDensity();
+        real_t getDensity(real_t temperature);
 
         /**
          * @brief Get the Heat Capacity of the particle
          * 
          * @return real_t Heat capacity of the particle
          */
-        real_t getHeatCapacity();
+        real_t getHeatCapacity(real_t temperature);
 
         /**
          * @brief Get the Heat Conductivity of the particle
          * 
          * @return real_t Heat capacity of the particle
          */
-        real_t getHeatConductivity();
+        real_t getThermalConductivity(real_t temperature);
 
         /**
          * @brief Get the Enthalpy of the particle
@@ -160,7 +160,7 @@ class CoreShellCombustionParticle
          * @param temperature Overall temperature of the particle
          * @return real_t Enthalpy of the particle at the specified temperature
          */
-        real_t getEnthalpy(real_t temperature);
+        real_t getInternalEnergy(real_t temperature);
 
         /**
          * @brief Print the properties of the substance to the given stream

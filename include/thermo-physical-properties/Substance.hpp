@@ -41,6 +41,8 @@ class Substance
             
             _molar_mass = molar_mass;
         }
+
+        Substance() {;}
         
         real_t getDensity(real_t temperature)
         {

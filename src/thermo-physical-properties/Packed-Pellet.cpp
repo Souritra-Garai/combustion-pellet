@@ -148,23 +148,23 @@ real_t PackedPellet<real_t>::getHeatCapacity(CoreShellCombustionParticle<real_t>
 }
 
 template<typename real_t>
-real_t PackedPellet<real_t>::getHeatConductivity(CoreShellCombustionParticle<real_t> *ptr_2_particle)
+real_t PackedPellet<real_t>::getThermalConductivity(CoreShellCombustionParticle<real_t> *ptr_2_particle)
 {    
     // Return the heat conductivity determined using Bruggeman model
     return getBruggemanHeatConductivity(
         _particle_volume_fractions,
-        ptr_2_particle->getHeatConductivity(),
-        _degassing_fluid.getHeatConductivity()
+        ptr_2_particle->getThermalConductivity(),
+        _degassing_fluid.getThermalConductivity()
     );
 }
 
 template<typename real_t>
-real_t PackedPellet<real_t>::getEnthalpy(CoreShellCombustionParticle<real_t> *ptr_2_particle, real_t T)
+real_t PackedPellet<real_t>::getInternalEnergy(CoreShellCombustionParticle<real_t> *ptr_2_particle, real_t T)
 {
     // Take mass fractions weighted average of enthalpies of the 
     // particle and th degassing fluid
-    return _particle_mass_fractions  * ptr_2_particle->getEnthalpy(T) +
-    (1.0 - _particle_mass_fractions) * _degassing_fluid.getEnthalpy(T);
+    return _particle_mass_fractions  * ptr_2_particle->getInternalEnergy(T) +
+    (1.0 - _particle_mass_fractions) * _degassing_fluid.getInternalEnergy(T);
 }
 
 template<typename real_t>
@@ -182,7 +182,7 @@ void PackedPellet<real_t>::printProperties(std::ostream &output_stream)
 
     output_stream << "\nDensity\t\t\t\t:\t" << getDensity() << "\tkg/m3" << std::endl;
     output_stream << "Heat Capacity\t\t\t:\t" << getHeatCapacity(&particle) << "\tJ/kg-K" << std::endl;
-    output_stream << "Heat Conductivity\t\t:\t" << getHeatConductivity(&particle) << "\tW/m-K" << std::endl;
+    output_stream << "Heat Conductivity\t\t:\t" << getThermalConductivity(&particle) << "\tW/m-K" << std::endl;
 
     output_stream << "\nParticle Properties" << std::endl;
     output_stream << "Particle Volume Fraction\t:\t" << _particle_volume_fractions << std::endl;

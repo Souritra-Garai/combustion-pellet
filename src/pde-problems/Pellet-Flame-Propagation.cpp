@@ -161,10 +161,10 @@ real_t PelletFlamePropagation<real_t>::getParticleEnthalpyTemperatureDerivative(
     return
     (   // \f$  \sum_{k \in \text{Particle}} \left\{ \Delta H_{f,k}^0 + c_k \left(T^{n-1}_j - T_{ref}\right) \right\}
         //      \cdot Y_{k,j}^{n}\left(T_j^{n-1} + \Delta T, \left\{C_i^{n-1}\right\}_j\right)  \f$
-        _particles_array_raised_temperature_evolution[i].getEnthalpy(_temperature_array[i]) - 
+        _particles_array_raised_temperature_evolution[i].getInternalEnergy(_temperature_array[i]) - 
         // \f$  \sum_{k \in \text{Particle}} \left\{ \Delta H_{f,k}^0 + c_k \left(T^{n-1}_j - T_{ref}\right) \right\}
         //      \cdot Y_{k,j}^{n}\left(T_j^{n-1}, \left\{C_i^{n-1}\right\}_j\right) \f$
-        _particles_array_const_temperature_evolution[i].getEnthalpy(_temperature_array[i])
+        _particles_array_const_temperature_evolution[i].getInternalEnergy(_temperature_array[i])
     ) / _delta_T;
 }
 
@@ -187,10 +187,10 @@ real_t PelletFlamePropagation<real_t>::getParticleEnthalpyTimeDerivative(size_t 
     return
     (   // \f$  \sum_{k \in \text{Particle}} \left\{ \Delta H_{f,k}^0 + c_k \left(T^{n-1}_j - T_{ref}\right) \right\}
         //      \cdot Y_{k,j}^{n}\left(T_j^{n-1}, \left\{C_i^{n-1}\right\}_j\right) \f$
-        _particles_array_const_temperature_evolution[i].getEnthalpy(_temperature_array[i]) -
+        _particles_array_const_temperature_evolution[i].getInternalEnergy(_temperature_array[i]) -
         // \f$  \sum_{k \in \text{Particle}} \left\{ \Delta H_{f,k}^0 + c_k \left(T^{n-1}_j - T_{ref}\right) \right\}
         //      \cdot Y_{k,j}^{n-1} \f$
-        _particles_array[i].getEnthalpy(_temperature_array[i])
+        _particles_array[i].getInternalEnergy(_temperature_array[i])
     ) / _delta_t;
 }
 
@@ -326,7 +326,7 @@ void PelletFlamePropagation<real_t>::setUpBoundaryConditionX0()
     LinearExpression<real_t> heat_loss_term = calcHeatLossTerm(0);
     
     // Get the effective heat conductivity of particle - gas mixture, divided by the grid size
-    real_t lambda_by_delta_x = this->getHeatConductivity(_particles_array + 1) / _delta_x;
+    real_t lambda_by_delta_x = this->getThermalConductivity(_particles_array + 1) / _delta_x;
     // Since, the particle at \f$ x = 0 \f$ grid point is not evolved, the effective heat conductivity
     // the next grid point is used
 
@@ -353,7 +353,7 @@ void PelletFlamePropagation<real_t>::setUpBoundaryConditionXN()
     LinearExpression<real_t> heat_loss_term = calcHeatLossTerm(_m-1);
 
     // Get the effective heat conductivity of particle - gas mixture, divided by the grid size
-    real_t lambda_by_delta_x = this->getHeatConductivity(_particles_array + _m - 2) / _delta_x;
+    real_t lambda_by_delta_x = this->getThermalConductivity(_particles_array + _m - 2) / _delta_x;
     // Since, the particle at \f$ x = 0 \f$ grid point is not evolved, the effective heat conductivity
     // the next grid point is used
 
@@ -467,7 +467,7 @@ void PelletFlamePropagation<real_t>::setUpEquations()
             LinearExpression<real_t> heat_loss_term = calcHeatLossTerm(i);
 
             // Get the effective heat conductivity of the particle - gas mixture, divided by square of grid size
-            real_t lambda_by_delta_x_sqr = this->getHeatConductivity(_particles_array + i) / pow(_delta_x, 2);
+            real_t lambda_by_delta_x_sqr = this->getThermalConductivity(_particles_array + i) / pow(_delta_x, 2);
 
             // Set up the matrix equation
             _solver.setEquation(

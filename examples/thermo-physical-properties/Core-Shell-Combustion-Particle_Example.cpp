@@ -11,25 +11,25 @@
 
 #include <iostream>
 
+#include "substances/Aluminium.hpp"
+#include "substances/Nickel.hpp"
+#include "substances/NickelAluminide.hpp"
+
 #include "thermo-physical-properties/Core-Shell-Combustion-Particle.hpp"
 
-Substance<float> Al(2700, 897, 26.98, 239);
-Substance<float> Ni(8908, 440, 58.69, 90.7);
-Substance<float> NiAl(5900, 717, 85.675, 115, -118.4);
-
-float core_radius = 32.5E-6;
-float overall_radius = 39.5E-6;
+double core_radius = 32.5E-6;
+double overall_radius = 39.5E-6;
 
 int main(int argc, char const *argv[])
 {
-    CoreShellCombustionParticle<float>::setUpCoreShellCombustionParticle(
-        Al, Ni, NiAl,
+    CoreShellCombustionParticle<double>::setUpCoreShellCombustionParticle(
+        Aluminium, Nickel, NickelAluminide,
         overall_radius, core_radius
     );
 
-    CoreShellCombustionParticle<float> Ni_clad_Al_particle;
+    CoreShellCombustionParticle<double> Ni_clad_Al_particle;
 
-    std::cout << "Enthalpy\t:\t" << Ni_clad_Al_particle.getEnthalpy(373) << "\tJ/kg" << std::endl << std::endl;
+    std::cout << "Enthalpy\t:\t" << Ni_clad_Al_particle.getInternalEnergy(373) << "\tJ/kg" << std::endl << std::endl;
 
     Ni_clad_Al_particle.printProperties(std::cout);
 

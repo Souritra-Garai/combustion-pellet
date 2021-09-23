@@ -16,9 +16,9 @@
 
 // Instantiate the static private members of the CoreShellCombustionParticle class
 // Creating the Substance members
-template<typename real_t> Substance<real_t> CoreShellCombustionParticle<real_t>::_core_material    = Substance<real_t>();
-template<typename real_t> Substance<real_t> CoreShellCombustionParticle<real_t>::_shell_material   = Substance<real_t>();
-template<typename real_t> Substance<real_t> CoreShellCombustionParticle<real_t>::_product_material = Substance<real_t>();
+template<typename real_t> Substance<real_t> * CoreShellCombustionParticle<real_t>::_core_material;
+template<typename real_t> Substance<real_t> * CoreShellCombustionParticle<real_t>::_shell_material;
+template<typename real_t> Substance<real_t> * CoreShellCombustionParticle<real_t>::_product_material;
 // Creating the real_t members
 template<typename real_t> real_t CoreShellCombustionParticle<real_t>::_overall_radius = 0;
 template<typename real_t> real_t CoreShellCombustionParticle<real_t>::_core_radius    = 0;
@@ -27,17 +27,17 @@ template<typename real_t> real_t CoreShellCombustionParticle<real_t>::_mass = 0;
 // Set up the static members of the CoreShellCombustionParticle class
 template<typename real_t>
 void CoreShellCombustionParticle<real_t>::setUpCoreShellCombustionParticle(
-    Substance<real_t> core_material,
-    Substance<real_t> shell_material,
-    Substance<real_t> product_material,
+    Substance<real_t> &core_material,
+    Substance<real_t> &shell_material,
+    Substance<real_t> &product_material,
     real_t overall_radius,
     real_t core_radius
 ) {
     // Copy the substances to the private static members
     // Copy constructor for Substance<real_t> is called
-    _core_material    = core_material;
-    _shell_material   = shell_material;
-    _product_material = product_material;
+    _core_material    = &core_material;
+    _shell_material   = &shell_material;
+    _product_material = &product_material;
 
     // Set the overall and core radii of the core-shell particle
     _overall_radius = overall_radius;
@@ -73,7 +73,7 @@ template<typename real_t>
 real_t CoreShellCombustionParticle<real_t>::calcCoreMass()
 {
     // Mass of core = Density of core material \f$ \times \f$ Volume of core
-    return _core_material.getDensity() * calcCoreVolume();
+    return _core_material->getDensity(298.15) * calcCoreVolume();
 }
 
 // Calculate and return mass of spherical shell
@@ -82,7 +82,7 @@ template<typename real_t>
 real_t CoreShellCombustionParticle<real_t>::calcShellMass()
 {
     // Mass of shell = Density of shell material \f$ \times \f$ Volume of shell
-    return _shell_material.getDensity() * calcShellVolume();
+    return _shell_material->getDensity(298.15) * calcShellVolume();
 }
 
 // Sum and return the masses of core part and the shell part
@@ -108,51 +108,51 @@ CoreShellCombustionParticle<real_t>::CoreShellCombustionParticle()
 // Take weighted sum of densities of core, shell and product materials
 // with mass fraction as the weights
 template<typename real_t>
-real_t CoreShellCombustionParticle<real_t>::getDensity()
+real_t CoreShellCombustionParticle<real_t>::getDensity(real_t T)
 {
     // \f$ \rho = \sum_{k \in \left\{ Core, Shell, Product \right}} Y_k \rho_k \f$
     return 1.0 / (
-        _mass_fraction_core_material    / _core_material.getDensity() +
-        _mass_fraction_shell_material   / _shell_material.getDensity() +
-        _mass_fraction_product_material / _product_material.getDensity()
+        _mass_fraction_core_material    / _core_material->getDensity(T) +
+        _mass_fraction_shell_material   / _shell_material->getDensity(T) +
+        _mass_fraction_product_material / _product_material->getDensity(T)
     );
 }
 
 // Take weighted sum of heat capacities of core, shell and product materials
 // with mass fraction as the weights
 template<typename real_t>
-real_t CoreShellCombustionParticle<real_t>::getHeatCapacity()
+real_t CoreShellCombustionParticle<real_t>::getHeatCapacity(real_t T)
 {
     // \f$ c = \sum_{k \in \left\{ Core, Shell, Product \right}} Y_k c_k \f$
     return 
-        _mass_fraction_core_material    * _core_material.getHeatCapacity() +
-        _mass_fraction_shell_material   * _shell_material.getHeatCapacity() +
-        _mass_fraction_product_material * _product_material.getHeatCapacity(); 
+        _mass_fraction_core_material    * _core_material->getHeatCapacity(T) +
+        _mass_fraction_shell_material   * _shell_material->getHeatCapacity(T) +
+        _mass_fraction_product_material * _product_material->getHeatCapacity(T); 
 }
 
 // Take weighted sum of heat conductivities of core, shell and product materials
 // with mass fraction as the weights
 template<typename real_t>
-real_t CoreShellCombustionParticle<real_t>::getHeatConductivity()
+real_t CoreShellCombustionParticle<real_t>::getThermalConductivity(real_t T)
 {
     // \f$ \lambda = \sum_{k \in \left\{ Core, Shell, Product \right}} Y_k \lambda_k \f$
     return
-        _mass_fraction_core_material    * _core_material.getHeatConductivity() +
-        _mass_fraction_shell_material   * _shell_material.getHeatConductivity() +
-        _mass_fraction_product_material * _product_material.getHeatConductivity();
+        _mass_fraction_core_material    * _core_material->getThermalConductivity(T) +
+        _mass_fraction_shell_material   * _shell_material->getThermalConductivity(T) +
+        _mass_fraction_product_material * _product_material->getThermalConductivity(T);
 }
 
 // Take weighted sum of enthalpies of core, shell and product materials
 // at the specified temperature with mass fraction as the weights
 template<typename real_t>
-real_t CoreShellCombustionParticle<real_t>::getEnthalpy(real_t T)
+real_t CoreShellCombustionParticle<real_t>::getInternalEnergy(real_t T)
 {
     // \f$ h \left( T \right) 
     // = \sum_{k \in \left\{ Core, Shell, Product \right}} Y_k h_k \left( T \right)\f$
     return
-        _mass_fraction_core_material    * _core_material.getEnthalpy(T) +
-        _mass_fraction_shell_material   * _shell_material.getEnthalpy(T) +
-        _mass_fraction_product_material * _product_material.getEnthalpy(T);
+        _mass_fraction_core_material    * _core_material->getInternalEnergy(T) +
+        _mass_fraction_shell_material   * _shell_material->getInternalEnergy(T) +
+        _mass_fraction_product_material * _product_material->getInternalEnergy(T);
 }
 
 template<typename real_t>
@@ -189,18 +189,10 @@ void CoreShellCombustionParticle<real_t>::printProperties(
 
     output_stream << "\nMass\t\t\t:\t" << _mass << "\tkg" << std::endl;
 
-    output_stream << "Density\t\t\t:\t" << getDensity() << "\tkg/m3" << std::endl;
-    output_stream << "Heat Capacity\t\t:\t" << getHeatCapacity() << "\tJ/kg-K" << std::endl;
-    output_stream << "Heat Conductivity\t:\t" << getHeatConductivity() << "\tW/m" << std::endl;
-
-    output_stream << "\nCore Material\nMass Fraction\t:\t" << getMassFractionsCoreMaterial() << std::endl;
-    _core_material.printProperties(output_stream);
-
-    output_stream << "\nShell Material\nMass Fraction\t:\t" << getMassFractionsShellMaterial() << std::endl;
-    _shell_material.printProperties(output_stream);
-
-    output_stream << "\nProduct Material\nMass Fraction\t:\t" << getMassFractionsProductMaterial() << std::endl;
-    _product_material.printProperties(output_stream);
+    output_stream << "Density\t\t\t:\t" << getDensity(298.15) << "\tkg/m3" << std::endl;
+    output_stream << "Heat Capacity\t\t:\t" << getHeatCapacity(298.15) << "\tJ/kg-K" << std::endl;
+    output_stream << "Internal Energy\t\t:\t" << getInternalEnergy(298.15) << "\tJ/kg" << std::endl;
+    output_stream << "Heat Conductivity\t:\t" << getThermalConductivity(298.15) << "\tW/m" << std::endl;
 }
 
 template class CoreShellCombustionParticle<float>;
@@ -215,8 +207,8 @@ real_t calcMassCoreShellParticle(
     real_t core_radius
 ) {
     return (4.0 * M_PI / 3.0) * (
-        core_material.getDensity() * pow(core_radius, 3) +
-        shell_material.getDensity() * (pow(overall_radius, 3) - pow(core_radius, 3))
+        core_material.getDensity(298.15) * pow(core_radius, 3) +
+        shell_material.getDensity(298.15) * (pow(overall_radius, 3) - pow(core_radius, 3))
     );
 }
 

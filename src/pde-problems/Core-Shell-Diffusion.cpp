@@ -128,14 +128,14 @@ void CoreShellDiffusion<real_t>::calcRxnMassFractions()
 
     // Multiply the summations with the required factors and divide
     // by the total mass of the particle calculated during initialisation
-    this->_mass_fraction_core_material    = 4.0 * M_PI * _delta_r * Y_A  * this->_core_material.getMolecularWeight()    / this->_mass;
-    this->_mass_fraction_shell_material   = 4.0 * M_PI * _delta_r * Y_B  * this->_shell_material.getMolecularWeight()   / this->_mass;
-    this->_mass_fraction_product_material = 4.0 * M_PI * _delta_r * Y_AB * this->_product_material.getMolecularWeight() / this->_mass;
+    this->_mass_fraction_core_material    = 4.0 * M_PI * _delta_r * Y_A  * this->_core_material->getMolarMass()    / this->_mass;
+    this->_mass_fraction_shell_material   = 4.0 * M_PI * _delta_r * Y_B  * this->_shell_material->getMolarMass()   / this->_mass;
+    this->_mass_fraction_product_material = 4.0 * M_PI * _delta_r * Y_AB * this->_product_material->getMolarMass() / this->_mass;
 
     // // Multiply the summations with the required factors
-    // Y_A  *= 4.0 * M_PI * _delta_r * this->_core_material.getMolecularWeight();
-    // Y_B  *= 4.0 * M_PI * _delta_r * this->_shell_material.getMolecularWeight();
-    // Y_AB *= 4.0 * M_PI * _delta_r * this->_product_material.getMolecularWeight();
+    // Y_A  *= 4.0 * M_PI * _delta_r * this->_core_material->getMolarMass();
+    // Y_B  *= 4.0 * M_PI * _delta_r * this->_shell_material->getMolarMass();
+    // Y_AB *= 4.0 * M_PI * _delta_r * this->_product_material->getMolarMass();
     
     // // Add the summations to get the total mass
     // float sum = Y_A + Y_B + Y_AB;
@@ -196,7 +196,7 @@ void CoreShellDiffusion<real_t>::initializeParticle()
             if (getRadialCoordinate(i) < this->_core_radius)
             {
                 // Concentration of pure substance A is its molar density
-                _concentration_array_A[i] = this->_core_material.getMolarDensity();
+                _concentration_array_A[i] = this->_core_material->getMolarDensity(298.15);
                 _concentration_array_B[i] = 0;
             }
             // Only substance B is present in the shell (\f$ r > r_V \f$)
@@ -204,7 +204,7 @@ void CoreShellDiffusion<real_t>::initializeParticle()
             {
                 // Concentration of pure substance B is its molar density
                 _concentration_array_A[i] = 0;
-                _concentration_array_B[i] = this->_shell_material.getMolarDensity();
+                _concentration_array_B[i] = this->_shell_material->getMolarDensity(298.15);
             }
         }
 }
@@ -320,7 +320,7 @@ real_t CoreShellDiffusion<real_t>::getDiffusionMassA()
             sum += _concentration_array_A[i] * pow(getRadialCoordinate(i), 2);
         }
     // Multiply the constant factors in the summation
-    return 4.0 * M_PI * this->_core_material.getMolecularWeight() * _delta_r * sum;
+    return 4.0 * M_PI * this->_core_material->getMolarMass() * _delta_r * sum;
 }
 
 template<typename real_t>
@@ -347,7 +347,7 @@ real_t CoreShellDiffusion<real_t>::getDiffusionMassB()
             sum += _concentration_array_B[i] * pow(getRadialCoordinate(i), 2);
         }
     // Multiply the constant factors in the summation
-    return 4.0 * M_PI * this->_shell_material.getMolecularWeight() * _delta_r * sum;
+    return 4.0 * M_PI * this->_shell_material->getMolarMass() * _delta_r * sum;
 }
 
 template<typename real_t>
