@@ -33,7 +33,7 @@ PDEOBJS := $(patsubst $(SRCDIR)/%, $(BUILDDIR)/%, $(PDESRCS:.$(SRCEXT)=.o))
 UTILSRCS := $(shell find $(SRCDIR)/$(UTILDIR) -type f -name *.$(SRCEXT))
 UTILOBJS := $(patsubst $(SRCDIR)/%, $(BUILDDIR)/%, $(UTILSRCS:.$(SRCEXT)=.o))
 
-SUBSTANCE_HPP := $(INCDIR)/$(TRPDIR)/Substance.hpp $(INCDIR)/$(TRPDIR)/Phase.hpp $(INCDIR)/$(TRPDIR)/Internal_Energy.hpp $(INCDIR)/$(TRPDIR)/Thermal_Conductivity.hpp $(INCDIR)/substances/Aluminium.hpp
+SUBSTANCE_HPP := $(INCDIR)/$(TRPDIR)/Substance.hpp $(INCDIR)/$(TRPDIR)/Phase.hpp $(INCDIR)/$(TRPDIR)/Internal_Energy.hpp $(INCDIR)/$(TRPDIR)/Thermal_Conductivity.hpp $(INCDIR)/substances/Argon.hpp $(INCDIR)/substances/Aluminium.hpp $(INCDIR)/substances/Nickel.hpp $(INCDIR)/substances/NickelAluminide.hpp
 
 # Flags required for compiler
 CFLAGS := -fopenmp -O2
@@ -150,7 +150,7 @@ Packed-Pellet_Example : $(BUILDDIR)/$(TRPDIR)/Packed-Pellet_Example.o $(BUILDDIR
 	@echo "\nLinking Packed-Pellet_Example...";
 	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(TRPDIR)/Packed-Pellet_Example.o $(BUILDDIR)/$(TRPDIR)/Packed-Pellet.o $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o $(QRSOBJS) -o $(BINDIR)/$(TRPDIR)/Packed-Pellet_Example
 
-$(BUILDDIR)/$(TRPDIR)/Packed-Pellet_Example.o : $(EXMDIR)/$(TRPDIR)/Packed-Pellet_Example.cpp $(INCDIR)/$(TRPDIR)/Packed-Pellet.hpp $(INCDIR)/$(TRPDIR)/Substance.hpp $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp $(INCDIR)/$(PDEDIR)/Core-Shell-Diffusion.hpp
+$(BUILDDIR)/$(TRPDIR)/Packed-Pellet_Example.o : $(EXMDIR)/$(TRPDIR)/Packed-Pellet_Example.cpp $(INCDIR)/$(TRPDIR)/Packed-Pellet.hpp $(SUBSTANCE_HPP) $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp $(INCDIR)/$(PDEDIR)/Core-Shell-Diffusion.hpp
 	@mkdir -p $(BUILDDIR)/$(TRPDIR);
 	@echo "\nCompiling Packed-Pellet_Example...";
 	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(TRPDIR)/Packed-Pellet_Example.cpp -o $(BUILDDIR)/$(TRPDIR)/Packed-Pellet_Example.o

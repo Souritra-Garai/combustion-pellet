@@ -1,46 +1,44 @@
 #include <iostream>
 
-#include "thermo-physical-properties/Substance.hpp"
 #include "thermo-physical-properties/Packed-Pellet.hpp"
 #include "thermo-physical-properties/Core-Shell-Combustion-Particle.hpp"
 
 #include "pde-problems/Core-Shell-Diffusion.hpp"
 
-Substance<float> Al(2700, 897, 26.98, 239);
-Substance<float> Ni(8908, 440, 58.69, 90.7);
-Substance<float> NiAl(5900, 717, 85.675, 115, -118.4);
+#include "substances/Argon.hpp"
+#include "substances/Aluminium.hpp"
+#include "substances/Nickel.hpp"
+#include "substances/NickelAluminide.hpp"
 
-float core_radius = 32.5E-6;
-float overall_radius = 39.5E-6;
+double core_radius = 32.5E-6;
+double overall_radius = 39.5E-6;
 
-Substance<float> Ar(0.5, 520, 39.95, 0.3, 0);
-
-float pellet_length = 6.35E-3;
-float pellet_diameter = 6.35E-3;
+double pellet_length = 6.35E-3;
+double pellet_diameter = 6.35E-3;
 
 int main(int argc, char const *argv[])
 {
-    CoreShellCombustionParticle<float>::setUpCoreShellCombustionParticle(
-        Al, Ni, NiAl,
-        overall_radius, core_radius
-    );
-
-    // CoreShellDiffusion<float>::setUpCoreShellCombustionParticle(
-    //     Al, Ni, NiAl,
+    // CoreShellCombustionParticle<double>::setUpCoreShellCombustionParticle(
+    //     Aluminium, Nickel, NickelAluminide,
     //     overall_radius, core_radius
     // );
 
-    CoreShellDiffusion<float> particle;
+    CoreShellDiffusion<double>::setUpCoreShellCombustionParticle(
+        Aluminium, Nickel, NickelAluminide,
+        overall_radius, core_radius
+    );
 
-    PackedPellet<float>::setPelletDimensions(pellet_length, pellet_diameter);
-    PackedPellet<float>::setAmbientHeatLossParameters(19.68, 0.25);
-    PackedPellet<float>::setTemperatureParameters(933.0, 298.0);
-    PackedPellet<float>::setDegassingFluid(Ar);
+    CoreShellDiffusion<double> particle;
 
-    PackedPellet<float> pellet(0.5);
+    PackedPellet<double>::setPelletDimensions(pellet_length, pellet_diameter);
+    PackedPellet<double>::setAmbientHeatLossParameters(19.68, 0.25);
+    PackedPellet<double>::setTemperatureParameters(933.0, 298.0);
+    PackedPellet<double>::setDegassingFluid(Argon);
+
+    PackedPellet<double> pellet(0.5);
     
     pellet.printProperties(std::cout);
 
-    std::cout << "\n\nEnthalpy\t:\t" << pellet.getInternalEnergy(&particle, T_REF) << "\tJ/kg" << std::endl;  
+    std::cout << "\n\nEnthalpy\t:\t" << pellet.getInternalEnergy(&particle, 298.15) << "\tJ/kg" << std::endl;  
     return 0;
 }

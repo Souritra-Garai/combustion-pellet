@@ -40,7 +40,7 @@ template<typename real_t> real_t PackedPellet<real_t>::_ambient_temperature = 29
 template<typename real_t> real_t PackedPellet<real_t>::_ignition_temperature = 298.0;
 
 // Substance filling the voids in the packed pellet
-template<typename real_t> Substance<real_t> PackedPellet<real_t>::_degassing_fluid;
+template<typename real_t> Substance<real_t> * PackedPellet<real_t>::_degassing_fluid;
 
 /*****************************************************************************************************/
 // Definitions of Static Member Functions
@@ -79,10 +79,10 @@ void PackedPellet<real_t>::setTemperatureParameters(
 }
 
 template<typename real_t>
-void PackedPellet<real_t>::setDegassingFluid(Substance<real_t> degassing_fluid)
+void PackedPellet<real_t>::setDegassingFluid(Substance<real_t> &degassing_fluid)
 {
     // Set static member variable - Substance filling the voids of the pellet
-    _degassing_fluid = degassing_fluid;
+    _degassing_fluid = &degassing_fluid;
 }
 
 template<typename real_t>
@@ -92,14 +92,14 @@ real_t PackedPellet<real_t>::calcParticleMassFractions(
     // Get the density of a defualt Core-Shell Combustion Particle instance
     // This assumes the static members of the CoreShellCombustionParticle class
     // have been initialized
-    real_t initial_particle_density = CoreShellCombustionParticle<real_t>().getDensity();
+    real_t initial_particle_density = CoreShellCombustionParticle<real_t>().getDensity(298.15);
     
     // Mass of particles present in unit volume of pellet = \f$ \phi_P \rho_p \f$
     // Mass of degassing fluid in unit volume of pellet = \f$ (1 - \phi_P) \rho_P \f$
     // Mass fractions of particles = Mass of particles / Mass of unit volume of pellet
     return particle_volume_fractions * initial_particle_density / (
         particle_volume_fractions           * initial_particle_density + 
-        (1.0 - particle_volume_fractions)   * _degassing_fluid.getDensity()
+        (1.0 - particle_volume_fractions)   * _degassing_fluid->getDensity(298.15)
     );
 }
 
@@ -109,12 +109,12 @@ real_t PackedPellet<real_t>::calcDensity(real_t particle_volume_fractions)
     // Get the density of a defualt Core-Shell Combustion Particle instance
     // This assumes the static members of the CoreShellCombustionParticle class
     // have been initialized
-    real_t initial_particle_density = CoreShellCombustionParticle<real_t>().getDensity();
+    real_t initial_particle_density = CoreShellCombustionParticle<real_t>().getDensity(298.15);
 
     // For mean pellet density, take the volume fractions weighted average of densities
     // of the particle and the degassing fluid
     return particle_volume_fractions  * initial_particle_density +
-    (1.0 - particle_volume_fractions) * _degassing_fluid.getDensity();
+    (1.0 - particle_volume_fractions) * _degassing_fluid->getDensity(298.15);
 }
 
 /*****************************************************************************************************/
@@ -139,22 +139,22 @@ template<typename real_t>
 real_t PackedPellet<real_t>::getDensity() { return _density; }
 
 template<typename real_t>
-real_t PackedPellet<real_t>::getHeatCapacity(CoreShellCombustionParticle<real_t> *ptr_2_particle)
+real_t PackedPellet<real_t>::getHeatCapacity(CoreShellCombustionParticle<real_t> *ptr_2_particle, real_t T)
 {
     // Take mass fractions weighted average of heat capacities of the 
     // particle and th degassing fluid
-    return _particle_mass_fractions  * ptr_2_particle->getHeatCapacity() +
-    (1.0 - _particle_mass_fractions) * _degassing_fluid.getHeatCapacity();
+    return _particle_mass_fractions  * ptr_2_particle->getHeatCapacity(T) +
+    (1.0 - _particle_mass_fractions) * _degassing_fluid->getHeatCapacity(T);
 }
 
 template<typename real_t>
-real_t PackedPellet<real_t>::getThermalConductivity(CoreShellCombustionParticle<real_t> *ptr_2_particle)
+real_t PackedPellet<real_t>::getThermalConductivity(CoreShellCombustionParticle<real_t> *ptr_2_particle, real_t T)
 {    
     // Return the heat conductivity determined using Bruggeman model
     return getBruggemanHeatConductivity(
         _particle_volume_fractions,
-        ptr_2_particle->getThermalConductivity(),
-        _degassing_fluid.getThermalConductivity()
+        ptr_2_particle->getThermalConductivity(T),
+        _degassing_fluid->getThermalConductivity(T)
     );
 }
 
@@ -164,7 +164,7 @@ real_t PackedPellet<real_t>::getInternalEnergy(CoreShellCombustionParticle<real_
     // Take mass fractions weighted average of enthalpies of the 
     // particle and th degassing fluid
     return _particle_mass_fractions  * ptr_2_particle->getInternalEnergy(T) +
-    (1.0 - _particle_mass_fractions) * _degassing_fluid.getInternalEnergy(T);
+    (1.0 - _particle_mass_fractions) * _degassing_fluid->getInternalEnergy(T);
 }
 
 template<typename real_t>
@@ -181,8 +181,8 @@ void PackedPellet<real_t>::printProperties(std::ostream &output_stream)
     CoreShellCombustionParticle<real_t> particle;
 
     output_stream << "\nDensity\t\t\t\t:\t" << getDensity() << "\tkg/m3" << std::endl;
-    output_stream << "Heat Capacity\t\t\t:\t" << getHeatCapacity(&particle) << "\tJ/kg-K" << std::endl;
-    output_stream << "Heat Conductivity\t\t:\t" << getThermalConductivity(&particle) << "\tW/m-K" << std::endl;
+    output_stream << "Heat Capacity\t\t\t:\t" << getHeatCapacity(&particle, 298.15) << "\tJ/kg-K" << std::endl;
+    output_stream << "Heat Conductivity\t\t:\t" << getThermalConductivity(&particle, 298.15) << "\tW/m-K" << std::endl;
 
     output_stream << "\nParticle Properties" << std::endl;
     output_stream << "Particle Volume Fraction\t:\t" << _particle_volume_fractions << std::endl;
@@ -192,7 +192,6 @@ void PackedPellet<real_t>::printProperties(std::ostream &output_stream)
     output_stream << "\nDegassing Fluid" << std::endl;
     output_stream << "Degassing Fluid Volume Fraction\t:\t" << 1.0 - _particle_volume_fractions << std::endl;
     output_stream << "Degassing Fluid Mass Fraction\t:\t" << 1.0 - _particle_mass_fractions << std::endl;
-    _degassing_fluid.printProperties(output_stream);
 }
 
 /*****************************************************************************************************/

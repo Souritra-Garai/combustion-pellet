@@ -68,7 +68,7 @@ class PackedPellet
         /**
          * @brief Fluid (gas) filling the voids of the packed pellet
          */
-        static Substance<real_t> _degassing_fluid;
+        static Substance<real_t> *_degassing_fluid;
 
         /**
          * @brief Fraction of the pellet volume occupied by
@@ -156,7 +156,7 @@ class PackedPellet
          * 
          * @param degassing_fluid Fluid (gas) substance degassing the pellet
          */
-        static void setDegassingFluid(Substance<real_t> degassing_fluid);
+        static void setDegassingFluid(Substance<real_t> &degassing_fluid);
 
         /**
          * @brief Get the mean density of the pellet (evaluated at the initial condition)
@@ -174,7 +174,7 @@ class PackedPellet
          * that represents the state of all particles in the pellet
          * @return real_t Mean heat capacity of the pellet in \f$ J / kg - K \f$
          */
-        real_t getHeatCapacity(CoreShellCombustionParticle<real_t> *ptr_2_particle);
+        real_t getHeatCapacity(CoreShellCombustionParticle<real_t> *ptr_2_particle, real_t temperature);
 
         /**
          * @brief Get he mean heat conductivity at a point in the pellet
@@ -185,7 +185,7 @@ class PackedPellet
          * that represents the state of all particles in the pellet
          * @return real_t Mean heat conductivity of the pellet in \f$ W / m - K \f$
          */
-        real_t getThermalConductivity(CoreShellCombustionParticle<real_t> *ptr_2_particle);
+        real_t getThermalConductivity(CoreShellCombustionParticle<real_t> *ptr_2_particle, real_t temperature);
 
         /**
          * @brief Get he mean enthalpy at a point in the pellet, at the specified temperature,
