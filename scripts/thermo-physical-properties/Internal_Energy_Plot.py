@@ -16,12 +16,14 @@ data_NiAl   = np.genfromtxt(solution_folder + '/Thermo_Physical_Properties_NiAl.
 
 fig, axes_left = plt.subplots()
 
+plt.figure(fig.number, figsize=(16, 9), dpi=600)
+
 axes_left.set_xlabel('Temperature (K)')
-axes_left.set_ylabel('Specific Heat Capacity (J / kg - K)')
 
 axes_right = axes_left.twinx()
 
-axes_right.set_ylabel('Specific Enthalpy (J / kg)')
+axes_left.set_ylabel('Specific Internal Energy (kJ / mol)')
+axes_right.set_ylabel('Specific Heat Capacity (J / mol - K)')
 
 for data, material in zip([data_Al, data_Ni, data_NiAl], ['Al', 'Ni', 'NiAl']) : 
 
@@ -30,12 +32,20 @@ for data, material in zip([data_Al, data_Ni, data_NiAl], ['Al', 'Ni', 'NiAl']) :
     c = data[:, 1]
     h = data[:, 2]
 
-    axes_left.plot(T, c, '--', label=material)
-    axes_right.plot(T, h, label=material)
+    axes_right.plot(T, c, label=material+' Heat Capacity')
+    axes_left.plot(T, h / 1000, '--', label=material + ' Internal Energy')
 
-axes_left.set_ylim([0, 2E3])
+axes_right.set_ylim([0, 100])
 
-axes_left.legend()
-axes_right.legend()
+axes_left.legend(loc='upper left')
+axes_right.legend(loc='lower right')
 
+axes_left.grid(which='major', color='grey')
+axes_left.minorticks_on()
+axes_left.grid(which='minor', color='grey', ls='--')
+
+axes_left.set_title('Variation of Thermodynamic Quantities with Temperature')
+
+# axes_left.set_aspect('auto')
+# plt.savefig('Thermodynamic_Properties.png', dpi=300)
 plt.show()

@@ -10,48 +10,47 @@
 #include "utilities/File_Generator.hpp"
 #include "utilities/Keyboard_Interrupt.hpp"
 
+#include "substances/Argon.hpp"
+#include "substances/Aluminium.hpp"
+#include "substances/Nickel.hpp"
+#include "substances/NickelAluminide.hpp"
+
 #define MAX_ITER 3000
 
-Substance<float> Al(2700, 1060, 26.98E-3, 220);
-Substance<float> Ni(8902, 440, 58.69E-3, 66);
-Substance<float> NiAl(5900, 717, 85.67E-3, 115, -118.4E3 / 85.67E-3);
+double core_radius = 32.5E-6;
+double overall_radius = 39.5E-6;
 
-float core_radius = 32.5E-6;
-float overall_radius = 39.5E-6;
+double pellet_length = 6.35E-3;
+double pellet_diameter = 6.35E-3;
 
-Substance<float> Ar(0.5, 520, 39.95E-3, 0.3, 0);
+ArrheniusDiffusivityModel<double> Alawieh_diffusivity(2.56E-6, 102.191E3);
+ArrheniusDiffusivityModel<double> Du_diffusivity(9.54E-8, 26E3);
 
-float pellet_length = 6.35E-3;
-float pellet_diameter = 6.35E-3;
-
-ArrheniusDiffusivityModel<float> Alawieh_diffusivity(2.56E-6, 102.191E3);
-ArrheniusDiffusivityModel<float> Du_diffusivity(9.54E-8, 26E3);
-
-void printState(size_t iteration_number, PelletFlamePropagation<float> &pellet);
+void printState(size_t iteration_number, PelletFlamePropagation<double> &pellet);
 
 int main(int argc, char const *argv[])
 {
-    CoreShellDiffusion<float>::setUpCoreShellCombustionParticle(
-        Al, Ni, NiAl,
+    CoreShellDiffusion<double>::setUpCoreShellCombustionParticle(
+        Aluminium, Nickel, NickelAluminide,
         overall_radius, core_radius
     );
 
-    CoreShellDiffusion<float>::setGridSize(1001);
-    // CoreShellDiffusion<float>::setTimeStep(0.0001);
+    CoreShellDiffusion<double>::setGridSize(1001);
+    // CoreShellDiffusion<double>::setTimeStep(0.0001);
 
-    PelletFlamePropagation<float>::setPelletDimensions(pellet_length, pellet_diameter);
-    PelletFlamePropagation<float>::setAmbientHeatLossParameters(0, 0);
-    PelletFlamePropagation<float>::setTemperatureParameters(933, 298);
-    PelletFlamePropagation<float>::setDegassingFluid(Ar);
+    PelletFlamePropagation<double>::setPelletDimensions(pellet_length, pellet_diameter);
+    PelletFlamePropagation<double>::setAmbientHeatLossParameters(0, 0);
+    PelletFlamePropagation<double>::setTemperatureParameters(933, 298);
+    PelletFlamePropagation<double>::setDegassingFluid(Argon);
 
-    PelletFlamePropagation<float>::setGridSize(101);
-    PelletFlamePropagation<float>::setTimeStep(0.0001);
-    PelletFlamePropagation<float>::setInfinitesimalChangeTemperature(0.1);
-    PelletFlamePropagation<float>::setInitialIgnitionParameters(1911, 0.1 * pellet_length);
+    PelletFlamePropagation<double>::setGridSize(101);
+    PelletFlamePropagation<double>::setTimeStep(0.0001);
+    PelletFlamePropagation<double>::setInfinitesimalChangeTemperature(0.1);
+    PelletFlamePropagation<double>::setInitialIgnitionParameters(1500, 0.1 * pellet_length);
 
     // omp_set_num_threads(1);
 
-    PelletFlamePropagation<float> combustion_pellet(0.5);
+    PelletFlamePropagation<double> combustion_pellet(0.5);
     combustion_pellet.setDiffusivityModel(Du_diffusivity);
 
     combustion_pellet.initializePellet();
@@ -111,7 +110,7 @@ int main(int argc, char const *argv[])
     return 0;
 }
 
-void printState(size_t iteration_number, PelletFlamePropagation<float> &pellet)
+void printState(size_t iteration_number, PelletFlamePropagation<double> &pellet)
 {
     std::cout << "Iteration # " << iteration_number << "\t";
     

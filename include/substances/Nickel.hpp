@@ -2,14 +2,14 @@
 #define __NICKEL__
 
 #include "thermo-physical-properties/Thermal_Conductivity.hpp"
-#include "thermo-physical-properties/Internal_Energy.hpp"
+#include "thermo-physical-properties/Enthalpy.hpp"
 #include "thermo-physical-properties/Phase.hpp"
 
 #include "thermo-physical-properties/Substance.hpp"
 
 #define SHARPNESS_COEFFICIENT_NI 100.0
 
-InternalEnergy<double> internal_energy_solid_Ni_1(
+Enthalpy<double> internal_energy_solid_Ni_1(
     13.69160,
     82.46509,
    -174.9548,
@@ -18,7 +18,7 @@ InternalEnergy<double> internal_energy_solid_Ni_1(
    -6.833644
 );
 
-InternalEnergy<double> internal_energy_solid_Ni_2(
+Enthalpy<double> internal_energy_solid_Ni_2(
     1248.045,
    -1257.510,
     0,
@@ -27,7 +27,7 @@ InternalEnergy<double> internal_energy_solid_Ni_2(
    -788.8263
 );
 
-InternalEnergy<double> internal_energy_solid_Ni_3(
+Enthalpy<double> internal_energy_solid_Ni_3(
     16.49839,
     18.74913,
    -6.639841,
@@ -36,7 +36,7 @@ InternalEnergy<double> internal_energy_solid_Ni_3(
    -0.467675
 );
 
-InternalEnergy<double> internal_energy_liquid_Ni(
+Enthalpy<double> internal_energy_liquid_Ni(
     38.91103,
     0.0,
     0.0,

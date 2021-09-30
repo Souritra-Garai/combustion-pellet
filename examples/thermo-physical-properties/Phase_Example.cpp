@@ -4,7 +4,7 @@
 
 #include <utilities/File_Generator.hpp>
 
-InternalEnergy<double> internal_energy_solid_Al(
+Enthalpy<double> internal_energy_solid_Al(
     28.08920,
    -5.414849,
     8.560423,
@@ -30,11 +30,11 @@ int main(int argc, char const *argv[])
 
     std::ofstream my_file = file_generator.getCSVFile("Thermo_Physical_Properties");
     
-    my_file << "Temperature (K)," << "Heat Capacity (J / kg-K)," << "Internal Energy (J / kg)," << "Thermal Conductivity (W / m - K)" << std::endl;
+    my_file << "Temperature (K)," << "Heat Capacity (J / mol-K)," << "Standard Enthalpy (J / mol)," << "Thermal Conductivity (W / m - K)" << std::endl;
 
     for (double temperature = 1; temperature <= 2000; temperature += 1)
     {
-        my_file << temperature << ',' << solid_Al.getHeatCapacity(temperature) << ',' << solid_Al.getInternalEnergy(temperature) << ',' << solid_Al.getThermalConductivity(temperature) << std::endl;
+        my_file << temperature << ',' << solid_Al.getHeatCapacity(temperature) << ',' << solid_Al.getStandardEnthalpy(temperature) << ',' << solid_Al.getThermalConductivity(temperature) << std::endl;
     }
 
     my_file.close();

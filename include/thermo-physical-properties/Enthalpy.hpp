@@ -1,6 +1,6 @@
 /**
- * @file Internal_Energy.hpp
- * @author your name (you@domain.com)
+ * @file Enthalpy.hpp
+ * @author Souritra Garai (souritra.garai@iitgn.ac.in)
  * @brief 
  * @version 0.1
  * @date 2021-09-15
@@ -9,13 +9,13 @@
  * 
  */
 
-#ifndef __INTERNAL_ENERGY__
-#define __INTERNAL_ENERGY__
+#ifndef __ENTHALPY__
+#define __ENTHALPY__
 
 #include <math.h>
 
 template <typename real_t>
-class InternalEnergy
+class Enthalpy
 {
     private:
     
@@ -28,7 +28,7 @@ class InternalEnergy
 
     public:
         
-        InternalEnergy(
+        Enthalpy(
             real_t A = 0,
             real_t B = 0,
             real_t C = 0,
@@ -45,7 +45,7 @@ class InternalEnergy
             _F = F;
         }
 
-        real_t getInternalEnergy(real_t temperature)
+        real_t getStandardEnthalpy(real_t temperature)
         {
             temperature /= 1000;
 

@@ -2,14 +2,14 @@
 #define __ALUMINIUM__
 
 #include "thermo-physical-properties/Thermal_Conductivity.hpp"
-#include "thermo-physical-properties/Internal_Energy.hpp"
+#include "thermo-physical-properties/Enthalpy.hpp"
 #include "thermo-physical-properties/Phase.hpp"
 
 #include "thermo-physical-properties/Substance.hpp"
 
 #define SHARPNESS_COEFFICIENT_AL 100.0
 
-InternalEnergy<double> internal_energy_solid_Al(
+Enthalpy<double> internal_energy_solid_Al(
     28.08920,
    -5.414849,
     8.560423,
@@ -18,7 +18,7 @@ InternalEnergy<double> internal_energy_solid_Al(
    -9.147187
 );
 
-InternalEnergy<double> internal_energy_liquid_Al(
+Enthalpy<double> internal_energy_liquid_Al(
     31.75104,
     3.935826E-8,
    -1.786515E-8,

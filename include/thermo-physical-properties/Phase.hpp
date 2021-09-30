@@ -14,7 +14,7 @@
 
 #include <math.h>
 
-#include "thermo-physical-properties/Internal_Energy.hpp"
+#include "thermo-physical-properties/Enthalpy.hpp"
 #include "thermo-physical-properties/Thermal_Conductivity.hpp"
 
 template<typename real_t>
@@ -22,7 +22,7 @@ class Phase
 {
     private:
 
-        InternalEnergy<real_t> &_internal_energy;
+        Enthalpy<real_t> &_enthalpy;
 
         ThermalConductivityQuadraticPolynomial<real_t> &_thermal_conductivity;
     
@@ -49,12 +49,12 @@ class Phase
 
         Phase(
             real_t density,
-            InternalEnergy<real_t> &internal_energy,
+            Enthalpy<real_t> &enthalpy,
             ThermalConductivityQuadraticPolynomial<real_t> &thermal_conductivity,
             real_t temperature_lower_bound = 0,
             real_t temeprature_upper_bound = INFINITY,
             real_t sharpness_coefficient = 1
-        ) : _internal_energy(internal_energy),
+        ) : _enthalpy(enthalpy),
             _thermal_conductivity(thermal_conductivity)
         {
             _density = density;
@@ -73,9 +73,9 @@ class Phase
             );
         }
 
-        real_t getInternalEnergy(real_t temperature)
+        real_t getStandardEnthalpy(real_t temperature)
         {
-            return _internal_energy.getInternalEnergy(temperature) * (
+            return _enthalpy.getStandardEnthalpy(temperature) * (
                 _getSigmoid(temperature, _temperature_lower_bound, _sharpness_coefficient) -
                 _getSigmoid(temperature, _temperature_upper_bound, _sharpness_coefficient)
             );
@@ -83,10 +83,10 @@ class Phase
 
         real_t getHeatCapacity(real_t temperature)
         {
-            return _internal_energy.getHeatCapacity(temperature) * (
+            return _enthalpy.getHeatCapacity(temperature) * (
                 _getSigmoid(temperature, _temperature_lower_bound, _sharpness_coefficient) -
                 _getSigmoid(temperature, _temperature_upper_bound, _sharpness_coefficient)
-            ) + _internal_energy.getInternalEnergy(temperature) * (
+            ) + _enthalpy.getStandardEnthalpy(temperature) * (
                 _getSigmoidDerivative(temperature, _temperature_lower_bound, _sharpness_coefficient) -
                 _getSigmoidDerivative(temperature, _temperature_upper_bound, _sharpness_coefficient)
             );

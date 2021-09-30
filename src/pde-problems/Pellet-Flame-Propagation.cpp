@@ -254,7 +254,7 @@ LinearExpression<real_t> PelletFlamePropagation<real_t>::calcTransientTerm(size_
     // \cdot \left\delimiter0\frac{\Delta Y_k}{\Delta t}\right|_j^n \f$
     
     // \f$ \alpha_{1,j}^n = \sum_{k \in \text{Pellet}} Y_{k,Pellet} \cdot c_k \cdot \dfrac{1}{\Delta t} \f$
-    expression.coefficient = this->getHeatCapacity(_particles_array + i) / _delta_t;
+    expression.coefficient = this->getHeatCapacity(_particles_array + i, _temperature_array[i]) / _delta_t;
     // Instantiate \f$ \alpha_{0,j}^n \f$ and initialize with 0
     expression.constant = 0.0;
 
@@ -326,7 +326,7 @@ void PelletFlamePropagation<real_t>::setUpBoundaryConditionX0()
     LinearExpression<real_t> heat_loss_term = calcHeatLossTerm(0);
     
     // Get the effective heat conductivity of particle - gas mixture, divided by the grid size
-    real_t lambda_by_delta_x = this->getThermalConductivity(_particles_array + 1) / _delta_x;
+    real_t lambda_by_delta_x = this->getThermalConductivity(_particles_array + 1, _temperature_array[0]) / _delta_x;
     // Since, the particle at \f$ x = 0 \f$ grid point is not evolved, the effective heat conductivity
     // the next grid point is used
 
@@ -353,7 +353,7 @@ void PelletFlamePropagation<real_t>::setUpBoundaryConditionXN()
     LinearExpression<real_t> heat_loss_term = calcHeatLossTerm(_m-1);
 
     // Get the effective heat conductivity of particle - gas mixture, divided by the grid size
-    real_t lambda_by_delta_x = this->getThermalConductivity(_particles_array + _m - 2) / _delta_x;
+    real_t lambda_by_delta_x = this->getThermalConductivity(_particles_array + _m - 2, _temperature_array[_m-1]) / _delta_x;
     // Since, the particle at \f$ x = 0 \f$ grid point is not evolved, the effective heat conductivity
     // the next grid point is used
 
@@ -467,7 +467,7 @@ void PelletFlamePropagation<real_t>::setUpEquations()
             LinearExpression<real_t> heat_loss_term = calcHeatLossTerm(i);
 
             // Get the effective heat conductivity of the particle - gas mixture, divided by square of grid size
-            real_t lambda_by_delta_x_sqr = this->getThermalConductivity(_particles_array + i) / pow(_delta_x, 2);
+            real_t lambda_by_delta_x_sqr = this->getThermalConductivity(_particles_array + i, _temperature_array[i]) / pow(_delta_x, 2);
 
             // Set up the matrix equation
             _solver.setEquation(
@@ -529,7 +529,7 @@ void PelletFlamePropagation<real_t>::printTemperatureProfile(
     char delimiter
 ) {
     // First print the current time, followed by the temperature profile
-    output_stream << _time;
+    output_stream << _time << delimiter;
     
     // Print the temperature followed by the delimiter for all except
     // the last grid point

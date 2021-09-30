@@ -29,17 +29,22 @@ class Substance
 
         real_t _molar_mass;
 
+		real_t _gamma;
+
     public :
 
         Substance(
             unsigned int number_of_phases,
             Phase<real_t> array_of_phases[],
-            real_t molar_mass
+            real_t molar_mass,
+			real_t gamma = 1.0
         ) {
             _num_phases = number_of_phases;
             _phases = array_of_phases;
             
             _molar_mass = molar_mass;
+
+			_gamma = gamma;
         }
 
         Substance() {;}
@@ -73,16 +78,16 @@ class Substance
                 heat_capacity += _phases[i].getHeatCapacity(temperature);
             }
 
-            return heat_capacity / getMolarMass();
+            return heat_capacity / (_gamma * getMolarMass());
         }
 
         real_t getInternalEnergy(real_t temperature)
         {
-            real_t internal_energy = 0;
+            real_t internal_energy = - 1E5 / getMolarDensity(298.15);
 
             for (unsigned int i = 0; i < _num_phases; i++)
             {
-                internal_energy += _phases[i].getInternalEnergy(temperature);
+                internal_energy += _phases[i].getStandardEnthalpy(temperature);
             }
 
             return internal_energy / getMolarMass();
