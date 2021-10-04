@@ -14,6 +14,8 @@
 // Required for pow function
 #include <math.h>
 
+#include <string.h>
+
 /******************************************************************************************************************/
 // Instatiating static member variables of CoreShellDiffusion Class
 
@@ -353,15 +355,18 @@ real_t CoreShellDiffusion<real_t>::getDiffusionMassB()
 template<typename real_t>
 void CoreShellDiffusion<real_t>::copyFrom(CoreShellDiffusion<real_t> &diffusion_problem)
 {
-    // Parallelize the copying operation
-    #pragma omp parallel for num_threads(4) schedule(static, 250)
-        // For each element in the concentration array
-        // copy the corresponding values
-        for (size_t i = 0; i < _n; i++)
-        {
-            _concentration_array_A[i] = diffusion_problem._concentration_array_A[i];
-            _concentration_array_B[i] = diffusion_problem._concentration_array_B[i];
-        }
+    // // Parallelize the copying operation
+    // #pragma omp parallel for num_threads(4) schedule(static, 250)
+    //     // For each element in the concentration array
+    //     // copy the corresponding values
+    //     for (size_t i = 0; i < _n; i++)
+    //     {
+    //         _concentration_array_A[i] = diffusion_problem._concentration_array_A[i];
+    //         _concentration_array_B[i] = diffusion_problem._concentration_array_B[i];
+    //     }
+
+	memcpy(_concentration_array_A, diffusion_problem._concentration_array_A, _n * sizeof(real_t));
+	memcpy(_concentration_array_B, diffusion_problem._concentration_array_B, _n * sizeof(real_t));
 
     // Update reaction mass fractions of the particle
     this->_mass_fraction_core_material    = diffusion_problem._mass_fraction_core_material;
@@ -372,15 +377,18 @@ void CoreShellDiffusion<real_t>::copyFrom(CoreShellDiffusion<real_t> &diffusion_
 template<typename real_t>
 void CoreShellDiffusion<real_t>::copyTo(CoreShellDiffusion<real_t> &diffusion_problem)
 {
-    // Parallelize the copying operation
-    #pragma omp parallel for num_threads(4) schedule(static, 250)
-        // For each element in the concentration array
-        // copy the corresponding values
-        for (size_t i = 0; i < _n; i++)
-        {
-            diffusion_problem._concentration_array_A[i] = _concentration_array_A[i];
-            diffusion_problem._concentration_array_B[i] = _concentration_array_B[i];
-        }
+    // // Parallelize the copying operation
+    // #pragma omp parallel for num_threads(4) schedule(static, 250)
+    //     // For each element in the concentration array
+    //     // copy the corresponding values
+    //     for (size_t i = 0; i < _n; i++)
+    //     {
+    //         diffusion_problem._concentration_array_A[i] = _concentration_array_A[i];
+    //         diffusion_problem._concentration_array_B[i] = _concentration_array_B[i];
+    //     }
+
+	memcpy(diffusion_problem._concentration_array_A, _concentration_array_A, _n * sizeof(real_t));
+	memcpy(diffusion_problem._concentration_array_B, _concentration_array_B, _n * sizeof(real_t));
 
     // Update reaction mass fractions of the particle
     diffusion_problem._mass_fraction_core_material    = this->_mass_fraction_core_material;
