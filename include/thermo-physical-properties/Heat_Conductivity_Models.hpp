@@ -44,4 +44,54 @@ real_t getBruggemanHeatConductivity(
     ) * heat_conductivity_fluid / 4.0;
 }
 
+template<typename real_t>
+real_t getCoContinuousHeatConductivity(
+    real_t particle_volume_fraction,
+    real_t heat_conductivity_particle,
+    real_t heat_conductivity_fluid
+) {
+    real_t heat_conductivity_series = 1.0 / (
+        particle_volume_fraction / heat_conductivity_particle +
+        (1.0 - particle_volume_fraction) / heat_conductivity_fluid
+    );
+
+    real_t heat_conductivity_parallel = 
+        particle_volume_fraction * heat_conductivity_particle + 
+        (1.0 - particle_volume_fraction) * heat_conductivity_fluid
+    ;
+
+    return (heat_conductivity_series / 2.0) * (
+        sqrt(1 + 8.0 * heat_conductivity_parallel / heat_conductivity_series) -
+        1.0
+    );
+}
+
+template <typename real_t>
+real_t getMaxwellEucken1HeatConudctivity(
+    real_t particle_volume_fraction,
+    real_t heat_conductivity_particle,
+    real_t heat_conductivity_fluid
+) {
+    return (
+        heat_conductivity_particle * particle_volume_fraction * (2 * heat_conductivity_particle + heat_conductivity_fluid) +
+        heat_conductivity_fluid * (1.0 - particle_volume_fraction) * 3.0 * heat_conductivity_particle
+    ) / (
+        particle_volume_fraction * (2 * heat_conductivity_particle + heat_conductivity_fluid) +
+        (1.0 - particle_volume_fraction) * 3.0 * heat_conductivity_particle
+    );
+}
+
+template <typename real_t>
+real_t getMaxwellEucken2HeatConudctivity(
+    real_t particle_volume_fraction,
+    real_t heat_conductivity_particle,
+    real_t heat_conductivity_fluid
+) {
+    return getMaxwellEucken1HeatConudctivity(
+        1.0 - particle_volume_fraction,
+        heat_conductivity_fluid,
+        heat_conductivity_particle
+    );
+}
+
 #endif

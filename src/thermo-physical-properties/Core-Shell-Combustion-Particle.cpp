@@ -136,10 +136,21 @@ template<typename real_t>
 real_t CoreShellCombustionParticle<real_t>::getThermalConductivity(real_t T)
 {
     // \f$ \lambda = \sum_{k \in \left\{ Core, Shell, Product \right}} Y_k \lambda_k \f$
+
+    real_t volume_fraction_core_material    = _mass_fraction_core_material      / _core_material->getDensity(T);
+    real_t volume_fraction_shell_material   = _mass_fraction_shell_material     / _shell_material->getDensity(T);
+    real_t volume_fraction_product_material = _mass_fraction_product_material   / _product_material->getDensity(T);
+
+    real_t sum = volume_fraction_core_material + volume_fraction_shell_material + volume_fraction_product_material;
+
+    volume_fraction_core_material       /= sum;
+    volume_fraction_shell_material      /= sum;
+    volume_fraction_product_material    /= sum;
+
     return
-        _mass_fraction_core_material    * _core_material->getThermalConductivity(T) +
-        _mass_fraction_shell_material   * _shell_material->getThermalConductivity(T) +
-        _mass_fraction_product_material * _product_material->getThermalConductivity(T);
+        volume_fraction_core_material       * _core_material->getThermalConductivity(T)     +
+        volume_fraction_shell_material      * _shell_material->getThermalConductivity(T)    +
+        volume_fraction_product_material    * _product_material->getThermalConductivity(T)  ;
 }
 
 // Take weighted sum of enthalpies of core, shell and product materials
