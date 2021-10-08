@@ -63,6 +63,11 @@ $(BUILDDIR)/$(TRPDIR)/Packed-Pellet.o : $(INCDIR)/$(TRPDIR)/Packed-Pellet.hpp $(
 	@echo "\nCompiling Packed-Pellet...";
 	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/$(TRPDIR)/Packed-Pellet.cpp -o $(BUILDDIR)/$(TRPDIR)/Packed-Pellet.o
 
+$(BUILDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.o : $(INCDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.hpp $(SRCDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.cpp
+	@mkdir -p $(BUILDDIR)/$(TRPDIR);
+	@echo "\nCompiling Thermal_Conductivity_Pellet...";
+	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.cpp -o $(BUILDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.o
+
 # ----------------------------------------------------------------------------------------------------------
 # Building pde problems source files
 
@@ -114,15 +119,15 @@ $(BUILDDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.o : $(EXMDIR)/$(PDEDIR)/P
 
 # ----------------------------------------------------------------------------------------------------------
 # Building Thermo-Physical Properties Examples
-Heat_Conductivity_Models_Example : $(BUILDDIR)/$(TRPDIR)/Heat_Conductivity_Models_Example.o $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o $(UTILOBJS)
+Thermal_Conductivity_Pellet_Example : $(BUILDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.o $(BUILDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.o $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o $(UTILOBJS)
 	@mkdir -p $(BINDIR)/$(TRPDIR);
-	@echo "\nLinking Heat_Conductivity_Models_Example...";
-	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(TRPDIR)/Heat_Conductivity_Models_Example.o $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o $(UTILOBJS) -o $(BINDIR)/$(TRPDIR)/Heat_Conductivity_Models_Example
+	@echo "\nLinking Thermal_Conductivity_Pellet_Example...";
+	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.o $(BUILDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.o $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o $(UTILOBJS) -o $(BINDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example
 
-$(BUILDDIR)/$(TRPDIR)/Heat_Conductivity_Models_Example.o : $(EXMDIR)/$(TRPDIR)/Heat_Conductivity_Models_Example.cpp $(INCDIR)/$(TRPDIR)/Heat_Conductivity_Models.hpp $(SUBSTANCE_HPP) $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp $(INCDIR)/$(UTILDIR)/File_Generator.hpp
+$(BUILDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.o : $(EXMDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.cpp $(INCDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.hpp $(SUBSTANCE_HPP) $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp $(INCDIR)/$(UTILDIR)/File_Generator.hpp
 	@mkdir -p $(BUILDDIR)/$(TRPDIR);
-	@echo "\nCompiling Heat_Conductivity_Models_Example...";
-	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(TRPDIR)/Heat_Conductivity_Models_Example.cpp -o $(BUILDDIR)/$(TRPDIR)/Heat_Conductivity_Models_Example.o
+	@echo "\nCompiling Thermal_Conductivity_Pellet...";
+	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.cpp -o $(BUILDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.o
 
 Adiabatic_Combustion_Temperature : $(BUILDDIR)/$(TRPDIR)/Adiabatic_Combustion_Temperature.o $(UTILOBJS)
 	@mkdir -p $(BINDIR)/$(TRPDIR);

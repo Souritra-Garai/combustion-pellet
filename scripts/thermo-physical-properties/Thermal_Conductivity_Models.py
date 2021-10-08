@@ -15,18 +15,19 @@ data = np.genfromtxt(solution_folder + '/thermal_conductivity_pellet.csv', delim
 fig, ax = plt.subplots()
 
 ax.set_title('Variation of Thermal Conductivity of Pellet with Particle Volume Fractions')
-ax.set_xlabel('Particle Volume Fractiosn')
+ax.set_xlabel('Particle Volume Fraction')
 ax.set_ylabel('Thermal Conductivity (W / m-K)')
 
-ax.set_ylim([1800, 3400])
-
 ax.plot(data[:, 0], data[:, 1], label='ME1')
-ax.plot(data[:, 0], data[:, 2], label='CC')
-ax.plot(data[:, 0], data[:, 3], label='EMT')
-ax.plot(data[:, 0], data[:, 4], label='ME2')
+ax.plot(data[:, 0], data[:, 2], label='EMT')
+ax.plot(data[:, 0], data[:, 3], label='MEB')
+ax.plot(data[:, 0], data[:, 4], label='CC')
+ax.plot(data[:, 0], data[:, 5], label='ME2')
 
 ax.grid(which='major', color='grey')
 ax.minorticks_on()
 ax.grid(which='minor', color='grey', ls='--')
+
+ax.legend()
 
 plt.show()
