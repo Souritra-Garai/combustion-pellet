@@ -50,7 +50,7 @@ int main(int argc, char const *argv[])
 
     // omp_set_num_threads(1);
 
-    PelletFlamePropagation<double> combustion_pellet(0.5);
+    PelletFlamePropagation<double> combustion_pellet(0.8);
     combustion_pellet.setDiffusivityModel(Du_diffusivity);
 
     combustion_pellet.initializePellet();

@@ -92,6 +92,8 @@ PelletFlamePropagation<real_t>::PelletFlamePropagation(
     // Allocate memory for holding the temperature profile
     _temperature_array = new real_t[_m];
 
+	_thermal_conductivity = new real_t[_m];
+
     // Allocate memory for core shell diffusion problems at each
     // grid point
     _particles_array = new CoreShellDiffusion<real_t>[_m];
@@ -113,6 +115,7 @@ PelletFlamePropagation<real_t>::~PelletFlamePropagation()
 {
     // Deallocate memory for temperature array
     delete [] _temperature_array;
+	delete [] _thermal_conductivity;
 
     // Deallocate memory for core shell diffusion problems
     delete [] _particles_array;
@@ -326,7 +329,7 @@ void PelletFlamePropagation<real_t>::setUpBoundaryConditionX0()
     LinearExpression<real_t> heat_loss_term = calcHeatLossTerm(0);
     
     // Get the effective heat conductivity of particle - gas mixture, divided by the grid size
-    real_t lambda_by_delta_x = this->getThermalConductivity(_particles_array + 1, _temperature_array[0]) / _delta_x;
+    real_t lambda_by_delta_x = _thermal_conductivity[1] / _delta_x;
     // Since, the particle at \f$ x = 0 \f$ grid point is not evolved, the effective heat conductivity
     // the next grid point is used
 
@@ -353,7 +356,7 @@ void PelletFlamePropagation<real_t>::setUpBoundaryConditionXN()
     LinearExpression<real_t> heat_loss_term = calcHeatLossTerm(_m-1);
 
     // Get the effective heat conductivity of particle - gas mixture, divided by the grid size
-    real_t lambda_by_delta_x = this->getThermalConductivity(_particles_array + _m - 2, _temperature_array[_m-1]) / _delta_x;
+    real_t lambda_by_delta_x = _thermal_conductivity[_m - 2] / _delta_x;
     // Since, the particle at \f$ x = 0 \f$ grid point is not evolved, the effective heat conductivity
     // the next grid point is used
 
@@ -386,7 +389,11 @@ void PelletFlamePropagation<real_t>::updateParticlesState()
                 // Solve the equations to update the state of the particle
                 _particles_array[i].solveEquations();
             }
+
+			_thermal_conductivity[i] = this->getThermalConductivity(_particles_array + i, _temperature_array[i]);
         }
+
+	_thermal_conductivity[_m-1] = this->getThermalConductivity(_particles_array + (_m - 2), _temperature_array[_m-1]);
 }
 
 /******************************************************************************************************************/
@@ -425,9 +432,13 @@ void PelletFlamePropagation<real_t>::initializePellet()
             // Initialize the particles used for 
             _particles_array_raised_temperature_evolution[i].initializeParticle();
             _particles_array_const_temperature_evolution[i].initializeParticle();
+
+			_thermal_conductivity[i] = this->getThermalConductivity(_particles_array + i, _temperature_array[i]);
         }
     // Set temperature at grid point at \f$ x = L \f$ to ambient temperature
     _temperature_array[_m-1] = this->_ambient_temperature;
+
+	_thermal_conductivity[_m-1] = this->getThermalConductivity(_particles_array + (_m - 2), _temperature_array[_m-1]);
 }
 
 template<typename real_t>
@@ -466,19 +477,19 @@ void PelletFlamePropagation<real_t>::setUpEquations()
             // Get the linearized expression for the heat loss term, \f$ \beta_{0,j}^n + \beta_{1,j}^n \cdot T_j^n \f$
             LinearExpression<real_t> heat_loss_term = calcHeatLossTerm(i);
 
-            // Get the effective heat conductivity of the particle - gas mixture, divided by square of grid size
-            real_t lambda_by_delta_x_sqr = this->getThermalConductivity(_particles_array + i, _temperature_array[i]) / pow(_delta_x, 2);
+			real_t lambda_forward_by_delta_x_sqr  = _thermal_conductivity[i+1] / pow(_delta_x, 2);
+			real_t lambda_backward_by_delta_x_sqr = _thermal_conductivity[i]   / pow(_delta_x, 2);
 
             // Set up the matrix equation
             _solver.setEquation(
                 // Matrix row number
                 i,
                 // Coefficient of \f$ T_{j-1}^n \f$, \f$ - \frac{\lambda}{\left( \Delta x \right)^2} \f$
-                - lambda_by_delta_x_sqr,
+                - lambda_forward_by_delta_x_sqr,
                 // Coefficient of \f$ T_j^n \f$, \f$ \left\{ \rho_0 \alpha_{1,j}^n + \frac{2 \lambda}{\left( \Delta x \right)^2} + \beta_{1,j}^n \right\} \f$
-                this->_density * transient_term.coefficient + heat_loss_term.coefficient + 2.0 * lambda_by_delta_x_sqr,
+                this->_density * transient_term.coefficient + heat_loss_term.coefficient + (lambda_forward_by_delta_x_sqr + lambda_backward_by_delta_x_sqr),
                 // Coefficient of \f$ T_{j+1}^n \f$, \f$ - \frac{\lambda}{\left( \Delta x \right)^2} \f$
-                - lambda_by_delta_x_sqr,
+                - lambda_backward_by_delta_x_sqr,
                 // Constant term, \f$ - \rho_0 \alpha_{0,j}^n - \beta_{0,j}^n \f$
                 - this->_density * transient_term.constant - heat_loss_term.constant
             );
@@ -521,6 +532,8 @@ bool PelletFlamePropagation<real_t>::isCombustionComplete()
     }
     // Return whether combustion is complete or not
     return flag;
+
+	// return _temperature_array[_m - 1] > 1000;
 }
 
 template<typename real_t>

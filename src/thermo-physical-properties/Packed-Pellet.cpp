@@ -16,7 +16,7 @@
 #include <math.h>
 
 // Required for functions to calculate heat conductivity
-#include "thermo-physical-properties/Heat_Conductivity_Models.hpp"
+#include "thermo-physical-properties/Thermal_Conductivity_Pellet.hpp"
 
 /*****************************************************************************************************/
 // Instantiation of static members
@@ -151,11 +151,11 @@ template<typename real_t>
 real_t PackedPellet<real_t>::getThermalConductivity(CoreShellCombustionParticle<real_t> *ptr_2_particle, real_t T)
 {    
     // Return the heat conductivity determined using Bruggeman model
-    return getBruggemanHeatConductivity(
-        _particle_volume_fractions,
-        ptr_2_particle->getThermalConductivity(T),
-        _degassing_fluid->getThermalConductivity(T)
-    );
+    return getThermalConductivityMEB(
+		(real_t) 1.0 - _particle_volume_fractions,
+		_degassing_fluid->getThermalConductivity(T),
+		ptr_2_particle->getThermalConductivity(T)
+	);
 }
 
 template<typename real_t>

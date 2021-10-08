@@ -112,6 +112,8 @@ class PelletFlamePropagation : public PackedPellet<real_t>
          * @brief Array to store temperature at each grid point of the pellet
          */
         real_t * _temperature_array;
+
+		real_t * _thermal_conductivity;
         
         /**
          * @brief Array of Objects to solve the core-shell diffusion problem at
