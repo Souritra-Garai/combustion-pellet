@@ -73,6 +73,8 @@ int main(int argc, char const *argv[])
     
     try
     {
+		combustion_pellet.printGridPoints(temperature_file, ',');
+
         while (!combustion_pellet.isCombustionComplete() && __iter <= MAX_ITER)
         {
             combustion_pellet.setUpEquations();
