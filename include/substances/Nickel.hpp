@@ -49,7 +49,7 @@ ThermalConductivityQuadraticPolynomial<double> thermal_conductivity_solid_Ni_1(1
 
 ThermalConductivityQuadraticPolynomial<double> thermal_conductivity_solid_Ni_2_3(59.5, -7.67E-3, 1.7E-5);
 
-ThermalConductivityQuadraticPolynomial<double> thermal_conductivity_liquid_Ni(33.9, 7.892E-2, -2.099E-5);
+ThermalConductivityQuadraticPolynomial<double> thermal_conductivity_liquid_Ni(17.95, 2.097E-2, 0.0);
 
 Phase<double> solid_Ni_1(
     8902.0,

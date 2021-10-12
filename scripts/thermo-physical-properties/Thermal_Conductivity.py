@@ -29,4 +29,15 @@ for data, material in zip([data_Al, data_Ni, data_NiAl], ['Al', 'Ni', 'NiAl']) :
 
 ax.legend()
 
-plt.show()
+ax.grid(which='major', color='grey')
+ax.minorticks_on()
+ax.grid(which='minor', color='grey', ls='--')
+
+ax.set_title('Variation of Thermal Conductivity with Temperature')
+
+fig.set_size_inches(10, 4.5)
+fig.set_dpi(300)
+
+plt.savefig(solution_folder + '/Thermal_Conductivity.png', dpi=600)
+
+# plt.show()

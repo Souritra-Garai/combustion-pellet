@@ -29,7 +29,7 @@ def getThermalConductivityMEB(v_2, k_2, k_1) :
 
 	__iter = 0
 
-	while abs(k_e_u - k_e_l) > 0.001 and __iter < MAX_ITER :
+	while abs(phi_11_u - phi_11_l) > 0.00001 and __iter < MAX_ITER :
 
 		phi_11_m = 0.5 * (phi_11_u + phi_11_l)
 		
@@ -55,8 +55,8 @@ def getThermalConductivityMEB(v_2, k_2, k_1) :
 
 	return getThermalConductivityEMT(v_1, k_1, v_2, k_2, phi_11_m), phi_11_m
 
-lambda_P = 162.0	# W / m-K
-lambda_F = 0.017714	# W / m-K
+lambda_P = 163.002		# W / m-K
+lambda_F = 0.0176054	# W / m-K
 
 v_1 = np.linspace(0.1, 1, 1000)
 
@@ -69,12 +69,12 @@ for i in np.arange(v_1.shape[0]) :
 
 fig1 = plt.figure()
 
-fig1.suptitle('Thermal Conductivity for ME2 + EMT Combined Structure')
+# fig1.suptitle('Thermal Conductivity for ME2 + EMT Combined Structure')
 
-ax1 = fig1.add_subplot(1, 2, 1)
-ax2 = fig1.add_subplot(1, 2, 2)
+ax1 = fig1.add_subplot()
+ax2 = ax1.twinx()
 
-ax1.plot(v_1, phi_11)
+plot_phi, = ax1.plot(v_1, phi_11)
 
 ax1.grid(which='major', color='grey')
 ax1.minorticks_on()
@@ -83,14 +83,25 @@ ax1.grid(which='minor', color='grey', ls='--')
 ax1.set_xlabel('Particle Volume Fractions')
 ax1.set_ylabel('Volume Fraction of Particles in ME2')
 
-ax2.plot(v_1, lambda_m)
+plot_lambda, = ax2.plot(v_1, lambda_m, color='orange')
 
-ax2.grid(which='major', color='grey')
-ax2.minorticks_on()
-ax2.grid(which='minor', color='grey', ls='--')
+# ax2.grid(which='major', color='grey')
+# ax2.minorticks_on()
+# ax2.grid(which='minor', color='grey', ls='--')
 
-ax2.set_xlabel('Particle Volume Fractions')
+# ax2.set_xlabel('Particle Volume Fractions')
 ax2.set_ylabel('Effective Thermal Conductivity (W / m-K)')
+
+ax1.set_title('Thermal Conductivity for ME2 + EMT Combined Structure')
+
+ax1.legend([plot_phi, plot_lambda], ['Volume Fractions in ME2', 'Thermal Conductivity'], loc='upper left')
+
+fig1.set_size_inches(10, 4.5)
+fig1.set_dpi(300)
+
+plt.savefig('Thermal_Conductivity_MEB.png', dpi=600)
+
+#####################################################################################################
 
 fig2 = plt.figure()
 ax = fig2.add_subplot()

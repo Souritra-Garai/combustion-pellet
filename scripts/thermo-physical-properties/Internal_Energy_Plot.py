@@ -16,8 +16,6 @@ data_NiAl   = np.genfromtxt(solution_folder + '/Thermo_Physical_Properties_NiAl.
 
 fig, axes_left = plt.subplots()
 
-plt.figure(fig.number, figsize=(16, 9), dpi=600)
-
 axes_left.set_xlabel('Temperature (K)')
 
 axes_right = axes_left.twinx()
@@ -46,6 +44,8 @@ axes_left.grid(which='minor', color='grey', ls='--')
 
 axes_left.set_title('Variation of Thermodynamic Quantities with Temperature')
 
-# axes_left.set_aspect('auto')
-# plt.savefig('Thermodynamic_Properties.png', dpi=300)
-plt.show()
+fig.set_size_inches(10, 4.5)
+fig.set_dpi(300)
+
+plt.savefig(solution_folder + '/Thermodynamic_Properties.png', dpi=600)
+# plt.show()

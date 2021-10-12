@@ -20,7 +20,7 @@ ax.set_ylabel('Thermal Conductivity (W / m-K)')
 
 ax.plot(data[:, 0], data[:, 1], label='ME1')
 ax.plot(data[:, 0], data[:, 2], label='EMT')
-ax.plot(data[:, 0], data[:, 3], label='MEB')
+ax.plot(data[:, 0], data[:, 3], label='ME2 + EMT')
 ax.plot(data[:, 0], data[:, 4], label='CC')
 ax.plot(data[:, 0], data[:, 5], label='ME2')
 
@@ -30,4 +30,9 @@ ax.grid(which='minor', color='grey', ls='--')
 
 ax.legend()
 
-plt.show()
+fig.set_size_inches(10, 4.5)
+fig.set_dpi(300)
+
+plt.savefig(solution_folder + '/Thermal_Conductivity_Models.png', dpi=600)
+
+# plt.show()
