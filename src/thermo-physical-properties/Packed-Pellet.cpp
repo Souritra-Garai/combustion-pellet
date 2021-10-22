@@ -170,6 +170,7 @@ real_t PackedPellet<real_t>::getInternalEnergy(CoreShellCombustionParticle<real_
 template<typename real_t>
 void PackedPellet<real_t>::printProperties(std::ostream &output_stream)
 {
+	output_stream << "Packed Pellet Properties\n\n";
     output_stream << "Length\t\t:\t" << _length << "\tm" << std::endl;
     output_stream << "Diameter\t:\t" << _diameter << "\tm" << std::endl;
 

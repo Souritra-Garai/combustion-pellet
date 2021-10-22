@@ -20,7 +20,7 @@ class SphericalDiffusion3d :
 
         self.__mpl_objs = None
 
-    def __getradii(self, probability_array) :
+    def __getRadii(self, probability_array) :
 
         return np.sort(np.random.choice(
             self.__radial_coordinates,
@@ -29,9 +29,9 @@ class SphericalDiffusion3d :
             probability_array
         ))
 
-    def __transform2cartesian(self, probability_array) :
+    def __transformToCartesian(self, probability_array) :
 
-        r = self.__getradii(probability_array)
+        r = self.__getRadii(probability_array)
 
         x = self.__center[0] + r * np.sin(self.__theta) * np.cos(self.__phi)
         y = self.__center[1] + r * np.sin(self.__theta) * np.sin(self.__phi)
@@ -39,7 +39,7 @@ class SphericalDiffusion3d :
 
         return (x, y, z)
 
-    def set_up_plot(self, axes, colour) :
+    def setUpPlot(self, axes, colour) :
 
         self.__mpl_objs, = axes.plot([], [], [], "o", markersize=0.5, c = colour)
 
@@ -47,14 +47,14 @@ class SphericalDiffusion3d :
 
     def update(self, probability_array) :
         
-        x, y, z = self.__transform2cartesian(probability_array)
+        x, y, z = self.__transformToCartesian(probability_array)
 
         self.__mpl_objs.set_data(x, y)
         self.__mpl_objs.set_3d_properties(z)
 
         return self.__mpl_objs,
 
-    def getplotlims(self, extension_factor = 1.2) :
+    def getPlotLims(self, extension_factor = 1.2) :
 
         return [- extension_factor * self.__radial_coordinates[-1], extension_factor * self.__radial_coordinates[-1]]
 
@@ -79,18 +79,18 @@ class ParticleDiffusion3D :
         self.__concentration_matrix['A'][conc_A_data[1:, 1:] < 0] = 0
         self.__concentration_matrix['B'][conc_B_data[1:, 1:] < 0] = 0
 
-    def __get_shell_probability(self, material, time_index) :
+    def __getShellProbability(self, material, time_index) :
 
         shell_prob = self.__concentration_matrix[material][time_index] * self.__radial_coordinates_array ** 2
 
         return shell_prob / np.sum(shell_prob)
 
-    def set_up_plot(self, axes) :
+    def setUpPlot(self, axes) :
 
         mpl_objs = []
 
-        mpl_objs.extend(self.__spherical_diffusion_A.set_up_plot(axes, 'red'))
-        mpl_objs.extend(self.__spherical_diffusion_B.set_up_plot(axes, 'blue'))
+        mpl_objs.extend(self.__spherical_diffusion_A.setUpPlot(axes, 'red'))
+        mpl_objs.extend(self.__spherical_diffusion_B.setUpPlot(axes, 'blue'))
 
         return mpl_objs
 
@@ -98,66 +98,68 @@ class ParticleDiffusion3D :
 
         mpl_objs = []
 
-        mpl_objs.extend(self.__spherical_diffusion_A.update(self.__get_shell_probability('A', time_index)))
-        mpl_objs.extend(self.__spherical_diffusion_B.update(self.__get_shell_probability('B', time_index)))
+        mpl_objs.extend(self.__spherical_diffusion_A.update(self.__getShellProbability('A', time_index)))
+        mpl_objs.extend(self.__spherical_diffusion_B.update(self.__getShellProbability('B', time_index)))
 
         return mpl_objs
 
-    def get_time(self, time_index) :
+    def getTime(self, time_index) :
 
         return self.__time_array[time_index]
 
-    def get_plot_lims(self, extension_factor = 1.2) :
+    def getPlotLims(self, extension_factor = 1.2) :
 
-        return self.__spherical_diffusion_A.getplotlims(extension_factor)
+        return self.__spherical_diffusion_A.getPlotLims(extension_factor)
 
 if __name__ == '__main__' :
 
-    from matplotlib.animation import FuncAnimation, FFMpegWriter
+	from matplotlib.animation import FuncAnimation, FFMpegWriter
 
-    import os
-    import sys
+	import os
+	import sys
 
-    sys.path.insert(0, os.path.dirname(os.path.split(sys.path[0])[0]))
+	sys.path.insert(0, os.path.dirname(os.path.split(sys.path[0])[0]))
 
-    from scripts.utilities.solution_folder import getlatestfolder, getpath
+	from scripts.utilities.solution_folder import getlatestfolder, getpath
 
-    particle = ParticleDiffusion3D(getlatestfolder(), 10000, [0,0,0], 1E6)
+	particle = ParticleDiffusion3D(getlatestfolder() + '/1', 10000, [0,0,0], 1E6)
 
-    fig = plt.figure(figsize=[10,10])
-    fig.suptitle('Diffusion in Ni-Coated Al Particle', fontweight='bold')
+	fig = plt.figure(figsize=[10,10])
+	fig.suptitle('Diffusion in Ni-Coated Al Particle', fontweight='bold')
 
-    ax = fig.add_subplot(1, 1, 1, projection='3d')
+	ax = fig.add_subplot(1, 1, 1, projection='3d')
 
-    e = 1.1
+	e = 1.1
 
-    ax.set_xlim(particle.get_plot_lims(e))
-    ax.set_ylim(particle.get_plot_lims(e))
-    ax.set_zlim(particle.get_plot_lims(e))
+	ax.set_xlim(particle.getPlotLims(e))
+	ax.set_ylim(particle.getPlotLims(e))
+	ax.set_zlim(particle.getPlotLims(e))
 
-    ax.set_xlabel(r'x $\left(\mu m\right)$')
-    ax.set_ylabel(r'y $\left(\mu m\right)$')
-    ax.set_zlabel(r'z $\left(\mu m\right)$')
+	ax.set_xlabel(r'x $\left(\mu m\right)$')
+	ax.set_ylabel(r'y $\left(\mu m\right)$')
+	ax.set_zlabel(r'z $\left(\mu m\right)$')
 
-    particle.set_up_plot(ax)
+	particle.setUpPlot(ax)
 
-    ax.plot([],[],[], 'o', markersize=5, c='blue', label='Nickel')
-    ax.plot([],[],[], 'o', markersize=5, c='red', label='Aluminium')
-    ax.legend()
+	ax.plot([],[],[], 'o', markersize=5, c='blue', label='Nickel')
+	ax.plot([],[],[], 'o', markersize=5, c='red', label='Aluminium')
+	ax.legend()
 
-    # title = ax.text(0.5,0.85, "", bbox={'facecolor':'w', 'alpha':0.5, 'pad':5},
-    #             transform=ax.transAxes, ha="center", s=0)
+	ax.set_axis_off()
 
-    def update(i) :
+	# title = ax.text(0.5,0.85, "", bbox={'facecolor':'w', 'alpha':0.5, 'pad':5},
+	#             transform=ax.transAxes, ha="center", s=0)
 
-        ax.set_title(u"Time t = {:.3f} seconds".format(particle.get_time(i)))
+	def update(i) :
 
-        return particle.update(i)
+		ax.set_title(u"Time t = {:.3f} seconds".format(particle.getTime(i)))
 
-    my_anim = FuncAnimation(fig, update, np.arange(start=0, stop=5000, step=100), blit=False, interval = 1)
+		return particle.update(i)
 
-    plt.show()
+	my_anim = FuncAnimation(fig, update, np.arange(start=0, stop=1000, step=10), blit=False, interval = 1)
 
-    # writervideo = FFMpegWriter(fps=60)
-    # my_anim.save('Core_Shell_Particle_Diffusion.mp4', writer=writervideo)
-    # plt.close()
+	plt.show()
+
+	# writervideo = FFMpegWriter(fps=60)
+	# my_anim.save('Core_Shell_Particle_Diffusion.mp4', writer=writervideo)
+	# plt.close()

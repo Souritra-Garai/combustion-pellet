@@ -333,6 +333,15 @@ class PelletFlamePropagation : public PackedPellet<real_t>
          * @param delimiter Character to separate two consecutive values of temperature
          */
         void printGridPoints(std::ostream &output_stream, char delimiter = '\t');
+
+		void printDiffusionParticleGridPoints(std::ostream &output_stream, unsigned int particle_index, char delimiter = '\t');
+
+		void printDiffusionParticleConcentationProfiles(
+			std::ostream &output_stream_A,
+			std::ostream &output_stream_B, 
+			unsigned int particle_index,
+			char delimiter = ','
+		);
 };
 
 #endif

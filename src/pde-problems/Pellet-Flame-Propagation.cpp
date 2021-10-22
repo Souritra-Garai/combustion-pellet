@@ -570,6 +570,7 @@ template<typename real_t>
 void PelletFlamePropagation<real_t>::printConfiguration(
     std::ostream &output_stream
 ) {
+	output_stream << "Pellet Flame Propagation PDE Solver Configuration\n\n";
     output_stream << "Time Step\t:\t" << _delta_t << "\ts" << std::endl;
 
     output_stream << "Number of Grid Points\t:\t" << _m << std::endl;
@@ -578,16 +579,38 @@ void PelletFlamePropagation<real_t>::printConfiguration(
 
     output_stream << "Delta T\t:\t" << _delta_T << "\tK" << std::endl;
 
-    output_stream << "Initial Ignitiion Parameters" << std::endl;
-    output_stream << "\tTemperature\t:\t" << _initial_ignition_temperature << "\tK" << std::endl;
-    output_stream << "\tLength\t:\t" << _initial_ignition_length << "\tm" << std::endl;
+    output_stream << "\nInitial Ignitiion Parameters" << std::endl;
+    output_stream << "Temperature\t:\t" << _initial_ignition_temperature << "\tK" << std::endl;
+    output_stream << "Length\t:\t" << _initial_ignition_length << "\tm" << std::endl;
 
-    output_stream << "Core-Shell Particle Diffusivity Parameter" << std::endl;
-    output_stream << "\tPre Exponential Factor\t:\t" << _diffusivity_model.getPreExponentialFactor() << "\tm2 / s" << std::endl;
-    output_stream << "\tActivation Energy\t:\t" << _diffusivity_model.getActivationEnergy() << "\tJ / mol." << std::endl;
+    output_stream << "\nCore-Shell Particle Diffusivity Parameter" << std::endl;
+    output_stream << "Pre Exponential Factor\t:\t" << _diffusivity_model.getPreExponentialFactor() << "\tm2 / s" << std::endl;
+    output_stream << "Activation Energy\t:\t" << _diffusivity_model.getActivationEnergy() << "\tJ / mol." << std::endl;
 
-    output_stream << "Core-Shell Particle Diffusion Solver Parameters" << std::endl;
+    output_stream << "\nCore-Shell Particle Diffusion Solver Parameters" << std::endl;
     _particles_array->printConfiguration(output_stream);
+
+	output_stream << std::endl;
+}
+
+template<typename real_t>
+void PelletFlamePropagation<real_t>::printDiffusionParticleGridPoints(
+	std::ostream &output_stream,
+	unsigned int particle_index,
+	char delimiter
+) {
+	_particles_array[particle_index].printGridPoints(output_stream, delimiter);
+}
+
+template<typename real_t>
+void PelletFlamePropagation<real_t>::printDiffusionParticleConcentationProfiles(
+	std::ostream &output_stream_A,
+	std::ostream &output_stream_B, 
+	unsigned int particle_index,
+	char delimiter
+) {
+	_particles_array[particle_index].printConcentrationProfileA(output_stream_A, delimiter, _time);
+	_particles_array[particle_index].printConcentrationProfileB(output_stream_B, delimiter, _time);
 }
 
 /******************************************************************************************************************/

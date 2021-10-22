@@ -24,37 +24,78 @@ FileGenerator::FileGenerator()
     time(&raw_time);
     time_info = localtime(&raw_time);
 
-    char * current_time = asctime(time_info);
-    current_time[strlen(current_time) - 1] = '\0';
+    std::string current_time = asctime(time_info);
+    current_time.erase(current_time.end() - 1);
 
-    strcpy(folder_name, "solutions/");
-    strcat(folder_name, current_time);
+	_folder_name.clear();
+	_folder_name.append("solutions/");
+	_folder_name.append(current_time);
 
-    mkdir(folder_name, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    mkdir(_folder_name.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 }
 
-std::ofstream FileGenerator::getCSVFile(const char * file_name)
+std::ofstream FileGenerator::getCSVFile(std::string file_name)
 {
-    char file[100];
+    std::string file;
     
-    strcpy(file, folder_name);
-    strcat(file, "/");
-
-    strcat(file, file_name);
-    strcat(file, ".csv");
+	file.clear();
+	file.append(_folder_name);
+	
+	file.append("/");
+    file.append(file_name);
+	file.append(".csv");
 
     return std::ofstream(file);
 }
 
-std::ofstream FileGenerator::getTXTFile(const char * file_name)
+std::ofstream FileGenerator::getCSVFile(std::string file_name, std::string folder)
 {
-    char file[100];
+    std::string file;
     
-    strcpy(file, folder_name);
-    strcat(file, "/");
+	file.clear();
+	file.append(_folder_name);
+	
+	file.append("/");
+	file.append(folder);
 
-    strcat(file, file_name);
-    strcat(file, ".txt");
+	mkdir(file.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+   	file.append("/");
+    file.append(file_name);
+	file.append(".csv");
+
+    return std::ofstream(file);
+}
+
+std::ofstream FileGenerator::getTXTFile(std::string file_name)
+{
+    std::string file;
+    
+	file.clear();
+	file.append(_folder_name);
+	
+	file.append("/");
+    file.append(file_name);
+	file.append(".txt");
+
+    return std::ofstream(file);
+}
+
+std::ofstream FileGenerator::getTXTFile(std::string file_name, std::string folder)
+{
+    std::string file;
+    
+    file.clear();
+	file.append(_folder_name);
+	
+	file.append("/");
+	file.append(folder);
+
+	mkdir(file.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+   	file.append("/");
+    file.append(file_name);
+	file.append(".txt");
 
     return std::ofstream(file);
 }

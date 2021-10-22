@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string.h>
 #include <omp.h>
 
 #include "thermo-physical-properties/Substance.hpp"
@@ -46,12 +47,10 @@ int main(int argc, char const *argv[])
     PelletFlamePropagation<double>::setGridSize(101);
     PelletFlamePropagation<double>::setTimeStep(0.0001);
     PelletFlamePropagation<double>::setInfinitesimalChangeTemperature(0.1);
-    PelletFlamePropagation<double>::setInitialIgnitionParameters(1500, 0.1 * pellet_length);
-
-    // omp_set_num_threads(1);
+    PelletFlamePropagation<double>::setInitialIgnitionParameters(1911, 0.05 * pellet_length);
 
     PelletFlamePropagation<double> combustion_pellet(0.8);
-    combustion_pellet.setDiffusivityModel(Du_diffusivity);
+    combustion_pellet.setDiffusivityModel(Alawieh_diffusivity);
 
     combustion_pellet.initializePellet();
 
@@ -59,7 +58,23 @@ int main(int argc, char const *argv[])
 
     std::ofstream temperature_file = file_generator.getCSVFile("temperature");
     std::ofstream config_file = file_generator.getTXTFile("combustion_config");
+	std::ofstream diffusion_particle_indices_file = file_generator.getCSVFile("diffusion_particle_indices");
 
+	int num_diffusion_particles = 4;
+	unsigned int diffusion_particle_indices[num_diffusion_particles] = {1, 25, 50, 99};
+
+	std::ofstream * diffusion_particle_file_A = new std::ofstream[num_diffusion_particles];
+	std::ofstream * diffusion_particle_file_B = new std::ofstream[num_diffusion_particles];
+
+	for (size_t i = 0; i < num_diffusion_particles; i++)
+	{
+		diffusion_particle_indices_file << diffusion_particle_indices[i] << std::endl;
+
+		diffusion_particle_file_A[i] = file_generator.getCSVFile("concentration_A", std::to_string(diffusion_particle_indices[i]));
+		diffusion_particle_file_B[i] = file_generator.getCSVFile("concentration_B", std::to_string(diffusion_particle_indices[i]));
+	}
+
+	combustion_pellet.printConfiguration(config_file);
     combustion_pellet.printProperties(config_file);
     config_file.close();
 
@@ -75,12 +90,28 @@ int main(int argc, char const *argv[])
     {
 		combustion_pellet.printGridPoints(temperature_file, ',');
 
+		for (size_t i = 0; i < num_diffusion_particles; i++)
+		{
+			combustion_pellet.printDiffusionParticleGridPoints(diffusion_particle_file_A[i], diffusion_particle_indices[i], ',');
+			combustion_pellet.printDiffusionParticleGridPoints(diffusion_particle_file_B[i], diffusion_particle_indices[i], ',');
+		}
+
         while (!combustion_pellet.isCombustionComplete() && __iter <= MAX_ITER)
         {
             combustion_pellet.setUpEquations();
             combustion_pellet.solveEquations();
 
             combustion_pellet.printTemperatureProfile(temperature_file, ',');
+
+			for (size_t i = 0; i < num_diffusion_particles; i++)
+			{
+				combustion_pellet.printDiffusionParticleConcentationProfiles(
+					diffusion_particle_file_A[i],
+					diffusion_particle_file_B[i],
+					diffusion_particle_indices[i],
+					','
+				);
+			}
 
             if (__iter % 30 == 0)
             {
@@ -109,6 +140,16 @@ int main(int argc, char const *argv[])
     
     combustion_pellet.printTemperatureProfile(temperature_file, ',');
     temperature_file.close();
+
+	for (size_t i = 0; i < num_diffusion_particles; i++)
+	{
+		diffusion_particle_file_A[i].close();
+		diffusion_particle_file_B[i].close();
+	}
+
+	delete [] diffusion_particle_file_A;
+	delete [] diffusion_particle_file_B;
+
     return 0;
 }
 
