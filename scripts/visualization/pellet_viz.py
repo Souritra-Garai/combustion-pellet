@@ -51,10 +51,10 @@ for x, T in zip(x_array, T_matrix[0]) :
 particle1 = ParticleDiffusion3D(solution_folder + '/1', position=[x_array[1], diameter/2, diameter/2], scale=20)
 particle1.setUpPlot(ax)
 
-particle2 = ParticleDiffusion3D(solution_folder + '/25', position=[x_array[25], diameter/2, diameter/2], scale=20)
+particle2 = ParticleDiffusion3D(solution_folder + '/33', position=[x_array[33], diameter/2, diameter/2], scale=20)
 particle2.setUpPlot(ax)
 
-particle3 = ParticleDiffusion3D(solution_folder + '/50', position=[x_array[50], diameter/2, diameter/2], scale=20)
+particle3 = ParticleDiffusion3D(solution_folder + '/66', position=[x_array[66], diameter/2, diameter/2], scale=20)
 particle3.setUpPlot(ax)
 
 particle4 = ParticleDiffusion3D(solution_folder + '/99', position=[x_array[99], diameter/2, diameter/2], scale=20)
@@ -64,7 +64,7 @@ y = np.linspace(0, diameter / 2)
 z = 2 * y
 z[z > diameter / 2] = diameter / 2
 
-for x in x_array[[1, 25, 50, 99]] :
+for x in x_array[[1, 33, 66, 99]] :
 
 	ax.plot(np.ones_like(y)*x, y, z, color='black', lw=0.5)
 
@@ -92,19 +92,23 @@ ax.set_axis_off()
 
 e = 1.1
 
-lim = np.array([-0.01 * diameter, 0.7 * diameter])
+lim = np.array([-0.02 * diameter, 0.8 * diameter])
 
 ax.set_xlim(lim + 0.11 * diameter)
 ax.set_ylim(lim)
 ax.set_zlim(lim - 0.11 * diameter)
 
-my_animation = FuncAnimation(fig, update, frames = np.arange(0, t_array.shape[0], 10), interval=1)
+my_animation = FuncAnimation(fig, update, frames = np.arange(0, t_array.shape[0], 5), interval=1)
 
-ax.view_init(azim=-90, elev=0)
+ax.view_init(azim=-53, elev=14)
 
 fig.colorbar(cm.ScalarMappable(norm=normalizer, cmap=temperature_colormap), ax=ax, label='Temperature (K)')
-plt.show()
 
-# writervideo = FFMpegWriter(fps=60)
-# my_animation.save('Pellet_Flame_Propagation.mp4', writer=writervideo)
-# plt.close()
+fig.set_size_inches(8, 6)
+fig.set_dpi(300)
+
+# plt.show()
+
+writervideo = FFMpegWriter(fps=60)
+my_animation.save('Pellet_Flame_Propagation.mp4', writer=writervideo)
+plt.close()

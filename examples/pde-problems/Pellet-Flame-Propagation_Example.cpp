@@ -61,7 +61,7 @@ int main(int argc, char const *argv[])
 	std::ofstream diffusion_particle_indices_file = file_generator.getCSVFile("diffusion_particle_indices");
 
 	int num_diffusion_particles = 4;
-	unsigned int diffusion_particle_indices[num_diffusion_particles] = {1, 25, 50, 99};
+	unsigned int diffusion_particle_indices[num_diffusion_particles] = {1, 33, 66, 99};
 
 	std::ofstream * diffusion_particle_file_A = new std::ofstream[num_diffusion_particles];
 	std::ofstream * diffusion_particle_file_B = new std::ofstream[num_diffusion_particles];
