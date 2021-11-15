@@ -2,6 +2,8 @@
 #include <string.h>
 #include <omp.h>
 
+#include <boost/program_options.hpp>
+
 #include "thermo-physical-properties/Substance.hpp"
 #include "thermo-physical-properties/Arrhenius_Diffusivity_Model.hpp"
 
@@ -16,7 +18,7 @@
 #include "substances/Nickel.hpp"
 #include "substances/NickelAluminide.hpp"
 
-#define MAX_ITER 3000
+#define MAX_ITER 30
 
 double core_radius = 32.5E-6;
 double overall_radius = 39.5E-6;
@@ -27,7 +29,11 @@ double pellet_diameter = 6.35E-3;
 ArrheniusDiffusivityModel<double> Alawieh_diffusivity(2.56E-6, 102.191E3);
 ArrheniusDiffusivityModel<double> Du_diffusivity(9.54E-8, 26E3);
 
+double phi = 0.7;
+ArrheniusDiffusivityModel<double> * diffusivity_model;
+
 void printState(size_t iteration_number, PelletFlamePropagation<double> &pellet);
+int setCombustionConfiguration(int argc, char const *argv[]);
 
 int main(int argc, char const *argv[])
 {
@@ -49,9 +55,17 @@ int main(int argc, char const *argv[])
     PelletFlamePropagation<double>::setInfinitesimalChangeTemperature(0.1);
     PelletFlamePropagation<double>::setInitialIgnitionParameters(1500, 0.1 * pellet_length);
 
-    PelletFlamePropagation<double> combustion_pellet(0.68);
-    combustion_pellet.setDiffusivityModel(Alawieh_diffusivity);
+	switch (setCombustionConfiguration(argc, argv))
+	{
+		case 0:	return 0;
 
+		case 1: return 1;
+		
+		default:	;
+	}
+
+	PelletFlamePropagation<double> combustion_pellet(phi);
+    combustion_pellet.setDiffusivityModel(*diffusivity_model);
     combustion_pellet.initializePellet();
 
     FileGenerator file_generator;
@@ -82,11 +96,7 @@ int main(int argc, char const *argv[])
 
             combustion_pellet.printTemperatureProfile(temperature_file, ',');
 
-            if (__iter % 50 == 0)
-            {
-                std::cout << "Iteration # " << __iter << std::endl;
-                // printState(__iter, combustion_pellet);
-            }
+            if (__iter % 50 == 0)   std::cout << "Iteration # " << __iter << std::endl;
 
             __iter++;
         }
@@ -99,7 +109,6 @@ int main(int argc, char const *argv[])
         printState(__iter, combustion_pellet);
 
         combustion_pellet.printTemperatureProfile(temperature_file, ',');
-
         temperature_file.close();
 
         return 1;
@@ -120,4 +129,76 @@ void printState(size_t iteration_number, PelletFlamePropagation<double> &pellet)
     pellet.printTemperatureProfile(std::cout);
 
     std::cout << std::endl;
+}
+
+int setCombustionConfiguration(int argc, const char * argv[])
+{
+	try
+	{
+		boost::program_options::options_description options_description_obj("Usage: Pellet-Flame-Propagation [options]\nOptions");
+
+		options_description_obj.add_options()
+			("help",	"produce help message")
+			("Du",		"set diffusivity parameters to Du et al's model (by default Alawieh et al's model is used)")
+			("M",		boost::program_options::value<size_t>(),	"set number of grid points for pellet pde-solver to arg")
+			("Dt",		boost::program_options::value<double>(),	"set time step in seconds to arg")
+			("phi",		boost::program_options::value<double>(),	"set particle volume fractions to arg");
+
+		boost::program_options::variables_map variables_map_obj;
+		boost::program_options::store(
+			boost::program_options::parse_command_line(argc, argv, options_description_obj),
+			variables_map_obj
+		);
+		boost::program_options::notify(variables_map_obj);
+
+		if (variables_map_obj.count("help"))
+		{
+			std::cout << options_description_obj << std::endl;
+			return 0;
+		}
+
+		if (variables_map_obj.count("Du"))
+		{
+			diffusivity_model = &Du_diffusivity;		
+			std::cout << "Using Du et al's Diffusivity parameters." << std::endl;
+		}
+		else
+		{
+			diffusivity_model = &Alawieh_diffusivity;
+			std::cout << "Using Alawieh et al's Diffusivity parameters." << std::endl;
+		}
+
+		if (variables_map_obj.count("M"))
+		{
+			PelletFlamePropagation<double>::setGridSize(variables_map_obj["M"].as<size_t>());
+		}
+
+		if (variables_map_obj.count("Dt"))
+		{
+			PelletFlamePropagation<double>::setTimeStep(variables_map_obj["Dt"].as<double>());
+		}
+
+		if (variables_map_obj.count("phi"))
+		{
+			phi = variables_map_obj["phi"].as<double>();
+
+			if (phi > 0.0 && phi <= 1.0) 
+			{
+				PelletFlamePropagation<double> combustion_pellet(phi);
+				std::cout << "Particle volume fractions set to " << phi << std::endl;
+			}
+			else
+			{
+				std::cerr << "Particle volume fractions should be in the interval (0, 1]. Given value : " << phi << std::endl;
+				return 1;
+			}
+		}
+	}
+
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
+
+	return 2;
 }

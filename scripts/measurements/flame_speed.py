@@ -30,6 +30,11 @@ valid_indices = np.where(flame_locations != 0.0)
 flame_locations = flame_locations[valid_indices]
 t = t[valid_indices]
 
+valid_indices = np.where(t < 0.25)
+
+flame_locations = flame_locations[valid_indices]
+t = t[valid_indices]
+
 line, cov = np.polyfit(t, flame_locations, 1, cov=True)
 # print(line)
 
@@ -39,7 +44,7 @@ fig = plt.figure()
 ax = fig.add_subplot()
 
 ax.plot(t, flame_locations, label='Simulation Results')
-ax.plot(t, np.polyval(line, t), label='Line fit')
+ax.plot(t, np.polyval(line, t), label='Line fit', lw=1)
 
 ax.set_title('Flame Speed : ' +  str(line[0]*100) + ' cm/s')
 

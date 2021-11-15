@@ -45,10 +45,15 @@ $(TARGET) : $(OBJECTS)
 	@echo "\nLinking all...";
 	$(CC) $(OBJECTS) $(CFLAGS) $(LIB) -o $(TARGET)
 
-$(BUILDDIR)/main.o : $(SRCDIR)/main.cpp
+main : $(BUILDDIR)/main.o $(PDEOBJS) $(TRPOBJS) $(QRSOBJS) $(UTILOBJS)
+	@mkdir -p $(BINDIR);
+	@echo "\nLinking all files for main...";
+	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/main.o $(PDEOBJS) $(TRPOBJS) $(QRSOBJS) $(UTILOBJS) -lboost_program_options -o $(BINDIR)/Pellet-Flame-Propagation
+
+$(BUILDDIR)/main.o : $(SRCDIR)/main.cpp $(INCDIR)/$(PDEDIR)/Core-Shell-Diffusion.hpp $(INCDIR)/$(PDEDIR)/Pellet-Flame-Propagation.hpp $(INCDIR)/$(TRPDIR)/Arrhenius_Diffusivity_Model.hpp $(SUBSTANCE_HPP) $(INCDIR)/$(UTILDIR)/Keyboard_Interrupt.hpp $(INCDIR)/$(UTILDIR)/File_Generator.hpp
 	@mkdir -p $(BUILDDIR);
 	@echo "\nCompiling main...";
-	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/main.cpp -o $(BUILDDIR)/main.o
+	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/main.cpp -I /usr/include/boost -o $(BUILDDIR)/main.o
 
 # ----------------------------------------------------------------------------------------------------------
 # Building thermo-physical properties source files
