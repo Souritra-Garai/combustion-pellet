@@ -275,6 +275,69 @@ void CoreShellDiffusion<real_t>::setUpEquations(real_t D)
 }
 
 template<typename real_t>
+void CoreShellDiffusion<real_t>::setUpEquations(real_t D, CoreShellDiffusion<real_t> &diffusion_problem)
+{
+    // \f$ \Rightarrow -
+    // \mathcal{D} \cdot \left( \frac{r_{i+1}}{\Delta r \cdot r_i} \right)^2 \cdot C_{k,i+1}^n +
+    // \left\{ \frac{1}{\Delta t} + \mathcal{D} \cdot \left( \frac{r_{i+1}}{\Delta r \cdot r_i} \right)^2 + \frac{\mathcal{D}}{\left(\Delta r\right)^2} \right\} \cdot C_{k,i}^n \\ -
+    // \frac{\mathcal{D}}{\left(\Delta r\right)^2} \cdot C_{k,i-1}^n
+    // = \frac{C_{k,i}^{n-1}}{\Delta t} \f$
+
+    // We can calculate the coefficients in three parts to avoid repetitive calculations
+
+    // Coefficient 1 = \f$ \frac{\mathcal{D\left(T\right)}}{\left(\Delta r\right)^2} \f$
+    real_t coefficient1 = D / pow(_delta_r, 2);
+    // Coefficient 2 = \f$ \frac{1}{\Delta t} \f$
+    real_t coefficient2 = 1.0 / _delta_t;
+    // Coefficient 3 = \f$ \mathcal{D} \cdot \left( \frac{r_{i+1}}{\Delta r \cdot r_i} \right)^2 \f$
+    real_t coefficient3;
+
+    // Set zero flux boundary condition at grid point # 0
+    // \f$ C_{k,1}^n - C_{k,0}^n = 0 \f$
+    _solver_A.setEquationFirstRow(1, -1, 0);
+    _solver_B.setEquationFirstRow(1, -1, 0);
+
+    // Parallely setup the matrix for the linear algebra solver
+    // As coefficient 3 is different for every grid point,
+    // it needs to be calculated for each row 
+    // and hence every thread needs a private copy
+    #pragma omp parallel for default(shared) private(coefficient3) num_threads(4) schedule(static, 250)
+        // Iteratively set up the discretized governing diffusion equation
+        // for all grid points except the grid points # 0 and N, where
+        // zero flux boundary conditions apply
+        for (size_t i = 1; i < _n - 1; i++)
+        {
+            // Calculating coefficient 3 for the current grid point
+            coefficient3 = coefficient1 * pow(getRadialCoordinate(i+1) / getRadialCoordinate(i), 2);
+
+            // Set up row for matrix equation representing 
+            // diffusion of substance A
+            _solver_A.setEquation(
+                i, 
+                - coefficient1, 
+                coefficient1 + coefficient2 + coefficient3, 
+                - coefficient3, 
+                coefficient2 * diffusion_problem._concentration_array_A[i]
+            );
+
+            // Set up row for matrix equation representing 
+            // diffusion of substance B
+            _solver_B.setEquation(
+                i, 
+                - coefficient1, 
+                coefficient1 + coefficient2 + coefficient3, 
+                - coefficient3, 
+                coefficient2 * diffusion_problem._concentration_array_B[i]
+            );
+        }
+
+    // Set zero flux boundary condition at grid point # N
+    // C_{k,N}^n - C_{k,N-1}^n = 0
+    _solver_A.setEquationLastRow(-1, 1, 0);
+    _solver_B.setEquationLastRow(-1, 1, 0);
+}
+
+template<typename real_t>
 void CoreShellDiffusion<real_t>::solveEquations()
 {
     // Parallelly solve the two linear algebra problems

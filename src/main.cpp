@@ -18,7 +18,7 @@
 #include "substances/Nickel.hpp"
 #include "substances/NickelAluminide.hpp"
 
-#define MAX_ITER 30
+#define MAX_ITER 3000
 
 double core_radius = 32.5E-6;
 double overall_radius = 39.5E-6;

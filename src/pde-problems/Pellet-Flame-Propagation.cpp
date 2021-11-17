@@ -202,17 +202,18 @@ void PelletFlamePropagation<real_t>::evolveParticleForEnthalpyDerivative(size_t 
 {
     // Since the evolution of the particles with constant temperature and raised temperature
     // are independent of each other, they can be parallelized
-    #pragma omp parallel sections
+    #pragma omp parallel sections default(shared)
     {
         // Parallel section for constant temperature evolution
         #pragma omp section
         {
-            // Create copies of the current particle to evolve
-            _particles_array_const_temperature_evolution[i].copyFrom(_particles_array[i]);
+            // // Create copies of the current particle to evolve
+            // _particles_array_const_temperature_evolution[i].copyFrom(_particles_array[i]);
             // Set up equations to evolve particle from \f$ \left( t_{n-1}, T_j^{n-1}, \left\{ C_j^{n-1} \right\} \right) \f$
             // to \f$ \left( t_n, T_j^n, \left\{ C_j^n \right\} \right) \f$
             _particles_array_const_temperature_evolution[i].setUpEquations(
-                _diffusivity_model.getDiffusivity(_temperature_array[i])
+                _diffusivity_model.getDiffusivity(_temperature_array[i]),
+				_particles_array[i]
             );
             // Solve the equations to update the state of the particle
             _particles_array_const_temperature_evolution[i].solveEquations();
@@ -221,13 +222,13 @@ void PelletFlamePropagation<real_t>::evolveParticleForEnthalpyDerivative(size_t 
         // Parallel section for evolution at an infinitesimally higher temperature
         #pragma omp section
         {
-            // Create copies of the current particle to evolve
-            _particles_array_raised_temperature_evolution[i].copyFrom(_particles_array[i]);
+            // // Create copies of the current particle to evolve
+            // _particles_array_raised_temperature_evolution[i].copyFrom(_particles_array[i]);
             // Set up equations to evolve particle from \f$ \left( t_{n-1}, T_j^{n-1} + \Delta T, \left\{ C_j^{n-1} \right\} \right) \f$
             // to \f$ \left( t_n, T_j^n, \left\{ C_j^n \right\} \right) \f$
             _particles_array_raised_temperature_evolution[i].setUpEquations(
-                _diffusivity_model.getDiffusivity(_temperature_array[i] +
-                _delta_T)
+                _diffusivity_model.getDiffusivity(_temperature_array[i] + _delta_T),
+				_particles_array[i]
             );
             // Solve the equations to update the state of the particle
             _particles_array_raised_temperature_evolution[i].solveEquations();
@@ -376,7 +377,7 @@ void PelletFlamePropagation<real_t>::updateParticlesState()
 {
     // Updating the state of the energetic particle at each grid point
     // parallely as they are independent of each other
-    #pragma omp parallel for schedule(dynamic)
+    #pragma omp parallel for default(shared) schedule(static,1) num_threads(6)
         // For each grid point update the state of the energetic particle
         for (size_t i = 1; i < _m-1; i++)
         {
@@ -460,7 +461,7 @@ void PelletFlamePropagation<real_t>::setUpEquations()
     setUpBoundaryConditionX0();
 
     // As the 
-    #pragma omp parallel for schedule(dynamic)
+    #pragma omp parallel for default(shared) schedule(static,1) num_threads(6)
 
         for (size_t i = 1; i < _m-1; i++)
         {
