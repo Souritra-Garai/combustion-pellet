@@ -152,8 +152,14 @@ class CoreShellDiffusion : public CoreShellCombustionParticle<real_t>
          * @param diffusivity Value of diffusivity in \f$ m^2 / s \f$
          */
         void setUpEquations(real_t diffusivity);
+		/**
+         * @brief Set up the matrix equation for diffusion over one time step
+         * @param diffusivity Value of diffusivity in \f$ m^2 / s \f$
+         */
+        void setUpEquations(real_t diffusivity, CoreShellDiffusion<real_t> &diffusion_problem);
+
         /**
-         * @brief Solve the matrix equations and upadte the particle state internally
+         * @brief Solve the matrix equations and update the particle state internally
          */
         void solveEquations();
 
