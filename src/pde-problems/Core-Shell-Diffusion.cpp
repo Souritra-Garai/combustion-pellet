@@ -223,7 +223,7 @@ void CoreShellDiffusion<real_t>::setUpEquations(real_t D)
     // We can calculate the coefficients in three parts to avoid repetitive calculations
 
     // Coefficient 1 = \f$ \frac{\mathcal{D\left(T\right)}}{\left(\Delta r\right)^2} \f$
-    real_t coefficient1 = D / pow(_delta_r, 2);
+    real_t coefficient1 = 0.5 * D / pow(_delta_r, 2);
     // Coefficient 2 = \f$ \frac{1}{\Delta t} \f$
     real_t coefficient2 = 1.0 / _delta_t;
     // Coefficient 3 = \f$ \mathcal{D} \cdot \left( \frac{r_{i+1}}{\Delta r \cdot r_i} \right)^2 \f$
@@ -250,11 +250,13 @@ void CoreShellDiffusion<real_t>::setUpEquations(real_t D)
             // Set up row for matrix equation representing 
             // diffusion of substance A
             _solver_A.setEquation(
-                i, 
+                i,
                 - coefficient1, 
                 coefficient1 + coefficient2 + coefficient3, 
                 - coefficient3, 
-                coefficient2 * _concentration_array_A[i]
+                coefficient1 * _concentration_array_A[i-1] -
+				(coefficient1 - coefficient2 + coefficient3) * _concentration_array_A[i] +
+				coefficient3 * _concentration_array_A[i+1]
             );
 
             // Set up row for matrix equation representing 
@@ -263,8 +265,10 @@ void CoreShellDiffusion<real_t>::setUpEquations(real_t D)
                 i, 
                 - coefficient1, 
                 coefficient1 + coefficient2 + coefficient3, 
-                - coefficient3, 
-                coefficient2 * _concentration_array_B[i]
+                - coefficient3,
+				coefficient1 * _concentration_array_B[i-1] -
+                (coefficient1 - coefficient2 + coefficient3) * _concentration_array_B[i] +
+				coefficient3 * _concentration_array_B[i+1]
             );
         }
 
@@ -286,7 +290,7 @@ void CoreShellDiffusion<real_t>::setUpEquations(real_t D, CoreShellDiffusion<rea
     // We can calculate the coefficients in three parts to avoid repetitive calculations
 
     // Coefficient 1 = \f$ \frac{\mathcal{D\left(T\right)}}{\left(\Delta r\right)^2} \f$
-    real_t coefficient1 = D / pow(_delta_r, 2);
+    real_t coefficient1 = 0.5 * D / pow(_delta_r, 2);
     // Coefficient 2 = \f$ \frac{1}{\Delta t} \f$
     real_t coefficient2 = 1.0 / _delta_t;
     // Coefficient 3 = \f$ \mathcal{D} \cdot \left( \frac{r_{i+1}}{\Delta r \cdot r_i} \right)^2 \f$
@@ -317,7 +321,9 @@ void CoreShellDiffusion<real_t>::setUpEquations(real_t D, CoreShellDiffusion<rea
                 - coefficient1, 
                 coefficient1 + coefficient2 + coefficient3, 
                 - coefficient3, 
-                coefficient2 * diffusion_problem._concentration_array_A[i]
+				coefficient1 * diffusion_problem._concentration_array_A[i-1] -
+                (coefficient1 - coefficient2 + coefficient3) * diffusion_problem._concentration_array_A[i] +
+				coefficient3 * diffusion_problem._concentration_array_A[i+1]
             );
 
             // Set up row for matrix equation representing 
@@ -326,8 +332,10 @@ void CoreShellDiffusion<real_t>::setUpEquations(real_t D, CoreShellDiffusion<rea
                 i, 
                 - coefficient1, 
                 coefficient1 + coefficient2 + coefficient3, 
-                - coefficient3, 
-                coefficient2 * diffusion_problem._concentration_array_B[i]
+                - coefficient3,
+				coefficient1 * diffusion_problem._concentration_array_B[i-1] -
+                (coefficient1 - coefficient2 + coefficient3) * diffusion_problem._concentration_array_B[i] +
+				coefficient3 * diffusion_problem._concentration_array_B[i+1]
             );
         }
 
