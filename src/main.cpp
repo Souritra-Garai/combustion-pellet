@@ -18,7 +18,7 @@
 #include "substances/Nickel.hpp"
 #include "substances/NickelAluminide.hpp"
 
-#define MAX_ITER 3000
+#define MAX_ITER 100000
 
 double core_radius = 32.5E-6;
 double overall_radius = 39.5E-6;
@@ -34,6 +34,8 @@ ArrheniusDiffusivityModel<double> * diffusivity_model;
 
 void printState(size_t iteration_number, PelletFlamePropagation<double> &pellet);
 int setCombustionConfiguration(int argc, char const *argv[]);
+
+size_t data_capture_interval = round(0.005 / 0.0001);
 
 int main(int argc, char const *argv[])
 {
@@ -54,6 +56,9 @@ int main(int argc, char const *argv[])
     PelletFlamePropagation<double>::setTimeStep(0.0001);
     PelletFlamePropagation<double>::setInfinitesimalChangeTemperature(0.1);
     PelletFlamePropagation<double>::setInitialIgnitionParameters(1500, 0.1 * pellet_length);
+
+	// PelletFlamePropagation<double>::setImplicitnessSourceTerm(0.5);
+	// PelletFlamePropagation<double>::setImplicitnessDiffusionTerm(0.5);
 
 	switch (setCombustionConfiguration(argc, argv))
 	{
@@ -94,9 +99,11 @@ int main(int argc, char const *argv[])
             combustion_pellet.setUpEquations();
             combustion_pellet.solveEquations();
 
-            combustion_pellet.printTemperatureProfile(temperature_file, ',');
-
-            if (__iter % 50 == 0)   std::cout << "Iteration # " << __iter << std::endl;
+            if (__iter % data_capture_interval == 0)
+			{
+            	combustion_pellet.printTemperatureProfile(temperature_file, ',');
+				std::cout << "Iteration # " << __iter+1 << std::endl;
+			}
 
             __iter++;
         }
@@ -142,7 +149,10 @@ int setCombustionConfiguration(int argc, const char * argv[])
 			("Du",		"set diffusivity parameters to Du et al's model (by default Alawieh et al's model is used)")
 			("M",		boost::program_options::value<size_t>(),	"set number of grid points for pellet pde-solver to arg")
 			("Dt",		boost::program_options::value<double>(),	"set time step in seconds to arg")
-			("phi",		boost::program_options::value<double>(),	"set particle volume fractions to arg");
+			("phi",		boost::program_options::value<double>(),	"set particle volume fractions to arg")
+			("DT",		boost::program_options::value<double>(),	"set infinitesimal change in temperature to arg, default is 0.1")
+			("gamma",	boost::program_options::value<double>(),	"set implicitness of source term to arg")
+			("theta",	boost::program_options::value<double>(),	"set implicitness of diffusion term to arg");
 
 		boost::program_options::variables_map variables_map_obj;
 		boost::program_options::store(
@@ -176,6 +186,12 @@ int setCombustionConfiguration(int argc, const char * argv[])
 		if (variables_map_obj.count("Dt"))
 		{
 			PelletFlamePropagation<double>::setTimeStep(variables_map_obj["Dt"].as<double>());
+			data_capture_interval = round(0.005 / variables_map_obj["Dt"].as<double>());
+		}
+
+		if (variables_map_obj.count("DT"))
+		{
+			PelletFlamePropagation<double>::setInfinitesimalChangeTemperature(variables_map_obj["DT"].as<double>());
 		}
 
 		if (variables_map_obj.count("phi"))
@@ -192,6 +208,16 @@ int setCombustionConfiguration(int argc, const char * argv[])
 				std::cerr << "Particle volume fractions should be in the interval (0, 1]. Given value : " << phi << std::endl;
 				return 1;
 			}
+		}
+
+		if (variables_map_obj.count("gamma"))
+		{
+			PelletFlamePropagation<double>::setImplicitnessSourceTerm(variables_map_obj["gamma"].as<double>());
+		}
+
+		if (variables_map_obj.count("theta"))
+		{
+			PelletFlamePropagation<double>::setImplicitnessDiffusionTerm(variables_map_obj["theta"].as<double>());
 		}
 	}
 
