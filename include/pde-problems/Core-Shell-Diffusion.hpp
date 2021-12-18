@@ -15,7 +15,7 @@
 // Required for definition of CoreShellCombustionParticle class
 #include "thermo-physical-properties/Core-Shell-Combustion-Particle.hpp"
 // Required for definition of QRSolver class
-#include "qrsolver/QR_Solver.hpp"
+#include "lusolver/LU_Solver.hpp"
 
 /**
  * @brief Class with functionalities to perform diffusion in a
@@ -62,12 +62,12 @@ class CoreShellDiffusion : public CoreShellCombustionParticle<real_t>
          * @brief Tridiagonal matrix equation solver for concentration
          * profile of substance A
          */
-        QRSolver<real_t> _solver_A;
+        LUSolver<real_t> _solver_A;
         /**
          * @brief Tridiagonal matrix equation solver for concentration
          * profile of substance B
          */
-        QRSolver<real_t> _solver_B;
+        LUSolver<real_t> _solver_B;
 
         /**
          * @brief Get the Radial Coordinate of the grid point 

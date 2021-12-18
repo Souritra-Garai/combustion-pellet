@@ -27,7 +27,7 @@
 // diffusion in a core-shell particle
 #include "pde-problems/Core-Shell-Diffusion.hpp"
 // Required for QRSolver class used to set up and solve matrix equations
-#include "qrsolver/QR_Solver.hpp"
+#include "lusolver/LU_Solver.hpp"
 
 /**
  * @brief Class to represent a linear expression of the form
@@ -145,7 +145,7 @@ class PelletFlamePropagation : public PackedPellet<real_t>
          * @brief Matrix equation solver for solving the implicit temperature
          * update equation
          */
-        QRSolver<real_t> _solver;
+        LUSolver<real_t> _solver;
 
         /**
          * @brief Arrhenius Diffusivity model to get value of diffusivity in core-shell

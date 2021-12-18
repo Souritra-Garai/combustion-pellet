@@ -49,10 +49,10 @@ $(TARGET) : $(OBJECTS)
 	@echo "\nLinking all...";
 	$(CC) $(OBJECTS) $(CFLAGS) $(LIB) -o $(TARGET)
 
-main : $(BUILDDIR)/main.o $(PDEOBJS) $(TRPOBJS) $(QRSOBJS) $(UTILOBJS)
+main : $(BUILDDIR)/main.o $(PDEOBJS) $(TRPOBJS) $(LUSOBJS) $(UTILOBJS)
 	@mkdir -p $(BINDIR);
 	@echo "\nLinking all files for main...";
-	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/main.o $(PDEOBJS) $(TRPOBJS) $(QRSOBJS) $(UTILOBJS) -lboost_program_options -o $(BINDIR)/Pellet-Flame-Propagation
+	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/main.o $(PDEOBJS) $(TRPOBJS) $(LUSOBJS) $(UTILOBJS) -lboost_program_options -o $(BINDIR)/Pellet-Flame-Propagation
 
 $(BUILDDIR)/main.o : $(SRCDIR)/main.cpp $(INCDIR)/$(PDEDIR)/Core-Shell-Diffusion.hpp $(INCDIR)/$(PDEDIR)/Pellet-Flame-Propagation.hpp $(INCDIR)/$(TRPDIR)/Arrhenius_Diffusivity_Model.hpp $(SUBSTANCE_HPP) $(INCDIR)/$(UTILDIR)/Keyboard_Interrupt.hpp $(INCDIR)/$(UTILDIR)/File_Generator.hpp
 	@mkdir -p $(BUILDDIR);
@@ -80,12 +80,12 @@ $(BUILDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.o : $(INCDIR)/$(TRPDIR)/Therma
 # ----------------------------------------------------------------------------------------------------------
 # Building pde problems source files
 
-$(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o : $(INCDIR)/$(PDEDIR)/Core-Shell-Diffusion.hpp $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp $(INCDIR)/$(QRSDIR)/QR_Solver.hpp $(SRCDIR)/$(PDEDIR)/Core-Shell-Diffusion.cpp
+$(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o : $(INCDIR)/$(PDEDIR)/Core-Shell-Diffusion.hpp $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp $(INCDIR)/$(LUSDIR)/LU_Solver.hpp $(SRCDIR)/$(PDEDIR)/Core-Shell-Diffusion.cpp
 	@mkdir -p $(BUILDDIR)/$(PDEDIR);
 	@echo "\nCompiling Core-Shell-Diffusion...";
 	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/$(PDEDIR)/Core-Shell-Diffusion.cpp -o $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o
 
-$(BUILDDIR)/$(PDEDIR)/Pellet-Flame-Propagation.o : $(INCDIR)/$(PDEDIR)/Pellet-Flame-Propagation.hpp $(INCDIR)/$(TRPDIR)/Packed-Pellet.hpp $(INCDIR)/$(PDEDIR)/Core-Shell-Diffusion.hpp $(INCDIR)/$(TRPDIR)/Arrhenius_Diffusivity_Model.hpp $(INCDIR)/$(QRSDIR)/QR_Solver.hpp $(SRCDIR)/$(PDEDIR)/Pellet-Flame-Propagation.cpp
+$(BUILDDIR)/$(PDEDIR)/Pellet-Flame-Propagation.o : $(INCDIR)/$(PDEDIR)/Pellet-Flame-Propagation.hpp $(INCDIR)/$(TRPDIR)/Packed-Pellet.hpp $(INCDIR)/$(PDEDIR)/Core-Shell-Diffusion.hpp $(INCDIR)/$(TRPDIR)/Arrhenius_Diffusivity_Model.hpp $(INCDIR)/$(LUSDIR)/LU_Solver.hpp $(SRCDIR)/$(PDEDIR)/Pellet-Flame-Propagation.cpp
 	@mkdir -p $(BUILDDIR)/$(PDEDIR);
 	@echo "\nCompiling Pellet-Flame-Propagation...";
 	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/$(PDEDIR)/Pellet-Flame-Propagation.cpp -o $(BUILDDIR)/$(PDEDIR)/Pellet-Flame-Propagation.o
@@ -106,20 +106,20 @@ $(BUILDDIR)/$(UTILDIR)/File_Generator.o : $(INCDIR)/$(UTILDIR)/File_Generator.hp
 # ----------------------------------------------------------------------------------------------------------
 # Building PDE Problem Examples
 
-Core-Shell-Diffusion_Example : $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o $(QRSOBJS) $(UTILOBJS)
+Core-Shell-Diffusion_Example : $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o $(LUSOBJS) $(UTILOBJS)
 	@mkdir -p $(BINDIR)/$(PDEDIR);
 	@echo "\nLinking Core-Shell-Diffusion_Example...";
-	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o $(QRSOBJS) $(UTILOBJS) -o $(BINDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example
+	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o $(LUSOBJS) $(UTILOBJS) -o $(BINDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example
 
 $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o : $(EXMDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.cpp $(INCDIR)/$(PDEDIR)/Core-Shell-Diffusion.hpp $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp $(SUBSTANCE_HPP) $(INCDIR)/$(UTILDIR)/Keyboard_Interrupt.hpp $(INCDIR)/$(UTILDIR)/File_Generator.hpp
 	@mkdir -p $(BUILDDIR)/$(PDEDIR);
 	@echo "\nCompiling Core-Shell-Diffusion_Example...";
 	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.cpp -o $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o
 
-Pellet-Flame-Propagation_Example : $(BUILDDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.o $(PDEOBJS) $(TRPOBJS) $(QRSOBJS) $(UTILOBJS)
+Pellet-Flame-Propagation_Example : $(BUILDDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.o $(PDEOBJS) $(TRPOBJS) $(LUSOBJS) $(UTILOBJS)
 	@mkdir -p $(BINDIR)/$(PDEDIR);
 	@echo "\nLinking Pellet-Flame-Propagation_Example...";
-	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.o $(PDEOBJS) $(TRPOBJS) $(QRSOBJS) $(UTILOBJS) -o $(BINDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example
+	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.o $(PDEOBJS) $(TRPOBJS) $(LUSOBJS) $(UTILOBJS) -o $(BINDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example
 
 $(BUILDDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.o : $(EXMDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.cpp $(INCDIR)/$(PDEDIR)/Core-Shell-Diffusion.hpp $(INCDIR)/$(PDEDIR)/Pellet-Flame-Propagation.hpp $(INCDIR)/$(TRPDIR)/Arrhenius_Diffusivity_Model.hpp $(SUBSTANCE_HPP) $(INCDIR)/$(UTILDIR)/Keyboard_Interrupt.hpp $(INCDIR)/$(UTILDIR)/File_Generator.hpp
 	@mkdir -p $(BUILDDIR)/$(PDEDIR);
