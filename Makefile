@@ -11,6 +11,7 @@ BINDIR := bin
 EXMDIR := examples
 BUILDDIR := build
 
+LUSDIR := lusolver
 QRSDIR := qrsolver
 TRPDIR := thermo-physical-properties
 PDEDIR := pde-problems
@@ -20,6 +21,9 @@ UTILDIR := utilities
 SRCEXT := cpp
 SOURCES := $(shell find $(SRCDIR) $(LIBDIR) -type f -name *.$(SRCEXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
+
+LUSSRCS := $(shell find $(SRCDIR)/$(LUSDIR) -type f -name *.$(SRCEXT))
+LUSOBJS := $(patsubst $(SRCDIR)/%, $(BUILDDIR)/%, $(LUSSRCS:.$(SRCEXT)=.o))
 
 QRSSRCS := $(shell find $(SRCDIR)/$(QRSDIR) -type f -name *.$(SRCEXT))
 QRSOBJS := $(patsubst $(SRCDIR)/%, $(BUILDDIR)/%, $(QRSSRCS:.$(SRCEXT)=.o))
@@ -183,6 +187,24 @@ $(BUILDDIR)/$(TRPDIR)/Packed-Pellet_Example.o : $(EXMDIR)/$(TRPDIR)/Packed-Pelle
 	@mkdir -p $(BUILDDIR)/$(TRPDIR);
 	@echo "\nCompiling Packed-Pellet_Example...";
 	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(TRPDIR)/Packed-Pellet_Example.cpp -o $(BUILDDIR)/$(TRPDIR)/Packed-Pellet_Example.o
+
+# ----------------------------------------------------------------------------------------------------------
+# Building LU Decomposition solver
+$(BUILDDIR)/$(LUSDIR)/LU_Solver.o : $(SRCDIR)/$(LUSDIR)/LU_Solver.cpp $(INCDIR)/$(LUSDIR)/LU_Solver.hpp
+	@mkdir -p $(BUILDDIR)/$(LUSDIR);
+	@echo "\nCompiling LU_Solver...";
+	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/$(LUSDIR)/LU_Solver.cpp -o $(BUILDDIR)/$(LUSDIR)/LU_Solver.o
+
+# Builds the example for LU Solver
+LU_Solver_Example : $(BUILDDIR)/$(LUSDIR)/LU_Solver_Example.o $(LUSOBJS) $(BUILDDIR)/$(QRSDIR)/Q_Matrix.o
+	@mkdir -p $(BINDIR)/$(LUSDIR);
+	@echo "\nBuilding LU_Solver_Example...";
+	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(LUSDIR)/LU_Solver_Example.o $(LUSOBJS) $(BUILDDIR)/$(QRSDIR)/Q_Matrix.o -o $(BINDIR)/$(LUSDIR)/LU_Solver_Example
+
+$(BUILDDIR)/$(LUSDIR)/LU_Solver_Example.o : $(EXMDIR)/$(LUSDIR)/LU_Solver_Example.cpp $(INCDIR)/$(LUSDIR)/LU_Solver.hpp $(INCDIR)/$(QRSDIR)/Q_Matrix.hpp
+	@mkdir -p $(BUILDDIR)/$(LUSDIR);
+	@echo "\nCompiling LU_Solver_Example...";
+	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(LUSDIR)/LU_Solver_Example.cpp -o $(BUILDDIR)/$(LUSDIR)/LU_Solver_Example.o
 
 # ----------------------------------------------------------------------------------------------------------
 # Building QR Factorization solver
