@@ -19,7 +19,7 @@ x = data[0, 1:]
 
 T = data[1:, 1:]
 
-flame_front_temperature = 1000	# K
+flame_front_temperature = 1500	# K
 
 flame_locations = x[np.argmin(np.abs(T - flame_front_temperature), axis=1)]	# m
 
@@ -57,8 +57,8 @@ ax.grid(which='minor', color='grey', ls='--')
 
 ax.legend()
 
-fig.set_size_inches(10, 4.5)
-fig.set_dpi(600)
+# fig.set_size_inches(10, 4.5)
+# fig.set_dpi(600)
 
-plt.savefig(folder + '/Flame_Position.png', dpi=600)
-# plt.show()
+# plt.savefig(folder + '/Flame_Position_2000.png', dpi=600)
+plt.show()

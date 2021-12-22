@@ -9,7 +9,7 @@
 
 #define SHARPNESS_COEFFICIENT_AL 100.0
 
-Enthalpy<double> internal_energy_solid_Al(
+Enthalpy<long double> internal_energy_solid_Al(
     28.08920,
    -5.414849,
     8.560423,
@@ -18,7 +18,7 @@ Enthalpy<double> internal_energy_solid_Al(
    -9.147187
 );
 
-Enthalpy<double> internal_energy_liquid_Al(
+Enthalpy<long double> internal_energy_liquid_Al(
     31.75104,
     3.935826E-8,
    -1.786515E-8,
@@ -27,11 +27,11 @@ Enthalpy<double> internal_energy_liquid_Al(
    -0.945684
 );
 
-ThermalConductivityQuadraticPolynomial<double> thermal_conductivity_solid_Al(248.0, -0.067, 0.0);
+ThermalConductivityQuadraticPolynomial<long double> thermal_conductivity_solid_Al(248.0, -0.067, 0.0);
 
-ThermalConductivityQuadraticPolynomial<double> thermal_conductivity_liquid_Al(33.9, 7.892E-2, -2.099E-5);
+ThermalConductivityQuadraticPolynomial<long double> thermal_conductivity_liquid_Al(33.9, 7.892E-2, -2.099E-5);
 
-Phase<double> solid_Al(
+Phase<long double> solid_Al(
     2700.0,
     internal_energy_solid_Al,
     thermal_conductivity_solid_Al,
@@ -40,7 +40,7 @@ Phase<double> solid_Al(
     SHARPNESS_COEFFICIENT_AL
 );
 
-Phase<double> liquid_Al(
+Phase<long double> liquid_Al(
     2375.0,
     internal_energy_liquid_Al,
     thermal_conductivity_liquid_Al,
@@ -49,8 +49,8 @@ Phase<double> liquid_Al(
     SHARPNESS_COEFFICIENT_AL
 );
 
-Phase<double> phases_Al[] = {solid_Al, liquid_Al};
+Phase<long double> phases_Al[] = {solid_Al, liquid_Al};
 
-Substance<double> Aluminium(2, phases_Al, 26.9815386E-3);
+Substance<long double> Aluminium(2, phases_Al, 26.9815386E-3);
 
 #endif

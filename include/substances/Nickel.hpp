@@ -9,7 +9,7 @@
 
 #define SHARPNESS_COEFFICIENT_NI 100.0
 
-Enthalpy<double> internal_energy_solid_Ni_1(
+Enthalpy<long double> internal_energy_solid_Ni_1(
     13.69160,
     82.46509,
    -174.9548,
@@ -18,7 +18,7 @@ Enthalpy<double> internal_energy_solid_Ni_1(
    -6.833644
 );
 
-Enthalpy<double> internal_energy_solid_Ni_2(
+Enthalpy<long double> internal_energy_solid_Ni_2(
     1248.045,
    -1257.510,
     0,
@@ -27,7 +27,7 @@ Enthalpy<double> internal_energy_solid_Ni_2(
    -788.8263
 );
 
-Enthalpy<double> internal_energy_solid_Ni_3(
+Enthalpy<long double> internal_energy_solid_Ni_3(
     16.49839,
     18.74913,
    -6.639841,
@@ -36,7 +36,7 @@ Enthalpy<double> internal_energy_solid_Ni_3(
    -0.467675
 );
 
-Enthalpy<double> internal_energy_liquid_Ni(
+Enthalpy<long double> internal_energy_liquid_Ni(
     38.91103,
     0.0,
     0.0,
@@ -45,13 +45,13 @@ Enthalpy<double> internal_energy_liquid_Ni(
    -2.722630
 );
 
-ThermalConductivityQuadraticPolynomial<double> thermal_conductivity_solid_Ni_1(107, -0.096, 3.2E-5);
+ThermalConductivityQuadraticPolynomial<long double> thermal_conductivity_solid_Ni_1(107, -0.096, 3.2E-5);
 
-ThermalConductivityQuadraticPolynomial<double> thermal_conductivity_solid_Ni_2_3(59.5, -7.67E-3, 1.7E-5);
+ThermalConductivityQuadraticPolynomial<long double> thermal_conductivity_solid_Ni_2_3(59.5, -7.67E-3, 1.7E-5);
 
-ThermalConductivityQuadraticPolynomial<double> thermal_conductivity_liquid_Ni(17.95, 2.097E-2, 0.0);
+ThermalConductivityQuadraticPolynomial<long double> thermal_conductivity_liquid_Ni(17.95, 2.097E-2, 0.0);
 
-Phase<double> solid_Ni_1(
+Phase<long double> solid_Ni_1(
     8902.0,
     internal_energy_solid_Ni_1,
     thermal_conductivity_solid_Ni_1,
@@ -60,7 +60,7 @@ Phase<double> solid_Ni_1(
     SHARPNESS_COEFFICIENT_NI
 );
 
-Phase<double> solid_Ni_2(
+Phase<long double> solid_Ni_2(
     8902.0,
     internal_energy_solid_Ni_2,
     thermal_conductivity_solid_Ni_2_3,
@@ -69,7 +69,7 @@ Phase<double> solid_Ni_2(
     SHARPNESS_COEFFICIENT_NI
 );
 
-Phase<double> solid_Ni_3(
+Phase<long double> solid_Ni_3(
     8902.0,
     internal_energy_solid_Ni_3,
     thermal_conductivity_solid_Ni_2_3,
@@ -78,7 +78,7 @@ Phase<double> solid_Ni_3(
     SHARPNESS_COEFFICIENT_NI
 );
 
-Phase<double> liquid_Ni(
+Phase<long double> liquid_Ni(
     7810.0,
     internal_energy_liquid_Ni,
     thermal_conductivity_liquid_Ni,
@@ -87,8 +87,8 @@ Phase<double> liquid_Ni(
     SHARPNESS_COEFFICIENT_NI
 );
 
-Phase<double> phases_Ni[] = {solid_Ni_1, solid_Ni_2, solid_Ni_3, liquid_Ni};
+Phase<long double> phases_Ni[] = {solid_Ni_1, solid_Ni_2, solid_Ni_3, liquid_Ni};
 
-Substance<double> Nickel(4, phases_Ni, 58.6934E-3);
+Substance<long double> Nickel(4, phases_Ni, 58.6934E-3);
 
 #endif

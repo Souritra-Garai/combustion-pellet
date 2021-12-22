@@ -9,7 +9,7 @@
 
 #define SHARPNESS_COEFFICIENT_NIAL 100.0
 
-Enthalpy<double> internal_energy_solid_NiAl(
+Enthalpy<long double> internal_energy_solid_NiAl(
     41.86,
     13.81,
     0.0,
@@ -18,7 +18,7 @@ Enthalpy<double> internal_energy_solid_NiAl(
    -131.5
 );
 
-Enthalpy<double> internal_energy_liquid_NiAl(
+Enthalpy<long double> internal_energy_liquid_NiAl(
     71.16,
     0.0,
     0.0,
@@ -27,11 +27,11 @@ Enthalpy<double> internal_energy_liquid_NiAl(
    -99.54
 );
 
-ThermalConductivityQuadraticPolynomial<double> thermal_conductivity_solid_NiAl(72.8, 0.0156, -1.35E-5);
+ThermalConductivityQuadraticPolynomial<long double> thermal_conductivity_solid_NiAl(72.8, 0.0156, -1.35E-5);
 
-ThermalConductivityQuadraticPolynomial<double> thermal_conductivity_liquid_NiAl(23.9, 0, 0);
+ThermalConductivityQuadraticPolynomial<long double> thermal_conductivity_liquid_NiAl(23.9, 0, 0);
 
-Phase<double> solid_NiAl(
+Phase<long double> solid_NiAl(
     5650.0,
     internal_energy_solid_NiAl,
     thermal_conductivity_solid_NiAl,
@@ -40,7 +40,7 @@ Phase<double> solid_NiAl(
     SHARPNESS_COEFFICIENT_NIAL
 );
 
-Phase<double> liquid_NiAl(
+Phase<long double> liquid_NiAl(
     4798.3,
     internal_energy_liquid_NiAl,
     thermal_conductivity_liquid_NiAl,
@@ -49,8 +49,8 @@ Phase<double> liquid_NiAl(
     SHARPNESS_COEFFICIENT_NIAL
 );
 
-Phase<double> phases_NiAl[] = {solid_NiAl, liquid_NiAl};
+Phase<long double> phases_NiAl[] = {solid_NiAl, liquid_NiAl};
 
-Substance<double> NickelAluminide(2, phases_NiAl, 85.6748386E-3);
+Substance<long double> NickelAluminide(2, phases_NiAl, 85.6748386E-3);
 
 #endif
