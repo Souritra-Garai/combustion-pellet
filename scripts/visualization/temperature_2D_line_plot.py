@@ -4,11 +4,23 @@ import matplotlib.pyplot as plt
 import os
 import sys
 
+import argparse
+
 sys.path.insert(0, os.path.dirname(os.path.split(sys.path[0])[0]))
 
 from scripts.utilities.solution_folder import getlatestfolder, getpath
 
 folder = getlatestfolder()
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument("-f", "--folderpath", help="Path to folder containing temperature.csv")
+
+args = parser.parse_args()
+
+if args.folderpath :
+
+	folder = args.folderpath
 
 print('Processing solution at the directory ' + folder)
 
