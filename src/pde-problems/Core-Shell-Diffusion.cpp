@@ -279,7 +279,7 @@ void CoreShellDiffusion<real_t>::setUpEquations(real_t D)
 }
 
 template<typename real_t>
-void CoreShellDiffusion<real_t>::setUpEquations(real_t D, CoreShellDiffusion<real_t> &diffusion_problem)
+void CoreShellDiffusion<real_t>::setUpEquations(real_t D, CoreShellDiffusion<real_t> &diffusion_problem, real_t Dt)
 {
     // \f$ \Rightarrow -
     // \mathcal{D} \cdot \left( \frac{r_{i+1}}{\Delta r \cdot r_i} \right)^2 \cdot C_{k,i+1}^n +
@@ -292,7 +292,7 @@ void CoreShellDiffusion<real_t>::setUpEquations(real_t D, CoreShellDiffusion<rea
     // Coefficient 1 = \f$ \frac{\mathcal{D\left(T\right)}}{\left(\Delta r\right)^2} \f$
     real_t coefficient1 = 0.5 * D / pow(_delta_r, 2);
     // Coefficient 2 = \f$ \frac{1}{\Delta t} \f$
-    real_t coefficient2 = 1.0 / _delta_t;
+    real_t coefficient2 = 1.0 / Dt;
     // Coefficient 3 = \f$ \mathcal{D} \cdot \left( \frac{r_{i+1}}{\Delta r \cdot r_i} \right)^2 \f$
     real_t coefficient3;
 

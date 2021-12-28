@@ -5,6 +5,10 @@ build/
 
 solutions
 
+rpms
+
+*.out
+
 doxygen/*
 # Whitelist some doxygen files
 !doxygen/Doxyfile
