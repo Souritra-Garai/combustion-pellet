@@ -391,7 +391,7 @@ void PelletFlamePropagation<real_t>::updateParticlesState()
 {
     // Updating the state of the energetic particle at each grid point
     // parallely as they are independent of each other
-    #pragma omp parallel for default(shared) schedule(static,1) num_threads(6)
+    #pragma omp parallel for default(shared) schedule(dynamic)
         // For each grid point update the state of the energetic particle
         for (size_t i = 1; i < _m-1; i++)
         {
@@ -478,7 +478,7 @@ void PelletFlamePropagation<real_t>::setUpEquations()
     setUpBoundaryConditionX0();
 
     // As the 
-    #pragma omp parallel for default(shared) schedule(static,1) num_threads(6)
+    #pragma omp parallel for default(shared) schedule(dynamic)
 
         for (size_t i = 1; i < _m-1; i++)
         {

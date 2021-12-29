@@ -55,7 +55,7 @@ int main(int argc, char const *argv[])
     PelletFlamePropagation<long double>::setGridSize(1001);
     PelletFlamePropagation<long double>::setTimeStep(0.000001);
     PelletFlamePropagation<long double>::setInfinitesimalChangeTemperature(0.001);
-    PelletFlamePropagation<long double>::setInitialIgnitionParameters(1000, 0.1 * pellet_length);
+    PelletFlamePropagation<long double>::setInitialIgnitionParameters(1500, 0.1 * pellet_length);
 
 	PelletFlamePropagation<long double>::setImplicitnessSourceTerm(1);
 	PelletFlamePropagation<long double>::setImplicitnessDiffusionTerm(1);
