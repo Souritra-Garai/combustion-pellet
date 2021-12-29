@@ -19,7 +19,7 @@ x = data[0, 1:]
 
 T = data[1:, 1:]
 
-flame_front_temperature = 1500	# K
+flame_front_temperature = 1000	# K
 
 flame_locations = x[np.argmin(np.abs(T - flame_front_temperature), axis=1)]	# m
 
@@ -38,7 +38,7 @@ t = t[valid_indices]
 line, cov = np.polyfit(t, flame_locations, 1, cov=True)
 # print(line)
 
-print('Flame Speed : ', line[0]*100, ' cm/s')
+print('Flame Speed : ', line[0]*1000, ' mm/s')
 
 fig = plt.figure()
 ax = fig.add_subplot()

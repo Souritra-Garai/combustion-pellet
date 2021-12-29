@@ -16,8 +16,6 @@
 
 #define STEFAN_BOLTZMANN_CONSTANT 5.670374419E-8 // W / m2 - K4
 
-#define Delta_t_Int_Energy_Derivative 1E-6	// s
-
 // #include <iostream>
 
 /******************************************************************************************************************/
@@ -214,7 +212,7 @@ real_t PelletFlamePropagation<real_t>::getParticleInternalEnergyTimeDerivative(s
         // \f$  \sum_{k \in \text{Particle}} \left\{ \Delta H_{f,k}^0 + c_k \left(T^{n-1}_j - T_{ref}\right) \right\}
         //      \cdot Y_{k,j}^{n-1} \f$
         _particles_array[i].getInternalEnergy(_temperature_array[i])
-    ) / Delta_t_Int_Energy_Derivative;
+    ) / _delta_t;
 }
 
 template<typename real_t>
@@ -233,8 +231,7 @@ void PelletFlamePropagation<real_t>::evolveParticleForInternalEnergyDerivative(s
             // to \f$ \left( t_n, T_j^n, \left\{ C_j^n \right\} \right) \f$
             _particles_array_const_temperature_evolution[i].setUpEquations(
                 _diffusivity_model.getDiffusivity(_temperature_array[i]),
-				_particles_array[i],
-				Delta_t_Int_Energy_Derivative
+				_particles_array[i]
             );
             // Solve the equations to update the state of the particle
             _particles_array_const_temperature_evolution[i].solveEquations();
@@ -249,8 +246,7 @@ void PelletFlamePropagation<real_t>::evolveParticleForInternalEnergyDerivative(s
             // to \f$ \left( t_n, T_j^n, \left\{ C_j^n \right\} \right) \f$
             _particles_array_raised_temperature_evolution[i].setUpEquations(
                 _diffusivity_model.getDiffusivity(_temperature_array[i] + _delta_T),
-				_particles_array[i],
-				Delta_t_Int_Energy_Derivative
+				_particles_array[i]
             );
             // Solve the equations to update the state of the particle
             _particles_array_raised_temperature_evolution[i].solveEquations();
