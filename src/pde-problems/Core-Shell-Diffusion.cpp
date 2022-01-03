@@ -45,7 +45,7 @@ void CoreShellDiffusion<real_t>::setGridSize(size_t n)
 }
 
 template<typename real_t>
-real_t CoreShellDiffusion<real_t>::getRadialCoordinate(size_t i)
+inline real_t CoreShellDiffusion<real_t>::getRadialCoordinate(size_t i)
 {
     // Radial distance from origin of the grid point \f$ i \f$
     // \f$ r_i = r_p \cdot \frac{i}{n-1}
