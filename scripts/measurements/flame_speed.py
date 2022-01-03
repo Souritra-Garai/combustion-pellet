@@ -4,11 +4,23 @@ import matplotlib.pyplot as plt
 import os
 import sys
 
+import argparse
+
 sys.path.insert(0, os.path.dirname(os.path.split(sys.path[0])[0]))
 
 from scripts.utilities.solution_folder import getlatestfolder, getpath
 
 folder = getlatestfolder()
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument("-f", "--folderpath", help="Path to folder containing temperature.csv")
+
+args = parser.parse_args()
+
+if args.folderpath :
+
+	folder = args.folderpath
 
 print('Processing solution at the directory ' + folder)
 
@@ -30,7 +42,7 @@ valid_indices = np.where(flame_locations != 0.0)
 flame_locations = flame_locations[valid_indices]
 t = t[valid_indices]
 
-valid_indices = np.where(t < 0.25)
+valid_indices = np.where(np.logical_and(t > 0.1, t < 0.2))
 
 flame_locations = flame_locations[valid_indices]
 t = t[valid_indices]
