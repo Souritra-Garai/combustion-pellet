@@ -344,7 +344,7 @@ void PelletFlamePropagation<real_t>::setUpBoundaryConditionX0()
     LinearExpression<real_t> heat_loss_term = calcHeatLossTerm(0);
     
     // Get the effective heat conductivity of particle - gas mixture, divided by the grid size
-    real_t lambda_by_delta_x = _thermal_conductivity[1] / _delta_x;
+    real_t lambda_by_delta_x = _thermal_conductivity[0] / _delta_x;
     // Since, the particle at \f$ x = 0 \f$ grid point is not evolved, the effective heat conductivity
     // the next grid point is used
 
@@ -371,7 +371,7 @@ void PelletFlamePropagation<real_t>::setUpBoundaryConditionXN()
     LinearExpression<real_t> heat_loss_term = calcHeatLossTerm(_m-1);
 
     // Get the effective heat conductivity of particle - gas mixture, divided by the grid size
-    real_t lambda_by_delta_x = _thermal_conductivity[_m - 2] / _delta_x;
+    real_t lambda_by_delta_x = _thermal_conductivity[_m - 1] / _delta_x;
     // Since, the particle at \f$ x = 0 \f$ grid point is not evolved, the effective heat conductivity
     // the next grid point is used
 
@@ -410,6 +410,7 @@ void PelletFlamePropagation<real_t>::updateParticlesState()
 			_thermal_conductivity[i] = this->getThermalConductivity(_particles_array + i, _temperature_array[i]);
         }
 
+	_thermal_conductivity[0]	= this->getThermalConductivity(_particles_array + 1, 		_temperature_array[0]);
 	_thermal_conductivity[_m-1] = this->getThermalConductivity(_particles_array + (_m - 2), _temperature_array[_m-1]);
 }
 
@@ -456,6 +457,7 @@ void PelletFlamePropagation<real_t>::initializePellet()
     // Set temperature at grid point at \f$ x = L \f$ to ambient temperature
     _temperature_array[_m-1] = this->_ambient_temperature;
 
+	_thermal_conductivity[0]	= this->getThermalConductivity(_particles_array + 1,		_temperature_array[0]);
 	_thermal_conductivity[_m-1] = this->getThermalConductivity(_particles_array + (_m - 2), _temperature_array[_m-1]);
 }
 
@@ -495,19 +497,19 @@ void PelletFlamePropagation<real_t>::setUpEquations()
             // Get the linearized expression for the heat loss term, \f$ \beta_{0,j}^n + \beta_{1,j}^n \cdot T_j^n \f$
             LinearExpression<real_t> heat_loss_term = calcHeatLossTerm(i);
 
-			real_t lambda_forward_by_delta_x_sqr  = _thermal_conductivity[i+1] / pow(_delta_x, 2);
-			real_t lambda_backward_by_delta_x_sqr = _thermal_conductivity[i]   / pow(_delta_x, 2);
+			real_t lambda_forward_by_delta_x_sqr  = 0.5 * (_thermal_conductivity[i+1] + _thermal_conductivity[i]) / pow(_delta_x, 2);
+			real_t lambda_backward_by_delta_x_sqr = 0.5 * (_thermal_conductivity[i] + _thermal_conductivity[i-1]) / pow(_delta_x, 2);
 
             // Set up the matrix equation
             _solver.setEquation(
                 // Matrix row number
                 i,
                 // Coefficient of \f$ T_{j-1}^n \f$, \f$ - \frac{\lambda}{\left( \Delta x \right)^2} \f$
-                - _theta * lambda_forward_by_delta_x_sqr,
+                - _theta * lambda_backward_by_delta_x_sqr,
                 // Coefficient of \f$ T_j^n \f$, \f$ \left\{ \rho_0 \alpha_{1,j}^n + \frac{2 \lambda}{\left( \Delta x \right)^2} + \beta_{1,j}^n \right\} \f$
                 this->_density * transient_term.coefficient + (4 * heat_loss_term.coefficient / this->_diameter) + _theta * (lambda_forward_by_delta_x_sqr + lambda_backward_by_delta_x_sqr),
                 // Coefficient of \f$ T_{j+1}^n \f$, \f$ - \frac{\lambda}{\left( \Delta x \right)^2} \f$
-                - _theta * lambda_backward_by_delta_x_sqr,
+                - _theta * lambda_forward_by_delta_x_sqr,
                 (1 - _theta) * lambda_forward_by_delta_x_sqr * _temperature_array[i+1] +
 				(this->_density * transient_term.coefficient - (1 - _theta) * (lambda_forward_by_delta_x_sqr + lambda_backward_by_delta_x_sqr) + (4 * heat_loss_term.coefficient / this->_diameter)) * _temperature_array[i] +
 				(1 - _theta) * lambda_backward_by_delta_x_sqr * _temperature_array[i-1] -
