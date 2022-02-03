@@ -126,6 +126,16 @@ $(BUILDDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.o : $(EXMDIR)/$(PDEDIR)/P
 	@echo "Compiling Pellet-Flame-Propagation_Example...";
 	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.cpp -o $(BUILDDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.o
 
+$(BUILDDIR)/$(PDEDIR)/Pellet-Flame-Propagation-Diffusion_Example.o : $(EXMDIR)/$(PDEDIR)/Pellet-Flame-Propagation-Diffusion_Example.cpp $(INCDIR)/$(PDEDIR)/Core-Shell-Diffusion.hpp $(INCDIR)/$(PDEDIR)/Pellet-Flame-Propagation.hpp $(INCDIR)/$(TRPDIR)/Arrhenius_Diffusivity_Model.hpp $(SUBSTANCE_HPP) $(INCDIR)/$(UTILDIR)/Keyboard_Interrupt.hpp $(INCDIR)/$(UTILDIR)/File_Generator.hpp
+	@mkdir -p $(BUILDDIR)/$(PDEDIR);
+	@echo "Compiling Pellet-Flame-Propagation-Diffusion_Example...";
+	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(PDEDIR)/Pellet-Flame-Propagation-Diffusion_Example.cpp -I /usr/include/boost -o $(BUILDDIR)/$(PDEDIR)/Pellet-Flame-Propagation-Diffusion_Example.o
+
+Pellet-Flame-Propagation-Diffusion_Example : $(BUILDDIR)/$(PDEDIR)/Pellet-Flame-Propagation-Diffusion_Example.o $(PDEOBJS) $(TRPOBJS) $(LUSOBJS) $(UTILOBJS)
+	@mkdir -p $(BINDIR)/$(PDEDIR);
+	@echo "Linking Pellet-Flame-Propagation-Diffusion_Example...";
+	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(PDEDIR)/Pellet-Flame-Propagation-Diffusion_Example.o $(PDEOBJS) $(TRPOBJS) $(LUSOBJS) $(UTILOBJS) -lboost_program_options -o $(BINDIR)/$(PDEDIR)/Pellet-Flame-Propagation-Diffusion_Example
+
 # ----------------------------------------------------------------------------------------------------------
 # Building Thermo-Physical Properties Examples
 Thermal_Conductivity_Pellet_Example : $(BUILDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.o $(BUILDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.o $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o $(UTILOBJS)
