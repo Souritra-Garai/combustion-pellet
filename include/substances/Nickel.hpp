@@ -9,7 +9,7 @@
 
 #define SHARPNESS_COEFFICIENT_NI 100.0
 
-Enthalpy<long double> internal_energy_solid_Ni_1(
+Enthalpy<long double> enthalpy_solid_Ni_1(
     13.69160,
     82.46509,
    -174.9548,
@@ -18,7 +18,7 @@ Enthalpy<long double> internal_energy_solid_Ni_1(
    -6.833644
 );
 
-Enthalpy<long double> internal_energy_solid_Ni_2(
+Enthalpy<long double> enthalpy_solid_Ni_2(
     1248.045,
    -1257.510,
     0,
@@ -27,7 +27,7 @@ Enthalpy<long double> internal_energy_solid_Ni_2(
    -788.8263
 );
 
-Enthalpy<long double> internal_energy_solid_Ni_3(
+Enthalpy<long double> enthalpy_solid_Ni_3(
     16.49839,
     18.74913,
    -6.639841,
@@ -36,7 +36,7 @@ Enthalpy<long double> internal_energy_solid_Ni_3(
    -0.467675
 );
 
-Enthalpy<long double> internal_energy_liquid_Ni(
+Enthalpy<long double> enthalpy_liquid_Ni(
     38.91103,
     0.0,
     0.0,
@@ -53,7 +53,7 @@ ThermalConductivityQuadraticPolynomial<long double> thermal_conductivity_liquid_
 
 Phase<long double> solid_Ni_1(
     8902.0,
-    internal_energy_solid_Ni_1,
+    enthalpy_solid_Ni_1,
     thermal_conductivity_solid_Ni_1,
     273.0,
     600.0,
@@ -62,7 +62,7 @@ Phase<long double> solid_Ni_1(
 
 Phase<long double> solid_Ni_2(
     8902.0,
-    internal_energy_solid_Ni_2,
+    enthalpy_solid_Ni_2,
     thermal_conductivity_solid_Ni_2_3,
     600.0,
     700.0,
@@ -71,7 +71,7 @@ Phase<long double> solid_Ni_2(
 
 Phase<long double> solid_Ni_3(
     8902.0,
-    internal_energy_solid_Ni_3,
+    enthalpy_solid_Ni_3,
     thermal_conductivity_solid_Ni_2_3,
     700.0,
     1728.0,
@@ -80,7 +80,7 @@ Phase<long double> solid_Ni_3(
 
 Phase<long double> liquid_Ni(
     7810.0,
-    internal_energy_liquid_Ni,
+    enthalpy_liquid_Ni,
     thermal_conductivity_liquid_Ni,
     1728.0,
     INFINITY,

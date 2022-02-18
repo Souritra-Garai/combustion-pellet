@@ -3,13 +3,11 @@
 
 #include "thermo-physical-properties/Thermal_Conductivity.hpp"
 #include "thermo-physical-properties/Enthalpy.hpp"
-#include "thermo-physical-properties/Phase.hpp"
-
-#include "thermo-physical-properties/Substance.hpp"
+#include "thermo-physical-properties/IdealGas.hpp"
 
 #define SHARPNESS_COEFFICIENT_AR 100.0
 
-Enthalpy<long double> internal_energy_gaseous_Ar(
+Enthalpy<long double> enthalpy_Ar(
     20.78600,
     2.825911E-7,
    -1.464191E-7,
@@ -18,19 +16,13 @@ Enthalpy<long double> internal_energy_gaseous_Ar(
    -6.197350
 );
 
-ThermalConductivityQuadraticPolynomial<long double> thermal_conductivity_gaseous_Ar(1.49E-3, 5.98E-5, -1.92E-8);
+ThermalConductivityQuadraticPolynomial<long double> thermal_conductivity_Ar(1.49E-3, 5.98E-5, -1.92E-8);
 
-Phase<long double> gaseous_Ar(
-    1.6025,
-    internal_energy_gaseous_Ar,
-    thermal_conductivity_gaseous_Ar,
-    273.0,
-    INFINITY,
-    SHARPNESS_COEFFICIENT_AR
+IdealGas<long double> Argon(
+	39.948E-3,
+	(long double) 5.0/3.0,
+	enthalpy_Ar,
+	thermal_conductivity_Ar
 );
-
-Phase<long double> phases_Ar[] = {gaseous_Ar};
-
-Substance<long double> Argon(1, phases_Ar, 39.948E-3, 5.0/3.0);
 
 #endif

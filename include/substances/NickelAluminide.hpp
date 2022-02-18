@@ -9,7 +9,7 @@
 
 #define SHARPNESS_COEFFICIENT_NIAL 100.0
 
-Enthalpy<long double> internal_energy_solid_NiAl(
+Enthalpy<long double> enthalpy_solid_NiAl(
     41.86,
     13.81,
     0.0,
@@ -18,7 +18,7 @@ Enthalpy<long double> internal_energy_solid_NiAl(
    -131.5
 );
 
-Enthalpy<long double> internal_energy_liquid_NiAl(
+Enthalpy<long double> enthalpy_liquid_NiAl(
     71.16,
     0.0,
     0.0,
@@ -33,7 +33,7 @@ ThermalConductivityQuadraticPolynomial<long double> thermal_conductivity_liquid_
 
 Phase<long double> solid_NiAl(
     5650.0,
-    internal_energy_solid_NiAl,
+    enthalpy_solid_NiAl,
     thermal_conductivity_solid_NiAl,
     273.0,
     1912.0,
@@ -42,7 +42,7 @@ Phase<long double> solid_NiAl(
 
 Phase<long double> liquid_NiAl(
     4798.3,
-    internal_energy_liquid_NiAl,
+    enthalpy_liquid_NiAl,
     thermal_conductivity_liquid_NiAl,
     1912.0,
     INFINITY,
