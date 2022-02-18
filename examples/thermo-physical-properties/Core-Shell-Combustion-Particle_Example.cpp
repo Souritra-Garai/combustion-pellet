@@ -17,19 +17,19 @@
 
 #include "thermo-physical-properties/Core-Shell-Combustion-Particle.hpp"
 
-double core_radius = 32.5E-6;
-double overall_radius = 39.5E-6;
+long double core_radius = 32.5E-6;
+long double overall_radius = 39.5E-6;
 
 int main(int argc, char const *argv[])
 {
-    CoreShellCombustionParticle<double>::setUpCoreShellCombustionParticle(
+    CoreShellCombustionParticle<long double>::setUpCoreShellCombustionParticle(
         Aluminium, Nickel, NickelAluminide,
         overall_radius, core_radius
     );
 
-    CoreShellCombustionParticle<double> Ni_clad_Al_particle;
+    CoreShellCombustionParticle<long double> Ni_clad_Al_particle;
 
-    std::cout << "Enthalpy\t:\t" << Ni_clad_Al_particle.getInternalEnergy(373) << "\tJ/kg" << std::endl << std::endl;
+    std::cout << "Enthalpy\t:\t" << Ni_clad_Al_particle.getEnthalpy(373) << "\tJ/kg" << std::endl << std::endl;
 
     Ni_clad_Al_particle.printProperties(std::cout);
 

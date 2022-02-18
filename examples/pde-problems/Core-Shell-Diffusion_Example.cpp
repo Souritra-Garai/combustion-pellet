@@ -27,25 +27,25 @@
 #define MAX_ITER 5000
 #define Dt 0.0001
 
-double core_radius = 32.5E-6;
-double overall_radius = 39.5E-6;
+long double core_radius = 32.5E-6;
+long double overall_radius = 39.5E-6;
 
-ArrheniusDiffusivityModel<double> Alawieh_diffusivity(2.56E-6, 102.191E3);
-ArrheniusDiffusivityModel<double> Du_diffusivity(9.54E-8, 26E3);
+ArrheniusDiffusivityModel<long double> Alawieh_diffusivity(2.56E-6, 102.191E3);
+ArrheniusDiffusivityModel<long double> Du_diffusivity(9.54E-8, 26E3);
 
-void printState(size_t iteration_number, CoreShellDiffusion<double> &particle);
+void printState(size_t iteration_number, CoreShellDiffusion<long double> &particle);
 
 int main(int argc, char const *argv[])
 {
-    CoreShellDiffusion<double>::setUpCoreShellCombustionParticle(
+    CoreShellDiffusion<long double>::setUpCoreShellCombustionParticle(
         Aluminium, Nickel, NickelAluminide,
         overall_radius, core_radius
     );
 
-    CoreShellDiffusion<double>::setGridSize(1001);
-    CoreShellDiffusion<double>::setTimeStep(Dt);
+    CoreShellDiffusion<long double>::setGridSize(1001);
+    CoreShellDiffusion<long double>::setTimeStep(Dt);
 
-    CoreShellDiffusion<double> Ni_clad_Al_particle;
+    CoreShellDiffusion<long double> Ni_clad_Al_particle;
 
     FileGenerator file_generator;
 
@@ -61,8 +61,8 @@ int main(int argc, char const *argv[])
 
     size_t __iter = 1;
 
-    double temperature = 1400;
-    double diffusivity = Alawieh_diffusivity.getDiffusivity(temperature);
+    long double temperature = 1400;
+    long double diffusivity = Alawieh_diffusivity.getDiffusivity(temperature);
 
     setUpKeyboardInterrupt();
     
@@ -101,11 +101,11 @@ int main(int argc, char const *argv[])
     return 0;
 }
 
-void printState(size_t iteration_number, CoreShellDiffusion<double> &particle)
+void printState(size_t iteration_number, CoreShellDiffusion<long double> &particle)
 {
-    double Y_Al = particle.getMassFractionsCoreMaterial();
-    double Y_Ni = particle.getMassFractionsShellMaterial();
-    double Y_NiAl = particle.getMassFractionsProductMaterial();
+    long double Y_Al = particle.getMassFractionsCoreMaterial();
+    long double Y_Ni = particle.getMassFractionsShellMaterial();
+    long double Y_NiAl = particle.getMassFractionsProductMaterial();
 
     std::cout << "Iteration # " << iteration_number;
 

@@ -29,7 +29,7 @@ template<typename real_t> real_t PackedPellet<real_t>::_diameter = 1.0;
 
 // Ambient heat loss parameters
 // Convective heat transfer coefficient
-template<typename real_t> real_t PackedPellet<real_t>::_convective_heat_transfer_coefficient = 0;
+template<typename real_t> real_t PackedPellet<real_t>::_convective_heat_transfer_coefficient_curved_surface = 0;
 // Emissivity
 template<typename real_t> real_t PackedPellet<real_t>::_radiative_emissivity = 0;
 
@@ -62,7 +62,7 @@ void PackedPellet<real_t>::setAmbientHeatLossParameters(
     real_t radiative_emissivity
 ) {
     // Set static member variable - convective heat transfer coefficient
-    _convective_heat_transfer_coefficient = convective_heat_transfer_coefficient;
+    _convective_heat_transfer_coefficient_curved_surface = convective_heat_transfer_coefficient;
     // Set static member variable - emissivity for radiative heat loss
     _radiative_emissivity = radiative_emissivity;
 }
@@ -159,12 +159,12 @@ real_t PackedPellet<real_t>::getThermalConductivity(CoreShellCombustionParticle<
 }
 
 template<typename real_t>
-real_t PackedPellet<real_t>::getInternalEnergy(CoreShellCombustionParticle<real_t> *ptr_2_particle, real_t T)
+real_t PackedPellet<real_t>::getEnthalpy(CoreShellCombustionParticle<real_t> *ptr_2_particle, real_t T)
 {
     // Take mass fractions weighted average of enthalpies of the 
     // particle and th degassing fluid
-    return _particle_mass_fractions  * ptr_2_particle->getInternalEnergy(T) +
-    (1.0 - _particle_mass_fractions) * _degassing_fluid->getInternalEnergy(T);
+    return _particle_mass_fractions  * ptr_2_particle->getEnthalpy(T) +
+    (1.0 - _particle_mass_fractions) * _degassing_fluid->getEnthalpy(T);
 }
 
 template<typename real_t>
@@ -175,7 +175,7 @@ void PackedPellet<real_t>::printProperties(std::ostream &output_stream)
     output_stream << "Diameter\t:\t" << _diameter << "\tm" << std::endl;
 
     output_stream << "\nAmbient Heat Loss Parameters" << std::endl;
-    output_stream << "Convective Heat Transfer Coefficient\t:\t" << _convective_heat_transfer_coefficient << "\tW/m2-K" << std::endl;
+    output_stream << "Convective Heat Transfer Coefficient\t:\t" << _convective_heat_transfer_coefficient_curved_surface << "\tW/m2-K" << std::endl;
     output_stream << "Radiative emissivity\t\t\t:\t" << _radiative_emissivity << std::endl;
     output_stream << "Ambient Temperature\t\t\t:\t" << _ambient_temperature << "\tK" << std::endl;
 

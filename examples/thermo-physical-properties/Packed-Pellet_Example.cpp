@@ -39,6 +39,6 @@ int main(int argc, char const *argv[])
     
     pellet.printProperties(std::cout);
 
-    std::cout << "\n\nEnthalpy\t:\t" << pellet.getInternalEnergy(&particle, 298.15) << "\tJ/kg" << std::endl;  
+    std::cout << "\n\nEnthalpy\t:\t" << pellet.getEnthalpy(&particle, 298.15) << "\tJ/kg" << std::endl;  
     return 0;
 }
