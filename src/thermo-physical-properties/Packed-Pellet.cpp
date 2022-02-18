@@ -30,6 +30,7 @@ template<typename real_t> real_t PackedPellet<real_t>::_diameter = 1.0;
 // Ambient heat loss parameters
 // Convective heat transfer coefficient
 template<typename real_t> real_t PackedPellet<real_t>::_convective_heat_transfer_coefficient_curved_surface = 0;
+template<typename real_t> real_t PackedPellet<real_t>::_convective_heat_transfer_coefficient_flat_surface = 0;
 // Emissivity
 template<typename real_t> real_t PackedPellet<real_t>::_radiative_emissivity = 0;
 
@@ -40,7 +41,7 @@ template<typename real_t> real_t PackedPellet<real_t>::_ambient_temperature = 29
 template<typename real_t> real_t PackedPellet<real_t>::_ignition_temperature = 298.0;
 
 // Substance filling the voids in the packed pellet
-template<typename real_t> Substance<real_t> * PackedPellet<real_t>::_degassing_fluid;
+template<typename real_t> IdealGas<real_t> * PackedPellet<real_t>::_degassing_fluid;
 
 /*****************************************************************************************************/
 // Definitions of Static Member Functions
@@ -58,11 +59,13 @@ void PackedPellet<real_t>::setPelletDimensions(
 
 template<typename real_t>
 void PackedPellet<real_t>::setAmbientHeatLossParameters(
-    real_t convective_heat_transfer_coefficient,
+    real_t convective_heat_transfer_coefficient_curved_surface,
+	real_t convective_heat_transfer_coefficient_flat_surface,
     real_t radiative_emissivity
 ) {
     // Set static member variable - convective heat transfer coefficient
-    _convective_heat_transfer_coefficient_curved_surface = convective_heat_transfer_coefficient;
+    _convective_heat_transfer_coefficient_curved_surface	= convective_heat_transfer_coefficient_curved_surface;
+    _convective_heat_transfer_coefficient_flat_surface		= convective_heat_transfer_coefficient_flat_surface;
     // Set static member variable - emissivity for radiative heat loss
     _radiative_emissivity = radiative_emissivity;
 }
@@ -79,42 +82,20 @@ void PackedPellet<real_t>::setTemperatureParameters(
 }
 
 template<typename real_t>
-void PackedPellet<real_t>::setDegassingFluid(Substance<real_t> &degassing_fluid)
+void PackedPellet<real_t>::setDegassingFluid(IdealGas<real_t> &degassing_fluid)
 {
     // Set static member variable - Substance filling the voids of the pellet
     _degassing_fluid = &degassing_fluid;
 }
 
 template<typename real_t>
-real_t PackedPellet<real_t>::calcParticleMassFractions(
-    real_t particle_volume_fractions
-) {
-    // Get the density of a defualt Core-Shell Combustion Particle instance
-    // This assumes the static members of the CoreShellCombustionParticle class
-    // have been initialized
-    real_t initial_particle_density = CoreShellCombustionParticle<real_t>().getDensity(298.15);
-    
-    // Mass of particles present in unit volume of pellet = \f$ \phi_P \rho_p \f$
-    // Mass of degassing fluid in unit volume of pellet = \f$ (1 - \phi_P) \rho_P \f$
-    // Mass fractions of particles = Mass of particles / Mass of unit volume of pellet
-    return particle_volume_fractions * initial_particle_density / (
-        particle_volume_fractions           * initial_particle_density + 
-        (1.0 - particle_volume_fractions)   * _degassing_fluid->getDensity(298.15)
-    );
-}
-
-template<typename real_t>
-real_t PackedPellet<real_t>::calcDensity(real_t particle_volume_fractions)
+real_t PackedPellet<real_t>::calcOverallParticleDensity(real_t particle_volume_fractions)
 {
     // Get the density of a defualt Core-Shell Combustion Particle instance
     // This assumes the static members of the CoreShellCombustionParticle class
     // have been initialized
-    real_t initial_particle_density = CoreShellCombustionParticle<real_t>().getDensity(298.15);
 
-    // For mean pellet density, take the volume fractions weighted average of densities
-    // of the particle and the degassing fluid
-    return particle_volume_fractions  * initial_particle_density +
-    (1.0 - particle_volume_fractions) * _degassing_fluid->getDensity(298.15);
+    return particle_volume_fractions  * CoreShellCombustionParticle<real_t>().getDensity(298.15);
 }
 
 /*****************************************************************************************************/
@@ -124,9 +105,8 @@ template<typename real_t>
 PackedPellet<real_t>::PackedPellet(
     real_t particle_volume_fractions
 ) : // Mem Initialization list for initialising the constant members
-    _density(calcDensity(particle_volume_fractions)),
-    _particle_volume_fractions(particle_volume_fractions),
-    _particle_mass_fractions(calcParticleMassFractions(particle_volume_fractions))
+    _overall_particle_density(calcOverallParticleDensity(particle_volume_fractions)),
+	_degassing_fluid_volume_fractions(1.0 - particle_volume_fractions)
 { 
     // Nothing to do
     ; 
@@ -136,35 +116,14 @@ PackedPellet<real_t>::PackedPellet(
 // Defining member functions
 
 template<typename real_t>
-real_t PackedPellet<real_t>::getDensity() { return _density; }
-
-template<typename real_t>
-real_t PackedPellet<real_t>::getHeatCapacity(CoreShellCombustionParticle<real_t> *ptr_2_particle, real_t T)
-{
-    // Take mass fractions weighted average of heat capacities of the 
-    // particle and th degassing fluid
-    return _particle_mass_fractions  * ptr_2_particle->getHeatCapacity(T) +
-    (1.0 - _particle_mass_fractions) * _degassing_fluid->getHeatCapacity(T);
-}
-
-template<typename real_t>
 real_t PackedPellet<real_t>::getThermalConductivity(CoreShellCombustionParticle<real_t> *ptr_2_particle, real_t T)
 {    
     // Return the heat conductivity determined using Bruggeman model
     return getThermalConductivityMEB(
-		(real_t) 1.0 - _particle_volume_fractions,
+		_degassing_fluid_volume_fractions,
 		_degassing_fluid->getThermalConductivity(T),
 		ptr_2_particle->getThermalConductivity(T)
 	);
-}
-
-template<typename real_t>
-real_t PackedPellet<real_t>::getEnthalpy(CoreShellCombustionParticle<real_t> *ptr_2_particle, real_t T)
-{
-    // Take mass fractions weighted average of enthalpies of the 
-    // particle and th degassing fluid
-    return _particle_mass_fractions  * ptr_2_particle->getEnthalpy(T) +
-    (1.0 - _particle_mass_fractions) * _degassing_fluid->getEnthalpy(T);
 }
 
 template<typename real_t>
@@ -181,18 +140,14 @@ void PackedPellet<real_t>::printProperties(std::ostream &output_stream)
 
     CoreShellCombustionParticle<real_t> particle;
 
-    output_stream << "\nDensity\t\t\t\t:\t" << getDensity() << "\tkg/m3" << std::endl;
-    output_stream << "Heat Capacity\t\t\t:\t" << getHeatCapacity(&particle, 298.15) << "\tJ/kg-K" << std::endl;
     output_stream << "Heat Conductivity\t\t:\t" << getThermalConductivity(&particle, 298.15) << "\tW/m-K" << std::endl;
 
     output_stream << "\nParticle Properties" << std::endl;
-    output_stream << "Particle Volume Fraction\t:\t" << _particle_volume_fractions << std::endl;
-    output_stream << "Particle Mass Fraction\t:\t" << _particle_mass_fractions << std::endl;
+    output_stream << "Particle Volume Fraction\t:\t" << 1.0 - _degassing_fluid_volume_fractions << std::endl;
     particle.printProperties(output_stream);
 
     output_stream << "\nDegassing Fluid" << std::endl;
-    output_stream << "Degassing Fluid Volume Fraction\t:\t" << 1.0 - _particle_volume_fractions << std::endl;
-    output_stream << "Degassing Fluid Mass Fraction\t:\t" << 1.0 - _particle_mass_fractions << std::endl;
+    output_stream << "Degassing Fluid Volume Fraction\t:\t" << _degassing_fluid_volume_fractions << std::endl;
 }
 
 /*****************************************************************************************************/

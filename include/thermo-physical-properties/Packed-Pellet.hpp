@@ -98,9 +98,9 @@ class PackedPellet
          * for the particle composition
          * @param particle_volume_fractions Fraction of the pellet volume occupied by
          * core-shell type combustion particles
-         * @return real_t Mean density of the pellet in \f$ kg / m^3 \f$
+         * @return real_t Overall density of particles in the pellet in \f$ kg / m^3 \f$
          */
-        static real_t calcParticleDensity(real_t particle_volume_fractions);
+        static real_t calcOverallParticleDensity(real_t particle_volume_fractions);
 
     public :
 
@@ -168,17 +168,6 @@ class PackedPellet
         static void setDegassingFluid(IdealGas<real_t> &degassing_fluid);
 
         /**
-         * @brief Get the mean heat capacity at a point in the pellet
-         * where state of the core-shell combustion particle is represented by
-         * the particle in the argument
-         * 
-         * @param ptr_2_particle Pointer to a core-shell combustion particle
-         * that represents the state of all particles in the pellet
-         * @return real_t Mean heat capacity of the pellet in \f$ J / kg - K \f$
-         */
-        real_t getHeatCapacity(CoreShellCombustionParticle<real_t> *ptr_2_particle, real_t temperature);
-
-        /**
          * @brief Get he mean heat conductivity at a point in the pellet
          * where state of the core-shell combustion particle is represented by
          * the particle in the argument
@@ -188,18 +177,6 @@ class PackedPellet
          * @return real_t Mean heat conductivity of the pellet in \f$ W / m - K \f$
          */
         real_t getThermalConductivity(CoreShellCombustionParticle<real_t> *ptr_2_particle, real_t temperature);
-
-        /**
-         * @brief Get he mean enthalpy at a point in the pellet, at the specified temperature,
-         * where state of the core-shell combustion particle is represented by
-         * the particle in the argument
-         * 
-         * @param ptr_2_particle Pointer to a core-shell combustion particle
-         * that represents the state of all particles in the pellet
-         * @param temperature Temperature at which enthalpy is evaluated \f$ K \f$
-         * @return real_t Mean enthalpy of the pellet in \f$ J / kg \f$
-         */
-        real_t getEnthalpy(CoreShellCombustionParticle<real_t> *ptr_2_particle, real_t temperature);
 
         /**
          * @brief Print the properties of the pellet (evaluated at the initial condition)
