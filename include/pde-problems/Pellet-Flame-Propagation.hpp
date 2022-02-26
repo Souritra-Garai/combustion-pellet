@@ -119,7 +119,7 @@ class PelletFlamePropagation : public PackedPellet<real_t>
 
 		real_t * _thermal_conductivity;
 
-		real_t * _prev_internal_energy;
+		real_t * _prev_enthalpy_particle;
         
         /**
          * @brief Array of Objects to solve the core-shell diffusion problem at
