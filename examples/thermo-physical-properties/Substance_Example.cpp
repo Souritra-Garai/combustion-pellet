@@ -27,20 +27,20 @@ int main(int argc, char const *argv[])
     std::ofstream file_Ni   = file_generator.getCSVFile("Thermo_Physical_Properties_Ni");
     std::ofstream file_NiAl = file_generator.getCSVFile("Thermo_Physical_Properties_NiAl");
     
-    file_Ar   << "Temperature (K)," << "Heat Capacity (J / mol-K)," << "Internal Energy (J / mol)," << "Thermal Conductivity (W / m - K)" << std::endl;
-    file_Al   << "Temperature (K)," << "Heat Capacity (J / mol-K)," << "Internal Energy (J / mol)," << "Thermal Conductivity (W / m - K)" << std::endl;
-    file_Ni   << "Temperature (K)," << "Heat Capacity (J / mol-K)," << "Internal Energy (J / mol)," << "Thermal Conductivity (W / m - K)" << std::endl;
-    file_NiAl << "Temperature (K)," << "Heat Capacity (J / mol-K)," << "Internal Energy (J / mol)," << "Thermal Conductivity (W / m - K)" << std::endl;
+    file_Ar   << "Temperature (K)," << "Heat Capacity (J / mol-K)," << "Enthalpy (J / mol)," << "Thermal Conductivity (W / m - K)" << std::endl;
+    file_Al   << "Temperature (K)," << "Heat Capacity (J / mol-K)," << "Enthalpy (J / mol)," << "Thermal Conductivity (W / m - K)" << std::endl;
+    file_Ni   << "Temperature (K)," << "Heat Capacity (J / mol-K)," << "Enthalpy (J / mol)," << "Thermal Conductivity (W / m - K)" << std::endl;
+    file_NiAl << "Temperature (K)," << "Heat Capacity (J / mol-K)," << "Enthalpy (J / mol)," << "Thermal Conductivity (W / m - K)" << std::endl;
 
     for (double temperature = 298; temperature <= 2500; temperature += 0.1)
     {
-        file_Ar     << temperature << ',' << Argon.getMolarMass()			* Argon.getHeatCapacity(temperature)             << ',' << Argon.getMolarMass()				* Argon.getInternalEnergy(temperature)              << ',' << Argon.getThermalConductivity(temperature)             << std::endl;
+        file_Ar     << temperature << ',' << Argon.getMolarMass()			* Argon.getCp(temperature)			             << ',' << Argon.getMolarMass()				* Argon.getEnthalpy(temperature)              << ',' << Argon.getThermalConductivity(temperature)             << std::endl;
 
-        file_Al     << temperature << ',' << Aluminium.getMolarMass()		* Aluminium.getHeatCapacity(temperature)         << ',' << Aluminium.getMolarMass()			* Aluminium.getInternalEnergy(temperature)          << ',' << Aluminium.getThermalConductivity(temperature)         << std::endl;
+        file_Al     << temperature << ',' << Aluminium.getMolarMass()		* Aluminium.getHeatCapacity(temperature)         << ',' << Aluminium.getMolarMass()			* Aluminium.getEnthalpy(temperature)          << ',' << Aluminium.getThermalConductivity(temperature)         << std::endl;
 
-        file_Ni     << temperature << ',' << Nickel.getMolarMass()			* Nickel.getHeatCapacity(temperature)            << ',' << Nickel.getMolarMass()			* Nickel.getInternalEnergy(temperature)             << ',' << Nickel.getThermalConductivity(temperature)            << std::endl;
+        file_Ni     << temperature << ',' << Nickel.getMolarMass()			* Nickel.getHeatCapacity(temperature)            << ',' << Nickel.getMolarMass()			* Nickel.getEnthalpy(temperature)             << ',' << Nickel.getThermalConductivity(temperature)            << std::endl;
 
-        file_NiAl   << temperature << ',' << NickelAluminide.getMolarMass() * NickelAluminide.getHeatCapacity(temperature)   << ',' << NickelAluminide.getMolarMass() 	* NickelAluminide.getInternalEnergy(temperature)    << ',' << NickelAluminide.getThermalConductivity(temperature)   << std::endl;
+        file_NiAl   << temperature << ',' << NickelAluminide.getMolarMass() * NickelAluminide.getHeatCapacity(temperature)   << ',' << NickelAluminide.getMolarMass() 	* NickelAluminide.getEnthalpy(temperature)    << ',' << NickelAluminide.getThermalConductivity(temperature)   << std::endl;
     }
 
     file_Ar.close();

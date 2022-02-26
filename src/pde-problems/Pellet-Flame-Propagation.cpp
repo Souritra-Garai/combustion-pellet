@@ -109,7 +109,7 @@ PelletFlamePropagation<real_t>::PelletFlamePropagation(
 
 	_thermal_conductivity = new real_t[_m];
 
-	_prev_internal_energy = new real_t[_m];
+	_prev_enthalpy_particle = new real_t[_m];
 
     // Allocate memory for core shell diffusion problems at each
     // grid point
@@ -133,7 +133,7 @@ PelletFlamePropagation<real_t>::~PelletFlamePropagation()
     // Deallocate memory for temperature array
     delete [] _temperature_array;
 	delete [] _thermal_conductivity;
-	delete [] _prev_internal_energy;
+	delete [] _prev_enthalpy_particle;
 
     // Deallocate memory for core shell diffusion problems
     delete [] _particles_array;
@@ -164,7 +164,7 @@ inline bool PelletFlamePropagation<real_t>::inReactionZone(size_t index)
 }
 
 template<typename real_t>
-real_t PelletFlamePropagation<real_t>::getParticleInternalEnergyTemperatureDerivative(size_t i)
+real_t PelletFlamePropagation<real_t>::getParticleEnthalpyTemperatureDerivative(size_t i)
 {
     // Calculate \f$ \sum_{k \in \text{Particle}} \left\{ \Delta H_{f,k}^0 + c_k \left(T^{n-1}_j - T_{ref}\right) \right\}
     // \cdot \left\delimiter0\frac{\Delta Y_k}{\Delta T}\right|_j^n \f$
@@ -182,15 +182,15 @@ real_t PelletFlamePropagation<real_t>::getParticleInternalEnergyTemperatureDeriv
     return
     (   // \f$  \sum_{k \in \text{Particle}} \left\{ \Delta H_{f,k}^0 + c_k \left(T^{n-1}_j - T_{ref}\right) \right\}
         //      \cdot Y_{k,j}^{n}\left(T_j^{n-1} + \Delta T, \left\{C_i^{n-1}\right\}_j\right)  \f$
-        _particles_array_raised_temperature_evolution[i].getInternalEnergy(_temperature_array[i]) - 
+        _particles_array_raised_temperature_evolution[i].getEnthalpy(_temperature_array[i]) - 
         // \f$  \sum_{k \in \text{Particle}} \left\{ \Delta H_{f,k}^0 + c_k \left(T^{n-1}_j - T_{ref}\right) \right\}
         //      \cdot Y_{k,j}^{n}\left(T_j^{n-1}, \left\{C_i^{n-1}\right\}_j\right) \f$
-        _particles_array_const_temperature_evolution[i].getInternalEnergy(_temperature_array[i])
+        _particles_array_const_temperature_evolution[i].getEnthalpy(_temperature_array[i])
     ) / _delta_T;
 }
 
 template<typename real_t>
-real_t PelletFlamePropagation<real_t>::getParticleInternalEnergyTimeDerivative(size_t i)
+real_t PelletFlamePropagation<real_t>::getParticleEnthalpyTimeDerivative(size_t i)
 {
     // Calculate \f$ \sum_{k \in \text{Particle}} \left\{ \Delta H_{f,k}^0 + c_k \left(T^{n-1}_j - T_{ref}\right) \right\}
     // \cdot \left\delimiter0\frac{\Delta Y_k}{\Delta t}\right|_j^n \f$
@@ -208,15 +208,15 @@ real_t PelletFlamePropagation<real_t>::getParticleInternalEnergyTimeDerivative(s
     return
     (   // \f$  \sum_{k \in \text{Particle}} \left\{ \Delta H_{f,k}^0 + c_k \left(T^{n-1}_j - T_{ref}\right) \right\}
         //      \cdot Y_{k,j}^{n}\left(T_j^{n-1}, \left\{C_i^{n-1}\right\}_j\right) \f$
-        _particles_array_const_temperature_evolution[i].getInternalEnergy(_temperature_array[i]) -
+        _particles_array_const_temperature_evolution[i].getEnthalpy(_temperature_array[i]) -
         // \f$  \sum_{k \in \text{Particle}} \left\{ \Delta H_{f,k}^0 + c_k \left(T^{n-1}_j - T_{ref}\right) \right\}
         //      \cdot Y_{k,j}^{n-1} \f$
-        _particles_array[i].getInternalEnergy(_temperature_array[i])
+        _particles_array[i].getEnthalpy(_temperature_array[i])
     ) / _delta_t;
 }
 
 template<typename real_t>
-void PelletFlamePropagation<real_t>::evolveParticleForInternalEnergyDerivative(size_t i)
+void PelletFlamePropagation<real_t>::evolveParticleForEnthalpyDerivative(size_t i)
 {
     // Since the evolution of the particles with constant temperature and raised temperature
     // are independent of each other, they can be parallelized
@@ -276,7 +276,9 @@ LinearExpression<real_t> PelletFlamePropagation<real_t>::calcTransientTerm(size_
     // \cdot \left\delimiter0\frac{\Delta Y_k}{\Delta t}\right|_j^n \f$
     
     // \f$ \alpha_{1,j}^n = \sum_{k \in \text{Pellet}} Y_{k,Pellet} \cdot c_k \cdot \dfrac{1}{\Delta t} \f$
-    expression.coefficient = this->getHeatCapacity(_particles_array + i, _temperature_array[i]) / _delta_t;
+    expression.coefficient =
+		this->_degassing_fluid_volume_fractions * this->_degassing_fluid->getDensity(_temperature_array[i]) * this->_degassing_fluid->getCp(_temperature_array[i]) / _delta_t +
+		this->_overall_particle_density * _particles_array[i].getHeatCapacity(_temperature_array[i]) / _delta_t;
     // Instantiate \f$ \alpha_{0,j}^n \f$ and initialize with 0
     expression.constant = 0.0;
 
@@ -285,7 +287,7 @@ LinearExpression<real_t> PelletFlamePropagation<real_t>::calcTransientTerm(size_
     {
         // Evolve the particles used for determining change in enthalpy at constant and
         // raised temperatures. This must be done before calling 
-        evolveParticleForInternalEnergyDerivative(i);
+        evolveParticleForEnthalpyDerivative(i);
         
         // std::cout << "\tParticle # " << i << std::endl;
         // std::cout << "\t\tdudT : " << getParticleEnthalpyTemperatureDerivative(i) / _delta_t << std::endl;
@@ -293,13 +295,13 @@ LinearExpression<real_t> PelletFlamePropagation<real_t>::calcTransientTerm(size_
 
         // \f$ \alpha_{1,j}^n += \sum_{k \in \text{Particle}} \left( 1 - Y_{Ar,Pellet} \right) \cdot \left\{ \Delta H_{f,k}^0 + c_k \left(T^{n-1}_j - T_{ref}\right)\right\}
         // \cdot \left( \left\delimiter0\frac{\Delta Y_k}{\Delta T}\right|_j^n \cdot \dfrac{1}{\Delta t} \right) \f$
-        expression.coefficient += _gamma * this->_particle_mass_fractions * getParticleInternalEnergyTemperatureDerivative(i) / _delta_t;
+        expression.coefficient += _gamma * this->_overall_particle_density * getParticleEnthalpyTemperatureDerivative(i) / _delta_t;
 
         // \f$ \alpha_{0,j}^n += \sum_{k \in \text{Particle}} \left( 1 - Y_{Ar,Pellet} \right) \cdot \left\{ \Delta H_{f,k}^0 + c_k \left(T^{n-1}_j - T_{ref}\right)\right\}
         // \cdot \left\delimiter0\frac{\Delta Y_k}{\Delta t}\right|_j^n \f$
-        expression.constant += this->_particle_mass_fractions * (
-			(1 - _gamma) * (_particles_array[i].getInternalEnergy(_temperature_array[i]) - _prev_internal_energy[i]) / _delta_t +
-			_gamma  * getParticleInternalEnergyTimeDerivative(i));
+        expression.constant += this->_overall_particle_density * (
+			(1 - _gamma) * (_particles_array[i].getEnthalpy(_temperature_array[i]) - _prev_enthalpy_particle[i]) / _delta_t +
+			_gamma  * getParticleEnthalpyTimeDerivative(i));
     }
     
     // Return the linearized expression for transient term
@@ -317,14 +319,14 @@ LinearExpression<real_t> PelletFlamePropagation<real_t>::calcHeatLossTerm(size_t
     // \f$ \beta_{0,j}^n = - \frac{4}{D} \left[ h \cdot T_a + 
     // \varepsilon \sigma \left\{ 3 \left(T_j^{n-1}\right)^4 + T_a^4 \right\} \right] \f$
     expression.constant =
-		this->_convective_heat_transfer_coefficient * (_temperature_array[i] - this->_ambient_temperature) +
+		this->_convective_heat_transfer_coefficient_curved_surface * (_temperature_array[i] - this->_ambient_temperature) +
 		this->_radiative_emissivity * STEFAN_BOLTZMANN_CONSTANT * (pow(_temperature_array[i], 4) - pow(this->_ambient_temperature, 4))
 	;
 
     // and,
     // \f$ \beta_{1,j}^n = \frac{4}{D} \left\{ h + 4 \varepsilon \sigma \left(T_j^{n-1}\right)^3 \right\} \f$
     expression.coefficient = _gamma * (
-		this->_convective_heat_transfer_coefficient +
+		this->_convective_heat_transfer_coefficient_curved_surface +
 		4.0 * this->_radiative_emissivity * STEFAN_BOLTZMANN_CONSTANT * pow(_temperature_array[i], 3)
 	);
 
@@ -344,7 +346,7 @@ void PelletFlamePropagation<real_t>::setUpBoundaryConditionX0()
     LinearExpression<real_t> heat_loss_term = calcHeatLossTerm(0);
     
     // Get the effective heat conductivity of particle - gas mixture, divided by the grid size
-    real_t lambda_by_delta_x = _thermal_conductivity[1] / _delta_x;
+    real_t lambda_by_delta_x = _thermal_conductivity[0] / _delta_x;
     // Since, the particle at \f$ x = 0 \f$ grid point is not evolved, the effective heat conductivity
     // the next grid point is used
 
@@ -371,7 +373,7 @@ void PelletFlamePropagation<real_t>::setUpBoundaryConditionXN()
     LinearExpression<real_t> heat_loss_term = calcHeatLossTerm(_m-1);
 
     // Get the effective heat conductivity of particle - gas mixture, divided by the grid size
-    real_t lambda_by_delta_x = _thermal_conductivity[_m - 2] / _delta_x;
+    real_t lambda_by_delta_x = _thermal_conductivity[_m - 1] / _delta_x;
     // Since, the particle at \f$ x = 0 \f$ grid point is not evolved, the effective heat conductivity
     // the next grid point is used
 
@@ -395,7 +397,7 @@ void PelletFlamePropagation<real_t>::updateParticlesState()
         // For each grid point update the state of the energetic particle
         for (size_t i = 1; i < _m-1; i++)
         {
-			_prev_internal_energy[i] = _particles_array[i].getInternalEnergy(_temperature_array[i]);
+			_prev_enthalpy_particle[i] = _particles_array[i].getEnthalpy(_temperature_array[i]);
 
             // Update the state of energetic particles only in the reaction zone
             if (inReactionZone(i))
@@ -410,6 +412,7 @@ void PelletFlamePropagation<real_t>::updateParticlesState()
 			_thermal_conductivity[i] = this->getThermalConductivity(_particles_array + i, _temperature_array[i]);
         }
 
+	_thermal_conductivity[0]	= this->getThermalConductivity(_particles_array + 1, 		_temperature_array[0]);
 	_thermal_conductivity[_m-1] = this->getThermalConductivity(_particles_array + (_m - 2), _temperature_array[_m-1]);
 }
 
@@ -451,11 +454,12 @@ void PelletFlamePropagation<real_t>::initializePellet()
             _particles_array_const_temperature_evolution[i].initializeParticle();
 
 			_thermal_conductivity[i] = this->getThermalConductivity(_particles_array + i, _temperature_array[i]);
-			_prev_internal_energy[i] = _particles_array[i].getInternalEnergy(_temperature_array[i]);
+			_prev_enthalpy_particle[i] = _particles_array[i].getEnthalpy(_temperature_array[i]);
         }
     // Set temperature at grid point at \f$ x = L \f$ to ambient temperature
     _temperature_array[_m-1] = this->_ambient_temperature;
 
+	_thermal_conductivity[0]	= this->getThermalConductivity(_particles_array + 1,		_temperature_array[0]);
 	_thermal_conductivity[_m-1] = this->getThermalConductivity(_particles_array + (_m - 2), _temperature_array[_m-1]);
 }
 
@@ -495,23 +499,23 @@ void PelletFlamePropagation<real_t>::setUpEquations()
             // Get the linearized expression for the heat loss term, \f$ \beta_{0,j}^n + \beta_{1,j}^n \cdot T_j^n \f$
             LinearExpression<real_t> heat_loss_term = calcHeatLossTerm(i);
 
-			real_t lambda_forward_by_delta_x_sqr  = _thermal_conductivity[i+1] / pow(_delta_x, 2);
-			real_t lambda_backward_by_delta_x_sqr = _thermal_conductivity[i]   / pow(_delta_x, 2);
+			real_t lambda_forward_by_delta_x_sqr  = 0.5 * (_thermal_conductivity[i+1] + _thermal_conductivity[i]) / pow(_delta_x, 2);
+			real_t lambda_backward_by_delta_x_sqr = 0.5 * (_thermal_conductivity[i] + _thermal_conductivity[i-1]) / pow(_delta_x, 2);
 
             // Set up the matrix equation
             _solver.setEquation(
                 // Matrix row number
                 i,
                 // Coefficient of \f$ T_{j-1}^n \f$, \f$ - \frac{\lambda}{\left( \Delta x \right)^2} \f$
-                - _theta * lambda_forward_by_delta_x_sqr,
-                // Coefficient of \f$ T_j^n \f$, \f$ \left\{ \rho_0 \alpha_{1,j}^n + \frac{2 \lambda}{\left( \Delta x \right)^2} + \beta_{1,j}^n \right\} \f$
-                this->_density * transient_term.coefficient + (4 * heat_loss_term.coefficient / this->_diameter) + _theta * (lambda_forward_by_delta_x_sqr + lambda_backward_by_delta_x_sqr),
-                // Coefficient of \f$ T_{j+1}^n \f$, \f$ - \frac{\lambda}{\left( \Delta x \right)^2} \f$
                 - _theta * lambda_backward_by_delta_x_sqr,
+                // Coefficient of \f$ T_j^n \f$, \f$ \left\{ \rho_0 \alpha_{1,j}^n + \frac{2 \lambda}{\left( \Delta x \right)^2} + \beta_{1,j}^n \right\} \f$
+                transient_term.coefficient + (4 * heat_loss_term.coefficient / this->_diameter) + _theta * (lambda_forward_by_delta_x_sqr + lambda_backward_by_delta_x_sqr),
+                // Coefficient of \f$ T_{j+1}^n \f$, \f$ - \frac{\lambda}{\left( \Delta x \right)^2} \f$
+                - _theta * lambda_forward_by_delta_x_sqr,
                 (1 - _theta) * lambda_forward_by_delta_x_sqr * _temperature_array[i+1] +
-				(this->_density * transient_term.coefficient - (1 - _theta) * (lambda_forward_by_delta_x_sqr + lambda_backward_by_delta_x_sqr) + (4 * heat_loss_term.coefficient / this->_diameter)) * _temperature_array[i] +
+				(transient_term.coefficient - (1 - _theta) * (lambda_forward_by_delta_x_sqr + lambda_backward_by_delta_x_sqr) + (4 * heat_loss_term.coefficient / this->_diameter)) * _temperature_array[i] +
 				(1 - _theta) * lambda_backward_by_delta_x_sqr * _temperature_array[i-1] -
-				(this->_density * transient_term.constant + (4 * heat_loss_term.constant / this->_diameter))                
+				(transient_term.constant + (4 * heat_loss_term.constant / this->_diameter))                
             );
         }
 

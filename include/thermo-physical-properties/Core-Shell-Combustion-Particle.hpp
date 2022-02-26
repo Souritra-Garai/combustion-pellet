@@ -160,7 +160,7 @@ class CoreShellCombustionParticle
          * @param temperature Overall temperature of the particle
          * @return real_t Enthalpy of the particle at the specified temperature
          */
-        real_t getInternalEnergy(real_t temperature);
+        real_t getEnthalpy(real_t temperature);
 
         /**
          * @brief Print the properties of the substance to the given stream

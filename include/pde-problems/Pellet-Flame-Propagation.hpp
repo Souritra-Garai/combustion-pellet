@@ -119,7 +119,7 @@ class PelletFlamePropagation : public PackedPellet<real_t>
 
 		real_t * _thermal_conductivity;
 
-		real_t * _prev_internal_energy;
+		real_t * _prev_enthalpy_particle;
         
         /**
          * @brief Array of Objects to solve the core-shell diffusion problem at
@@ -177,7 +177,7 @@ class PelletFlamePropagation : public PackedPellet<real_t>
          * 
          * @param index Index of the grid point where particle needs to be evolved
          */
-        void evolveParticleForInternalEnergyDerivative(size_t index);
+        void evolveParticleForEnthalpyDerivative(size_t index);
 
         /**
          * @brief Get the partial derivative of enthalpy of a particle with respect to temperature
@@ -188,7 +188,7 @@ class PelletFlamePropagation : public PackedPellet<real_t>
          * @return real_t The partial derivative of enthalpy of a particle at the specified grid point 
          * with respect to temperature
          */
-        real_t getParticleInternalEnergyTemperatureDerivative(size_t index);
+        real_t getParticleEnthalpyTemperatureDerivative(size_t index);
         /**
          * @brief Get the partial derivative of enthalpy of a particle with respect to time
          * \left\delimiter0\frac{\partial Y_k}{\partial t}\right|_{x,T} \left(t_n, x_j\right)
@@ -198,7 +198,7 @@ class PelletFlamePropagation : public PackedPellet<real_t>
          * @return real_t The partial derivative of enthalpy of a particle at the specified grid point 
          * with respect to time 
          */
-        real_t getParticleInternalEnergyTimeDerivative(size_t index);
+        real_t getParticleEnthalpyTimeDerivative(size_t index);
 
         /**
          * @brief Calculates the linear expression in terms of Temperature

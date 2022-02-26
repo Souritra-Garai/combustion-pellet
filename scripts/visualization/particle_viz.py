@@ -122,7 +122,7 @@ if __name__ == '__main__' :
 
 	from scripts.utilities.solution_folder import getlatestfolder, getpath
 
-	particle = ParticleDiffusion3D(getlatestfolder() + '/1', 10000, [0,0,0], 1E6)
+	particle = ParticleDiffusion3D(getlatestfolder(), 10000, [0,0,0], 1E6)
 
 	fig = plt.figure(figsize=[10,10])
 	fig.suptitle('Diffusion in Ni-Coated Al Particle', fontweight='bold')
@@ -141,8 +141,8 @@ if __name__ == '__main__' :
 
 	particle.setUpPlot(ax)
 
-	ax.plot([],[],[], 'o', markersize=5, c='blue', label='Nickel')
-	ax.plot([],[],[], 'o', markersize=5, c='red', label='Aluminium')
+	ax.plot([],[],[], 'o', markersize=10, c='blue', label='Nickel')
+	ax.plot([],[],[], 'o', markersize=10, c='red', label='Aluminium')
 	ax.legend()
 
 	ax.set_axis_off()

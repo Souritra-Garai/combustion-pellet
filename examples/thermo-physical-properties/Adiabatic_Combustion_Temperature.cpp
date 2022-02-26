@@ -32,8 +32,8 @@ int main(int argc, char const *argv[])
 	for (double initial_temperature = 298; initial_temperature <= 2000; initial_temperature+=1)
 	{
 		double initial_energy = // J
-			Aluminium.getInternalEnergy(initial_temperature) * Aluminium.getMolarMass() +
-			Nickel.getInternalEnergy(initial_temperature) * Nickel.getMolarMass();
+			Aluminium.getEnthalpy(initial_temperature) * Aluminium.getMolarMass() +
+			Nickel.getEnthalpy(initial_temperature) * Nickel.getMolarMass();
 
 		// std::cout << "Intial Energy : " << initial_energy << " J\n";
 
@@ -41,7 +41,7 @@ int main(int argc, char const *argv[])
 		double temperature_lower = initial_temperature;
 
 		double temperature_middle = (temperature_upper + temperature_lower) / 2.0;
-		double final_energy = NickelAluminide.getInternalEnergy(temperature_middle) * NickelAluminide.getMolarMass();
+		double final_energy = NickelAluminide.getEnthalpy(temperature_middle) * NickelAluminide.getMolarMass();
 
 		unsigned int i = 0;
 
@@ -52,7 +52,7 @@ int main(int argc, char const *argv[])
 			else temperature_lower = temperature_middle;
 
 			temperature_middle = (temperature_upper + temperature_lower) / 2.0;
-			final_energy = NickelAluminide.getInternalEnergy(temperature_middle) * NickelAluminide.getMolarMass();
+			final_energy = NickelAluminide.getEnthalpy(temperature_middle) * NickelAluminide.getMolarMass();
 		
 			// std::cout << "Iteration # " << ++i << "\t\tTemperature : " << temperature_middle << " K\t\tEnergy : " << final_energy << " J\n";
 		}

@@ -48,7 +48,7 @@ int main(int argc, char const *argv[])
     // CoreShellDiffusion<long double>::setTimeStep(0.0001);
 
     PelletFlamePropagation<long double>::setPelletDimensions(pellet_length, pellet_diameter);
-    PelletFlamePropagation<long double>::setAmbientHeatLossParameters(0, 0);
+    PelletFlamePropagation<long double>::setAmbientHeatLossParameters(0, 0, 0);
     PelletFlamePropagation<long double>::setTemperatureParameters(933, 298);
     PelletFlamePropagation<long double>::setDegassingFluid(Argon);
 

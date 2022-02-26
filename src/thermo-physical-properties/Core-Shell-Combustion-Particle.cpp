@@ -110,24 +110,22 @@ CoreShellCombustionParticle<real_t>::CoreShellCombustionParticle()
 template<typename real_t>
 real_t CoreShellCombustionParticle<real_t>::getDensity(real_t T)
 {
+	real_t volume_fraction_core_material    = _mass_fraction_core_material      / _core_material->getDensity(T);
+    real_t volume_fraction_shell_material   = _mass_fraction_shell_material     / _shell_material->getDensity(T);
+    real_t volume_fraction_product_material = _mass_fraction_product_material   / _product_material->getDensity(T);
+
+    real_t sum = volume_fraction_core_material + volume_fraction_shell_material + volume_fraction_product_material;
+
+    volume_fraction_core_material       /= sum;
+    volume_fraction_shell_material      /= sum;
+    volume_fraction_product_material    /= sum;
+
     // \f$ \rho = \sum_{k \in \left\{ Core, Shell, Product \right}} Y_k \rho_k \f$
     return 1.0 / (
-        _mass_fraction_core_material    / _core_material->getDensity(T) +
-        _mass_fraction_shell_material   / _shell_material->getDensity(T) +
-        _mass_fraction_product_material / _product_material->getDensity(T)
+        volume_fraction_core_material    / _core_material->getDensity(T) +
+        volume_fraction_shell_material   / _shell_material->getDensity(T) +
+        volume_fraction_product_material / _product_material->getDensity(T)
     );
-}
-
-// Take weighted sum of heat capacities of core, shell and product materials
-// with mass fraction as the weights
-template<typename real_t>
-real_t CoreShellCombustionParticle<real_t>::getHeatCapacity(real_t T)
-{
-    // \f$ c = \sum_{k \in \left\{ Core, Shell, Product \right}} Y_k c_k \f$
-    return 
-        _mass_fraction_core_material    * _core_material->getHeatCapacity(T) +
-        _mass_fraction_shell_material   * _shell_material->getHeatCapacity(T) +
-        _mass_fraction_product_material * _product_material->getHeatCapacity(T); 
 }
 
 // Take weighted sum of heat conductivities of core, shell and product materials
@@ -153,17 +151,29 @@ real_t CoreShellCombustionParticle<real_t>::getThermalConductivity(real_t T)
         volume_fraction_product_material    * _product_material->getThermalConductivity(T)  ;
 }
 
+// Take weighted sum of heat capacities of core, shell and product materials
+// with mass fraction as the weights
+template<typename real_t>
+real_t CoreShellCombustionParticle<real_t>::getHeatCapacity(real_t T)
+{
+    // \f$ c = \sum_{k \in \left\{ Core, Shell, Product \right}} Y_k c_k \f$
+    return 
+        _mass_fraction_core_material    * _core_material->getHeatCapacity(T) +
+        _mass_fraction_shell_material   * _shell_material->getHeatCapacity(T) +
+        _mass_fraction_product_material * _product_material->getHeatCapacity(T); 
+}
+
 // Take weighted sum of enthalpies of core, shell and product materials
 // at the specified temperature with mass fraction as the weights
 template<typename real_t>
-real_t CoreShellCombustionParticle<real_t>::getInternalEnergy(real_t T)
+real_t CoreShellCombustionParticle<real_t>::getEnthalpy(real_t T)
 {
     // \f$ h \left( T \right) 
     // = \sum_{k \in \left\{ Core, Shell, Product \right}} Y_k h_k \left( T \right)\f$
     return
-        _mass_fraction_core_material    * _core_material->getInternalEnergy(T) +
-        _mass_fraction_shell_material   * _shell_material->getInternalEnergy(T) +
-        _mass_fraction_product_material * _product_material->getInternalEnergy(T);
+        _mass_fraction_core_material    * _core_material->getEnthalpy(T) +
+        _mass_fraction_shell_material   * _shell_material->getEnthalpy(T) +
+        _mass_fraction_product_material * _product_material->getEnthalpy(T);
 }
 
 template<typename real_t>
@@ -202,7 +212,7 @@ void CoreShellCombustionParticle<real_t>::printProperties(
 
     output_stream << "Density\t\t\t:\t" << getDensity(298.15) << "\tkg/m3" << std::endl;
     output_stream << "Heat Capacity\t\t:\t" << getHeatCapacity(298.15) << "\tJ/kg-K" << std::endl;
-    output_stream << "Internal Energy\t\t:\t" << getInternalEnergy(298.15) << "\tJ/kg" << std::endl;
+    output_stream << "Enthalpy\t\t:\t" << getEnthalpy(298.15) << "\tJ/kg" << std::endl;
     output_stream << "Heat Conductivity\t:\t" << getThermalConductivity(298.15) << "\tW/m" << std::endl;
 }
 

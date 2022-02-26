@@ -9,7 +9,7 @@
 
 #define SHARPNESS_COEFFICIENT_AL 100.0
 
-Enthalpy<long double> internal_energy_solid_Al(
+Enthalpy<long double> enthalpy_solid_Al(
     28.08920,
    -5.414849,
     8.560423,
@@ -18,7 +18,7 @@ Enthalpy<long double> internal_energy_solid_Al(
    -9.147187
 );
 
-Enthalpy<long double> internal_energy_liquid_Al(
+Enthalpy<long double> enthalpy_liquid_Al(
     31.75104,
     3.935826E-8,
    -1.786515E-8,
@@ -33,7 +33,7 @@ ThermalConductivityQuadraticPolynomial<long double> thermal_conductivity_liquid_
 
 Phase<long double> solid_Al(
     2700.0,
-    internal_energy_solid_Al,
+    enthalpy_solid_Al,
     thermal_conductivity_solid_Al,
     273.0,
     933.47,
@@ -42,7 +42,7 @@ Phase<long double> solid_Al(
 
 Phase<long double> liquid_Al(
     2375.0,
-    internal_energy_liquid_Al,
+    enthalpy_liquid_Al,
     thermal_conductivity_liquid_Al,
     933.47,
     INFINITY,
