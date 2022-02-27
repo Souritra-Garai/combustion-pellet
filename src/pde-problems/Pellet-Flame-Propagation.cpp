@@ -16,7 +16,7 @@
 
 #define STEFAN_BOLTZMANN_CONSTANT 5.670374419E-8 // W / m2 - K4
 
-// #include <iostream>
+#include <iostream>
 
 /******************************************************************************************************************/
 // Instantiating static member variables of PelletFlamePropagation class
@@ -279,12 +279,13 @@ LinearExpression<real_t> PelletFlamePropagation<real_t>::calcTransientTerm(size_
     expression.coefficient =
 		this->_degassing_fluid_volume_fractions * this->_degassing_fluid->getDensity(_temperature_array[i]) * this->_degassing_fluid->getCp(_temperature_array[i]) / _delta_t +
 		this->_overall_particle_density * _particles_array[i].getHeatCapacity(_temperature_array[i]) / _delta_t;
-    // Instantiate \f$ \alpha_{0,j}^n \f$ and initialize with 0
+    // Initialize \f$ \alpha_{0,j}^n \f$ and initialize with 0
     expression.constant = 0.0;
 
     // If the grid point is within the reaction zone, only then activate the reaction term
     if (inReactionZone(i))
     {
+		// std::cout << "Inside Reaction Zone" <<std::endl;
         // Evolve the particles used for determining change in enthalpy at constant and
         // raised temperatures. This must be done before calling 
         evolveParticleForEnthalpyDerivative(i);
@@ -302,6 +303,8 @@ LinearExpression<real_t> PelletFlamePropagation<real_t>::calcTransientTerm(size_
         expression.constant += this->_overall_particle_density * (
 			(1 - _gamma) * (_particles_array[i].getEnthalpy(_temperature_array[i]) - _prev_enthalpy_particle[i]) / _delta_t +
 			_gamma  * getParticleEnthalpyTimeDerivative(i));
+
+		// std::cout << expression.constant << '\t' << expression.coefficient << std::endl;
     }
     
     // Return the linearized expression for transient term
