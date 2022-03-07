@@ -413,6 +413,8 @@ void PelletFlamePropagation<real_t>::updateParticlesState()
             }
 
 			_thermal_conductivity[i] = this->getThermalConductivity(_particles_array + i, _temperature_array[i]);
+			
+			// std::cout << "Thermal Conductivity" << _thermal_conductivity[i] << std::endl;
         }
 
 	_thermal_conductivity[0]	= this->getThermalConductivity(_particles_array + 1, 		_temperature_array[0]);

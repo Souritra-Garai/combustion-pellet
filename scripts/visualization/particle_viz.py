@@ -41,7 +41,7 @@ class SphericalDiffusion3d :
 
     def setUpPlot(self, axes, colour) :
 
-        self.__mpl_objs, = axes.plot([], [], [], "o", markersize=0.5, c = colour)
+        self.__mpl_objs, = axes.plot([], [], [], "o", markersize=0.15, c = colour)
 
         return self.__mpl_objs,
 
@@ -56,7 +56,7 @@ class SphericalDiffusion3d :
 
     def getPlotLims(self, extension_factor = 1.2) :
 
-        return [- extension_factor * self.__radial_coordinates[-1], extension_factor * self.__radial_coordinates[-1]]
+        return np.array([- extension_factor * self.__radial_coordinates[-1], extension_factor * self.__radial_coordinates[-1]])
 
 class ParticleDiffusion3D :
 
@@ -89,8 +89,8 @@ class ParticleDiffusion3D :
 
         mpl_objs = []
 
-        mpl_objs.extend(self.__spherical_diffusion_A.setUpPlot(axes, 'red'))
-        mpl_objs.extend(self.__spherical_diffusion_B.setUpPlot(axes, 'blue'))
+        mpl_objs.extend(self.__spherical_diffusion_A.setUpPlot(axes, 'yellow'))
+        mpl_objs.extend(self.__spherical_diffusion_B.setUpPlot(axes, 'red'))
 
         return mpl_objs
 
@@ -122,17 +122,17 @@ if __name__ == '__main__' :
 
 	from scripts.utilities.solution_folder import getlatestfolder, getpath
 
-	particle = ParticleDiffusion3D(getlatestfolder(), 10000, [0,0,0], 1E6)
+	particle = ParticleDiffusion3D(getlatestfolder() + '/333', 10000, [0,0,0], 1E6)
 
-	fig = plt.figure(figsize=[10,10])
+	fig = plt.figure(figsize=[8,8])
 	fig.suptitle('Diffusion in Ni-Coated Al Particle', fontweight='bold')
 
 	ax = fig.add_subplot(1, 1, 1, projection='3d')
 
-	e = 1.1
+	e = 0.75
 
 	ax.set_xlim(particle.getPlotLims(e))
-	ax.set_ylim(particle.getPlotLims(e))
+	ax.set_ylim(particle.getPlotLims(e)*1.25)
 	ax.set_zlim(particle.getPlotLims(e))
 
 	ax.set_xlabel(r'x $\left(\mu m\right)$')
@@ -141,8 +141,8 @@ if __name__ == '__main__' :
 
 	particle.setUpPlot(ax)
 
-	ax.plot([],[],[], 'o', markersize=10, c='blue', label='Nickel')
-	ax.plot([],[],[], 'o', markersize=10, c='red', label='Aluminium')
+	ax.plot([],[],[], 'o', markersize=5, c='red', label='Nickel')
+	ax.plot([],[],[], 'o', markersize=5, c='yellow', label='Aluminium')
 	ax.legend()
 
 	ax.set_axis_off()
@@ -156,10 +156,15 @@ if __name__ == '__main__' :
 
 		return particle.update(i)
 
-	my_anim = FuncAnimation(fig, update, np.arange(start=0, stop=1000, step=10), blit=False, interval = 1)
+	ax.view_init(azim=0, elev=0)
 
-	plt.show()
+	my_anim = FuncAnimation(fig, update, np.arange(start=0, stop=100, step=1), blit=False, interval = 10)
 
-	# writervideo = FFMpegWriter(fps=60)
-	# my_anim.save('Core_Shell_Particle_Diffusion.mp4', writer=writervideo)
-	# plt.close()
+	# plt.show()
+
+	fig.set_size_inches(4, 4)
+	fig.set_dpi(300)
+
+	writervideo = FFMpegWriter(fps=30)
+	my_anim.save('Core_Shell_Particle_Diffusion_3.mp4', writer=writervideo)
+	plt.close()
