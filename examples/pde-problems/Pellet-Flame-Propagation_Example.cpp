@@ -44,12 +44,12 @@ int main(int argc, char const *argv[])
     PelletFlamePropagation<long double>::setTemperatureParameters(933, 298);
     PelletFlamePropagation<long double>::setDegassingFluid(Argon);
 
-    PelletFlamePropagation<long double>::setGridSize(1001);
-    PelletFlamePropagation<long double>::setTimeStep(0.000001);
-    PelletFlamePropagation<long double>::setInfinitesimalChangeTemperature(0.001);
+    PelletFlamePropagation<long double>::setGridSize(101);
+    PelletFlamePropagation<long double>::setTimeStep(0.0001);
+    PelletFlamePropagation<long double>::setInfinitesimalChangeTemperature(1);
     PelletFlamePropagation<long double>::setInitialIgnitionParameters(1500, 0.1 * pellet_length);
 
-    PelletFlamePropagation<long double> combustion_pellet(0.9);
+    PelletFlamePropagation<long double> combustion_pellet(0.7);
     combustion_pellet.setDiffusivityModel(Alawieh_diffusivity);
 
     combustion_pellet.initializePellet();
@@ -80,12 +80,11 @@ int main(int argc, char const *argv[])
             combustion_pellet.setUpEquations();
             combustion_pellet.solveEquations();
 
-            combustion_pellet.printTemperatureProfile(temperature_file, ',');
-
             if (__iter % 1000 == 0)
             {
                 std::cout << "Iteration # " << __iter << std::endl;
                 // printState(__iter, combustion_pellet);
+	            combustion_pellet.printTemperatureProfile(temperature_file, ',');
             }
 
             __iter++;

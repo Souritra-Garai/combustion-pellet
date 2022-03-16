@@ -95,7 +95,7 @@ real_t PackedPellet<real_t>::calcOverallParticleDensity(real_t particle_volume_f
     // This assumes the static members of the CoreShellCombustionParticle class
     // have been initialized
 
-    return particle_volume_fractions  * CoreShellCombustionParticle<real_t>().getDensity(298.15);
+    return particle_volume_fractions * CoreShellCombustionParticle<real_t>().getDensity(298.15);
 }
 
 /*****************************************************************************************************/
