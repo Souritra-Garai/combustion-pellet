@@ -6,7 +6,7 @@ class TridiagonalMatrix
 {
 	private:
 
-		unsigned int _n;
+		const unsigned int _n;
 
 		real_t * _array;
 

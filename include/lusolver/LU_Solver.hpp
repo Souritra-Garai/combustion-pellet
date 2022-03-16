@@ -1,30 +1,24 @@
 #ifndef __LU_SOLVER__
 #define __LU_SOLVER__
 
+#include "lusolver/Tridiagonal_Matrix.hpp"
+
 template<typename real_t>
 class LUSolver
 {
 	private:
 
 		// size of x vector for the linear algebra problem A.x = b
-		const unsigned int N;
+		const unsigned int _n;
 
-		// pointer to array of real type numbers representing 
-		// the main diagonal of the tridiagonal matrix a_(i,i)
-		real_t *A_matrix_diagonal;
-		// the immediate upper diagonal of the tridiagonal matrix a_(i,i+1)
-		// Entry at index N-1 is insignificant
-		real_t *A_matrix_diagonal_plus_1;
-		// the immediate lower diagonal of the tridiagonal matrix a_(i,i-1)
-		// Entry at index 0 is insignificant
-		real_t *A_matrix_diagonal_less_1;
+		TridiagonalMatrix<real_t> _A;
 
 		// pointer to array of real type numbers representing
 		// constant vector b in the matrix equation
 		real_t *b;
 
 		// helper function to decompose the A matrix in Upper and Lower matrices
-		void LU_Decomposition();
+		void LU_DecompositionAndForwardSubstitution();
 
 	public:
 

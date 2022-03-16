@@ -3,10 +3,8 @@
 #include <iostream>
 
 template<typename real_t>
-TridiagonalMatrix<real_t>::TridiagonalMatrix(unsigned int n)
+TridiagonalMatrix<real_t>::TridiagonalMatrix(unsigned int n) : _n(n)
 {
-	_n = n;
-	
 	_array = new real_t[3*n - 2];
 }
 

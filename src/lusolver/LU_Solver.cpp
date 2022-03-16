@@ -1,34 +1,17 @@
 #include "lusolver/LU_Solver.hpp"
 
-// Required for the printf function
-#include <stdio.h>
+#include <iostream>
 
 template<typename real_t>
-LUSolver<real_t>::LUSolver(unsigned int n) : N(n)
+LUSolver<real_t>::LUSolver(unsigned int n) : _n(n), _A(n)
 {
-	A_matrix_diagonal = new real_t[N];
-	A_matrix_diagonal_plus_1 = new real_t[N];
-	A_matrix_diagonal_less_1 = new real_t[N];
-
-	// Upper_Matrix_Diagonal = new real_t[N];
-	// Upper_Matrix_Diagonal_plus_1 = new real_t[N];
-
-	b = new real_t[N];
-	// d = new real_t[N];
+	b = new real_t[_n];
 }
 
 template<typename real_t>
 LUSolver<real_t>::~LUSolver()
 {
-	delete [] A_matrix_diagonal;
-	delete [] A_matrix_diagonal_less_1;
-	delete [] A_matrix_diagonal_plus_1;
-
-	// delete [] Upper_Matrix_Diagonal;
-	// delete [] Upper_Matrix_Diagonal_plus_1;
-
 	delete [] b;
-	// delete [] d;
 }
 
 template<typename real_t>
@@ -42,11 +25,11 @@ void LUSolver<real_t>::setEquation(
 	// \f$ e x_{i-1} + f x_i + g x_{i+1} = b \f$
 
 	// Set \f$ a_{i,i-1} \f$ to e_val
-    A_matrix_diagonal_less_1[i] = e_val;
+    _A.setElement(i, i-1, e_val);
     // Set \f$ a_{i,i} \f$ to f_val
-    A_matrix_diagonal[i] = f_val;
+    _A.setElement(i, i,   f_val);
     // Set \f$ a_{i,i+1} \f$ to g_val
-    A_matrix_diagonal_plus_1[i] = g_val;
+    _A.setElement(i, i+1, g_val);
 
     // Set the constant
     b[i] = b_val;
@@ -61,9 +44,9 @@ void LUSolver<real_t>::setEquationFirstRow(
     // \f$ f x_i + g x_{i+1} = b \f$
 
     // Set \f$ a_{i,i} \f$ to f_val
-    A_matrix_diagonal[0] = f_val;
+    _A.setElement(0, 0, f_val);
     // Set \f$ a_{i,i+1} \f$ to g_val
-    A_matrix_diagonal_plus_1[0] = g_val;
+    _A.setElement(0, 1, g_val);
 
     // Set the constant
     b[0] = b_val;
@@ -78,71 +61,46 @@ void LUSolver<real_t>::setEquationLastRow(
     // \f$ e x_{i-1} f x_i = b \f$
 
     // Set \f$ a_{i,i-1} \f$ to e_val
-    A_matrix_diagonal_less_1[N-1] = e_val;
+    _A.setElement(_n-1, _n-2, e_val);
     // Set \f$ a_{i,i} \f$ to f_val
-    A_matrix_diagonal[N-1] = f_val;
+    _A.setElement(_n-1, _n-1, f_val);
 
     // Set the constant
-    b[N-1] = b_val;
+    b[_n-1] = b_val;
 }
 
 template<typename real_t>
 void LUSolver<real_t>::printMatrixEquation()
 {
-    printf("Matrix Eqn A.x = b\n");
-    printf("\nA_{%d \\times %d}\n", N, N);
-    // Print \f$ A \f$ matrix
-    
-	printf("%LE\t%LE\t",
-		(long double) A_matrix_diagonal[0],
-		(long double) A_matrix_diagonal_plus_1[0]);
-	for (int i = 2; i < N; i++) printf("0\t");
-	printf("\n");
+    std::cout << "Matrix Eqn A.x = b" << std::endl;
 	
-	for (int i = 1; i < N-1; i++)
-	{
-		for (int j = 0; j < i-1; j++) printf("0\t");
+	std::cout << std::endl;
+    
+	std::cout << "A\t" << _n << " x " << _n << std::endl;    
+	_A.printMatrix();
 
-		printf("%LE\t%LE\t%LE\t",
-			(long double) A_matrix_diagonal_less_1[i],
-			(long double) A_matrix_diagonal[i],
-			(long double) A_matrix_diagonal_plus_1[i]
-		);
+	std::cout << std::endl;
 
-		for (int j = i+2; j < N; j++) printf("0\t");
-
-		printf("\n");
-	}
-
-	for (int i = 0; i < N-2; i++) printf("0\t");
-	printf("%LE\t%LE\t",
-		(long double) A_matrix_diagonal_less_1[N-1],
-		(long double) A_matrix_diagonal[N-1]);
-	printf("\n");
-
-    printf("\nb_{%d \\times 1}\n", N);
-    // Print \f$ b \f$ vector
-    for (int k = 0; k < N; k++) printf("%LE\n", (long double) b[k]);
+    std::cout << "b\t" << _n << " x 1" << std::endl;
+    for (int k = 0; k < _n; k++) std::cout << b[k] << std::endl;
 }
 
 template<typename real_t>
-void LUSolver<real_t>::LU_Decomposition()
+void LUSolver<real_t>::LU_DecompositionAndForwardSubstitution()
 {
-	// Upper_Matrix_Diagonal[0] = A_matrix_diagonal[0];
-    // Upper_Matrix_Diagonal_plus_1[0] = A_matrix_diagonal_plus_1[0];
-
-	// d[0] = b[0];
-
 	real_t Lower_Matrix_Diagonal_less_1;
     
-    for (int i=1; i<N; i++)
+    for (int i=1; i<_n; i++)
     {
-        Lower_Matrix_Diagonal_less_1 = A_matrix_diagonal_less_1[i] / A_matrix_diagonal[i-1];
+		// Set l_{i,i-1} = a_{i,i-1} / u_{i-1,i-1}
+        Lower_Matrix_Diagonal_less_1 = _A.getElement(i, i-1) / _A.getElement(i-1, i-1);
 
-        A_matrix_diagonal[i] -= A_matrix_diagonal_plus_1[i-1] * Lower_Matrix_Diagonal_less_1;
-
-        // Upper_Matrix_Diagonal_plus_1[i] = A_matrix_diagonal_plus_1[i];
-
+		// Set u_{i,i} = a_{i,i} - a_{i-1,i} * l_(i,i-1)
+        _A.setElement(i, i,
+			_A.getElement(i, i) - _A.getElement(i-1, i) * Lower_Matrix_Diagonal_less_1
+		);
+		
+		// Set d_{i} = b_{i} - d_{i-1} * l_{i,i-1}
 		b[i] -= b[i-1] * Lower_Matrix_Diagonal_less_1;
     }
 }
@@ -150,13 +108,16 @@ void LUSolver<real_t>::LU_Decomposition()
 template<typename real_t>
 void LUSolver<real_t>::getSolution(real_t *x)
 {
-	LU_Decomposition();
+	LU_DecompositionAndForwardSubstitution();
 
-	x[N-1] = b[N-1] / A_matrix_diagonal[N-1];
+	// Backward substitution
+	// Last element is simply x_{n-1} = d_{n-1} / U_{n-1, n-1}
+	x[_n-1] = b[_n-1] / _A.getElement(_n-1, _n-1);
 
-    for (int i=N-2; i>=0; i--)
+    for (int i=_n-2; i>=0; i--)
 
-        x[i] = ( b[i] - A_matrix_diagonal_plus_1[i]*x[i+1] ) / A_matrix_diagonal[i];
+		// Set x_{i} = ( d_{i} - U_{i,i+1} * x_{i+1} ) / U_{i,i}
+        x[i] = ( b[i] - _A.getElement(i, i+1) * x[i+1] ) / _A.getElement(i, i);
 }
 
 template class LUSolver<long double>;

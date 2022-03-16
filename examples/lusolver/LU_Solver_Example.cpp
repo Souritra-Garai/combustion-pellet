@@ -12,7 +12,7 @@
 #include "qrsolver/Q_Matrix.hpp"
 #include "lusolver/LU_Solver.hpp"
 
-#include <stdio.h>
+#include <iostream>
 #include <stdlib.h>
 #include <time.h>
 
@@ -20,9 +20,9 @@ int main(int argc, char const *argv[])
 {
     const unsigned int N = 10000;
 
-    QMatrix<long double> A(N);
-
     long double x[N], b[N];
+
+    TridiagonalMatrix<long double> A(N);
 
     srand(time(0));
 
@@ -61,11 +61,7 @@ int main(int argc, char const *argv[])
 
     my_solver.setEquationLastRow(A.getElement(N-1, N-2), A.getElement(N-1, N-1), b[N-1]);
 
-    // my_solver.printMatrixEquation();
-
-    // printf("\n");
-
-    // my_solver.printQRMatrices();
+	// my_solver.printMatrixEquation();
 
     long double x_soln[N];
 
@@ -75,7 +71,7 @@ int main(int argc, char const *argv[])
 
     for (int i = 0; i < N; i++) MSE += (x[i] - x_soln[i]) * (x[i] - x_soln[i]);
 
-    printf("\nMSE : %Lf\n", MSE);
+    std::cout << "\nMSE : " << MSE << std::endl;
 
     return 0;
 }
