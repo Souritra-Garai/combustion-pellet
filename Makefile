@@ -205,6 +205,12 @@ $(BUILDDIR)/$(LUSDIR)/LU_Solver.o : $(SRCDIR)/$(LUSDIR)/LU_Solver.cpp $(INCDIR)/
 	@echo "Compiling LU_Solver...";
 	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/$(LUSDIR)/LU_Solver.cpp -o $(BUILDDIR)/$(LUSDIR)/LU_Solver.o
 
+# Building Tridiagonal Matrix
+$(BUILDDIR)/$(LUSDIR)/Tridiagonal_Matrix.o : $(SRCDIR)/$(LUSDIR)/Tridiagonal_Matrix.cpp $(INCDIR)/$(LUSDIR)/Tridiagonal_Matrix.hpp
+	@mkdir -p $(BUILDDIR)/$(LUSDIR);
+	@echo "Compiling Tridiagonal_Matrix...";
+	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/$(LUSDIR)/Tridiagonal_Matrix.cpp -o $(BUILDDIR)/$(LUSDIR)/Tridiagonal_Matrix.o
+
 # Builds the example for LU Solver
 LU_Solver_Example : $(BUILDDIR)/$(LUSDIR)/LU_Solver_Example.o $(LUSOBJS) $(BUILDDIR)/$(QRSDIR)/Q_Matrix.o
 	@mkdir -p $(BINDIR)/$(LUSDIR);
@@ -215,6 +221,17 @@ $(BUILDDIR)/$(LUSDIR)/LU_Solver_Example.o : $(EXMDIR)/$(LUSDIR)/LU_Solver_Exampl
 	@mkdir -p $(BUILDDIR)/$(LUSDIR);
 	@echo "Compiling LU_Solver_Example...";
 	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(LUSDIR)/LU_Solver_Example.cpp -o $(BUILDDIR)/$(LUSDIR)/LU_Solver_Example.o
+
+# Builds the example for Tridiagonal Matrix
+Tridiagonal_Matrix_Example : $(BUILDDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example.o $(BUILDDIR)/$(LUSDIR)/Tridiagonal_Matrix.o
+	@mkdir -p $(BINDIR)/$(LUSDIR);
+	@echo "Building Tridiagonal_Matrix_Example...";
+	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example.o $(BUILDDIR)/$(LUSDIR)/Tridiagonal_Matrix.o -o $(BINDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example
+
+$(BUILDDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example.o : $(EXMDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example.cpp $(INCDIR)/$(LUSDIR)/Tridiagonal_Matrix.hpp
+	@mkdir -p $(BUILDDIR)/$(LUSDIR);
+	@echo "Compiling Tridiagonal_Matrix_Example...";
+	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example.cpp -o $(BUILDDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example.o
 
 # ----------------------------------------------------------------------------------------------------------
 # Building QR Factorization solver

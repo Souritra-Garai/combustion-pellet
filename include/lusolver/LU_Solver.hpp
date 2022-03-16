@@ -9,22 +9,19 @@ class LUSolver
 		// size of x vector for the linear algebra problem A.x = b
 		const unsigned int N;
 
+		// pointer to array of real type numbers representing 
+		// the main diagonal of the tridiagonal matrix a_(i,i)
 		real_t *A_matrix_diagonal;
+		// the immediate upper diagonal of the tridiagonal matrix a_(i,i+1)
+		// Entry at index N-1 is insignificant
 		real_t *A_matrix_diagonal_plus_1;
+		// the immediate lower diagonal of the tridiagonal matrix a_(i,i-1)
+		// Entry at index 0 is insignificant
 		real_t *A_matrix_diagonal_less_1;
 
-		// vectors / arrays carrying values of diagonals 
-		// of decomposed upper and lower matrices
-		
-		// // Upper matrix
-		// // Main Diagonal elements - total size n
-		// real_t *Upper_Matrix_Diagonal;
-		// // Diagonal immediately to right of main diagonal
-		// // total size n; Upper_Matrix_Diagonal_plus_1[n-1] is ignored
-		// real_t *Upper_Matrix_Diagonal_plus_1;
-
+		// pointer to array of real type numbers representing
+		// constant vector b in the matrix equation
 		real_t *b;
-		// real_t *d;
 
 		// helper function to decompose the A matrix in Upper and Lower matrices
 		void LU_Decomposition();
