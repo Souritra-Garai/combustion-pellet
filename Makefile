@@ -1,5 +1,5 @@
 # Compiler
-CC := g++
+CC := nvcc
 
 # Building this file is the main objective
 TARGET := bin/simulate_pellet_combustion
@@ -18,7 +18,7 @@ PDEDIR := pde-problems
 UTILDIR := utilities
 
 # Finding all source and object files
-SRCEXT := cpp
+SRCEXT := cu
 SOURCES := $(shell find $(SRCDIR) $(LIBDIR) -type f -name *.$(SRCEXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 
@@ -40,7 +40,7 @@ UTILOBJS := $(patsubst $(SRCDIR)/%, $(BUILDDIR)/%, $(UTILSRCS:.$(SRCEXT)=.o))
 SUBSTANCE_HPP := $(INCDIR)/$(TRPDIR)/Substance.hpp $(INCDIR)/$(TRPDIR)/IdealGas.hpp $(INCDIR)/$(TRPDIR)/Phase.hpp $(INCDIR)/$(TRPDIR)/Enthalpy.hpp $(INCDIR)/$(TRPDIR)/Thermal_Conductivity.hpp $(INCDIR)/substances/Argon.hpp $(INCDIR)/substances/Aluminium.hpp $(INCDIR)/substances/Nickel.hpp $(INCDIR)/substances/NickelAluminide.hpp
 
 # Flags required for compiler
-CFLAGS := -fopenmp -O2
+CFLAGS := # -fopenmp -O2
 LIB := -lm
 INC := -I $(INCDIR)
 
@@ -199,39 +199,27 @@ $(BUILDDIR)/$(TRPDIR)/Packed-Pellet_Example.o : $(EXMDIR)/$(TRPDIR)/Packed-Pelle
 	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(TRPDIR)/Packed-Pellet_Example.cpp -o $(BUILDDIR)/$(TRPDIR)/Packed-Pellet_Example.o
 
 # ----------------------------------------------------------------------------------------------------------
-# Building LU Decomposition solver
-$(BUILDDIR)/$(LUSDIR)/LU_Solver.o : $(SRCDIR)/$(LUSDIR)/LU_Solver.cpp $(INCDIR)/$(LUSDIR)/LU_Solver.hpp
-	@mkdir -p $(BUILDDIR)/$(LUSDIR);
-	@echo "Compiling LU_Solver...";
-	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/$(LUSDIR)/LU_Solver.cpp -o $(BUILDDIR)/$(LUSDIR)/LU_Solver.o
-
-# Building Tridiagonal Matrix
-$(BUILDDIR)/$(LUSDIR)/Tridiagonal_Matrix.o : $(SRCDIR)/$(LUSDIR)/Tridiagonal_Matrix.cpp $(INCDIR)/$(LUSDIR)/Tridiagonal_Matrix.hpp
-	@mkdir -p $(BUILDDIR)/$(LUSDIR);
-	@echo "Compiling Tridiagonal_Matrix...";
-	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/$(LUSDIR)/Tridiagonal_Matrix.cpp -o $(BUILDDIR)/$(LUSDIR)/Tridiagonal_Matrix.o
-
 # Builds the example for LU Solver
-LU_Solver_Example : $(BUILDDIR)/$(LUSDIR)/LU_Solver_Example.o $(LUSOBJS) $(BUILDDIR)/$(QRSDIR)/Q_Matrix.o
+LU_Solver_Example : $(BUILDDIR)/$(LUSDIR)/LU_Solver_Example.o
 	@mkdir -p $(BINDIR)/$(LUSDIR);
 	@echo "Building LU_Solver_Example...";
-	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(LUSDIR)/LU_Solver_Example.o $(LUSOBJS) $(BUILDDIR)/$(QRSDIR)/Q_Matrix.o -o $(BINDIR)/$(LUSDIR)/LU_Solver_Example
+	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(LUSDIR)/LU_Solver_Example.o $(LUSOBJS) -o $(BINDIR)/$(LUSDIR)/LU_Solver_Example
 
-$(BUILDDIR)/$(LUSDIR)/LU_Solver_Example.o : $(EXMDIR)/$(LUSDIR)/LU_Solver_Example.cpp $(INCDIR)/$(LUSDIR)/LU_Solver.hpp $(INCDIR)/$(QRSDIR)/Q_Matrix.hpp
+$(BUILDDIR)/$(LUSDIR)/LU_Solver_Example.o : $(EXMDIR)/$(LUSDIR)/LU_Solver_Example.cu $(INCDIR)/$(LUSDIR)/LU_Solver.hpp
 	@mkdir -p $(BUILDDIR)/$(LUSDIR);
 	@echo "Compiling LU_Solver_Example...";
-	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(LUSDIR)/LU_Solver_Example.cpp -o $(BUILDDIR)/$(LUSDIR)/LU_Solver_Example.o
+	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(LUSDIR)/LU_Solver_Example.cu -o $(BUILDDIR)/$(LUSDIR)/LU_Solver_Example.o
 
 # Builds the example for Tridiagonal Matrix
-Tridiagonal_Matrix_Example : $(BUILDDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example.o $(BUILDDIR)/$(LUSDIR)/Tridiagonal_Matrix.o
+Tridiagonal_Matrix_Example : $(BUILDDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example.o 
 	@mkdir -p $(BINDIR)/$(LUSDIR);
 	@echo "Building Tridiagonal_Matrix_Example...";
-	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example.o $(BUILDDIR)/$(LUSDIR)/Tridiagonal_Matrix.o -o $(BINDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example
+	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example.o -o $(BINDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example
 
-$(BUILDDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example.o : $(EXMDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example.cpp $(INCDIR)/$(LUSDIR)/Tridiagonal_Matrix.hpp
+$(BUILDDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example.o : $(EXMDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example.cu $(INCDIR)/$(LUSDIR)/Tridiagonal_Matrix.hpp
 	@mkdir -p $(BUILDDIR)/$(LUSDIR);
 	@echo "Compiling Tridiagonal_Matrix_Example...";
-	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example.cpp -o $(BUILDDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example.o
+	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example.cu -o $(BUILDDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example.o
 
 # ----------------------------------------------------------------------------------------------------------
 # Building QR Factorization solver
