@@ -205,7 +205,7 @@ LU_Solver_Example : $(BUILDDIR)/$(LUSDIR)/LU_Solver_Example.o
 	@echo "Building LU_Solver_Example...";
 	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(LUSDIR)/LU_Solver_Example.o $(LUSOBJS) -o $(BINDIR)/$(LUSDIR)/LU_Solver_Example
 
-$(BUILDDIR)/$(LUSDIR)/LU_Solver_Example.o : $(EXMDIR)/$(LUSDIR)/LU_Solver_Example.cu $(INCDIR)/$(LUSDIR)/LU_Solver.hpp
+$(BUILDDIR)/$(LUSDIR)/LU_Solver_Example.o : $(EXMDIR)/$(LUSDIR)/LU_Solver_Example.cu $(INCDIR)/$(LUSDIR)/LU_Solver.cuh
 	@mkdir -p $(BUILDDIR)/$(LUSDIR);
 	@echo "Compiling LU_Solver_Example...";
 	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(LUSDIR)/LU_Solver_Example.cu -o $(BUILDDIR)/$(LUSDIR)/LU_Solver_Example.o
@@ -216,7 +216,7 @@ Tridiagonal_Matrix_Example : $(BUILDDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example.o
 	@echo "Building Tridiagonal_Matrix_Example...";
 	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example.o -o $(BINDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example
 
-$(BUILDDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example.o : $(EXMDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example.cu $(INCDIR)/$(LUSDIR)/Tridiagonal_Matrix.hpp
+$(BUILDDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example.o : $(EXMDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example.cu $(INCDIR)/$(LUSDIR)/Tridiagonal_Matrix.cuh
 	@mkdir -p $(BUILDDIR)/$(LUSDIR);
 	@echo "Compiling Tridiagonal_Matrix_Example...";
 	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example.cu -o $(BUILDDIR)/$(LUSDIR)/Tridiagonal_Matrix_Example.o
