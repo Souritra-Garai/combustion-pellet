@@ -40,7 +40,7 @@ template<typename real_t> real_t PackedPellet<real_t>::_ambient_temperature = 29
 // Ignition temperature of the energetic particles in K
 template<typename real_t> real_t PackedPellet<real_t>::_ignition_temperature = 298.0;
 
-// Substance filling the voids in the packed pellet
+// Species filling the voids in the packed pellet
 template<typename real_t> IdealGas<real_t> * PackedPellet<real_t>::_degassing_fluid;
 
 /*****************************************************************************************************/
@@ -84,7 +84,7 @@ void PackedPellet<real_t>::setTemperatureParameters(
 template<typename real_t>
 void PackedPellet<real_t>::setDegassingFluid(IdealGas<real_t> &degassing_fluid)
 {
-    // Set static member variable - Substance filling the voids of the pellet
+    // Set static member variable - Species filling the voids of the pellet
     _degassing_fluid = &degassing_fluid;
 }
 

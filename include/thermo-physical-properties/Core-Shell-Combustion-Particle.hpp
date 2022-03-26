@@ -12,7 +12,7 @@
 #ifndef __CORE_SHELL_COMBUSTION_PARTICLE__
 #define __CORE_SHELL_COMBUSTION_PARTICLE__
 
-// Required for Substance class
+// Required for Species class
 #include "thermo-physical-properties/Substance.hpp"
 
 // Required for << operator for printing to file / screen
@@ -48,20 +48,20 @@ class CoreShellCombustionParticle
         real_t _mass_fraction_product_material;
 
         /**
-         * @brief Substance present in the core of 
+         * @brief Species present in the core of 
          * the core-shell particle
          */
-        static Substance<real_t> *_core_material;
+        static Species<real_t> *_core_material;
         /**
-         * @brief Substance present in the shell of
+         * @brief Species present in the shell of
          * the core-shell particle
          */
-        static Substance<real_t> *_shell_material;
+        static Species<real_t> *_shell_material;
         /**
-         * @brief Substance formed upon reaction of
+         * @brief Species formed upon reaction of
          * the core and shell substances
          */
-        static Substance<real_t> *_product_material;
+        static Species<real_t> *_product_material;
 
         /**
          * @brief Overall radius of the Core-Shell Particle
@@ -82,16 +82,16 @@ class CoreShellCombustionParticle
         /**
          * @brief Set up Core Shell Combustion Particle 
          * 
-         * @param core_material Substance that forms the core of the core-shell particle
-         * @param shell_material Substance that forms the shell of the core-shell particle
-         * @param product_material Substance that is produced upon reaction of the core and shell materials
+         * @param core_material Species that forms the core of the core-shell particle
+         * @param shell_material Species that forms the shell of the core-shell particle
+         * @param product_material Species that is produced upon reaction of the core and shell materials
          * @param overall_radius Overall radius of the core-shell particle in m
          * @param core_radius Radius of the core of the particle in m
          */
         static void setUpCoreShellCombustionParticle(
-            Substance<real_t> &core_material,
-            Substance<real_t> &shell_material,
-            Substance<real_t> &product_material,
+            Species<real_t> &core_material,
+            Species<real_t> &shell_material,
+            Species<real_t> &product_material,
             real_t overall_radius,
             real_t core_radius
         );
@@ -190,16 +190,16 @@ class CoreShellCombustionParticle
  * @brief Function to calculate mass of core shell type particle
  * 
  * @tparam real_t 
- * @param core_material Substance forming the core of the core shell particle
- * @param shell_material Substance forming the shell of the core shell particle
+ * @param core_material Species forming the core of the core shell particle
+ * @param shell_material Species forming the shell of the core shell particle
  * @param overall_radius Overall radius of the core shell particle
  * @param core_radius Radius of the core of the core sheel particle
  * @return real_t Mass of the core sheel particle
  */
 template<typename real_t>
 real_t calcMassCoreShellParticle(
-    Substance<real_t> core_material,
-    Substance<real_t> shell_material,
+    Species<real_t> core_material,
+    Species<real_t> shell_material,
     real_t overall_radius,
     real_t core_radius
 );

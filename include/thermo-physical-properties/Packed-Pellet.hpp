@@ -18,7 +18,7 @@
 
 // Required for IdealGas class
 #include "thermo-physical-properties/IdealGas.hpp"
-// Required for Substance class
+// Required for Species class
 #include "thermo-physical-properties/Substance.hpp"
 // Required for CoreShellCombustionParticle class
 #include "thermo-physical-properties/Core-Shell-Combustion-Particle.hpp"

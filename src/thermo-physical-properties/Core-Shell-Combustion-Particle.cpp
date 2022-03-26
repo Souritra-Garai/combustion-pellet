@@ -15,10 +15,10 @@
 #include <math.h>
 
 // Instantiate the static private members of the CoreShellCombustionParticle class
-// Creating the Substance members
-template<typename real_t> Substance<real_t> * CoreShellCombustionParticle<real_t>::_core_material;
-template<typename real_t> Substance<real_t> * CoreShellCombustionParticle<real_t>::_shell_material;
-template<typename real_t> Substance<real_t> * CoreShellCombustionParticle<real_t>::_product_material;
+// Creating the Species members
+template<typename real_t> Species<real_t> * CoreShellCombustionParticle<real_t>::_core_material;
+template<typename real_t> Species<real_t> * CoreShellCombustionParticle<real_t>::_shell_material;
+template<typename real_t> Species<real_t> * CoreShellCombustionParticle<real_t>::_product_material;
 // Creating the real_t members
 template<typename real_t> real_t CoreShellCombustionParticle<real_t>::_overall_radius = 0;
 template<typename real_t> real_t CoreShellCombustionParticle<real_t>::_core_radius    = 0;
@@ -27,14 +27,14 @@ template<typename real_t> real_t CoreShellCombustionParticle<real_t>::_mass = 0;
 // Set up the static members of the CoreShellCombustionParticle class
 template<typename real_t>
 void CoreShellCombustionParticle<real_t>::setUpCoreShellCombustionParticle(
-    Substance<real_t> &core_material,
-    Substance<real_t> &shell_material,
-    Substance<real_t> &product_material,
+    Species<real_t> &core_material,
+    Species<real_t> &shell_material,
+    Species<real_t> &product_material,
     real_t overall_radius,
     real_t core_radius
 ) {
     // Copy the substances to the private static members
-    // Copy constructor for Substance<real_t> is called
+    // Copy constructor for Species<real_t> is called
     _core_material    = &core_material;
     _shell_material   = &shell_material;
     _product_material = &product_material;
@@ -222,8 +222,8 @@ template class CoreShellCombustionParticle<long double>;
 
 template<typename real_t>
 real_t calcMassCoreShellParticle(
-    Substance<real_t> core_material,
-    Substance<real_t> shell_material,
+    Species<real_t> core_material,
+    Species<real_t> shell_material,
     real_t overall_radius,
     real_t core_radius
 ) {
@@ -235,24 +235,24 @@ real_t calcMassCoreShellParticle(
 
 template
 float calcMassCoreShellParticle(
-    Substance<float> core_material,
-    Substance<float> shell_material,
+    Species<float> core_material,
+    Species<float> shell_material,
     float overall_radius,
     float core_radius
 );
 
 template
 double calcMassCoreShellParticle(
-    Substance<double> core_material,
-    Substance<double> shell_material,
+    Species<double> core_material,
+    Species<double> shell_material,
     double overall_radius,
     double core_radius
 );
 
 template
 long double calcMassCoreShellParticle(
-    Substance<long double> core_material,
-    Substance<long double> shell_material,
+    Species<long double> core_material,
+    Species<long double> shell_material,
     long double overall_radius,
     long double core_radius
 );
