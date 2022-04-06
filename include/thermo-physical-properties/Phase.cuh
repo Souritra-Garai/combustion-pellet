@@ -19,12 +19,12 @@ class Phase
 
 		ThermalConductivity _thermal_conductivity;
 
-		__device__ __forceinline__ static double _getSigmoid(double x, double origin = 0, double scale = 0)
+		__device__ __host__ __forceinline__ static double _getSigmoid(double x, double origin = 0, double scale = 0)
 		{
 			return 1 / (1 + exp( - scale * (x - origin)));
 		}
 
-		__device__ __forceinline__ static double _getSigmoidDerivative(double x, double origin = 0, double scale = 0)
+		__device__ __host__ __forceinline__ static double _getSigmoidDerivative(double x, double origin = 0, double scale = 0)
 		{
 			double sigma = _getSigmoid(x, origin, scale);
 
@@ -33,7 +33,7 @@ class Phase
 
     public:
 
-		__host__ __device__ void initialize(
+		__host__ void initialize(
 			double density,
 			Enthalpy enthalpy,
 			ThermalConductivity thermal_conductivity,
@@ -52,7 +52,7 @@ class Phase
 			_sharpness_coefficient = sharpness_coefficient;
 		}
 
-		__device__ __forceinline__ double getDensity(double temperature) 
+		__device__ __host__ __forceinline__ double getDensity(double temperature) 
 		{
 			return _density * (
 				_getSigmoid(temperature, _temperature_lower_bound, _sharpness_coefficient) -
@@ -60,7 +60,7 @@ class Phase
 			);
 		}
 
-		__device__ __forceinline__ double getEnthalpy(double temperature)
+		__device__ __host__ __forceinline__ double getEnthalpy(double temperature)
 		{
 			return _enthalpy.getEnthalpy(temperature) * (
 				_getSigmoid(temperature, _temperature_lower_bound, _sharpness_coefficient) -
@@ -68,7 +68,7 @@ class Phase
 			);
 		}
 
-		__device__ __forceinline__ double getHeatCapacity(double temperature)
+		__device__ __host__ __forceinline__ double getHeatCapacity(double temperature)
 		{
 			return _enthalpy.getHeatCapacity(temperature) * (
 				_getSigmoid(temperature, _temperature_lower_bound, _sharpness_coefficient) -
@@ -79,7 +79,7 @@ class Phase
 			);
 		}
 
-		__device__ __forceinline__ double getThermalConductivity(double temperature)
+		__device__ __host__ __forceinline__ double getThermalConductivity(double temperature)
 		{
 			return _thermal_conductivity.getThermalConductivity(temperature) * (
 				_getSigmoid(temperature, _temperature_lower_bound, _sharpness_coefficient) -

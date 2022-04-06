@@ -12,7 +12,7 @@ __global__ void initializeCurandState(unsigned int n, double seed, curandState *
 	curand_init(seed, i, 0, curand_state_ptr + i);
 }
 
-__global__ void initializeMatrix(TridiagonalMatrix A, double *vector_ptr, curandState *curand_state_ptr)
+__global__ void initializeMatrix(TridiagonalMatrix::Matrix A, double *vector_ptr, curandState *curand_state_ptr)
 {
 	unsigned int i = threadIdx.x;
 
@@ -55,8 +55,8 @@ int main(int argc, char const *argv[])
 
 	cudaMalloc(&curand_states, n * sizeof(curandState));
 
-	TridiagonalMatrix matrix;
-	matrix.allocateMemory(n);
+	TridiagonalMatrix::Matrix matrix;
+	matrix.allocateMemoryFromHost(n);
 
 	initializeCurandState<<<1,n>>>(n, time(0), curand_states);
 
@@ -66,15 +66,17 @@ int main(int argc, char const *argv[])
 
 	cudaDeviceSynchronize();
 
-	multiplyTridiagonalMatrix<<<1,n>>>(matrix, x, b);
+	TridiagonalMatrix::multiply<<<1,n>>>(matrix, x, b);
 
-	matrix.printMatrix(std::cout);
+	cudaDeviceSynchronize();
+
+	matrix.print(std::cout);
 
 	cudaFree(x);
 	cudaFree(b);
 	cudaFree(curand_states);
 
-	matrix.deallocateMemory();
+	matrix.deallocateMemoryFromHost();
 
 	return 0;
 }

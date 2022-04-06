@@ -33,19 +33,21 @@ class Species
 			cudaFree(_phases);
 		}
 
-		__device__ __forceinline__ double getMolarMass()
+		__device__ __host__ __forceinline__ double getMolarMass()
 		{
 			return _molar_mass;
 		}
 		
-		__device__ double getDensity(double temperature)
+		__device__ __forceinline__ double getDensity(double temperature)
 		{
 			double density = 0;
 
-			for (unsigned int i = 0; i < _num_phases; i++)
-			{
-				density += _phases[i].getDensity(temperature);
-			}
+			#pragma unroll
+			
+				for (unsigned int i = 0; i < _num_phases; i++)
+				{
+					density += _phases[i].getDensity(temperature);
+				}
 
 			return density;
 		}
@@ -55,38 +57,44 @@ class Species
 			return getDensity(temperature) / getMolarMass();
 		}
 
-		__device__ double getHeatCapacity(double temperature)
+		__device__ __forceinline__ double getHeatCapacity(double temperature)
 		{
 			double heat_capacity = 0;
 
-			for (unsigned int i = 0; i < _num_phases; i++)
-			{
-				heat_capacity += _phases[i].getHeatCapacity(temperature);
-			}
+			#pragma unroll
+
+				for (unsigned int i = 0; i < _num_phases; i++)
+				{
+					heat_capacity += _phases[i].getHeatCapacity(temperature);
+				}
 
 			return heat_capacity / getMolarMass();
 		}
 
-		__device__ double getEnthalpy(double temperature)
+		__device__ __forceinline__ double getEnthalpy(double temperature)
 		{
 			double enthalpy = 0;
 
-			for (unsigned int i = 0; i < _num_phases; i++)
-			{
-				enthalpy += _phases[i].getEnthalpy(temperature);
-			}
+			#pragma unroll
+
+				for (unsigned int i = 0; i < _num_phases; i++)
+				{
+					enthalpy += _phases[i].getEnthalpy(temperature);
+				}
 
 			return enthalpy / getMolarMass();
 		}
 
-		__device__ double getThermalConductivity(double temperature)
+		__device__ __forceinline__ double getThermalConductivity(double temperature)
 		{ 
 			double heat_conductivity = 0;
 
-			for (unsigned int i = 0; i < _num_phases; i++)
-			{
-				heat_conductivity += _phases[i].getThermalConductivity(temperature);
-			}
+			#pragma unroll
+
+				for (unsigned int i = 0; i < _num_phases; i++)
+				{
+					heat_conductivity += _phases[i].getThermalConductivity(temperature);
+				}
 
 			return heat_conductivity;
 		}

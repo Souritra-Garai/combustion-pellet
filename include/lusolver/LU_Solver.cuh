@@ -8,22 +8,34 @@ class LUSolver
 {
 	public :
 
-		__host__ void allocateMemory(unsigned int n)
+		__host__ void allocateMemoryFromHost(size_t n)
 		{
-			_A_matrix.allocateMemory(n);
-
+			_A_matrix.allocateMemoryFromHost(n);
 			cudaMalloc(&_b_vector, n * sizeof(double));
 		}
 
-		__host__ void deallocateMemory()
+		__device__ void allocateMemoryFromDevice(size_t n)
 		{
-			_A_matrix.deallocateMemory();
+			printf("Line 19\n");
+			_A_matrix.allocateMemoryFromDevice(n);
+			printf("Line 21\n");
+			_b_vector = new double[n];
+		}
 
+		__host__ void deallocateMemoryFromHost()
+		{
+			_A_matrix.deallocateMemoryFromHost();
 			cudaFree(_b_vector);
 		}
 
+		__device__ void deallocateMemoryFromDevice()
+		{
+			_A_matrix.deallocateMemoryFromDevice();
+			delete [] _b_vector;
+		}
+
 		__device__ __forceinline__ void setEquation(
-			unsigned int i,
+			size_t i,
 			double e,
 			double f,
 			double g,
@@ -81,7 +93,7 @@ class LUSolver
 			backwardSubstitution(x);
 		}
 
-		__host__ __device__ __forceinline__ unsigned int getDim()
+		__host__ __device__ __forceinline__ size_t getDim()
 		{
 			return _A_matrix.getDim();
 		}
@@ -90,9 +102,7 @@ class LUSolver
 
 	private :
 
-		unsigned int _n;
-
-		TridiagonalMatrix _A_matrix;
+		TridiagonalMatrix::Matrix _A_matrix;
 
 		double *_b_vector;
 
@@ -100,7 +110,7 @@ class LUSolver
 		{
 			double lower_matrix_diagonal_less_1;
 
-			for (unsigned int i = 1U; i < _A_matrix.getDim(); i++)
+			for (size_t i = 1U; i < _A_matrix.getDim(); i++)
 			{
 				// Set l_{i,i-1} = a_{i,i-1} / u_{i-1,i-1}
 				lower_matrix_diagonal_less_1 = _A_matrix.getElement(i, i-1) / _A_matrix.getElement(i-1, i-1);
@@ -120,7 +130,7 @@ class LUSolver
 			// Last element is simply x_{n-1} = d_{n-1} / U_{n-1, n-1}
 			x_vector[getDim() - 1] = _b_vector[getDim() - 1] / _A_matrix.getElement(getDim() - 1, getDim() - 1);
 
-			for (unsigned int i = getDim() - 2; i > 0; i--)
+			for (size_t i = getDim() - 2; i > 0; i--)
 
 				// Set x_{i} = ( d_{i} - U_{i,i+1} * x_{i+1} ) / U_{i,i}
 				x_vector[i] = ( _b_vector[i] - _A_matrix.getElement(i, i+1) * x_vector[i+1] ) / _A_matrix.getElement(i, i);
@@ -133,19 +143,19 @@ __host__ void LUSolver::printMatrixEquation(std::ostream &output_stream)
 {
 	output_stream << "Matrix Eqn A.x = b\n\n";
     
-	output_stream << "A\t" << _n << " x " << _n << '\n';
+	output_stream << "A\t" << getDim() << " x " << getDim() << '\n';
 
-	_A_matrix.printMatrix(output_stream);
+	_A_matrix.print(output_stream);
 
 	output_stream << '\n';
 
-	output_stream << "b\t" << _n << " x 1\n";
+	output_stream << "b\t" << getDim() << " x 1\n";
 
-	double b[_n];
+	double b[getDim()];
 
-	cudaMemcpy(b, _b_vector, _n * sizeof(double), cudaMemcpyDeviceToHost);
+	cudaMemcpy(b, _b_vector, getDim() * sizeof(double), cudaMemcpyDeviceToHost);
 
-	for (unsigned int i = 0; i < _n; i++) output_stream << b[i] << '\n';
+	for (size_t i = 0; i < getDim(); i++) output_stream << b[i] << '\n';
 }
 
 #endif

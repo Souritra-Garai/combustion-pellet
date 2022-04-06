@@ -11,7 +11,7 @@ class ThermalConductivity
 
     public :
 
-        __host__ __device__ void assignCoefficients(
+        __host__ void assignCoefficients(
 			double a_0,
 			double a_1,
 			double a_2
@@ -21,7 +21,7 @@ class ThermalConductivity
 			_a_2 = a_2;
 		}
 
-        __device__ double getThermalConductivity(double temperature)
+        __device__ __host__ __forceinline__ double getThermalConductivity(double temperature)
         {
             return _a_0 + _a_1 * temperature + _a_2 * temperature * temperature;
         }
