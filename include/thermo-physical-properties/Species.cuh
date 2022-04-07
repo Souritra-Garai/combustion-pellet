@@ -15,30 +15,24 @@ class Species
 
 	public :
 
-		__host__ void initialize(
+		__host__ __device__ Species(
 			unsigned int number_of_phases,
 			Phase *array_of_phases,
 			double molar_mass
 		) {
 			_num_phases = number_of_phases;
 
-			cudaMalloc(&_phases, number_of_phases * sizeof(Phase));
-			cudaMemcpy(_phases, array_of_phases, number_of_phases * sizeof(Phase), cudaMemcpyHostToDevice);
+			_phases = array_of_phases;
 
 			_molar_mass = molar_mass;
 		}
 
-		__host__ void deallocateMemory()
-		{
-			cudaFree(_phases);
-		}
-
-		__device__ __host__ __forceinline__ double getMolarMass()
+		__host__ __device__ __forceinline__ double getMolarMass()
 		{
 			return _molar_mass;
 		}
 		
-		__device__ __forceinline__ double getDensity(double temperature)
+		__host__ __device__ __forceinline__ double getDensity(double temperature)
 		{
 			double density = 0;
 
@@ -52,12 +46,12 @@ class Species
 			return density;
 		}
 		
-		__device__ __forceinline__ double getMolarDensity(double temperature)
+		__host__ __device__ __forceinline__ double getMolarDensity(double temperature)
 		{
 			return getDensity(temperature) / getMolarMass();
 		}
 
-		__device__ __forceinline__ double getHeatCapacity(double temperature)
+		__host__ __device__ __forceinline__ double getHeatCapacity(double temperature)
 		{
 			double heat_capacity = 0;
 
@@ -71,7 +65,7 @@ class Species
 			return heat_capacity / getMolarMass();
 		}
 
-		__device__ __forceinline__ double getEnthalpy(double temperature)
+		__host__ __device__ __forceinline__ double getEnthalpy(double temperature)
 		{
 			double enthalpy = 0;
 
@@ -85,7 +79,7 @@ class Species
 			return enthalpy / getMolarMass();
 		}
 
-		__device__ __forceinline__ double getThermalConductivity(double temperature)
+		__host__ __device__ __forceinline__ double getThermalConductivity(double temperature)
 		{ 
 			double heat_conductivity = 0;
 

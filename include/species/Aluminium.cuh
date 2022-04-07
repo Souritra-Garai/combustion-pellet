@@ -7,16 +7,12 @@
 
 #include "thermo-physical-properties/Species.cuh"
 
-Species aluminium;
+__device__ Species *aluminium;
+__device__ Phase *phases_Al;
 
-__host__ void loadAluminium(double sharpness_coefficient = 100.0)
+__device__ void loadAluminium(double sharpness_coefficient = 100.0)
 {
-	Enthalpy enthalpy_solid_Al, enthalpy_liquid_Al;
-	ThermalConductivity thermal_conductivity_solid_Al, thermal_conductivity_liquid_Al;
-
-	Phase phases_Al[2];
-
-	enthalpy_solid_Al.assignCoefficients(
+	Enthalpy enthalpy_solid_Al(
 		28.08920,
 		-5.414849,
 		8.560423,
@@ -25,7 +21,7 @@ __host__ void loadAluminium(double sharpness_coefficient = 100.0)
 		-9.147187
 	);
 
-	enthalpy_liquid_Al.assignCoefficients(
+	Enthalpy enthalpy_liquid_Al(
 		31.75104,
 		3.935826E-8,
 		-1.786515E-8,
@@ -34,10 +30,10 @@ __host__ void loadAluminium(double sharpness_coefficient = 100.0)
 		-0.945684
 	);
 
-	thermal_conductivity_solid_Al.assignCoefficients(248.0, -0.067, 0.0);
-	thermal_conductivity_liquid_Al.assignCoefficients(33.9, 7.89E-2, -2.099E-5);
+	ThermalConductivity thermal_conductivity_solid_Al(248.0, -0.067, 0.0);
+	ThermalConductivity thermal_conductivity_liquid_Al(33.9, 7.89E-2, -2.099E-5);
 
-	phases_Al[0].initialize(
+	Phase solid_Al(
 		2700.0,
 		enthalpy_solid_Al,
 		thermal_conductivity_solid_Al,
@@ -46,7 +42,7 @@ __host__ void loadAluminium(double sharpness_coefficient = 100.0)
 		sharpness_coefficient
 	);
 
-	phases_Al[1].initialize(
+	Phase liquid_Al(
 		2375.0,
 		enthalpy_liquid_Al,
 		thermal_conductivity_liquid_Al,
@@ -55,7 +51,15 @@ __host__ void loadAluminium(double sharpness_coefficient = 100.0)
 		sharpness_coefficient
 	);
 
-	aluminium.initialize(2, phases_Al, 26.9815386E-3);
+	phases_Al = new Phase[2]{solid_Al, liquid_Al};
+
+	aluminium = new Species(2, phases_Al, 26.9815386E-3);
+}
+
+__device__ void unloadAluminium()
+{
+	delete aluminium;
+	delete [] phases_Al;
 }
 
 #endif

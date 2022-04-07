@@ -18,11 +18,7 @@ namespace CoreShellParticle
 	__device__ double core_mass;
 	__device__ double shell_mass;
 
-	Species *core_material_host_ptr;
-	Species *shell_material_host_ptr;
-	Species *product_material_host_ptr;
-
-	__global__ void setParticleMass(
+	__device__ void setParticleMass(
 		double core_radius,
 		double overall_radius)
 	{
@@ -35,34 +31,19 @@ namespace CoreShellParticle
 		mass = core_mass + shell_mass;
 	}
 
-	__host__ void initialize(
-		Species *pointer_to_core_material,
-		Species *pointer_to_shell_material,
-		Species *pointer_to_product_material,
+	__device__ void initialize(
+		Species *core_material,
+		Species *shell_material,
+		Species *product_material,
 		double core_radius,
 		double overall_radius
 	)
 	{
-		cudaMalloc(&core_material_host_ptr, sizeof(Species));
-		cudaMalloc(&shell_material_host_ptr, sizeof(Species));
-		cudaMalloc(&product_material_host_ptr, sizeof(Species));
+		CoreShellParticle::core_material = core_material;
+		CoreShellParticle::shell_material = shell_material;
+		CoreShellParticle::product_material = product_material;
 
-		cudaMemcpy(core_material_host_ptr, pointer_to_core_material, sizeof(Species), cudaMemcpyHostToDevice);
-		cudaMemcpy(shell_material_host_ptr, pointer_to_shell_material, sizeof(Species), cudaMemcpyHostToDevice);
-		cudaMemcpy(product_material_host_ptr, pointer_to_product_material, sizeof(Species), cudaMemcpyHostToDevice);
-
-		cudaMemcpyToSymbol(core_material, &core_material_host_ptr, sizeof(Species *));
-		cudaMemcpyToSymbol(shell_material, &shell_material_host_ptr, sizeof(Species *));
-		cudaMemcpyToSymbol(product_material, &product_material_host_ptr, sizeof(Species *));
-
-		setParticleMass<<<1,1>>>(core_radius, overall_radius);
-	}
-
-	__host__ void deallocate()
-	{
-		cudaFree(core_material_host_ptr);
-		cudaFree(shell_material_host_ptr);
-		cudaFree(product_material_host_ptr);
+		setParticleMass(core_radius, overall_radius);
 	}
 
 	class Particle
@@ -76,7 +57,7 @@ namespace CoreShellParticle
 
 		public:
 
-			__device__ void initialize()
+			__device__ Particle()
 			{
 				_mass_fraction_core_material = core_mass / mass;
 				_mass_fraction_shell_material = shell_mass / mass;
@@ -84,9 +65,9 @@ namespace CoreShellParticle
 				_mass_fraction_product_material = 0.0;
 			}
 
-			__device__ __host__ __forceinline__ double getMassFractionsCoreMaterial() { return _mass_fraction_core_material; }
-			__device__ __host__ __forceinline__ double getMassFractionsShellMaterial() { return _mass_fraction_shell_material; }
-			__device__ __host__ __forceinline__ double getMassFractionsProductMaterial() { return _mass_fraction_product_material; }
+			__device__ __forceinline__ double getMassFractionsCoreMaterial() { return _mass_fraction_core_material; }
+			__device__ __forceinline__ double getMassFractionsShellMaterial() { return _mass_fraction_shell_material; }
+			__device__ __forceinline__ double getMassFractionsProductMaterial() { return _mass_fraction_product_material; }
 
 			__device__ __forceinline__ double getDensity(double temperature)
 			{
@@ -138,7 +119,7 @@ namespace CoreShellParticle
 				getMassFractionsProductMaterial() * product_material->getEnthalpy(temperature);
 			}
 
-			__device__ __host__ __forceinline__ void setMassFractions(
+			__device__ __forceinline__ void setMassFractions(
 				double mass_fraction_core_material,
 				double mass_fraction_shell_material,
 				double mass_fraction_product_material

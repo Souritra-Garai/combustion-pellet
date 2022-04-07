@@ -17,12 +17,9 @@ namespace CoreShellDIffusion
 	__device__ double delta_r;
 	__device__ double *radial_coordinate_sqr;
 
-	__device__ __forceinline__ double getRadialCoordinate(size_t index)
-	{
-		return CoreShellParticle::overall_radius * (double) index / ((double) n - 1.0);
-	}
+	__device__ double coefficient_2;
 
-	__global__ void setGridSize(size_t num_points)
+	__device__ void setGridSize(size_t num_points)
 	{
 		n = num_points;
 
@@ -36,15 +33,18 @@ namespace CoreShellDIffusion
 		}
 	}
 
-	__global__  void deallocate()
+	__device__  void deallocate()
 	{
 		delete [] radial_coordinate_sqr;
 	}
 
-	__global__ void setTimeStep(double time_step)
+	__device__ void setTimeStep(double time_step)
 	{
 		delta_t = time_step;
+		coefficient_2 = 1.0 / delta_t;
 	}
+
+	// static void printConfiguration(std::ostream &output_stream);
 
 	class Diffusion : public CoreShellParticle::Particle
 	{
@@ -56,7 +56,21 @@ namespace CoreShellDIffusion
 			LUSolver _solver_A;
 			LUSolver _solver_B;
 
+			double coefficient_1;
+
 		public :
+
+			__device__ Diffusion() : CoreShellParticle::Particle(), _solver_A(n), _solver_B(n)
+			{
+				_concentration_array_A = new double[n];
+				_concentration_array_B = new double[n];
+			}
+
+			__device__ ~Diffusion()
+			{
+				delete [] _concentration_array_B;
+				delete [] _concentration_array_A;
+			}
 
 			__device__ __forceinline__ double getRxnConcA(size_t index)
 			{
@@ -83,62 +97,102 @@ namespace CoreShellDIffusion
 				return _concentration_array_B[index];
 			}
 
-			// static void printConfiguration(std::ostream &output_stream);
-
-			__device__ void initializeParticleFromDevice()
+			__device__ __forceinline__ void addAtmMolesA(size_t index, double *sum_A)
 			{
-				initialize();
+				double mol_A = getAtmConcA(index) * radial_coordinate_sqr[index];
+				
+				atomicAdd(sum_A, mol_A);
+			}
 
-				printf("Line 105\n");
-
-				_concentration_array_A = new double[n];
-				_concentration_array_B = new double[n];
-
-				printf("Line 110\n");
-
-				_solver_A.allocateMemoryFromDevice(n);
-				_solver_B.allocateMemoryFromDevice(n);
-
-				printf("Line 115\n");
-
-				for (size_t i = 0; i < n; i++)
+			__device__ __forceinline__ void setInitialState(size_t index)
+			{
+				if (radial_coordinate_sqr[index] <= pow(CoreShellParticle::core_radius, 2))
 				{
-					if (i < n)
-					{
-						if (radial_coordinate_sqr[i] < pow(CoreShellParticle::core_radius,2))
-						{
-							_concentration_array_A[i] = CoreShellParticle::core_material->getMolarDensity(298.15);
-							_concentration_array_B[i] = 0;
-						}
+					_concentration_array_A[index] = CoreShellParticle::core_material->getMolarDensity(298.15);
+					_concentration_array_B[index] = 0.0;
+				}
+				else
+				{
+					_concentration_array_A[index] = 0.0;
+					_concentration_array_B[index] = CoreShellParticle::shell_material->getMolarDensity(298.15);
+				}
+			}
 
-						else
-						{
-							_concentration_array_A[i] = 0;
-							_concentration_array_B[i] = CoreShellParticle::shell_material->getMolarDensity(298.15);
-						}
-					}
+			__device__ double getAtmMassA()
+			{
+				double moles = 0.5 * getAtmConcA(n-1) * radial_coordinate_sqr[n-1];
+
+				for (size_t i = 1; i < n-1; i++)	moles += getAtmConcA(i) * radial_coordinate_sqr[i];
+
+				return 4.0 * M_PI * delta_r * CoreShellParticle::core_material->getMolarMass() * moles;
+			}
+
+			__device__ double getAtmMassB()
+			{
+				double moles = 0.5 * getAtmConcA(n-1) * radial_coordinate_sqr[n-1];
+
+				for (size_t i = 1; i < n-1; i++)	moles += getAtmConcB(i) * radial_coordinate_sqr[i];
+
+				return 4.0 * M_PI * delta_r * CoreShellParticle::shell_material->getMolarMass() * moles;
+			}
+
+			__device__ __forceinline__ void setCoefficient_1(double diffusivity)
+			{
+				coefficient_1 = - 0.5 * diffusivity / pow(delta_r, 2);
+			}
+
+			__device__ __forceinline__ void setUpEquations(size_t index, Diffusion *diffusion_problem)
+			{
+				if (index == 0)
+				{
+					_solver_A.setEquationFirstRow(1, -1, 0);
+					_solver_B.setEquationFirstRow(1, -1, 0);
+				}
+				
+				else if (index < n-1)
+				{
+					double coefficient_3 = coefficient_1 * radial_coordinate_sqr[index+1] / radial_coordinate_sqr[index];
+					double coefficient_4 = coefficient_2 - coefficient_1 - coefficient_3;
+					double coefficient_5 = coefficient_2 + coefficient_1 + coefficient_3;
+
+					_solver_A.setEquation(
+						index,
+						coefficient_1,
+						coefficient_4,
+						coefficient_3,
+						- coefficient_1 * diffusion_problem->_concentration_array_A[index-1] +
+						coefficient_5 * diffusion_problem->_concentration_array_A[index] +
+						- coefficient_3 * diffusion_problem->_concentration_array_A[index+1]
+					);
+
+					_solver_B.setEquation(
+						index,
+						coefficient_1,
+						coefficient_4,
+						coefficient_3,
+						- coefficient_1 * diffusion_problem->_concentration_array_B[index-1] +
+						coefficient_5 * diffusion_problem->_concentration_array_B[index] +
+						- coefficient_3 * diffusion_problem->_concentration_array_B[index+1]
+					);
 				}
 
-				printf("Line 135\n");
+				else if (index == n-1)
+				{
+					_solver_A.setEquationLastRow(-1, 1, 0);
+					_solver_B.setEquationLastRow(-1, 1, 0);
+				}
 			}
 
-			__device__ void deallocateMemoryFromDevice()
+			__device__ __forceinline__ void setUpEquations(size_t index)
 			{
-				delete [] _concentration_array_A;
-				delete [] _concentration_array_B;
-
-				_solver_A.deallocateMemoryFromDevice();
-				_solver_B.deallocateMemoryFromDevice();
+				setUpEquations(index, this);
 			}
-
-			// void setUpEquations(double diffusivity);
-			// void setUpEquations(double diffusivity, Diffusion &diffusion_problem);
-
-			// void solveEquations();
-
-			// double getDiffusionMassA();
-
-			// double getDiffusionMassB();
+			
+			__device__ __forceinline__ void solveEquations(size_t index)
+			{
+				if (index == 0)			_solver_A.getSolution(_concentration_array_A);
+				else if (index == 1)	_solver_B.getSolution(_concentration_array_B);
+			}
 
 			// void copyFrom(Diffusion &diffusion_problem);
 			// void copyTo(Diffusion &diffusion_problem);
@@ -148,33 +202,6 @@ namespace CoreShellDIffusion
 
 			// void printGridPoints(std::ostream &output_stream, char delimiter = '\t');
 	};
-
-	__global__ void addShellMassA(CoreShellDIffusion::Diffusion *diffusion_problem, double *sum)
-	{
-		size_t i = blockDim.x + blockIdx.x + threadIdx.x;
-
-		if (i < n-1) 
-		{
-			double s = diffusion_problem->getAtmConcA(i+1) * radial_coordinate_sqr[i+1];
-			atomicAdd(sum, s);
-		}
-	}
-
-	// __host__ double getMassA(CoreShellDIffusion::Diffusion *diffusion_problem)
-	// {
-	// 	double sum = 0.5 * diffusion_problem->getAtmConcA(n-1) * radial_coordinate_sqr[n-1];
-
-	// 	double *dev_sum;
-	// 	cudaMalloc(&dev_sum, sizeof(double));
-	// 	cudaMemcpy(dev_sum, &sum, sizeof(double), cudaMemcpyHostToDevice);
-		
-	// 	addShellMassA<<<n+255/256, 256>>>(diffusion_problem, dev_sum);
-
-	// 	cudaMemcpy(&sum, dev_sum, sizeof(double), cudaMemcpyDeviceToHost);
-	// 	cudaFree(dev_sum);
-
-	// 	return sum;
-	// }
 }
 
 #endif

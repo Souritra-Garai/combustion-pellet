@@ -17,33 +17,26 @@ namespace TridiagonalMatrix
 
 	class Matrix
 	{
+		private:
+
+			size_t _n;
+
+			double *_array;
+
 		public:
 
-			__host__ void allocateMemoryFromHost(size_t n)
-			{
-				_n = n;
-				cudaMalloc(&_array, getSize(n) * sizeof(double));
-			}
-
-			__device__ void allocateMemoryFromDevice(size_t n)
+			__host__ __device__ Matrix(size_t n)
 			{
 				_n = n;
 				_array = new double[getSize(n)];
 			}
 
-			__host__ void deallocateMemoryFromHost()
-			{
-				cudaFree(_array);
-				_n = 0;
-			}
-
-			__device__ void deallocateMemoryFromDevice()
+			__host__ __device__ ~Matrix()
 			{
 				delete [] _array;
-				_n = 0;
 			}
 
-			__device__ __forceinline__ void setElement(
+			__host__ __device__ __forceinline__ void setElement(
 				size_t row_index,
 				size_t column_index,
 				double value
@@ -51,7 +44,7 @@ namespace TridiagonalMatrix
 				_array[getIndex(row_index, column_index)] = value;
 			}
 
-			__device__ __forceinline__ double getElement(
+			__host__ __device__ __forceinline__ double getElement(
 				size_t row_index,
 				size_t column_index
 			) {
@@ -63,17 +56,11 @@ namespace TridiagonalMatrix
 				return _n;
 			}
 
-			__host__ void print(std::ostream &output_stream);
-
-		private:
-
-			size_t _n;
-
-			double *_array;
+			__host__ __device__ void print();
 	};
 
 	__global__ void multiply(
-		Matrix A,
+		Matrix *A,
 		double *x,
 		double *b
 	) {
@@ -81,51 +68,45 @@ namespace TridiagonalMatrix
 
 		if (i==0)
 
-			b[0] = A.getElement(0, 0) * x[0] + A.getElement(0, 1) * x[1];
+			b[0] = A->getElement(0, 0) * x[0] + A->getElement(0, 1) * x[1];
 
-		else if (i < A.getDim() - 1)
+		else if (i < A->getDim() - 1)
 
-			b[i] = A.getElement(i, i-1) * x[i-1] + A.getElement(i, i) * x[i] + A.getElement(i, i+1) * x[i+1];
+			b[i] = A->getElement(i, i-1) * x[i-1] + A->getElement(i, i) * x[i] + A->getElement(i, i+1) * x[i+1];
 
-		else if (i == A.getDim() - 1)
+		else if (i == A->getDim() - 1)
 
-			b[i] = A.getElement(i, i-1) * x[i-1] + A.getElement(i, i) * x[i];
+			b[i] = A->getElement(i, i-1) * x[i-1] + A->getElement(i, i) * x[i];
 	}
 
-	__host__ void Matrix::print(std::ostream &output_stream)
+	__host__ __device__ void Matrix::print()
 	{
 		size_t i, j;
 
-		double matrix[getSize(_n)];
+		printf("%f\t%f", getElement(0,0), getElement(0,1));
 
-		cudaMemcpy(matrix, _array, getSize(_n) * sizeof(double), cudaMemcpyDeviceToHost);
+		for (i = 2; i < getDim(); i++) printf("\t0.0");
 
-		output_stream << matrix[getIndex(0,0)] << '\t' << matrix[getIndex(0,1)];
-
-		for (i = 2; i < _n; i++) output_stream << "\t0.0";
-
-		output_stream << '\n';
+		printf("\n");
 
 		
-		for (i = 1; i < _n-1; i++)
+		for (i = 1; i < getDim()-1; i++)
 		{
-			for (j = 0; j < i-1; j++) output_stream << "0.0\t";
+			for (j = 0; j < i-1; j++) printf("0.0\t");
 
-			output_stream << matrix[getIndex(i, i-1)] << '\t' << matrix[getIndex(i, i)] << '\t' << matrix[getIndex(i, i+1)];
+			printf("%f\t%f\t%f", getElement(i, i-1), getElement(i, i), getElement(i, i+1));
 
-			for (j = i+2; j < _n; j++) output_stream << "\t0.0";
+			for (j = i+2; j < getDim(); j++) printf("\t0.0");
 
-			output_stream << '\n';
+			printf("\n");
 		}
 
 
-		for (i = 0; i < _n-2; i++) output_stream << "0.0\t";
+		for (i = 0; i < getDim()-2; i++) printf("0.0\t");
 
-		output_stream << matrix[getIndex(_n-1, _n-2)] << '\t' << matrix[getIndex(_n-1, _n-1)];
-
-		output_stream << '\n';
+		printf("%f\t%f\n", getElement(getDim()-1, getDim()-2), getElement(getDim()-1, getDim()-1));
 	}
-
+	
 } // namespace TridiagonalMatrix
 
 #endif

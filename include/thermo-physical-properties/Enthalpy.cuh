@@ -14,13 +14,13 @@ class Enthalpy
 
     public:
         
-        __host__ void assignCoefficients(
-            double A = 0,
-            double B = 0,
-            double C = 0,
-            double D = 0,
-            double E = 0,
-            double F = 0
+        __host__ __device__ Enthalpy(
+            double A = 0.0,
+            double B = 0.0,
+            double C = 0.0,
+            double D = 0.0,
+            double E = 0.0,
+            double F = 0.0
         ) {
             _A = A;
 			_B = B;
@@ -30,7 +30,7 @@ class Enthalpy
 			_F = F;
         }
 
-		__device__ __host__ __forceinline__ double getEnthalpy(double temperature)
+		__host__ __device__ __forceinline__ double getEnthalpy(double temperature)
 		{
 			temperature /= 1000;
 
@@ -45,7 +45,7 @@ class Enthalpy
 			);
 		}
 
-		__device__ __host__ __forceinline__ double getHeatCapacity(double temperature)
+		__host__ __device__ __forceinline__ double getHeatCapacity(double temperature)
 		{
 			temperature /= 1000;
 			

@@ -2,71 +2,70 @@
 
 #include <iostream>
 
+#define N 1000
 #define TEMPERATURE_LOWER_BOUND	250.0	// K
 #define TEMPERATURE_UPPER_BOUND 1000.0	// K
+#define GET_TEMPERATURE(i) (TEMPERATURE_LOWER_BOUND + (TEMPERATURE_UPPER_BOUND - TEMPERATURE_LOWER_BOUND) * ((double) i) / ((double) N - 1.0))
 
-__global__ void calcEnthalpies(unsigned int n, double *temperatures, double *enthalpies, double *heat_capacities, Enthalpy *material_enthalpy)
+__device__ Enthalpy *species_enthalpy;
+
+__global__ void allocateMemory()
 {
-	unsigned int i = threadIdx.x;
+	species_enthalpy = new Enthalpy(
+		28.08920,
+		-5.414849,
+		8.560423,
+		3.427370,
+		-0.277375,
+		-9.147187
+	);
+}
 
-	if (i < n) 
+__global__ void deallocateMemory()
+{
+	delete species_enthalpy;
+}
+
+__global__ void calcEnthalpies(double *enthalpy_array, double *heat_capacity_array)
+{
+	unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
+
+	if (i < N) 
 	{
-		enthalpies[i] = material_enthalpy->getEnthalpy(temperatures[i]);
-		heat_capacities[i] = material_enthalpy->getHeatCapacity(temperatures[i]);
+		double T = GET_TEMPERATURE(i);
+		enthalpy_array[i] = species_enthalpy->getEnthalpy(T);
+		heat_capacity_array[i] = species_enthalpy->getHeatCapacity(T);
 	}
 }
 
 int main(int argc, char const *argv[])
 {
-	unsigned int n = 1001;
-	
-	double h_temperatures[n], h_enthalpies[n], h_heat_capacities[n];
-	double *d_temperatures, *d_enthalpies, *d_heat_capacities;
+	double enthalpy_array_h[N], heat_capacity_array_h[N];
 
-	cudaMalloc(&d_temperatures, n * sizeof(double));
-	cudaMalloc(&d_enthalpies, n * sizeof(double));
-	cudaMalloc(&d_heat_capacities, n * sizeof(double));
+	double *enthalpy_array_d, *heat_capacity_array_d;
+	cudaMalloc(&enthalpy_array_d, N*sizeof(double));
+	cudaMalloc(&heat_capacity_array_d, N*sizeof(double));
 
-	for (unsigned int i = 0; i < n; i++)
-	
-		h_temperatures[i] = TEMPERATURE_LOWER_BOUND + (TEMPERATURE_UPPER_BOUND - TEMPERATURE_LOWER_BOUND) * ((double) i / ((double) n - 1));
-
-	cudaMemcpy(d_temperatures, h_temperatures, n * sizeof(double), cudaMemcpyHostToDevice);
-
-	Enthalpy *d_material_enthalpy;
-
-	{
-		Enthalpy material_enthalpy;
-		material_enthalpy.assignCoefficients(
-			28.08920,
-			-5.414849,
-			8.560423,
-			3.427370,
-			-0.277375,
-			-9.147187
-		);
-
-		cudaMalloc(&d_material_enthalpy, sizeof(material_enthalpy));
-		cudaMemcpy(d_material_enthalpy, &material_enthalpy, sizeof(material_enthalpy), cudaMemcpyHostToDevice);
-	}
-
-	calcEnthalpies<<<1,n>>>(n, d_temperatures, d_enthalpies, d_heat_capacities, d_material_enthalpy);	
+	allocateMemory<<<1,1>>>();
 
 	cudaDeviceSynchronize();
 
-	cudaMemcpy(h_enthalpies, d_enthalpies, n * sizeof(double), cudaMemcpyDeviceToHost);
-	cudaMemcpy(h_heat_capacities, d_heat_capacities, n * sizeof(double), cudaMemcpyDeviceToHost);
+	calcEnthalpies<<<(N+255)/256, 256>>>(enthalpy_array_d, heat_capacity_array_d);
 
-	for (int i = 0; i < n; i++)
+	cudaDeviceSynchronize();
+	
+	cudaMemcpy(enthalpy_array_h, enthalpy_array_d, N * sizeof(double), cudaMemcpyDeviceToHost);
+	cudaMemcpy(heat_capacity_array_h, heat_capacity_array_d, N * sizeof(double), cudaMemcpyDeviceToHost);
 
-		std::cout << "Temperature : " << h_temperatures[i] << " K\t" << "Heat Capacity : " << h_heat_capacities[i] << " J / mol. - K\t" <<
-		"Enthalpy : " << h_enthalpies[i] << " J / mol.\n";
+	for (int i = 0; i < N; i++)
 
-	cudaFree(d_temperatures);
-	cudaFree(d_heat_capacities);
-	cudaFree(d_enthalpies);
+		std::cout << "Temperature : " << GET_TEMPERATURE(i) << " K\t" << "Heat Capacity : " << heat_capacity_array_h[i] << " J / mol. - K\t" <<
+		"Enthalpy : " << enthalpy_array_h[i] << " J / mol.\n";
 
-	cudaFree(d_material_enthalpy);
+	deallocateMemory<<<1,1>>>();
+
+	cudaFree(heat_capacity_array_d);
+	cudaFree(enthalpy_array_d);
 
 	return 0;
 }

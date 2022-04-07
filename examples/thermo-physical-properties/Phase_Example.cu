@@ -1,100 +1,86 @@
+#include "thermo-physical-properties/Phase.cuh"
+
 #include <iostream>
 
-#include <thermo-physical-properties/Phase.cuh>
-
+#define N 1000
 #define TEMPERATURE_LOWER_BOUND	250.0	// K
 #define TEMPERATURE_UPPER_BOUND 1000.0	// K
+#define GET_TEMPERATURE(i) (TEMPERATURE_LOWER_BOUND + (TEMPERATURE_UPPER_BOUND - TEMPERATURE_LOWER_BOUND) * ((double) i) / ((double) N - 1.0))
 
-__global__ void calcThermoPhysicalProperties(
-	unsigned int n,
-	double *temperatures,
-	double *densities,
-	double *enthalpies,
-	double *heat_capacities,
-	double *thermal_conductivities,
-	Phase *species
-) {
-	unsigned int i = threadIdx.x;
+__device__ Phase *species_phase;
 
-	if (i < n)
+__global__ void allocateMemory()
+{
+	Enthalpy species_enthalpy(
+		28.08920,
+		-5.414849,
+		8.560423,
+		3.427370,
+		-0.277375,
+		-9.147187
+	);
+
+	ThermalConductivity species_thermal_conductivity(248.0, -0.067, 0.0);
+
+	species_phase = new Phase(
+		2700.0,
+		species_enthalpy,
+		species_thermal_conductivity,
+		273.15,
+		933.0,
+		10
+	);
+}
+
+__global__ void deallocateMemory()
+{
+	delete species_phase;
+}
+
+__global__ void calcEnthalpies(double *enthalpy_array, double *heat_capacity_array, double *thermal_conductivity_array)
+{
+	unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
+
+	if (i < N) 
 	{
-		densities[i] = species->getDensity(temperatures[i]);
-		enthalpies[i] = species->getEnthalpy(temperatures[i]);
-		heat_capacities[i] = species->getHeatCapacity(temperatures[i]);
-		thermal_conductivities[i] = species->getThermalConductivity(temperatures[i]);
+		double T = GET_TEMPERATURE(i);
+		enthalpy_array[i] = species_phase->getEnthalpy(T);
+		heat_capacity_array[i] = species_phase->getHeatCapacity(T);
+		thermal_conductivity_array[i] = species_phase->getThermalConductivity(T);
 	}
 }
 
 int main(int argc, char const *argv[])
 {
-	unsigned int n = 500;
-	
-	double h_temperatures[n], h_densities[n], h_enthalpies[n], h_heat_capacities[n], h_thermal_conductivities[n];
-	double *d_temperatures, *d_densities, *d_enthalpies, *d_heat_capacities, *d_thermal_conductivities;
+	double enthalpy_array_h[N], heat_capacity_array_h[N], thermal_conductivity_array_h[N];
 
-	cudaMalloc(&d_temperatures, n * sizeof(double));
-	cudaMalloc(&d_densities, n * sizeof(double));
-	cudaMalloc(&d_enthalpies, n * sizeof(double));
-	cudaMalloc(&d_heat_capacities, n * sizeof(double));
-	cudaMalloc(&d_thermal_conductivities, n * sizeof(double));
+	double *enthalpy_array_d, *heat_capacity_array_d, *thermal_conductivity_array_d;
+	cudaMalloc(&enthalpy_array_d, N*sizeof(double));
+	cudaMalloc(&heat_capacity_array_d, N*sizeof(double));
+	cudaMalloc(&thermal_conductivity_array_d, N*sizeof(double));
 
-	for (unsigned int i = 0; i < n; i++)
-	
-		h_temperatures[i] = TEMPERATURE_LOWER_BOUND + (TEMPERATURE_UPPER_BOUND - TEMPERATURE_LOWER_BOUND) * ((double) i / ((double) n - 1.0));
-
-	cudaMemcpy(d_temperatures, h_temperatures, n * sizeof(double), cudaMemcpyHostToDevice);
-
-	Phase *d_solid_Al;
-
-	{
-		Enthalpy enthalpy_solid_Al;
-		enthalpy_solid_Al.assignCoefficients(
-			28.08920,
-			-5.414849,
-			8.560423,
-			3.427370,
-			-0.277375,
-			-9.147187
-		);
-
-		ThermalConductivity conductivity_solid_Al;
-		conductivity_solid_Al.assignCoefficients(248.0, -0.067, 0.0);
-		
-		Phase solid_Al;
-		solid_Al.initialize(
-			2700,
-			enthalpy_solid_Al,
-			conductivity_solid_Al,
-			273,
-			933,
-			10
-		);
-
-		cudaMalloc(&d_solid_Al, sizeof(solid_Al));
-		cudaMemcpy(d_solid_Al, &solid_Al, sizeof(solid_Al), cudaMemcpyHostToDevice);
-	}
-
-	calcThermoPhysicalProperties<<<1,n>>>(n, d_temperatures, d_densities, d_enthalpies, d_heat_capacities, d_thermal_conductivities, d_solid_Al);	
+	allocateMemory<<<1,1>>>();
 
 	cudaDeviceSynchronize();
 
-	cudaMemcpy(h_densities, d_densities, n * sizeof(double), cudaMemcpyDeviceToHost);
-	cudaMemcpy(h_enthalpies, d_enthalpies, n * sizeof(double), cudaMemcpyDeviceToHost);
-	cudaMemcpy(h_heat_capacities, d_heat_capacities, n * sizeof(double), cudaMemcpyDeviceToHost);
-	cudaMemcpy(h_thermal_conductivities, d_thermal_conductivities, n * sizeof(double), cudaMemcpyDeviceToHost);
+	calcEnthalpies<<<(N+255)/256, 256>>>(enthalpy_array_d, heat_capacity_array_d, thermal_conductivity_array_d);
 
-	for (int i = 0; i < n; i++)
+	cudaDeviceSynchronize();
+	
+	cudaMemcpy(enthalpy_array_h, enthalpy_array_d, N * sizeof(double), cudaMemcpyDeviceToHost);
+	cudaMemcpy(heat_capacity_array_h, heat_capacity_array_d, N * sizeof(double), cudaMemcpyDeviceToHost);
+	cudaMemcpy(thermal_conductivity_array_h, thermal_conductivity_array_d, N * sizeof(double), cudaMemcpyDeviceToHost);
 
-		std::cout << "Temperature : " << h_temperatures[i] << " K\t" << "Density : " << h_densities[i] << " kg / m3\t" <<
-		"Heat Capacity : " << h_heat_capacities[i] << " J / mol. - K\t" << "Enthalpy : " << h_enthalpies[i] << " J / mol.\n" <<
-		"Thermal Conductivity : " << h_thermal_conductivities[i] << " W / m - K\n";
+	for (int i = 0; i < N; i++)
 
-	cudaFree(d_temperatures);
-	cudaFree(d_densities);
-	cudaFree(d_heat_capacities);
-	cudaFree(d_enthalpies);
-	cudaFree(d_thermal_conductivities);
-	cudaFree(d_solid_Al);
+		std::cout << "Temperature : " << GET_TEMPERATURE(i) << " K\t" << "Heat Capacity : " << heat_capacity_array_h[i] << " J / mol. - K\t" <<
+		"Enthalpy : " << enthalpy_array_h[i] << " J / mol.\t" << "Thermal Conductivity : " << thermal_conductivity_array_h[i] << " W / m - K\n";
+
+	deallocateMemory<<<1,1>>>();
+
+	cudaFree(thermal_conductivity_array_d);
+	cudaFree(heat_capacity_array_d);
+	cudaFree(enthalpy_array_d);
 
 	return 0;
 }

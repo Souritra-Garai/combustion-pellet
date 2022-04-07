@@ -11,10 +11,10 @@ class ThermalConductivity
 
     public :
 
-        __host__ void assignCoefficients(
-			double a_0,
-			double a_1,
-			double a_2
+        __host__ __device__ ThermalConductivity(
+			double a_0 = 0.0,
+			double a_1 = 0.0,
+			double a_2 = 0.0
 		) {
 			_a_0 = a_0;
 			_a_1 = a_1;

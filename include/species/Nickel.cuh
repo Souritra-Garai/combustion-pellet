@@ -7,17 +7,12 @@
 
 #include "thermo-physical-properties/Species.cuh"
 
-Species nickel;
+__device__ Species *nickel;
+__device__ Phase *phases_Ni;
 
-__host__ void loadNickel(double sharpness_coefficient = 100.0)
+__device__ void loadNickel(double sharpness_coefficient = 100.0)
 {
-	Enthalpy enthalpy_solid_Ni_1, enthalpy_solid_Ni_2, enthalpy_solid_Ni_3, enthalpy_liquid_Ni;
-	
-	ThermalConductivity thermal_conductivity_solid_Ni_1, thermal_conductivity_solid_Ni_2, thermal_conductivity_liquid_Ni;
-
-	Phase phases_Ni[4];
-
-	enthalpy_solid_Ni_1.assignCoefficients(
+	Enthalpy enthalpy_solid_Ni_1(
 		13.69160,
 		82.46509,
 		-174.9548,
@@ -26,7 +21,7 @@ __host__ void loadNickel(double sharpness_coefficient = 100.0)
 		-6.833644
 	);
 
-	enthalpy_solid_Ni_2.assignCoefficients(
+	Enthalpy enthalpy_solid_Ni_2(
 		1248.045,
 		-1257.510,
 		0,
@@ -35,7 +30,7 @@ __host__ void loadNickel(double sharpness_coefficient = 100.0)
 		-788.8263
 	);
 
-	enthalpy_solid_Ni_3.assignCoefficients(
+	Enthalpy enthalpy_solid_Ni_3(
 		16.49839,
 		18.74913,
 		-6.639841,
@@ -44,7 +39,7 @@ __host__ void loadNickel(double sharpness_coefficient = 100.0)
 		-0.467675
 	);
 
-	enthalpy_liquid_Ni.assignCoefficients(
+	Enthalpy enthalpy_liquid_Ni(
 		38.91103,
 		0.0,
 		0.0,
@@ -53,11 +48,11 @@ __host__ void loadNickel(double sharpness_coefficient = 100.0)
 		-2.722630
 	);
 
-	thermal_conductivity_solid_Ni_1.assignCoefficients(107, -0.096, 3.2E-5);
-	thermal_conductivity_solid_Ni_2.assignCoefficients(59.5, -7.67E-3, 1.7E-5);
-	thermal_conductivity_liquid_Ni.assignCoefficients(17.95, 2.097E-2, 0.0);
+	ThermalConductivity thermal_conductivity_solid_Ni_1(107, -0.096, 3.2E-5);
+	ThermalConductivity thermal_conductivity_solid_Ni_2(59.5, -7.67E-3, 1.7E-5);
+	ThermalConductivity thermal_conductivity_liquid_Ni(17.95, 2.097E-2, 0.0);
 
-	phases_Ni[0].initialize(
+	Phase solid_Ni_1(
 		8902.0,
 		enthalpy_solid_Ni_1,
 		thermal_conductivity_solid_Ni_1,
@@ -66,7 +61,7 @@ __host__ void loadNickel(double sharpness_coefficient = 100.0)
 		sharpness_coefficient
 	);
 
-	phases_Ni[1].initialize(
+	Phase solid_Ni_2(
 		8902.0,
 		enthalpy_solid_Ni_2,
 		thermal_conductivity_solid_Ni_2,
@@ -75,7 +70,7 @@ __host__ void loadNickel(double sharpness_coefficient = 100.0)
 		sharpness_coefficient
 	);
 
-	phases_Ni[2].initialize(
+	Phase solid_Ni_3(
 		8902.0,
 		enthalpy_solid_Ni_3,
 		thermal_conductivity_solid_Ni_2,
@@ -84,7 +79,7 @@ __host__ void loadNickel(double sharpness_coefficient = 100.0)
 		sharpness_coefficient
 	);
 
-	phases_Ni[3].initialize(
+	Phase liquid_Ni(
 		7810.0,
 		enthalpy_liquid_Ni,
 		thermal_conductivity_liquid_Ni,
@@ -93,7 +88,14 @@ __host__ void loadNickel(double sharpness_coefficient = 100.0)
 		sharpness_coefficient
 	);
 
-	nickel.initialize(4, phases_Ni, 58.6934E-3);
+	phases_Ni = new Phase[4]{solid_Ni_1, solid_Ni_2, solid_Ni_3, liquid_Ni};
+	nickel = new Species(4, phases_Ni, 58.6934E-3);
+}
+
+__device__ void unloadNickel()
+{
+	delete nickel;
+	delete [] phases_Ni;
 }
 
 #endif

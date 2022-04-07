@@ -8,35 +8,42 @@
 #include <boost/program_options.hpp>
 #include <iostream>
 
-#define TEMPERATURE_UPPER_BOUND 2500.0	// K
-#define TEMPERATURE_LOWER_BOUND 273.15	// K
+#define N 10000
+#define TEMPERATURE_LOWER_BOUND	250.0	// K
+#define TEMPERATURE_UPPER_BOUND 1000.0	// K
+#define GET_TEMPERATURE(i) (TEMPERATURE_LOWER_BOUND + (TEMPERATURE_UPPER_BOUND - TEMPERATURE_LOWER_BOUND) * ((double) i) / ((double) N - 1.0))
 
-#define GET_TEMPERATURE(i, n) (TEMPERATURE_LOWER_BOUND + (TEMPERATURE_UPPER_BOUND - TEMPERATURE_LOWER_BOUND) * ((double) i) / ((double) n - 1.0))
-
-const unsigned int n = 10000;
 double sharpness_coefficient = 100.0;
 
-__host__ void initializeSpecies();
-__host__ void deinitializeSpecies();
-__host__ void saveSpecies(std::ofstream &output_file);
+__global__ void allocateMemory(double sharpness_coefficient)
+{
+	loadAluminium(sharpness_coefficient);
+	loadArgon();
+	loadNickel(sharpness_coefficient);
+	loadNickelAlumnide(sharpness_coefficient);
+}
 
-Species *aluminium_dev_ptr, *nickel_dev_ptr, *nickel_aluminide_dev_ptr;
-IdealGas *argon_dev_ptr;
+__global__ void deallocateMemory()
+{
+	unloadAluminium();
+	unloadArgon();
+	unloadNickel();
+	unloadNickelAluminide();
+}
 
-// Arrays for storing temperature and corresponding thermophysical properties on host memory
-double heat_capacities[n], enthalpies[n], thermal_conductivities[n];
+__global__ void getThermalConductivities(double *thermal_conductivities, Species *species_ptr);
+__global__ void getHeatCapacities(double *heat_capacities, Species *species_ptr);
+__global__ void getEnthalpies(double *enthalpies, Species *species_ptr);
 
-// Pointer to arrays for storing temperature and corresponding thermophysical properties
-// on device memory
-double *heat_capacities_dev_ptr, *enthalpies_dev_ptr, *thermal_conductivities_dev_ptr;
+__global__ void getThermalConductivities(double *thermal_conductivities, IdealGas *gas);
+__global__ void getHeatCapacities(double *heat_capacities, IdealGas *gas);
+__global__ void getEnthalpies(double *enthalpies, IdealGas *gas);
 
-__global__ void getThermalConductivities(unsigned int n, double *thermal_conductivities, Species *species_ptr);
-__global__ void getHeatCapacities(unsigned int n, double *heat_capacities, Species *species_ptr);
-__global__ void getEnthalpies(unsigned int n, double *enthalpies, Species *species_ptr);
+__host__ void saveSpecies(std::ofstream &file);
 
-__global__ void getThermalConductivities(unsigned int n, double *thermal_conductivities, IdealGas *gas);
-__global__ void getHeatCapacities(unsigned int n, double *heat_capacities, IdealGas *gas);
-__global__ void getEnthalpies(unsigned int n, double *enthalpies, IdealGas *gas);
+double enthalpy_array_h[N], heat_capacity_array_h[N], thermal_conductivity_array_h[N];
+
+double *enthalpy_array_d, *heat_capacity_array_d, *thermal_conductivity_array_d;
 
 int main(int argc, char const *argv[])
 {
@@ -72,165 +79,142 @@ int main(int argc, char const *argv[])
 		std::cerr << e.what() << '\n';
 		return(1);
 	}
-	
-	cudaMalloc(&thermal_conductivities_dev_ptr, n * sizeof(double));
-	cudaMalloc(&heat_capacities_dev_ptr, n * sizeof(double));
-	cudaMalloc(&enthalpies_dev_ptr, n * sizeof(double));
 
-	initializeSpecies();
+	cudaMalloc(&enthalpy_array_d, N*sizeof(double));
+	cudaMalloc(&heat_capacity_array_d, N*sizeof(double));
+	cudaMalloc(&thermal_conductivity_array_d, N*sizeof(double));
+
+	allocateMemory<<<1,1>>>(sharpness_coefficient);
+
+	Species *aluminium, *nickel, *nickel_aluminide;
+	IdealGas *argon;
+
+	cudaMemcpyFromSymbol(&aluminium, ::aluminium, sizeof(Species*));
+	cudaMemcpyFromSymbol(&argon, ::argon, sizeof(IdealGas*));
+	cudaMemcpyFromSymbol(&nickel, ::nickel, sizeof(Species*));
+	cudaMemcpyFromSymbol(&nickel_aluminide, ::nickel_aluminide, sizeof(Species*));
+	cudaDeviceSynchronize();
 
 	FileGenerator solution_folder;
 
 	// Aluminium
-	getThermalConductivities<<<(n + 255) / 256, 256>>>(n, thermal_conductivities_dev_ptr, aluminium_dev_ptr);
-	getHeatCapacities<<<(n + 255) / 256, 256>>>(n, heat_capacities_dev_ptr, aluminium_dev_ptr);
-	getEnthalpies<<<(n + 255) / 256, 256>>>(n, enthalpies_dev_ptr, aluminium_dev_ptr);
+	getThermalConductivities<<<(N + 255) / 256, 256>>>(thermal_conductivity_array_d, aluminium);
+	getHeatCapacities<<<(N + 255) / 256, 256>>>(heat_capacity_array_d, aluminium);
+	getEnthalpies<<<(N + 255) / 256, 256>>>(enthalpy_array_d, aluminium);
 
 	cudaDeviceSynchronize();
 
-	cudaMemcpy(thermal_conductivities, thermal_conductivities_dev_ptr, n * sizeof(double), cudaMemcpyDeviceToHost);
-	cudaMemcpy(heat_capacities, heat_capacities_dev_ptr, n * sizeof(double), cudaMemcpyDeviceToHost);
-	cudaMemcpy(enthalpies, enthalpies_dev_ptr, n * sizeof(double), cudaMemcpyDeviceToHost);
+	cudaMemcpy(thermal_conductivity_array_h, thermal_conductivity_array_d, N * sizeof(double), cudaMemcpyDeviceToHost);
+	cudaMemcpy(heat_capacity_array_h, heat_capacity_array_d, N * sizeof(double), cudaMemcpyDeviceToHost);
+	cudaMemcpy(enthalpy_array_h, enthalpy_array_d, N * sizeof(double), cudaMemcpyDeviceToHost);
 	
 	std::ofstream aluminium_file = solution_folder.getCSVFile("aluminium");
 	saveSpecies(aluminium_file);
 	aluminium_file.close();
 
 	// Argon
-	getThermalConductivities<<<(n + 255) / 256, 256>>>(n, thermal_conductivities_dev_ptr, argon_dev_ptr);
-	getHeatCapacities<<<(n + 255) / 256, 256>>>(n, heat_capacities_dev_ptr, argon_dev_ptr);
-	getEnthalpies<<<(n + 255) / 256, 256>>>(n, enthalpies_dev_ptr, argon_dev_ptr);
+	getThermalConductivities<<<(N + 255) / 256, 256>>>(thermal_conductivity_array_d, argon);
+	getHeatCapacities<<<(N + 255) / 256, 256>>>(heat_capacity_array_d, argon);
+	getEnthalpies<<<(N + 255) / 256, 256>>>(enthalpy_array_d, argon);
 
 	cudaDeviceSynchronize();
 
-	cudaMemcpy(thermal_conductivities, thermal_conductivities_dev_ptr, n * sizeof(double), cudaMemcpyDeviceToHost);
-	cudaMemcpy(heat_capacities, heat_capacities_dev_ptr, n * sizeof(double), cudaMemcpyDeviceToHost);
-	cudaMemcpy(enthalpies, enthalpies_dev_ptr, n * sizeof(double), cudaMemcpyDeviceToHost);
+	cudaMemcpy(thermal_conductivity_array_h, thermal_conductivity_array_d, N * sizeof(double), cudaMemcpyDeviceToHost);
+	cudaMemcpy(heat_capacity_array_h, heat_capacity_array_d, N * sizeof(double), cudaMemcpyDeviceToHost);
+	cudaMemcpy(enthalpy_array_h, enthalpy_array_d, N * sizeof(double), cudaMemcpyDeviceToHost);
 	
 	std::ofstream argon_file = solution_folder.getCSVFile("argon");
 	saveSpecies(argon_file);
 	argon_file.close();
 
 	// Nickel
-	getThermalConductivities<<<(n + 255) / 256, 256>>>(n, thermal_conductivities_dev_ptr, nickel_dev_ptr);
-	getHeatCapacities<<<(n + 255) / 256, 256>>>(n, heat_capacities_dev_ptr, nickel_dev_ptr);
-	getEnthalpies<<<(n + 255) / 256, 256>>>(n, enthalpies_dev_ptr, nickel_dev_ptr);
+	getThermalConductivities<<<(N + 255) / 256, 256>>>(thermal_conductivity_array_d, nickel);
+	getHeatCapacities<<<(N + 255) / 256, 256>>>(heat_capacity_array_d, nickel);
+	getEnthalpies<<<(N + 255) / 256, 256>>>(enthalpy_array_d, nickel);
 
 	cudaDeviceSynchronize();
 
-	cudaMemcpy(thermal_conductivities, thermal_conductivities_dev_ptr, n * sizeof(double), cudaMemcpyDeviceToHost);
-	cudaMemcpy(heat_capacities, heat_capacities_dev_ptr, n * sizeof(double), cudaMemcpyDeviceToHost);
-	cudaMemcpy(enthalpies, enthalpies_dev_ptr, n * sizeof(double), cudaMemcpyDeviceToHost);
+	cudaMemcpy(thermal_conductivity_array_h, thermal_conductivity_array_d, N * sizeof(double), cudaMemcpyDeviceToHost);
+	cudaMemcpy(heat_capacity_array_h, heat_capacity_array_d, N * sizeof(double), cudaMemcpyDeviceToHost);
+	cudaMemcpy(enthalpy_array_h, enthalpy_array_d, N * sizeof(double), cudaMemcpyDeviceToHost);
 	
 	std::ofstream nickel_file = solution_folder.getCSVFile("nickel");
 	saveSpecies(nickel_file);
-	nickel_file.close();
+	aluminium_file.close();
 
 	// Nickel Aluminide
-	getThermalConductivities<<<(n + 255) / 256, 256>>>(n, thermal_conductivities_dev_ptr, nickel_aluminide_dev_ptr);
-	getHeatCapacities<<<(n + 255) / 256, 256>>>(n, heat_capacities_dev_ptr, nickel_aluminide_dev_ptr);
-	getEnthalpies<<<(n + 255) / 256, 256>>>(n, enthalpies_dev_ptr, nickel_aluminide_dev_ptr);
+	getThermalConductivities<<<(N + 255) / 256, 256>>>(thermal_conductivity_array_d, nickel_aluminide);
+	getHeatCapacities<<<(N + 255) / 256, 256>>>(heat_capacity_array_d, nickel_aluminide);
+	getEnthalpies<<<(N + 255) / 256, 256>>>(enthalpy_array_d, nickel_aluminide);
 
 	cudaDeviceSynchronize();
 
-	cudaMemcpy(thermal_conductivities, thermal_conductivities_dev_ptr, n * sizeof(double), cudaMemcpyDeviceToHost);
-	cudaMemcpy(heat_capacities, heat_capacities_dev_ptr, n * sizeof(double), cudaMemcpyDeviceToHost);
-	cudaMemcpy(enthalpies, enthalpies_dev_ptr, n * sizeof(double), cudaMemcpyDeviceToHost);
+	cudaMemcpy(thermal_conductivity_array_h, thermal_conductivity_array_d, N * sizeof(double), cudaMemcpyDeviceToHost);
+	cudaMemcpy(heat_capacity_array_h, heat_capacity_array_d, N * sizeof(double), cudaMemcpyDeviceToHost);
+	cudaMemcpy(enthalpy_array_h, enthalpy_array_d, N * sizeof(double), cudaMemcpyDeviceToHost);
 	
 	std::ofstream nickel_aluminide_file = solution_folder.getCSVFile("nickel_aluminide");
 	saveSpecies(nickel_aluminide_file);
 	nickel_aluminide_file.close();
 
-	deinitializeSpecies();
+	deallocateMemory<<<1,1>>>();
 
-	cudaFree(thermal_conductivities_dev_ptr);
-	cudaFree(heat_capacities_dev_ptr);
-	cudaFree(enthalpies_dev_ptr);
+	cudaFree(thermal_conductivity_array_d);
+	cudaFree(heat_capacity_array_d);
+	cudaFree(enthalpy_array_d);
 
 	return 0;
-}
-
-__host__ void initializeSpecies()
-{
-	loadAluminium(sharpness_coefficient);
-	loadArgon();
-	loadNickel(sharpness_coefficient);
-	loadNickelAlumnide(sharpness_coefficient);
-
-	cudaMalloc(&aluminium_dev_ptr, sizeof(Species));
-	cudaMemcpy(aluminium_dev_ptr, &aluminium, sizeof(Species), cudaMemcpyHostToDevice);
-
-	cudaMalloc(&nickel_dev_ptr, sizeof(Species));
-	cudaMemcpy(nickel_dev_ptr, &nickel, sizeof(Species), cudaMemcpyHostToDevice);
-
-	cudaMalloc(&nickel_aluminide_dev_ptr, sizeof(Species));
-	cudaMemcpy(nickel_aluminide_dev_ptr, &nickel_aluminide, sizeof(Species), cudaMemcpyHostToDevice);
-
-	cudaMalloc(&argon_dev_ptr, sizeof(IdealGas));
-	cudaMemcpy(argon_dev_ptr, &argon, sizeof(IdealGas), cudaMemcpyHostToDevice);
-}
-
-__host__ void deinitializeSpecies()
-{
-	aluminium.deallocateMemory();
-	nickel.deallocateMemory();
-	nickel_aluminide.deallocateMemory();
-
-	cudaFree(aluminium_dev_ptr);
-	cudaFree(argon_dev_ptr);
-	cudaFree(nickel_dev_ptr);
-	cudaFree(nickel_aluminide_dev_ptr);
 }
 
 __host__ void saveSpecies(std::ofstream &file)
 {
 	file << "Temperature (K)," << "Heat Capacity (J / mol. - K)," << "Enthalpy (J / mol.)," << "Thermal Conductivity (W / m - K)\n";
 
-	for (unsigned int i = 0; i < n; i++)
+	for (unsigned int i = 0; i < N; i++)
 	{
-		file << GET_TEMPERATURE(i, n) << ',' << heat_capacities[i] << ',' << enthalpies[i] << ',' <<
-		thermal_conductivities[i] << '\n';
+		file << GET_TEMPERATURE(i) << ',' << heat_capacity_array_h[i] << ',' << enthalpy_array_h[i] << ',' <<
+		thermal_conductivity_array_h[i] << '\n';
 	}
 }
 
-__global__ void getThermalConductivities(unsigned int n, double *thermal_conductivities, Species *species_ptr)
+__global__ void getThermalConductivities(double *thermal_conductivities, Species *species_ptr)
 {
 	unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
 
-	if (i < n) thermal_conductivities[i] = species_ptr->getThermalConductivity(GET_TEMPERATURE(i, n));
+	if (i < N) thermal_conductivities[i] = species_ptr->getThermalConductivity(GET_TEMPERATURE(i));
 }
 
-__global__ void getHeatCapacities(unsigned int n, double *heat_capacities, Species *species_ptr)
+__global__ void getHeatCapacities(double *heat_capacities, Species *species_ptr)
 {
 	unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
 
-	if (i < n) heat_capacities[i] = species_ptr->getHeatCapacity(GET_TEMPERATURE(i, n));
+	if (i < N) heat_capacities[i] = species_ptr->getHeatCapacity(GET_TEMPERATURE(i));
 }
 
-__global__ void getEnthalpies(unsigned int n, double *enthalpies, Species *species_ptr)
+__global__ void getEnthalpies(double *enthalpies, Species *species_ptr)
 {
 	unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
 
-	if (i < n) enthalpies[i] = species_ptr->getEnthalpy(GET_TEMPERATURE(i, n));
+	if (i < N) enthalpies[i] = species_ptr->getEnthalpy(GET_TEMPERATURE(i));
 }
 
-__global__ void getThermalConductivities(unsigned int n, double *thermal_conductivities, IdealGas *species_ptr)
+__global__ void getThermalConductivities(double *thermal_conductivities, IdealGas *species_ptr)
 {
 	unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
 
-	if (i < n) thermal_conductivities[i] = species_ptr->getThermalConductivity(GET_TEMPERATURE(i, n));
+	if (i < N) thermal_conductivities[i] = species_ptr->getThermalConductivity(GET_TEMPERATURE(i));
 }
 
-__global__ void getHeatCapacities(unsigned int n, double *heat_capacities, IdealGas *species_ptr)
+__global__ void getHeatCapacities(double *heat_capacities, IdealGas *species_ptr)
 {
 	unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
 
-	if (i < n) heat_capacities[i] = species_ptr->getHeatCapacity(GET_TEMPERATURE(i, n));
+	if (i < N) heat_capacities[i] = species_ptr->getHeatCapacity(GET_TEMPERATURE(i));
 }
 
-__global__ void getEnthalpies(unsigned int n, double *enthalpies, IdealGas *species_ptr)
+__global__ void getEnthalpies(double *enthalpies, IdealGas *species_ptr)
 {
 	unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
 
-	if (i < n) enthalpies[i] = species_ptr->getEnthalpy(GET_TEMPERATURE(i, n));
+	if (i < N) enthalpies[i] = species_ptr->getEnthalpy(GET_TEMPERATURE(i));
 }

@@ -7,17 +7,12 @@
 
 #include "thermo-physical-properties/Species.cuh"
 
-Species nickel_aluminide;
+__device__ Species *nickel_aluminide;
+__device__ Phase *phases_NiAl;
 
-__host__ void loadNickelAlumnide(double sharpness_coefficient = 100.0)
+__device__ void loadNickelAlumnide(double sharpness_coefficient = 100.0)
 {
-	Enthalpy enthalpy_solid_NiAl, enthalpy_liquid_NiAl;
-
-	ThermalConductivity thermal_conductivity_solid_NiAl, thermal_conductivity_liquid_NiAl;
-
-	Phase phases_NiAl[2];
-
-	enthalpy_solid_NiAl.assignCoefficients(
+	Enthalpy enthalpy_solid_NiAl(
 		41.86,
 		13.81,
 		0.0,
@@ -26,7 +21,7 @@ __host__ void loadNickelAlumnide(double sharpness_coefficient = 100.0)
 		-131.5
 	);
 
-	enthalpy_liquid_NiAl.assignCoefficients(
+	Enthalpy enthalpy_liquid_NiAl(
 		71.16,
 		0.0,
 		0.0,
@@ -35,10 +30,10 @@ __host__ void loadNickelAlumnide(double sharpness_coefficient = 100.0)
 		-99.54
 	);
 
-	thermal_conductivity_solid_NiAl.assignCoefficients(72.8, 0.0156, -1.35E-5);
-	thermal_conductivity_liquid_NiAl.assignCoefficients(23.9, 0.0, 0.0);
+	ThermalConductivity thermal_conductivity_solid_NiAl(72.8, 0.0156, -1.35E-5);
+	ThermalConductivity thermal_conductivity_liquid_NiAl(23.9, 0.0, 0.0);
 
-	phases_NiAl[0].initialize(
+	Phase solid_NiAl(
 		5650.0,
 		enthalpy_solid_NiAl,
 		thermal_conductivity_solid_NiAl,
@@ -47,7 +42,7 @@ __host__ void loadNickelAlumnide(double sharpness_coefficient = 100.0)
 		sharpness_coefficient
 	);
 
-	phases_NiAl[1].initialize(
+	Phase liquid_NiAl(
 		4798.3,
 		enthalpy_liquid_NiAl,
 		thermal_conductivity_liquid_NiAl,
@@ -56,7 +51,15 @@ __host__ void loadNickelAlumnide(double sharpness_coefficient = 100.0)
 		sharpness_coefficient
 	);
 
-	nickel_aluminide.initialize(2, phases_NiAl, 85.6748386E-3);
+	phases_NiAl = new Phase[2]{solid_NiAl, liquid_NiAl};
+
+	nickel_aluminide = new Species(2, phases_NiAl, 85.6748386E-3);
+}
+
+__device__ void unloadNickelAluminide()
+{
+	delete nickel_aluminide;
+	delete [] phases_NiAl;
 }
 
 #endif

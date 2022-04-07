@@ -42,7 +42,7 @@ SPECIES_HPP := $(INCDIR)/$(TRPDIR)/Species.cuh $(INCDIR)/$(TRPDIR)/Ideal_Gas.cuh
 
 # Flags required for compiler
 CFLAGS := # -fopenmp -O2
-LIB := -lm
+LIB := # -lm
 INC := -I $(INCDIR)
 
 $(TARGET) : $(OBJECTS)

@@ -1,73 +1,88 @@
-#include <iostream>
+#include "thermo-physical-properties/Core-Shell-Particle.cuh"
 
 #include "species/Aluminium.cuh"
 #include "species/Nickel.cuh"
 #include "species/NickelAluminide.cuh"
 
-#include "thermo-physical-properties/Core-Shell-Particle.cuh"
+#include <iostream>
 
-#define TEMPERATURE_UPPER_BOUND 2500.0	// K
-#define TEMPERATURE_LOWER_BOUND 273.15	// K
+#define N 1000
+#define TEMPERATURE_LOWER_BOUND	250.0	// K
+#define TEMPERATURE_UPPER_BOUND 1000.0	// K
+#define GET_TEMPERATURE(i) (TEMPERATURE_LOWER_BOUND + (TEMPERATURE_UPPER_BOUND - TEMPERATURE_LOWER_BOUND) * ((double) i) / ((double) N - 1.0))
 
-#define GET_TEMPERATURE(i, n) (TEMPERATURE_LOWER_BOUND + (TEMPERATURE_UPPER_BOUND - TEMPERATURE_LOWER_BOUND) * ((double) i) / ((double) n - 1.0))
+__device__ CoreShellParticle::Particle *Ni_clad_Al_particle;
 
-double core_radius = 32.5E-6;
-double overall_radius = 39.5E-6;
-
-__global__ void initialize(CoreShellParticle::Particle *particle_ptr)
-{
-	particle_ptr->initialize();
-}
-
-__global__ void getEnthalpies(unsigned int n, double *enthalpies, CoreShellParticle::Particle *particle_ptr)
-{
-	unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
-
-	if (i < n) enthalpies[i] = particle_ptr->getEnthalpy(GET_TEMPERATURE(i, n));
-}
-
-int main(int argc, char const *argv[])
+__global__ void allocateMemory()
 {
 	loadAluminium();
 	loadNickel();
 	loadNickelAlumnide();
 
 	CoreShellParticle::initialize(
-		&aluminium, &nickel, &nickel_aluminide,
-		core_radius, overall_radius
+		aluminium,
+		nickel,
+		nickel_aluminide,
+		32.5E-6,
+		39.5E-6
 	);
 
-    CoreShellParticle::Particle *Ni_clad_Al_particle;
-	cudaMalloc(&Ni_clad_Al_particle, sizeof(CoreShellParticle::Particle));
+	Ni_clad_Al_particle = new CoreShellParticle::Particle();
+}
 
-	initialize<<<1,1>>>(Ni_clad_Al_particle);
+__global__ void deallocateMemory()
+{
+	delete Ni_clad_Al_particle;
 
-	unsigned int n = 10;
+	unloadAluminium();
+	unloadNickel();
+	unloadNickelAluminide();
+}
 
-    double *enthalpies;
-	cudaMalloc(&enthalpies, n * sizeof(double));
+__global__ void calcEnthalpies(double *enthalpy_array, double *heat_capacity_array, double *thermal_conductivity_array)
+{
+	unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
 
-	getEnthalpies<<<(n+255)/256, 256>>>(n, enthalpies, Ni_clad_Al_particle);
+	if (i < N) 
+	{
+		double T = GET_TEMPERATURE(i);
+		enthalpy_array[i] = Ni_clad_Al_particle->getEnthalpy(T);
+		heat_capacity_array[i] = Ni_clad_Al_particle->getHeatCapacity(T);
+		thermal_conductivity_array[i] = Ni_clad_Al_particle->getThermalConductivity(T);
+	}
+}
+
+int main(int argc, char const *argv[])
+{
+	double enthalpy_array_h[N], heat_capacity_array_h[N], thermal_conductivity_array_h[N];
+
+	double *enthalpy_array_d, *heat_capacity_array_d, *thermal_conductivity_array_d;
+	cudaMalloc(&enthalpy_array_d, N*sizeof(double));
+	cudaMalloc(&heat_capacity_array_d, N*sizeof(double));
+	cudaMalloc(&thermal_conductivity_array_d, N*sizeof(double));
+
+	allocateMemory<<<1,1>>>();
 
 	cudaDeviceSynchronize();
 
-	double enthalpies_host[n];
+	calcEnthalpies<<<(N+255)/256, 256>>>(enthalpy_array_d, heat_capacity_array_d, thermal_conductivity_array_d);
 
-	cudaMemcpy(enthalpies_host, enthalpies, n * sizeof(double), cudaMemcpyDeviceToHost);
+	cudaDeviceSynchronize();
+	
+	cudaMemcpy(enthalpy_array_h, enthalpy_array_d, N * sizeof(double), cudaMemcpyDeviceToHost);
+	cudaMemcpy(heat_capacity_array_h, heat_capacity_array_d, N * sizeof(double), cudaMemcpyDeviceToHost);
+	cudaMemcpy(thermal_conductivity_array_h, thermal_conductivity_array_d, N * sizeof(double), cudaMemcpyDeviceToHost);
 
-	for (int i = 0; i < n; i++)
+	for (int i = 0; i < N; i++)
 
-		std::cout << "Temperature : " << GET_TEMPERATURE(i, n) << " K\t" << "Enthalpy : " << enthalpies_host[i] << " J / mol.\n";
+		std::cout << "Temperature : " << GET_TEMPERATURE(i) << " K\t" << "Heat Capacity : " << heat_capacity_array_h[i] << " J / kg - K\t" <<
+		"Enthalpy : " << enthalpy_array_h[i] << " J / kg\t" << "Thermal Conductivity : " << thermal_conductivity_array_h[i] << " W / m - K\n";
 
-	cudaFree(enthalpies);
+	deallocateMemory<<<1,1>>>();
 
-	cudaFree(Ni_clad_Al_particle);
+	cudaFree(thermal_conductivity_array_d);
+	cudaFree(heat_capacity_array_d);
+	cudaFree(enthalpy_array_d);
 
-	aluminium.deallocateMemory();
-	nickel.deallocateMemory();
-	nickel_aluminide.deallocateMemory();
-
-	CoreShellParticle::deallocate();
-
-    return 0;
+	return 0;
 }

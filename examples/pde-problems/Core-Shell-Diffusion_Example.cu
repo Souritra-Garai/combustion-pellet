@@ -10,121 +10,123 @@
 // #include "utilities/Keyboard_Interrupt.hpp"
 // #include "utilities/File_Generator.hpp"
 
-#define MAX_ITER 5000
-#define Dt 0.0001
+#define MAX_ITER 1E6
+#define Dt 0.000001
 
-long double core_radius = 32.5E-6;
-long double overall_radius = 39.5E-6;
+#define N 1001
 
 // ArrheniusDiffusivityModel<long double> Alawieh_diffusivity(2.56E-6, 102.191E3);
 // ArrheniusDiffusivityModel<long double> Du_diffusivity(9.54E-8, 26E3);
 
 // void printState(size_t iteration_number, CoreShellDiffusion<long double> &particle);
 
-__global__ void initialize(CoreShellDIffusion::Diffusion *diffusion_problem)
-{
-	diffusion_problem->initializeParticleFromDevice();
-}
+__device__ CoreShellDIffusion::Diffusion *diffusion_problem;
+// __device__ double diffusivity = 1E-10;
 
-__global__ void deinitialize(CoreShellDIffusion::Diffusion *diffusion_problem)
-{
-	diffusion_problem->deallocateMemoryFromDevice();
-}
-
-int main(int argc, char const *argv[])
+__global__ void allocateMemory()
 {
 	loadAluminium();
 	loadNickel();
 	loadNickelAlumnide();
 
 	CoreShellParticle::initialize(
-		&aluminium, &nickel, &nickel_aluminide,
-		core_radius, overall_radius
+		aluminium,
+		nickel,
+		nickel_aluminide,
+		32.5E-6,
+		39.5E-6
 	);
 
-	CoreShellDIffusion::setGridSize<<<1,1>>>(1001);
-	CoreShellDIffusion::setTimeStep<<<1,1>>>(Dt);
+	CoreShellDIffusion::setGridSize(N);
+	CoreShellDIffusion::setTimeStep(Dt);
 
-	CoreShellDIffusion::Diffusion *diffusion_problem;
-	cudaMalloc(&diffusion_problem, sizeof(CoreShellDIffusion::Diffusion));
-
-	initialize<<<1,1>>>(diffusion_problem);
-	deinitialize<<<1,1>>>(diffusion_problem);
-
-	aluminium.deallocateMemory();
-	nickel.deallocateMemory();
-	nickel_aluminide.deallocateMemory();
-
-
-	CoreShellDIffusion::deallocate<<<1,1>>>();
-	CoreShellParticle::deallocate();
-
-    // FileGenerator file_generator;
-
-    // std::ofstream config_file = file_generator.getTXTFile("diffusion_config");
-    // std::ofstream conc_A_file = file_generator.getCSVFile("concentration_A");
-    // std::ofstream conc_B_file = file_generator.getCSVFile("concentration_B");
-
-    // Ni_clad_Al_particle.printGridPoints(conc_A_file, ',');
-    // Ni_clad_Al_particle.printGridPoints(conc_B_file, ',');
-
-    // Ni_clad_Al_particle.printProperties(config_file);
-    // config_file.close();
-
-    // size_t __iter = 1;
-
-    // long double temperature = 1400;
-    // long double diffusivity = Alawieh_diffusivity.getDiffusivity(temperature);
-
-    // setUpKeyboardInterrupt();
-    
-    // try
-    // {
-    //     while (!Ni_clad_Al_particle.isCombustionComplete() && __iter <= MAX_ITER)
-    //     {
-    //         Ni_clad_Al_particle.setUpEquations(diffusivity);
-    //         Ni_clad_Al_particle.solveEquations();
-            
-    //         Ni_clad_Al_particle.printConcentrationProfileA(conc_A_file, ',', Dt * __iter);
-    //         Ni_clad_Al_particle.printConcentrationProfileB(conc_B_file, ',', Dt * __iter);
-
-    //         if (__iter % 100 == 0)
-    //         {
-    //             std::cout << "Iteration # " << __iter << std::endl;
-    //         }
-
-    //         __iter++;
-    //     }
-    // }
-
-    // catch (InterruptException& e)
-    // {
-    //     std::cout << "\nCaught signal " << e.S << std::endl;
-
-    //     conc_A_file.close();
-    //     conc_B_file.close();
-
-    //     return 1;
-    // }
-
-    // conc_A_file.close();
-    // conc_B_file.close();
-    
-    return 0;
+	diffusion_problem = new CoreShellDIffusion::Diffusion();
 }
 
-// void printState(size_t iteration_number, CoreShellDiffusion<long double> &particle)
-// {
-//     long double Y_Al = particle.getMassFractionsCoreMaterial();
-//     long double Y_Ni = particle.getMassFractionsShellMaterial();
-//     long double Y_NiAl = particle.getMassFractionsProductMaterial();
+__global__ void deallocateMemory()
+{
+	delete diffusion_problem;
 
-//     std::cout << "Iteration # " << iteration_number;
+	CoreShellDIffusion::deallocate();
 
-//     std::cout << "\tAl\t:\t" << Y_Al;
-//     std::cout << "\tNi\t:\t" << Y_Ni;
-//     std::cout << "\tNiAl\t:\t" << Y_NiAl;
-//     std::cout << "\tSum\t:\t" << Y_Al + Y_Ni + Y_NiAl;
+	unloadAluminium();
+	unloadNickel();
+	unloadNickelAluminide();
+}
 
-//     std::cout << std::endl;
-// }
+__global__ void initializeCoreShellParticle()
+{
+	size_t i = blockDim.x * blockIdx.x + threadIdx.x;
+
+	if (i < CoreShellDIffusion::n) 
+	{
+		diffusion_problem->setInitialState(i);
+	}
+}
+
+__global__ void initIteration()
+{
+	diffusion_problem->setCoefficient_1(1E-9);
+}
+
+__global__ void iterate()
+{
+	size_t i = blockDim.x * blockIdx.x + threadIdx.x;
+
+	diffusion_problem->setUpEquations(i);
+}
+
+__global__ void solve()
+{
+	size_t i = blockDim.x * blockIdx.x + threadIdx.x;
+
+	diffusion_problem->solveEquations(i);
+}
+
+__global__ void printMass()
+{
+	double mass_A = diffusion_problem->getAtmMassA();
+	double mass_B = diffusion_problem->getAtmMassB();
+
+	printf("Mass A : %e kg\n", mass_A);
+	printf("Mass B : %e kg\n", mass_B);
+	printf("Mass : %e kg\n", mass_A + mass_B);
+}
+
+int main(int argc, char const *argv[])
+{
+	allocateMemory<<<1,1>>>();
+
+	initializeCoreShellParticle<<<1, N>>>();
+
+	double mass;
+	cudaMemcpyFromSymbol(&mass, CoreShellParticle::core_mass, sizeof(double));
+	printf("Core mass : %e kg\n", mass);
+	cudaMemcpyFromSymbol(&mass, CoreShellParticle::shell_mass, sizeof(double));
+	printf("Shell mass : %e kg\n", mass);
+	cudaMemcpyFromSymbol(&mass, CoreShellParticle::mass, sizeof(double));
+	printf("Overall mass : %e kg\n", mass);
+
+	printMass<<<1,1>>>();
+
+	cudaDeviceSynchronize();
+
+	initIteration<<<1,1>>>();
+
+	cudaDeviceSynchronize();
+
+	for (size_t i = 0; i < 1000; i++)
+	{
+		iterate<<<1, N>>>();
+
+		cudaDeviceSynchronize();
+
+		solve<<<1,2>>>();
+
+		cudaDeviceSynchronize();
+	}
+
+	printMass<<<1,1>>>();
+	deallocateMemory<<<1,1>>>();
+    return 0;
+}
