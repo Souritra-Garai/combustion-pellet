@@ -23,8 +23,8 @@ SRCEXT := cu
 SOURCES := $(shell find $(SRCDIR) $(LIBDIR) -type f -name *.$(SRCEXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 
-LUSSRCS := $(shell find $(SRCDIR)/$(LUSDIR) -type f -name *.$(SRCEXT))
-LUSOBJS := $(patsubst $(SRCDIR)/%, $(BUILDDIR)/%, $(LUSSRCS:.$(SRCEXT)=.o))
+# LUSSRCS := $(shell find $(SRCDIR)/$(LUSDIR) -type f -name *.$(SRCEXT))
+# LUSOBJS := $(patsubst $(SRCDIR)/%, $(BUILDDIR)/%, $(LUSSRCS:.$(SRCEXT)=.o))
 
 QRSSRCS := $(shell find $(SRCDIR)/$(QRSDIR) -type f -name *.$(SRCEXT))
 QRSOBJS := $(patsubst $(SRCDIR)/%, $(BUILDDIR)/%, $(QRSSRCS:.$(SRCEXT)=.o))

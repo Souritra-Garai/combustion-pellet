@@ -90,7 +90,7 @@ __global__ void printMass()
 
 	printf("Mass A : %e kg\n", mass_A);
 	printf("Mass B : %e kg\n", mass_B);
-	printf("Mass : %e kg\n", mass_A + mass_B);
+	printf("Mass : %e kg\n\n", mass_A + mass_B);
 }
 
 int main(int argc, char const *argv[])
@@ -105,7 +105,7 @@ int main(int argc, char const *argv[])
 	cudaMemcpyFromSymbol(&mass, CoreShellParticle::shell_mass, sizeof(double));
 	printf("Shell mass : %e kg\n", mass);
 	cudaMemcpyFromSymbol(&mass, CoreShellParticle::mass, sizeof(double));
-	printf("Overall mass : %e kg\n", mass);
+	printf("Overall mass : %e kg\n\n", mass);
 
 	printMass<<<1,1>>>();
 
@@ -127,6 +127,10 @@ int main(int argc, char const *argv[])
 	}
 
 	printMass<<<1,1>>>();
+	cudaDeviceSynchronize();
+
 	deallocateMemory<<<1,1>>>();
+	cudaDeviceSynchronize();
+
     return 0;
 }
