@@ -24,8 +24,8 @@
 #include "utilities/Keyboard_Interrupt.hpp"
 #include "utilities/File_Generator.hpp"
 
-#define MAX_ITER 5000
-#define Dt 0.0001
+#define MAX_ITER 1000
+#define Dt 0.000001
 
 long double core_radius = 32.5E-6;
 long double overall_radius = 39.5E-6;
