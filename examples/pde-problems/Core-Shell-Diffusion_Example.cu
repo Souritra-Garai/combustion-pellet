@@ -1,29 +1,19 @@
-#include <iostream>
-
 #include "species/Aluminium.cuh"
 #include "species/Nickel.cuh"
 #include "species/NickelAluminide.cuh"
 
-#include "thermo-physical-properties/Core-Shell-Particle.cuh"
+#include "thermo-physical-properties/Arrhenius_Diffusivity_Model.cuh"
 #include "pde-problems/Core-Shell-Diffusion.cuh"
-
-// #include "utilities/Keyboard_Interrupt.hpp"
-// #include "utilities/File_Generator.hpp"
 
 #define MAX_ITER 1E6
 #define Dt 0.000001
 
 #define N 1001
 
-// ArrheniusDiffusivityModel<long double> Alawieh_diffusivity(2.56E-6, 102.191E3);
-// ArrheniusDiffusivityModel<long double> Du_diffusivity(9.54E-8, 26E3);
-
-// void printState(size_t iteration_number, CoreShellDiffusion<long double> &particle);
-
 __device__ CoreShellDIffusion::Diffusion *diffusion_problem;
-// __device__ double diffusivity = 1E-10;
+__device__ ArrheniusDiffusivityModel *Alawieh_diffusivity;
 
-__global__ void allocateMemory()
+__global__ void allocateMemory(double *concentration_array_A, double *concentration_array_B)
 {
 	loadAluminium();
 	loadNickel();
@@ -41,10 +31,14 @@ __global__ void allocateMemory()
 	CoreShellDIffusion::setTimeStep(Dt);
 
 	diffusion_problem = new CoreShellDIffusion::Diffusion();
+	Alawieh_diffusivity = new ArrheniusDiffusivityModel(2.56E-6, 102.191E3);
+
+	diffusion_problem->setArrayAddresses(concentration_array_A, concentration_array_B);
 }
 
 __global__ void deallocateMemory()
 {
+	delete Alawieh_diffusivity;
 	delete diffusion_problem;
 
 	CoreShellDIffusion::deallocate();
@@ -66,10 +60,10 @@ __global__ void initializeCoreShellParticle()
 
 __global__ void initIteration()
 {
-	diffusion_problem->setCoefficient_1(1E-9);
+	diffusion_problem->setDiffusivity(Alawieh_diffusivity->getDiffusivity(1500));
 }
 
-__global__ void iterate()
+__global__ void setUpEquations()
 {
 	size_t i = blockDim.x * blockIdx.x + threadIdx.x;
 
@@ -81,6 +75,11 @@ __global__ void solve()
 	size_t i = blockDim.x * blockIdx.x + threadIdx.x;
 
 	diffusion_problem->solveEquations(i);
+}
+
+__global__ void updateMassFractions()
+{
+	diffusion_problem->updateMassFractions();
 }
 
 __global__ void printMass()
@@ -95,9 +94,15 @@ __global__ void printMass()
 
 int main(int argc, char const *argv[])
 {
-	allocateMemory<<<1,1>>>();
+	double *concentration_array_A, *concentration_array_B;
+	cudaMalloc(&concentration_array_A, N * sizeof(double));
+	cudaMalloc(&concentration_array_B, N * sizeof(double));
+
+	allocateMemory<<<1,1>>>(concentration_array_A, concentration_array_B);
 
 	initializeCoreShellParticle<<<1, N>>>();
+
+	cudaDeviceSynchronize();
 
 	double mass;
 	cudaMemcpyFromSymbol(&mass, CoreShellParticle::core_mass, sizeof(double));
@@ -109,28 +114,28 @@ int main(int argc, char const *argv[])
 
 	printMass<<<1,1>>>();
 
-	cudaDeviceSynchronize();
+	double conc_array[N];
 
 	initIteration<<<1,1>>>();
 
-	cudaDeviceSynchronize();
-
-	for (size_t i = 0; i < 1000; i++)
+	for (size_t i = 0; i < 10000; i++)
 	{
-		iterate<<<1, N>>>();
-
-		cudaDeviceSynchronize();
-
+		setUpEquations<<<1, N>>>();
 		solve<<<1,2>>>();
-
-		cudaDeviceSynchronize();
+		updateMassFractions<<<1,1>>>();
+		// cudaMemcpy(conc_array, concentration_array_A, N * sizeof(double), cudaMemcpyDeviceToHost);
 	}
+
+	// for(size_t i = 0; i < N; i++) printf("%e\n", conc_array[i]);
 
 	printMass<<<1,1>>>();
 	cudaDeviceSynchronize();
 
 	deallocateMemory<<<1,1>>>();
 	cudaDeviceSynchronize();
+
+	cudaFree(concentration_array_A);
+	cudaFree(concentration_array_B);
 
     return 0;
 }

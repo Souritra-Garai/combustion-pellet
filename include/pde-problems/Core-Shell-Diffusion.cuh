@@ -6,18 +6,20 @@
 __device__ double atomicAdd(double* a, double b) { return b; }
 #endif
 
+#include <ostream>
+
 #include "thermo-physical-properties/Core-Shell-Particle.cuh"
 #include "lusolver/LU_Solver.cuh"
 
 namespace CoreShellDIffusion
 {
+	__device__ double time;
 	__device__ double delta_t;
+	__device__ double _coefficient_2;
 
 	__device__ size_t n;
 	__device__ double delta_r;
 	__device__ double *radial_coordinate_sqr;
-
-	__device__ double coefficient_2;
 
 	__device__ void setGridSize(size_t num_points)
 	{
@@ -40,11 +42,50 @@ namespace CoreShellDIffusion
 
 	__device__ void setTimeStep(double time_step)
 	{
+		time = 0.0;
 		delta_t = time_step;
-		coefficient_2 = 1.0 / delta_t;
+		_coefficient_2 = 1.0 / delta_t;
 	}
 
-	// static void printConfiguration(std::ostream &output_stream);
+	__host__ void printConfiguration(std::ostream &output_stream)
+	{
+		double delta_t, delta_r;
+		size_t n;
+
+		cudaMemcpyFromSymbol(&delta_t, CoreShellDIffusion::delta_t, sizeof(double));
+		cudaMemcpyFromSymbol(&delta_r, CoreShellDIffusion::delta_r, sizeof(double));
+		cudaMemcpyFromSymbol(&n, CoreShellDIffusion::n, sizeof(size_t));
+
+		output_stream << "Time Step\t:\t" << delta_t << "\ts" << std::endl;
+
+		output_stream << "Number of Grid Points\t:\t" << n << std::endl;
+
+		output_stream << "Grid Size\t:\t" << delta_r << "\tm" << std::endl;
+	}
+
+	__host__ void printGridPoints(std::ostream &output_stream, char delimiter=',')
+	{
+		double radius;
+		cudaMemcpyFromSymbol(&radius, CoreShellParticle::overall_radius, sizeof(double));
+
+		size_t n;
+		cudaMemcpyFromSymbol(&n, CoreShellDIffusion::n, sizeof(size_t));
+
+		for (size_t i = 0; i < n-1; i++) output_stream << radius * (double) i / ((double) n - 1.0) << delimiter;
+		output_stream << "\n";
+	}
+
+	__host__ void printConcentrationArray(std::ostream &output_stream, double *concentration_array, double time = 0.0)
+	{
+		output_stream << time << '\t';
+
+		size_t n;
+		cudaMemcpyFromSymbol(&n, CoreShellDIffusion::n, sizeof(size_t));
+		
+		for (size_t i = 0; i < n-1; i++) output_stream << concentration_array[i] << '\t';
+
+		output_stream << concentration_array[n-1] << '\n';
+	}
 
 	class Diffusion : public CoreShellParticle::Particle
 	{
@@ -56,20 +97,21 @@ namespace CoreShellDIffusion
 			LUSolver _solver_A;
 			LUSolver _solver_B;
 
-			double coefficient_1;
+			double _coefficient_1;
 
 		public :
 
 			__device__ Diffusion() : CoreShellParticle::Particle(), _solver_A(n), _solver_B(n)
 			{
-				_concentration_array_A = new double[n];
-				_concentration_array_B = new double[n];
+				;
 			}
 
-			__device__ ~Diffusion()
-			{
-				delete [] _concentration_array_B;
-				delete [] _concentration_array_A;
+			__device__ void setArrayAddresses(
+				double *concentration_array_A,
+				double *concentration_array_B
+			) {
+				_concentration_array_A = concentration_array_A;
+				_concentration_array_B = concentration_array_B;
 			}
 
 			__device__ __forceinline__ double getRxnConcA(size_t index)
@@ -136,9 +178,9 @@ namespace CoreShellDIffusion
 				return 4.0 * M_PI * delta_r * CoreShellParticle::shell_material->getMolarMass() * moles;
 			}
 
-			__device__ __forceinline__ void setCoefficient_1(double diffusivity)
+			__device__ __forceinline__ void setDiffusivity(double diffusivity)
 			{
-				coefficient_1 = - 0.5 * diffusivity / pow(delta_r, 2);
+				_coefficient_1 = - 0.5 * diffusivity / pow(delta_r, 2);
 			}
 
 			__device__ __forceinline__ void setUpEquations(size_t index, Diffusion *diffusion_problem)
@@ -151,26 +193,26 @@ namespace CoreShellDIffusion
 				
 				else if (index < n-1)
 				{
-					double coefficient_3 = coefficient_1 * radial_coordinate_sqr[index+1] / radial_coordinate_sqr[index];
-					double coefficient_4 = coefficient_2 - coefficient_1 - coefficient_3;
-					double coefficient_5 = coefficient_2 + coefficient_1 + coefficient_3;
+					double coefficient_3 = _coefficient_1 * radial_coordinate_sqr[index+1] / radial_coordinate_sqr[index];
+					double coefficient_4 = _coefficient_2 - _coefficient_1 - coefficient_3;
+					double coefficient_5 = _coefficient_2 + _coefficient_1 + coefficient_3;
 
 					_solver_A.setEquation(
 						index,
-						coefficient_1,
+						_coefficient_1,
 						coefficient_4,
 						coefficient_3,
-						- coefficient_1 * diffusion_problem->_concentration_array_A[index-1] +
+						- _coefficient_1 * diffusion_problem->_concentration_array_A[index-1] +
 						coefficient_5 * diffusion_problem->_concentration_array_A[index] +
 						- coefficient_3 * diffusion_problem->_concentration_array_A[index+1]
 					);
 
 					_solver_B.setEquation(
 						index,
-						coefficient_1,
+						_coefficient_1,
 						coefficient_4,
 						coefficient_3,
-						- coefficient_1 * diffusion_problem->_concentration_array_B[index-1] +
+						- _coefficient_1 * diffusion_problem->_concentration_array_B[index-1] +
 						coefficient_5 * diffusion_problem->_concentration_array_B[index] +
 						- coefficient_3 * diffusion_problem->_concentration_array_B[index+1]
 					);
@@ -194,13 +236,26 @@ namespace CoreShellDIffusion
 				else if (index == 1)	_solver_B.getSolution(_concentration_array_B);
 			}
 
-			// void copyFrom(Diffusion &diffusion_problem);
-			// void copyTo(Diffusion &diffusion_problem);
+			__device__ __forceinline__ void updateMassFractions()
+			{
+				double Y_A  = 0.5 * getRxnConcA(n-1)  * radial_coordinate_sqr[n-1];
+				double Y_B  = 0.5 * getRxnConcA(n-1)  * radial_coordinate_sqr[n-1];
+				double Y_AB = 0.5 * getRxnConcAB(n-1) * radial_coordinate_sqr[n-1];
 
-			// void printConcentrationProfileA(std::ostream &output_stream, char delimiter = '\t', double curr_time = 0);
-			// void printConcentrationProfileB(std::ostream &output_stream, char delimiter = '\t', double curr_time = 0);
+				for (size_t i = 1; i < n-1; i++)
+				{
+					Y_A  += getRxnConcA(i)  * radial_coordinate_sqr[i];
+					Y_B  += getRxnConcB(i)  * radial_coordinate_sqr[i];
+					Y_AB += getRxnConcAB(i) * radial_coordinate_sqr[i];
+				}
 
-			// void printGridPoints(std::ostream &output_stream, char delimiter = '\t');
+				Y_A  *= CoreShellParticle::core_material->getMolarMass();
+				Y_B  *= CoreShellParticle::shell_material->getMolarMass();
+				Y_AB *= CoreShellParticle::product_material->getMolarMass();
+
+				double sum = Y_A + Y_B + Y_AB;
+				setMassFractions(Y_A / sum, Y_B / sum, Y_AB / sum);
+			}
 	};
 }
 

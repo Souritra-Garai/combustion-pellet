@@ -128,6 +128,13 @@ namespace CoreShellParticle
 				_mass_fraction_shell_material = mass_fraction_shell_material;
 				_mass_fraction_product_material = mass_fraction_product_material;
 			}
+
+			__device__ __forceinline__ bool isReactionComplete(double tolerance = 0.001)
+			{
+				if (_mass_fraction_core_material < tolerance || _mass_fraction_shell_material < tolerance) return true;
+
+				else return false;
+			}
 	};
 }
 
