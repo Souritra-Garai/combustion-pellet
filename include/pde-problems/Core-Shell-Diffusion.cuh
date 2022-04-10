@@ -71,18 +71,20 @@ namespace CoreShellDIffusion
 		size_t n;
 		cudaMemcpyFromSymbol(&n, CoreShellDIffusion::n, sizeof(size_t));
 
+		output_stream << NAN << delimiter;
+
 		for (size_t i = 0; i < n-1; i++) output_stream << radius * (double) i / ((double) n - 1.0) << delimiter;
 		output_stream << "\n";
 	}
 
-	__host__ void printConcentrationArray(std::ostream &output_stream, double *concentration_array, double time = 0.0)
+	__host__ void printConcentrationArray(std::ostream &output_stream, double *concentration_array, double time = 0.0, char delimiter = '\t')
 	{
-		output_stream << time << '\t';
+		output_stream << time << delimiter;
 
 		size_t n;
 		cudaMemcpyFromSymbol(&n, CoreShellDIffusion::n, sizeof(size_t));
 		
-		for (size_t i = 0; i < n-1; i++) output_stream << concentration_array[i] << '\t';
+		for (size_t i = 0; i < n-1; i++) output_stream << concentration_array[i] << delimiter;
 
 		output_stream << concentration_array[n-1] << '\n';
 	}

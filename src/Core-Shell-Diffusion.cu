@@ -10,6 +10,7 @@
 #include "utilities/File_Generator.hpp"
 
 #include <iostream>
+#include <boost/program_options.hpp>
 
 #define MAX_ITER 1E6
 
@@ -19,9 +20,11 @@ double time_step = 1E-6;	// s
 double temperature = 1500;	// K
 double core_radius = 32.5E-6;	// m
 double overall_radius = 39.5E-6;	// m
+double activation_energy = 102.191E3;	// J / mol.
+double pre_exponential_factor = 2.56E-6;	// m2 / s
 
 __device__ CoreShellDIffusion::Diffusion *diffusion_problem;
-__device__ ArrheniusDiffusivityModel *Alawieh_diffusivity;
+__device__ ArrheniusDiffusivityModel *diffusivity_model;
 __device__ bool combustion_complete;
 __device__ double mass_A;
 __device__ double mass_B;
@@ -34,6 +37,8 @@ __global__ void allocateMemory(
 	double num_grid_points,
 	double core_radius, 
 	double overall_radius,
+	double activation_energy,
+	double pre_exponential_factor,
 	double *concentration_array_A,
 	double *concentration_array_B
 );
@@ -47,10 +52,15 @@ __global__ void updateMassFractions();
 
 __host__ void printMass(std::ostream &output_stream);
 __host__ void printMassFractions(std::ostream &output_stream);
-__host__ void printConcentrationArray(std::ostream &output_stream, double concentration_array[], size_t n);
+
+__host__ int setConfiguration(int argc, char const *argv[]);
 
 int main(int argc, char const *argv[])
 {
+	int flag = setConfiguration(argc, argv);
+
+	if (flag != 2) return flag;
+
 	double step = 0.005 / time_step;
 
 	double *concentration_array_A, *concentration_array_B;
@@ -65,6 +75,8 @@ int main(int argc, char const *argv[])
 		particle_num_grid_points,
 		core_radius,
 		overall_radius,
+		activation_energy,
+		pre_exponential_factor,
 		concentration_array_A,
 		concentration_array_B
 	);
@@ -78,8 +90,17 @@ int main(int argc, char const *argv[])
 	std::ofstream mass_file = folder.getCSVFile("mass");
 	std::ofstream mass_fractions_file = folder.getCSVFile("mass_fractions");
 
+	CoreShellDIffusion::printGridPoints(concentration_array_A_file, ',');
+	CoreShellDIffusion::printGridPoints(concentration_array_B_file, ',');
+
 	initializeCoreShellParticle<<<1, particle_num_grid_points>>>();
 	cudaDeviceSynchronize();
+
+	cudaMemcpy(concentration_array_A_host, concentration_array_A, particle_num_grid_points * sizeof(double), cudaMemcpyDeviceToHost);
+	cudaMemcpy(concentration_array_B_host, concentration_array_B, particle_num_grid_points * sizeof(double), cudaMemcpyDeviceToHost);
+
+	CoreShellDIffusion::printConcentrationArray(concentration_array_A_file, concentration_array_A_host, 0.0, ',');
+	CoreShellDIffusion::printConcentrationArray(concentration_array_B_file, concentration_array_B_host, 0.0, ',');
 
 	initIteration<<<1,1>>>(temperature);
 	cudaDeviceSynchronize();
@@ -90,13 +111,18 @@ int main(int argc, char const *argv[])
 
 	try
 	{
-		for (size_t i = 0; i < MAX_ITER; i++)
+		double time = 0.0;
+
+		for (size_t i = 0; i < MAX_ITER;)
 		{
 			size_t i_top = i + step;
 			for (; i < i_top; i++)
 			{
 				setUpEquations<<<1, particle_num_grid_points>>>();
+				
 				solve<<<1,2>>>();
+				time += time_step;
+
 				updateMassFractions<<<1,1>>>();
 
 				cudaMemcpyFromSymbol(&combustion_complete, ::combustion_complete, sizeof(bool));
@@ -110,8 +136,8 @@ int main(int argc, char const *argv[])
 			cudaMemcpy(concentration_array_A_host, concentration_array_A, particle_num_grid_points * sizeof(double), cudaMemcpyDeviceToHost);
 			cudaMemcpy(concentration_array_B_host, concentration_array_B, particle_num_grid_points * sizeof(double), cudaMemcpyDeviceToHost);
 
-			printConcentrationArray(concentration_array_A_file, concentration_array_A_host, particle_num_grid_points);
-			printConcentrationArray(concentration_array_B_file, concentration_array_B_host, particle_num_grid_points);
+			CoreShellDIffusion::printConcentrationArray(concentration_array_A_file, concentration_array_A_host, time, ',');
+			CoreShellDIffusion::printConcentrationArray(concentration_array_B_file, concentration_array_B_host, time, ',');
 
 			printMass(mass_file);
 			printMassFractions(mass_fractions_file);
@@ -122,15 +148,15 @@ int main(int argc, char const *argv[])
 
 	catch (InterruptException& e)
     {
-        std::cout << "\nCaught signal " << e.S << std::endl;
+		std::cout << "\nQuitting...\n";
 
 		cudaDeviceSynchronize();
 
 		cudaMemcpy(concentration_array_A_host, concentration_array_A, particle_num_grid_points * sizeof(double), cudaMemcpyDeviceToHost);
 		cudaMemcpy(concentration_array_B_host, concentration_array_B, particle_num_grid_points * sizeof(double), cudaMemcpyDeviceToHost);
 
-		printConcentrationArray(concentration_array_A_file, concentration_array_A_host, particle_num_grid_points);
-		printConcentrationArray(concentration_array_B_file, concentration_array_B_host, particle_num_grid_points);
+		CoreShellDIffusion::printConcentrationArray(concentration_array_A_file, concentration_array_A_host, particle_num_grid_points, ',');
+		CoreShellDIffusion::printConcentrationArray(concentration_array_B_file, concentration_array_B_host, particle_num_grid_points, ',');
 
 		printMass(mass_file);
 		printMassFractions(mass_fractions_file);
@@ -155,6 +181,8 @@ __global__ void allocateMemory(
 	double num_grid_points,
 	double core_radius,
 	double overall_radius,
+	double activation_energy,
+	double pre_exponential_factor,
 	double concentration_array_A[],
 	double concentration_array_B[]
 )
@@ -175,14 +203,14 @@ __global__ void allocateMemory(
 	CoreShellDIffusion::setTimeStep(time_step);
 
 	diffusion_problem = new CoreShellDIffusion::Diffusion();
-	Alawieh_diffusivity = new ArrheniusDiffusivityModel(2.56E-6, 102.191E3);
+	diffusivity_model = new ArrheniusDiffusivityModel(pre_exponential_factor, activation_energy);
 
 	diffusion_problem->setArrayAddresses(concentration_array_A, concentration_array_B);
 }
 
 __global__ void deallocateMemory()
 {
-	delete Alawieh_diffusivity;
+	delete diffusivity_model;
 	delete diffusion_problem;
 
 	CoreShellDIffusion::deallocate();
@@ -204,7 +232,7 @@ __global__ void initializeCoreShellParticle()
 
 __global__ void initIteration(double temperature)
 {
-	diffusion_problem->setDiffusivity(Alawieh_diffusivity->getDiffusivity(temperature));
+	diffusion_problem->setDiffusivity(diffusivity_model->getDiffusivity(temperature));
 	combustion_complete = false;
 }
 
@@ -261,4 +289,104 @@ __host__ void printConcentrationArray(std::ostream &output_stream, double conc_a
 {
 	for (size_t i = 0; i < n-1; i++) output_stream << conc_array[i] << ',';
 	output_stream << conc_array[n-1] << '\n';
+}
+
+int setConfiguration(int argc, const char * argv[])
+{
+	try
+	{
+		boost::program_options::options_description options_description_obj("Usage: Core-Shell-Diffusion [options]\nOptions");
+
+		options_description_obj.add_options()
+			("help",	"Produce help message")
+			("Du",		"Set diffusivity parameters to Du et al's model. Default is Alawieh et al's model.")
+			("num",		boost::program_options::value<size_t>(),	"Set number of grid points for particle diffusion pde-solver to arg. Default is 1001.")
+			("Dt",		boost::program_options::value<double>(),	"Set time step in seconds to arg. Default is 1E-6 seconds.")
+			("temp",	boost::program_options::value<double>(),	"Set particle temperature in kelvin to arg. Default is 1500 K.")
+			("radius",	boost::program_options::value<double>(),	"Set particle radius in metre to arg. Default is 39.5E-6 m.")
+			("core",	boost::program_options::value<double>(),	"Set particle core radius in metre to arg. Default is 32.5E-6 m");
+
+		boost::program_options::variables_map variables_map_obj;
+		boost::program_options::store(
+			boost::program_options::parse_command_line(argc, argv, options_description_obj),
+			variables_map_obj
+		);
+		boost::program_options::notify(variables_map_obj);
+
+		if (variables_map_obj.count("help"))
+		{
+			std::cout << options_description_obj << std::endl;
+			return 0;
+		}
+
+		if (variables_map_obj.count("Du"))
+		{
+			activation_energy = 26E3;
+			pre_exponential_factor = 9.54E-8;
+			std::cout << "Using Du et al's Diffusivity parameters." << std::endl;
+		}
+
+		if (variables_map_obj.count("num"))
+		{
+			particle_num_grid_points = variables_map_obj["num"].as<size_t>();
+		}
+
+		if (variables_map_obj.count("Dt"))
+		{
+			time_step = variables_map_obj["Dt"].as<double>();
+			
+			if (time_step <= 0.0)
+			{
+				std::cerr << "Dt cannot be negative. Given value : " << time_step << std::endl;
+				return 1;
+			}
+		}
+
+		if (variables_map_obj.count("temp"))
+		{
+			temperature = variables_map_obj["temp"].as<double>();
+
+			if (temperature <= 0.0)
+			{
+				std::cerr << "Temperature cannot be negative. Given value : " << temperature << std::endl;
+				return 1;
+			}
+		}
+
+		if (variables_map_obj.count("radius"))
+		{
+			overall_radius = variables_map_obj["radius"].as<double>();
+
+			if (overall_radius <= 0.0)
+			{
+				std::cerr << "Overall radius cannot be negative. Given value : " << overall_radius << std::endl;
+				return 1;
+			}
+		}
+
+		if (variables_map_obj.count("core"))
+		{
+			core_radius = variables_map_obj["core"].as<double>();
+
+			if (core_radius <= 0.0)
+			{
+				std::cerr << "Core radius cannot be negative. Given value : " << core_radius << std::endl;
+				return 1;
+			}
+
+			else if (core_radius >= overall_radius)
+			{
+				std::cerr << "Core radius cannot be greater than overall radius. Given value : " << core_radius << std::endl;
+				std::cerr << "Overall radius : " << overall_radius << std::endl;
+				return 1;
+			}
+		}
+	}
+
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
+
+	return 2;
 }
