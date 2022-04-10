@@ -35,8 +35,8 @@ TRPOBJS := $(patsubst $(SRCDIR)/%, $(BUILDDIR)/%, $(TRPSRCS:.$(SRCEXT)=.o))
 PDESRCS := $(shell find $(SRCDIR)/$(PDEDIR) -type f -name *.$(SRCEXT))
 PDEOBJS := $(patsubst $(SRCDIR)/%, $(BUILDDIR)/%, $(PDESRCS:.$(SRCEXT)=.o))
 
-UTILSRCS := $(shell find $(SRCDIR)/$(UTILDIR) -type f -name *.$(SRCEXT))
-UTILOBJS := $(patsubst $(SRCDIR)/%, $(BUILDDIR)/%, $(UTILSRCS:.$(SRCEXT)=.o))
+UTILSRCS := $(shell find $(SRCDIR)/$(UTILDIR) -type f -name *.cpp)
+UTILOBJS := $(patsubst $(SRCDIR)/%, $(BUILDDIR)/%, $(UTILSRCS:.cpp=.o))
 
 SPECIES_HPP := $(INCDIR)/$(TRPDIR)/Species.cuh $(INCDIR)/$(TRPDIR)/Ideal_Gas.cuh $(INCDIR)/$(TRPDIR)/Phase.cuh $(INCDIR)/$(TRPDIR)/Enthalpy.cuh $(INCDIR)/$(TRPDIR)/Thermal_Conductivity.cuh $(INCDIR)/$(SPCDIR)/Argon.cuh $(INCDIR)/$(SPCDIR)/Aluminium.cuh $(INCDIR)/$(SPCDIR)/Nickel.cuh $(INCDIR)/$(SPCDIR)/NickelAluminide.cuh
 
@@ -69,6 +69,16 @@ $(BUILDDIR)/Thermo-Physical_Properties.o : $(SRCDIR)/Thermo-Physical_Properties.
 	@mkdir -p $(BUILDDIR);
 	@echo "Compiling Thermo-Physical_Properties...";
 	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/Thermo-Physical_Properties.cu -I /usr/include/boost -o $(BUILDDIR)/Thermo-Physical_Properties.o
+
+Core-Shell-Diffusion : $(BUILDDIR)/Core-Shell-Diffusion.o $(UTILOBJS)
+	@mkdir -p $(BINDIR);
+	@echo "Linking all files for Core-Shell-Diffusion...";
+	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/Core-Shell-Diffusion.o $(UTILOBJS) -lboost_program_options -o $(BINDIR)/Core-Shell-Diffusion
+
+$(BUILDDIR)/Core-Shell-Diffusion.o : $(SRCDIR)/Core-Shell-Diffusion.cu $(SPECIES_HPP) $(INCDIR)/$(PDEDIR)/Core-Shell-Diffusion.cuh $(INCDIR)/$(TRPDIR)/Core-Shell-Particle.cuh $(INCDIR)/$(TRPDIR)/Arrhenius_Diffusivity_Model.cuh
+	@mkdir -p $(BUILDDIR);
+	@echo "Compiling Core-Shell-Diffusion...";
+	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/Core-Shell-Diffusion.cu -I /usr/include/boost -o $(BUILDDIR)/Core-Shell-Diffusion.o
 
 # ----------------------------------------------------------------------------------------------------------
 # Building thermo-physical properties source files
