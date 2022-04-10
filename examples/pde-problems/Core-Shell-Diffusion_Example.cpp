@@ -24,8 +24,8 @@
 #include "utilities/Keyboard_Interrupt.hpp"
 #include "utilities/File_Generator.hpp"
 
-#define MAX_ITER 1000
-#define Dt 0.000001
+#define MAX_ITER 10000
+#define Dt 0.0001
 
 long double core_radius = 32.5E-6;
 long double overall_radius = 39.5E-6;
@@ -61,7 +61,7 @@ int main(int argc, char const *argv[])
 
     size_t __iter = 1;
 
-    long double temperature = 1400;
+    long double temperature = 1900;
     long double diffusivity = Alawieh_diffusivity.getDiffusivity(temperature);
 
     setUpKeyboardInterrupt();
@@ -76,7 +76,7 @@ int main(int argc, char const *argv[])
             Ni_clad_Al_particle.printConcentrationProfileA(conc_A_file, ',', Dt * __iter);
             Ni_clad_Al_particle.printConcentrationProfileB(conc_B_file, ',', Dt * __iter);
 
-            if (__iter % 100 == 0)
+            if (__iter % 5 == 0)
             {
                 std::cout << "Iteration # " << __iter << std::endl;
             }

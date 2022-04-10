@@ -122,7 +122,7 @@ if __name__ == '__main__' :
 
 	from scripts.utilities.solution_folder import getlatestfolder, getpath
 
-	particle = ParticleDiffusion3D(getlatestfolder() + '/333', 10000, [0,0,0], 1E6)
+	particle = ParticleDiffusion3D(getlatestfolder(), 10000, [0,0,0], 1E6)
 
 	fig = plt.figure(figsize=[8,8])
 	fig.suptitle('Diffusion in Ni-Coated Al Particle', fontweight='bold')
