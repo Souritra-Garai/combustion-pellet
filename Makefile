@@ -19,7 +19,7 @@ SPCDIR := species
 UTILDIR := utilities
 
 # Finding all source and object files
-SRCEXT := cu
+SRCEXT := cpp
 SOURCES := $(shell find $(SRCDIR) $(LIBDIR) -type f -name *.$(SRCEXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 
@@ -35,13 +35,14 @@ TRPOBJS := $(patsubst $(SRCDIR)/%, $(BUILDDIR)/%, $(TRPSRCS:.$(SRCEXT)=.o))
 PDESRCS := $(shell find $(SRCDIR)/$(PDEDIR) -type f -name *.$(SRCEXT))
 PDEOBJS := $(patsubst $(SRCDIR)/%, $(BUILDDIR)/%, $(PDESRCS:.$(SRCEXT)=.o))
 
-UTILSRCS := $(shell find $(SRCDIR)/$(UTILDIR) -type f -name *.cpp)
-UTILOBJS := $(patsubst $(SRCDIR)/%, $(BUILDDIR)/%, $(UTILSRCS:.cpp=.o))
+UTILSRCS := $(shell find $(SRCDIR)/$(UTILDIR) -type f -name *.$(SRCEXT))
+UTILOBJS := $(patsubst $(SRCDIR)/%, $(BUILDDIR)/%, $(UTILSRCS:.$(SRCEXT)=.o))
 
 SPECIES_HPP := $(INCDIR)/$(TRPDIR)/Species.cuh $(INCDIR)/$(TRPDIR)/Ideal_Gas.cuh $(INCDIR)/$(TRPDIR)/Phase.cuh $(INCDIR)/$(TRPDIR)/Enthalpy.cuh $(INCDIR)/$(TRPDIR)/Thermal_Conductivity.cuh $(INCDIR)/$(SPCDIR)/Argon.cuh $(INCDIR)/$(SPCDIR)/Aluminium.cuh $(INCDIR)/$(SPCDIR)/Nickel.cuh $(INCDIR)/$(SPCDIR)/NickelAluminide.cuh
 
 # Flags required for compiler
 CFLAGS := # -fopenmp -O2
+NVCCFLAGS := -arch=sm_75
 LIB := # -lm
 INC := -I $(INCDIR)
 
