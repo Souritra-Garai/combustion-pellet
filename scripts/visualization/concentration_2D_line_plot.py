@@ -27,14 +27,11 @@ print('Processing solution at the directory ' + folder)
 dataA = np.genfromtxt(os.path.join(folder, 'concentration_A.csv'), delimiter=',')
 dataB = np.genfromtxt(os.path.join(folder, 'concentration_B.csv'), delimiter=',')
 
-index1 = 40
-index2 = 70
-
-t = dataA[index1:index2, 0]
+t = dataA[1:, 0]
 x = dataA[0, 1:]
 
-C_A = dataA[index1:index2, 1:]
-C_B = dataB[index1:index2, 1:]
+C_A = dataA[1:, 1:]
+C_B = dataB[1:, 1:]
 
 N = t.shape[0]
 
