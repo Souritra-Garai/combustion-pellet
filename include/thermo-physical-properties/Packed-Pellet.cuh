@@ -1,48 +1,89 @@
-/**
- * @file Packed-Pellet.hpp
- * @author Souritra Garai (souritra.garai@iitgn.ac.in)
- * @brief Definition of class to represent thermo-physical properties
- * of a pellet packed with core-shell type combustion particles
- * @version 0.1
- * @date 2021-07-30
- * 
- * @copyright Copyright (c) 2021
- * 
- */
-
 #ifndef __PACKED_PELLET__
 #define __PACKED_PELLET__
 
-// Required for << operator for printing to file / screen
 #include <ostream>
 
-// Required for IdealGas class
-#include "thermo-physical-properties/IdealGas.hpp"
-// Required for Species class
-#include "thermo-physical-properties/Substance.hpp"
-// Required for CoreShellCombustionParticle class
-#include "thermo-physical-properties/Core-Shell-Combustion-Particle.hpp"
+#include "thermo-physical-properties/Ideal_Gas.cuh"
+#include "thermo-physical-properties/Species.cuh"
+#include "thermo-physical-properties/Core-Shell-Particle.cuh"
 
-/**
- * @brief Class to represent thermo - physical properties of a cylindrical
- * pellet packed with core - shell type combustion particles
- * 
- * @tparam real_t float, double or long double data types
- * to represent real numbers
- */
-template<typename real_t>
+namespace PackedPellet
+{
+	__device__ double length;
+	__device__ double diameter;
+
+	__device__ double convective_heat_transfer_coefficient_curved_surface;
+	__device__ double convective_heat_transfer_coefficient_flat_surface;
+	__device__ double radiative_emissivity;
+
+	__device__ double ambient_temperature;
+	__device__ double ignition_temperature;
+
+	__device__ IdealGas *degassing_fluid;
+
+	__device__ void initializePelletDimensions(double length, double diameter)
+	{
+		PackedPellet::length = length;
+		PackedPellet::diameter = diameter;
+	}
+
+	__device__ void setHeatLossParameters(
+		double convective_heat_transfer_coefficient_curved_surface,
+		double convective_heat_transfer_coefficient_flat_surface,
+		double radiative_emissivity
+	) {
+		PackedPellet::convective_heat_transfer_coefficient_curved_surface = convective_heat_transfer_coefficient_curved_surface;
+		PackedPellet::convective_heat_transfer_coefficient_flat_surface = convective_heat_transfer_coefficient_flat_surface;
+		PackedPellet::radiative_emissivity = radiative_emissivity;
+	}
+
+	__device__ void setTemperatureParameters(
+		double ambient_temperature,
+		double ignition_temperature
+	) {
+		PackedPellet::ambient_temperature = ambient_temperature;
+		PackedPellet::ignition_temperature = ignition_temperature;
+	}
+
+	__device__ void setDegassingFluid(
+		IdealGas *degassing_fluid
+	) {
+		PackedPellet::degassing_fluid = degassing_fluid;
+	}
+
+	class Pellet
+	{
+		private:
+	
+			double _degassing_fluid_volume_fractions;
+			double _overall_particle_density;
+
+		public:
+
+			Pellet(double particle_volume_fractions)
+			{
+				_degassing_fluid_volume_fractions = 1.0 - particle_volume_fractions;
+				
+				_overall_particle_density = particle_volume_fractions * CoreShellParticle::Particle().getDensity(ambient_temperature);
+			}
+
+			__device__ __forceinline__ double getPelletThermalConductivity(CoreShellParticle::Particle *particle, double temperature)
+			{
+				return 1.0;
+			}
+	};
+} // namespace PackedPellet
+
+
 class PackedPellet
 {
     protected :
 
-        /**
-         * @brief Length of cylindrical pellet in \f$ m \f$
-         */
-        static real_t _length;
+        static double _length;
         /**
          * @brief Diameter of cylindrical pellet in \f$ m \f$
          */
-        static real_t _diameter;
+        static double _diameter;
 
         /**
          * @brief Convective heat transfer coefficient
@@ -50,47 +91,47 @@ class PackedPellet
          * convection at the curved surface of the pellet.
 		 * Units - \f$ W / m^2 - K \f$
          */
-        static real_t _convective_heat_transfer_coefficient_curved_surface;
+        static double _convective_heat_transfer_coefficient_curved_surface;
 		/**
          * @brief Convective heat transfer coefficient
          * for heat loss to surrounding atmosphere via 
          * convection at the flat surface of the pellet.
 		 * Units - \f$ W / m^2 - K \f$
          */
-        static real_t _convective_heat_transfer_coefficient_flat_surface;
+        static double _convective_heat_transfer_coefficient_flat_surface;
         /**
          * @brief Emissivity for the surface of the cylinder
          * through which radiative heat loss to the surrounding
          * atmosphere occurs
          */
-        static real_t _radiative_emissivity;
+        static double _radiative_emissivity;
         
         /**
          * @brief Temperature of surrounding atmosphere in \f$ K \f$
          */
-        static real_t _ambient_temperature;
+        static double _ambient_temperature;
 
         /**
          * @brief Temperature at which reactions begin in the pellet
          */
-        static real_t _ignition_temperature;
+        static double _ignition_temperature;
 
         /**
          * @brief Fluid (gas) filling the voids of the packed pellet
          */
-        static IdealGas<real_t> *_degassing_fluid;
+        static IdealGas *_degassing_fluid;
 
         /**
          * @brief Fraction of the pellet volume occupied by
          * the degassing fluid
          */
-        const real_t _degassing_fluid_volume_fractions;
+        const double _degassing_fluid_volume_fractions;
         
         /**
          * @brief Density of particle in the pellet, i.e.,
          * \f$ \rho_P \phi_P \f$ in \f$ kg / m^3 \f$
          */
-		const real_t _overall_particle_density;
+		const double _overall_particle_density;
 
         /**
          * @brief Calculates the overall density of particles in the pellet,
@@ -98,9 +139,9 @@ class PackedPellet
          * for the particle composition
          * @param particle_volume_fractions Fraction of the pellet volume occupied by
          * core-shell type combustion particles
-         * @return real_t Overall density of particles in the pellet in \f$ kg / m^3 \f$
+         * @return double Overall density of particles in the pellet in \f$ kg / m^3 \f$
          */
-        static real_t calcOverallParticleDensity(real_t particle_volume_fractions);
+        static double calcOverallParticleDensity(double particle_volume_fractions);
 
     public :
 
@@ -110,7 +151,7 @@ class PackedPellet
          * @param particle_volume_fractions Fraction of the pellet volume occupied by
          * core-shell type combustion particles
          */
-        PackedPellet(real_t particle_volume_fractions);
+        PackedPellet(double particle_volume_fractions);
 
         /**
          * @brief Set the dimensions of the cylindrical pellet
@@ -119,8 +160,8 @@ class PackedPellet
          * @param diameter Diameter of the cylindrical pellet
          */
         static void setPelletDimensions(
-            real_t length,
-            real_t diameter
+            double length,
+            double diameter
         );
 
         /**
@@ -143,9 +184,9 @@ class PackedPellet
          * through which radiative heat loss to the surrounding atmosphere occurs
 		 */
         static void setAmbientHeatLossParameters(
-            real_t convective_heat_transfer_coefficient_curved_surface,
-			real_t convective_heat_transfer_coefficient_flat_surface,
-            real_t radiative_emissivity
+            double convective_heat_transfer_coefficient_curved_surface,
+			double convective_heat_transfer_coefficient_flat_surface,
+            double radiative_emissivity
         );
 
         /**
@@ -156,8 +197,8 @@ class PackedPellet
          * @param ambient_temperature Temperature of surrounding atmosphere
          */
         static void setTemperatureParameters(
-            real_t ignition_temperature,
-            real_t ambient_temperature
+            double ignition_temperature,
+            double ambient_temperature
         );
 
         /**
@@ -165,7 +206,7 @@ class PackedPellet
          * 
          * @param degassing_fluid Fluid degassing the pellet
          */
-        static void setDegassingFluid(IdealGas<real_t> &degassing_fluid);
+        static void setDegassingFluid(IdealGas &degassing_fluid);
 
         /**
          * @brief Get he mean heat conductivity at a point in the pellet
@@ -174,9 +215,9 @@ class PackedPellet
          * 
          * @param ptr_2_particle Pointer to a core-shell combustion particle
          * that represents the state of all particles in the pellet
-         * @return real_t Mean heat conductivity of the pellet in \f$ W / m - K \f$
+         * @return double Mean heat conductivity of the pellet in \f$ W / m - K \f$
          */
-        real_t getThermalConductivity(CoreShellCombustionParticle<real_t> *ptr_2_particle, real_t temperature);
+        double getThermalConductivity(CoreShellParticle::Particle *ptr_2_particle, double temperature);
 
         /**
          * @brief Print the properties of the pellet (evaluated at the initial condition)

@@ -89,6 +89,16 @@ int main(int argc, char const *argv[])
 
 	std::ofstream mass_file = folder.getCSVFile("mass");
 	std::ofstream mass_fractions_file = folder.getCSVFile("mass_fractions");
+	
+	std::ofstream config_file = folder.getTXTFile("configuration");
+	
+	config_file << "Temperature :\t" << temperature << "\tK\n\n\n";
+	config_file << "Arrhenius Diffusivity Model Parameters\n\n";
+	config_file << "Pre-exponential Factor :\t" << pre_exponential_factor << "\tm2 / s\n";
+	config_file << "Activation Energy :\t" << activation_energy << "\tJ / mol. - K\n\n\n";
+
+	CoreShellDIffusion::printConfiguration(config_file);
+	config_file.close();
 
 	CoreShellDIffusion::printGridPoints(concentration_array_A_file, ',');
 	CoreShellDIffusion::printGridPoints(concentration_array_B_file, ',');

@@ -80,6 +80,16 @@ $(BUILDDIR)/Core-Shell-Diffusion.o : $(SRCDIR)/Core-Shell-Diffusion.cu $(SPECIES
 	@echo "Compiling Core-Shell-Diffusion...";
 	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/Core-Shell-Diffusion.cu -I /usr/include/boost -o $(BUILDDIR)/Core-Shell-Diffusion.o
 
+Hetergenous_Thermal_Conductivity_Models : $(BUILDDIR)/Hetergenous_Thermal_Conductivity_Models.o $(BUILDDIR)/$(UTILDIR)/File_Generator.o
+	@mkdir -p $(BINDIR);
+	@echo "Linking all files for Hetergenous_Thermal_Conductivity_Models...";
+	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/Hetergenous_Thermal_Conductivity_Models.o $(BUILDDIR)/$(UTILDIR)/File_Generator.o -lboost_program_options -o $(BINDIR)/Hetergenous_Thermal_Conductivity_Models
+
+$(BUILDDIR)/Hetergenous_Thermal_Conductivity_Models.o : $(SRCDIR)/Hetergenous_Thermal_Conductivity_Models.cu $(SPECIES_HPP) $(INCDIR)/$(TRPDIR)/Core-Shell-Particle.cuh $(INCDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.cuh
+	@mkdir -p $(BUILDDIR);
+	@echo "Compiling Hetergenous_Thermal_Conductivity_Models...";
+	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/Hetergenous_Thermal_Conductivity_Models.cu -I /usr/include/boost -o $(BUILDDIR)/Hetergenous_Thermal_Conductivity_Models.o
+
 # ----------------------------------------------------------------------------------------------------------
 # Building thermo-physical properties source files
 
@@ -92,11 +102,6 @@ $(BUILDDIR)/$(TRPDIR)/Packed-Pellet.o : $(INCDIR)/$(TRPDIR)/Packed-Pellet.hpp $(
 	@mkdir -p $(BUILDDIR)/$(TRPDIR);
 	@echo "Compiling Packed-Pellet...";
 	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/$(TRPDIR)/Packed-Pellet.cpp -o $(BUILDDIR)/$(TRPDIR)/Packed-Pellet.o
-
-$(BUILDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.o : $(INCDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.hpp $(SRCDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.cpp
-	@mkdir -p $(BUILDDIR)/$(TRPDIR);
-	@echo "Compiling Thermal_Conductivity_Pellet...";
-	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.cpp -o $(BUILDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.o
 
 # ----------------------------------------------------------------------------------------------------------
 # Building pde problems source files
