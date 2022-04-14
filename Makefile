@@ -219,35 +219,15 @@ $(BUILDDIR)/$(TRPDIR)/Core-Shell-Particle_Example.o : $(EXMDIR)/$(TRPDIR)/Core-S
 	@echo "Compiling Core-Shell-Particle_Example...";
 	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(TRPDIR)/Core-Shell-Particle_Example.cu -o $(BUILDDIR)/$(TRPDIR)/Core-Shell-Particle_Example.o
 
-Thermal_Conductivity_Pellet_Example : $(BUILDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.o $(BUILDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.o $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o $(UTILOBJS)
-	@mkdir -p $(BINDIR)/$(TRPDIR);
-	@echo "Linking Thermal_Conductivity_Pellet_Example...";
-	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.o $(BUILDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.o $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o $(UTILOBJS) -o $(BINDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example
-
-$(BUILDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.o : $(EXMDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.cpp $(INCDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.hpp $(SPECIES_HPP) $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp $(INCDIR)/$(UTILDIR)/File_Generator.hpp
-	@mkdir -p $(BUILDDIR)/$(TRPDIR);
-	@echo "Compiling Thermal_Conductivity_Pellet...";
-	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.cpp -o $(BUILDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.o
-
-Adiabatic_Combustion_Temperature : $(BUILDDIR)/$(TRPDIR)/Adiabatic_Combustion_Temperature.o $(UTILOBJS)
-	@mkdir -p $(BINDIR)/$(TRPDIR);
-	@echo "Linking Adiabatic_Combustion_Temperature...";
-	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(TRPDIR)/Adiabatic_Combustion_Temperature.o $(UTILOBJS) -o $(BINDIR)/$(TRPDIR)/Adiabatic_Combustion_Temperature
-
-$(BUILDDIR)/$(TRPDIR)/Adiabatic_Combustion_Temperature.o : $(EXMDIR)/$(TRPDIR)/Adiabatic_Combustion_Temperature.cpp $(SPECIES_HPP) $(INCDIR)/$(UTILDIR)/File_Generator.hpp
-	@mkdir -p $(BUILDDIR)/$(TRPDIR);
-	@echo "Compiling Adiabatic_Combustion_Temperature...";
-	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(TRPDIR)/Adiabatic_Combustion_Temperature.cpp -o $(BUILDDIR)/$(TRPDIR)/Adiabatic_Combustion_Temperature.o
-
-Packed-Pellet_Example : $(BUILDDIR)/$(TRPDIR)/Packed-Pellet_Example.o $(BUILDDIR)/$(TRPDIR)/Packed-Pellet.o $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o $(BUILDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.o
+Packed-Pellet_Example : $(BUILDDIR)/$(TRPDIR)/Packed-Pellet_Example.o
 	@mkdir -p $(BINDIR)/$(TRPDIR);
 	@echo "Linking Packed-Pellet_Example...";
-	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(TRPDIR)/Packed-Pellet_Example.o $(BUILDDIR)/$(TRPDIR)/Packed-Pellet.o $(BUILDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o $(BUILDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.o -o $(BINDIR)/$(TRPDIR)/Packed-Pellet_Example
+	$(CC) $(CFLAGS) $(LIB) $(BUILDDIR)/$(TRPDIR)/Packed-Pellet_Example.o -o $(BINDIR)/$(TRPDIR)/Packed-Pellet_Example
 
-$(BUILDDIR)/$(TRPDIR)/Packed-Pellet_Example.o : $(EXMDIR)/$(TRPDIR)/Packed-Pellet_Example.cpp $(INCDIR)/$(TRPDIR)/Packed-Pellet.hpp $(SPECIES_HPP) $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp
+$(BUILDDIR)/$(TRPDIR)/Packed-Pellet_Example.o : $(EXMDIR)/$(TRPDIR)/Packed-Pellet_Example.cu $(INCDIR)/$(TRPDIR)/Packed-Pellet.cuh $(SPECIES_HPP) $(INCDIR)/$(TRPDIR)/Core-Shell-Particle.cuh
 	@mkdir -p $(BUILDDIR)/$(TRPDIR);
 	@echo "Compiling Packed-Pellet_Example...";
-	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(TRPDIR)/Packed-Pellet_Example.cpp -o $(BUILDDIR)/$(TRPDIR)/Packed-Pellet_Example.o
+	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(TRPDIR)/Packed-Pellet_Example.cu -o $(BUILDDIR)/$(TRPDIR)/Packed-Pellet_Example.o
 
 # ----------------------------------------------------------------------------------------------------------
 # Builds the example for LU Solver
