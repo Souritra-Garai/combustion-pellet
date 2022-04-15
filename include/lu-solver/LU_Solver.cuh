@@ -2,7 +2,7 @@
 #define __LU_SOLVER__
 
 #include <ostream>
-#include "lusolver/Tridiagonal_Matrix.cuh"
+#include "lu-solver/Tridiagonal_Matrix.cuh"
 
 class LUSolver
 {

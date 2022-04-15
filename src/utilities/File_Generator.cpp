@@ -9,7 +9,8 @@
  * 
  */
 
-#include <sys/stat.h>
+// #include <sys/stat.h>
+#include <filesystem>
 
 #include <time.h>
 #include <string.h>
@@ -31,7 +32,8 @@ FileGenerator::FileGenerator()
 	_folder_name.append("solutions/");
 	_folder_name.append(current_time);
 
-    mkdir(_folder_name.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+	std::filesystem::create_directory(_folder_name.c_str());
+    // mkdir(_folder_name.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 }
 
 std::ofstream FileGenerator::getCSVFile(std::string file_name)
@@ -58,7 +60,8 @@ std::ofstream FileGenerator::getCSVFile(std::string file_name, std::string folde
 	file.append("/");
 	file.append(folder);
 
-	mkdir(file.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+	std::filesystem::create_directory(_folder_name.c_str());
+	// mkdir(file.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
    	file.append("/");
     file.append(file_name);
@@ -91,7 +94,8 @@ std::ofstream FileGenerator::getTXTFile(std::string file_name, std::string folde
 	file.append("/");
 	file.append(folder);
 
-	mkdir(file.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+	std::filesystem::create_directory(_folder_name.c_str());
+	// mkdir(file.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
    	file.append("/");
     file.append(file_name);

@@ -1,27 +1,11 @@
-/**
- * @file Packed-Pellet.hpp
- * @author Souritra Garai (souritra.garai@iitgn.ac.in)
- * @brief Definition of class to represent thermo-physical properties
- * of a pellet packed with core-shell type combustion particles
- * @version 0.1
- * @date 2021-07-30
- * 
- * @copyright Copyright (c) 2021
- * 
- */
-
 #ifndef __PACKED_PELLET__
 #define __PACKED_PELLET__
 
-// Required for << operator for printing to file / screen
 #include <ostream>
 
-// Required for IdealGas class
-#include "thermo-physical-properties/IdealGas.hpp"
-// Required for Species class
-#include "thermo-physical-properties/Substance.hpp"
-// Required for CoreShellCombustionParticle class
-#include "thermo-physical-properties/Core-Shell-Combustion-Particle.hpp"
+#include "thermo-physical-properties/Ideal_Gas.cuh"
+#include "thermo-physical-properties/Species.cuh"
+#include "thermo-physical-properties/Core-Shell-Particle.cuh"
 
 /**
  * @brief Class to represent thermo - physical properties of a cylindrical
