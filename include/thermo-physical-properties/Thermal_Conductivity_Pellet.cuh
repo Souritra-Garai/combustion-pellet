@@ -7,7 +7,7 @@ namespace PelletThermalConductivity
 	__device__ double tolerance = 0.001;
 
 
-	__device__ double getThermalConductivityEMT(
+	__device__ __forceinline__ double getThermalConductivityEMT(
 		double v_2,
 		double k_2,
 		double k_1
@@ -25,7 +25,7 @@ namespace PelletThermalConductivity
 		return 0.25 * k_2 * (k_1_k_2 * (3.0 * v_1 - 1) + 2.0 - 3.0 * v_1 + sqrt_D);
 	}
 
-	__device__ double getThermalConductivityCC(
+	__device__ __forceinline__ double getThermalConductivityCC(
 		double v_2,
 		double k_2,
 		double k_1
@@ -39,7 +39,7 @@ namespace PelletThermalConductivity
 		return (K_s / 2.0) * (sqrt(1.0 + 8.0 * K_p / K_s) - 1.0);
 	}
 
-	__device__ double getThermalConductivityME1(
+	__device__ __forceinline__ double getThermalConductivityME1(
 		double v_2,
 		double k_2,
 		double k_1
@@ -54,7 +54,7 @@ namespace PelletThermalConductivity
 	}
 
 
-	__device__ double getThermalConductivityME2(
+	__device__ __forceinline__ double getThermalConductivityME2(
 		double v_2,
 		double k_2,
 		double k_1
@@ -68,7 +68,7 @@ namespace PelletThermalConductivity
 		);
 	}
 
-	__device__ double getThermalConductivityME2(
+	__device__ __forceinline__ double getThermalConductivityME2(
 		double v_1,
 		double k_1,
 		double v_2, 
@@ -81,7 +81,7 @@ namespace PelletThermalConductivity
 		return (f_1 * k_2 + f_2 * k_1) / (f_1 + f_2);
 	}
 
-	__device__ double getThermalConductivityEMT(
+	__device__ __forceinline__ double getThermalConductivityEMT(
 		double v_1,
 		double k_1,
 		double v_2, 

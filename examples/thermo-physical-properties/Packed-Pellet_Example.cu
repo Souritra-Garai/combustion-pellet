@@ -31,6 +31,7 @@ __global__ void allocateMemory()
 		39.5E-6
 	);
 
+	PackedPellet::setPelletDimensions(6.35E-3, 6.35E-3);
 	PackedPellet::setDegassingFluid(argon);
 	PackedPellet::setHeatLossParameters(0, 0, 0);
 	PackedPellet::setTemperatureParameters(298, 933);

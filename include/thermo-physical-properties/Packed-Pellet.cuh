@@ -22,7 +22,7 @@ namespace PackedPellet
 
 	__device__ IdealGas *degassing_fluid;
 
-	__device__ void initializePelletDimensions(double length, double diameter)
+	__device__ void setPelletDimensions(double length, double diameter)
 	{
 		PackedPellet::length = length;
 		PackedPellet::diameter = diameter;
@@ -54,7 +54,7 @@ namespace PackedPellet
 
 	class Pellet
 	{
-		private:
+		protected:
 	
 			double _degassing_fluid_volume_fractions;
 			double _overall_particle_density;
