@@ -50,6 +50,11 @@ namespace PelletFlamePropagation
 		initial_ignition_temperature = ignition_temperature;
 	}
 
+	__host__ void printConfiguration(std::ostream &output_stream)
+	{
+		;
+	}
+
 	__host__ void printGridPoints(std::ostream &output_stream, char delimiter=',')
 	{
 		double length;
@@ -65,7 +70,7 @@ namespace PelletFlamePropagation
 		output_stream << length << "\n";
 	}
 
-	__host__ void printTemperatureArray(std::ostream &output_stream, double *temperature_array, double *time, char delimiter='\t')
+	__host__ void printTemperatureArray(std::ostream &output_stream, double *temperature_array, double time, char delimiter='\t')
 	{
 		output_stream << time << delimiter;
 

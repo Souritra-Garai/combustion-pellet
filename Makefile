@@ -62,6 +62,16 @@ $(BUILDDIR)/Hetergenous_Thermal_Conductivity_Models.o : $(SRCDIR)/Hetergenous_Th
 	@echo "Compiling Hetergenous_Thermal_Conductivity_Models...";
 	$(CC) $(NFLAGS) $(INC) $(IBOOST) -c $(SRCDIR)/Hetergenous_Thermal_Conductivity_Models.cu -o $(BUILDDIR)/Hetergenous_Thermal_Conductivity_Models.o
 
+Pellet-Flame-Propagation : $(BUILDDIR)/Pellet-Flame-Propagation.o $(UTLOBJS)
+	@mkdir -p $(BINDIR);
+	@echo "Linking all files for Pellet-Flame-Propagation...";
+	$(CC) $(LBOOST) $(BUILDDIR)/Pellet-Flame-Propagation.o $(UTLOBJS) -o $(BINDIR)/Pellet-Flame-Propagation
+
+$(BUILDDIR)/Pellet-Flame-Propagation.o : $(SRCDIR)/Pellet-Flame-Propagation.cu $(PDEHPP) $(TRPHPP) $(SPCHPP) $(LUSHPP) $(UTLHPP)
+	@mkdir -p $(BUILDDIR);
+	@echo "Compiling Pellet-Flame-Propagation...";
+	$(CC) $(NFLAGS) $(INC) $(IBOOST) -c $(SRCDIR)/Pellet-Flame-Propagation.cu -o $(BUILDDIR)/Pellet-Flame-Propagation.o
+
 # ----------------------------------------------------------------------------------------------------------
 # Building utilities
 

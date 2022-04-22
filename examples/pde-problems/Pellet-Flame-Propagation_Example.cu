@@ -11,7 +11,7 @@
 
 #include <iostream>
 
-#define MAX_ITER 1E1
+#define MAX_ITER 1E3
 #define Dt 0.000001
 
 #define N 1001
@@ -136,7 +136,7 @@ __global__ void solveAuxiliaryParticleEquations()
 
 __global__ void updateAuxiliaryParticles()
 {
-	flame_propagation->updateParticleMassFraction(threadIdx.x, blockIdx.x);
+	flame_propagation->updateParticleMassFraction(1 + threadIdx.x, blockIdx.x);
 }
 
 __host__ __forceinline__ void evolveAuxiliaryParticles()
@@ -193,7 +193,17 @@ int main(int argc, char const *argv[])
 
 	std::cout << "Initialized\n";
 
-	for (size_t i = 0; i < MAX_ITER; i++) iterate();
+	for (size_t i = 0; i < MAX_ITER; i++) 
+	{
+		iterate();
+		if (i % 1000 == 0) 
+		{
+			cudaDeviceSynchronize();
+			std::cout << "Iterations completed : " << i << "\n";
+		}
+	}
+
+	cudaDeviceSynchronize();
 
 	cudaFree(temperature_array);
 	cudaFree(concentration_array_A);

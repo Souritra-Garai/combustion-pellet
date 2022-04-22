@@ -115,7 +115,7 @@ int main(int argc, char const *argv[])
 	initIteration<<<1,1>>>(temperature);
 	cudaDeviceSynchronize();
 
-	std::cout << "Initialized Diffusion Problems\nStarting Iterations\n(Press Ctrl+C to break)\n";
+	std::cout << "Initialized Diffusion Problem\nStarting Iterations\n(Press Ctrl+C to break)\n";
 
 	setUpKeyboardInterrupt();
 
