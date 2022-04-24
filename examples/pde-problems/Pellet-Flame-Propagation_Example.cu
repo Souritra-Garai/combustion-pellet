@@ -11,11 +11,11 @@
 
 #include <iostream>
 
-#define MAX_ITER 1E3
-#define Dt 0.000001
+#define MAX_ITER 100
+#define Dt 1E-6
 
-#define N 1001
-#define M 1001
+#define N 101
+#define M 101
 
 __device__ PelletFlamePropagation::FlamePropagation *flame_propagation;
 __device__ ArrheniusDiffusivityModel *diffusivity_model;
@@ -181,6 +181,8 @@ int main(int argc, char const *argv[])
 	cudaMalloc(&concentration_array_A, 3 * M * N * sizeof(double));
 	cudaMalloc(&concentration_array_B, 3 * M * N * sizeof(double));
 
+	double temperature_array_host[M];
+
 	setArrayAddresses<<<1,1>>>(temperature_array, concentration_array_A, concentration_array_B);
 
 	cudaDeviceSynchronize();
@@ -196,11 +198,13 @@ int main(int argc, char const *argv[])
 	for (size_t i = 0; i < MAX_ITER; i++) 
 	{
 		iterate();
-		if (i % 1000 == 0) 
-		{
+		// if (i % 1000 == 0) 
+		// {
 			cudaDeviceSynchronize();
 			std::cout << "Iterations completed : " << i << "\n";
-		}
+			cudaMemcpy(temperature_array_host, temperature_array, M * sizeof(double), cudaMemcpyDeviceToHost);
+			for (size_t j = 0; j < M; j++) printf("Temperature\t%d\t%f\n", j, temperature_array_host[j]);
+		// }
 	}
 
 	cudaDeviceSynchronize();

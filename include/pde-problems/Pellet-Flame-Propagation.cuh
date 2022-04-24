@@ -108,10 +108,10 @@ namespace PelletFlamePropagation
 
 			__device__ __forceinline__ bool inReactionZone(size_t index)
 			{
-				// printf("%d\n", index);
+				// printf("%d\t%b\t%b\n", index);
 				return 
 					_temperature_array[index] >= PackedPellet::ignition_temperature &&
-					_diffusion_problems_array[0][index]->isReactionComplete();
+					!_diffusion_problems_array[0][index]->isReactionComplete();
 			}
 
 			__device__ __forceinline__ double getParticleEnthalpyTemperatureDerivate(size_t index)
@@ -141,11 +141,13 @@ namespace PelletFlamePropagation
 			__device__ __forceinline__ double2 getTransientTerm(size_t index)
 			{
 				double2 expr = {0, 0};
+				
+				// printf("Temperature\t%d\t%f\n", index, _temperature_array[index]);
 
 				if (index > 0 && index < n-1)
 				{
 					expr.x =
-						_degassing_fluid_volume_fractions * PackedPellet::degassing_fluid->getDensity(_temperature_array[index]) * PackedPellet::degassing_fluid->getHeatCapacity(_temperature_array[index]) / CoreShellDIffusion::delta_t;
+						_degassing_fluid_volume_fractions * PackedPellet::degassing_fluid->getDensity(_temperature_array[index]) * PackedPellet::degassing_fluid->getHeatCapacity(_temperature_array[index]) / CoreShellDIffusion::delta_t +
 						_overall_particle_density * _diffusion_problems_array[0][index]->getHeatCapacity(_temperature_array[index]) / CoreShellDIffusion::delta_t;
 
 					expr.y = 0.0;
@@ -159,6 +161,8 @@ namespace PelletFlamePropagation
 						);
 					}
 				}
+
+				// printf("Transient term\t%d\t%f\t%f\n", index, expr.x, expr.y);
 
 				return expr;
 			}
@@ -231,6 +235,10 @@ namespace PelletFlamePropagation
 
 					double lambda_by_delta_x_sqr_forward  = 0.5 * (_thermal_conductivity_array[index] + _thermal_conductivity_array[index+1]) / pow(delta_x, 2);
 					double lambda_by_delta_x_sqr_backward = 0.5 * (_thermal_conductivity_array[index-1] + _thermal_conductivity_array[index]) / pow(delta_x, 2);
+
+					// printf("lambda\t%d\t%f\t%f\n", index, lambda_by_delta_x_sqr_backward, lambda_by_delta_x_sqr_forward);
+
+					// printf("Source\t%d\t%f\t%f\n", index, alpha.x - beta.x + kappa * (lambda_by_delta_x_sqr_backward + lambda_by_delta_x_sqr_forward), (alpha.x - beta.x) * _temperature_array[index] + (beta.y - alpha.x));
 
 					_solver.setEquation(
 						index,
@@ -388,7 +396,7 @@ namespace PelletFlamePropagation
 
 						_temperature_array[pellet_position_index] = 
 							getXCoordinate(pellet_position_index) <= initial_ignition_length ?
-							initial_ignition_length : PackedPellet::ambient_temperature;
+							initial_ignition_temperature : PackedPellet::ambient_temperature;
 
 					_diffusion_problems_array[0][pellet_position_index]->setInitialState(particle_position_index);
 					_diffusion_problems_array[1][pellet_position_index]->setInitialState(particle_position_index);

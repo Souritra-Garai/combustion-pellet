@@ -9,12 +9,10 @@
 
 #include "pde-problems/Pellet-Flame-Propagation.cuh"
 
-#include "lusolver/LU_Solver.cuh"
-
 #include "utilities/File_Generator.hpp"
 #include "utilities/Keyboard_Interrupt.hpp"
 
-#define MAX_ITER 1E6
+#define MAX_ITER 1E3
 
 __device__ PelletFlamePropagation::FlamePropagation *flame_propagation_problem;
 __device__ ArrheniusDiffusivityModel *diffusivity_model;
@@ -26,8 +24,8 @@ __device__ double length = 6.35E-3;
 __device__ double diameter = 6.35E-3;
 
 double delta_t = 1E-6;
-size_t num_grid_points_particle = 1001;
-size_t num_grid_points_pellet = 1001;
+size_t num_grid_points_particle = 101;
+size_t num_grid_points_pellet = 101;
 
 __device__ double delta_T = 0.001;
 
@@ -94,7 +92,9 @@ int main(int argc, char const *argv[])
 
 	try
 	{
-		size_t step = 0.001 / delta_t;
+		size_t step = 0.000001 / delta_t;
+
+		evolveMainParticles();
 
 		for (size_t i = 0; i < MAX_ITER;)
 		{

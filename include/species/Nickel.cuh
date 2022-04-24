@@ -56,7 +56,7 @@ __device__ void loadNickel(double sharpness_coefficient = 100.0)
 		8902.0,
 		enthalpy_solid_Ni_1,
 		thermal_conductivity_solid_Ni_1,
-		273.0,
+		-INFINITY,
 		600.0,
 		sharpness_coefficient
 	);

@@ -37,7 +37,7 @@ __device__ void loadAluminium(double sharpness_coefficient = 100.0)
 		2700.0,
 		enthalpy_solid_Al,
 		thermal_conductivity_solid_Al,
-		273.0,
+		-INFINITY,
 		933.47,
 		sharpness_coefficient
 	);
