@@ -146,19 +146,30 @@ namespace PelletFlamePropagation
 
 				if (index > 0 && index < n-1)
 				{
-					expr.x =
-						_degassing_fluid_volume_fractions * PackedPellet::degassing_fluid->getDensity(_temperature_array[index]) * PackedPellet::degassing_fluid->getHeatCapacity(_temperature_array[index]) / CoreShellDIffusion::delta_t +
-						_overall_particle_density * _diffusion_problems_array[0][index]->getHeatCapacity(_temperature_array[index]) / CoreShellDIffusion::delta_t;
+					// expr.x =
+					// 	_degassing_fluid_volume_fractions * PackedPellet::degassing_fluid->getDensity(_temperature_array[index]) * PackedPellet::degassing_fluid->getHeatCapacity(_temperature_array[index]) / CoreShellDIffusion::delta_t +
+					// 	_overall_particle_density * _diffusion_problems_array[0][index]->getHeatCapacity(_temperature_array[index]) / CoreShellDIffusion::delta_t;
+
+					// expr.y = 0.0;
+
+					// if (inReactionZone(index))
+					// {
+					// 	expr.x += gamma * _overall_particle_density * getParticleEnthalpyTemperatureDerivate(index) / CoreShellDIffusion::delta_t;
+					// 	expr.y += _overall_particle_density * (
+					// 		gamma * getParticleEnthalpyTimeDerivative(index) +
+					// 		(1.0 - gamma) * getParticleEnthalpyExplicitDerivative(index)
+					// 	);
+					// }
+
+					expr.x = _diffusion_problems_array[0][index]->getHeatCapacity(_temperature_array[index]) / CoreShellDIffusion::delta_t;
 
 					expr.y = 0.0;
 
 					if (inReactionZone(index))
 					{
-						expr.x += gamma * _overall_particle_density * getParticleEnthalpyTemperatureDerivate(index) / CoreShellDIffusion::delta_t;
-						expr.y += _overall_particle_density * (
-							gamma * getParticleEnthalpyTimeDerivative(index) +
-							(1.0 - gamma) * getParticleEnthalpyExplicitDerivative(index)
-						);
+						expr.x += gamma * getParticleEnthalpyTemperatureDerivate(index) / CoreShellDIffusion::delta_t;
+
+						expr.y = (1.0 - gamma) * getParticleEnthalpyExplicitDerivative(index) + gamma * getParticleEnthalpyTimeDerivative(index);
 					}
 				}
 
@@ -175,15 +186,20 @@ namespace PelletFlamePropagation
 					PackedPellet::convective_heat_transfer_coefficient_flat_surface :
 					PackedPellet::convective_heat_transfer_coefficient_curved_surface;
 
-				expr.x = 4.0 * gamma * (
-					h +
-					4.0 * PackedPellet::radiative_emissivity * STEFAN_BOLTZMANN_CONSTANT * pow(_temperature_array[index], 3)
-				) / PackedPellet::diameter;
+				// expr.x = 4.0 * gamma * (
+				// 	h +
+				// 	4.0 * PackedPellet::radiative_emissivity * STEFAN_BOLTZMANN_CONSTANT * pow(_temperature_array[index], 3)
+				// ) / PackedPellet::diameter;
 
-				expr.y = 4.0 * (
-					h * (_temperature_array[index] - PackedPellet::ambient_temperature) +
-					PackedPellet::radiative_emissivity * STEFAN_BOLTZMANN_CONSTANT * (pow(_temperature_array[index], 4) - pow(PackedPellet::ambient_temperature, 4))
-				) / PackedPellet::diameter;
+				// expr.y = 4.0 * (
+				// 	h * (_temperature_array[index] - PackedPellet::ambient_temperature) +
+				// 	PackedPellet::radiative_emissivity * STEFAN_BOLTZMANN_CONSTANT * (pow(_temperature_array[index], 4) - pow(PackedPellet::ambient_temperature, 4))
+				// ) / PackedPellet::diameter;
+
+				expr.x = gamma * (h + 4.0 * PackedPellet::radiative_emissivity * STEFAN_BOLTZMANN_CONSTANT * pow(_temperature_array[index], 3));
+
+				expr.y = 	h * (_temperature_array[index] - PackedPellet::ambient_temperature) + 
+							PackedPellet::radiative_emissivity * STEFAN_BOLTZMANN_CONSTANT * (pow(_temperature_array[index], 4) - pow(PackedPellet::ambient_temperature, 4));
 				
 				return expr;
 			}
@@ -195,9 +211,9 @@ namespace PelletFlamePropagation
 				double lambda_by_delta_x = 0.5 * (_thermal_conductivity_array[0] + _thermal_conductivity_array[1]) / delta_x;
 
 				_solver.setEquationFirstRow(
-					lambda_by_delta_x + expr.x * PackedPellet::diameter / 4.0,
+					lambda_by_delta_x + expr.x,
 					- lambda_by_delta_x,
-					(expr.x * _temperature_array[0] - expr.y) * PackedPellet::diameter / 4.0
+					expr.x * _temperature_array[0] - expr.y
 				);
 			}
 
@@ -208,9 +224,9 @@ namespace PelletFlamePropagation
 				double lambda_by_delta_x = 0.5 * (_thermal_conductivity_array[n-2] + _thermal_conductivity_array[n-1]) / delta_x;
 
 				_solver.setEquationLastRow(
-					lambda_by_delta_x - expr.x * PackedPellet::diameter / 4.0,
 					- lambda_by_delta_x,
-					(expr.y - expr.x * _temperature_array[n-1]) * PackedPellet::diameter / 4.0
+					lambda_by_delta_x - expr.x,
+					expr.y - expr.x * _temperature_array[n-1]
 				);
 			}
 
@@ -243,9 +259,17 @@ namespace PelletFlamePropagation
 					_solver.setEquation(
 						index,
 						- kappa * lambda_by_delta_x_sqr_backward,
-						alpha.x - beta.x + kappa * (lambda_by_delta_x_sqr_backward + lambda_by_delta_x_sqr_forward),
+						_overall_particle_density * alpha.x - 4.0 * beta.x / PackedPellet::diameter + kappa * (lambda_by_delta_x_sqr_backward + lambda_by_delta_x_sqr_forward) +
+						_degassing_fluid_volume_fractions * PackedPellet::degassing_fluid->getDensity(_temperature_array[index]) * PackedPellet::degassing_fluid->getHeatCapacity(_temperature_array[index]) / CoreShellDIffusion::delta_t,
+						// alpha.x - beta.x + kappa * (lambda_by_delta_x_sqr_backward + lambda_by_delta_x_sqr_forward),
 						- kappa * lambda_by_delta_x_sqr_forward,
-						(alpha.x - beta.x) * _temperature_array[index] + (beta.y - alpha.x) +
+						// (alpha.x - beta.x) * _temperature_array[index] + (beta.y - alpha.x) +
+						// (1.0 - kappa) * (
+						// 	lambda_by_delta_x_sqr_forward  * (_temperature_array[index + 1] - _temperature_array[index]) -
+						// 	lambda_by_delta_x_sqr_backward * (_temperature_array[index] - _temperature_array[index - 1])
+						// )
+						- _overall_particle_density * (alpha.y - alpha.x * _temperature_array[index]) + 4.0 * (beta.y - beta.x * _temperature_array[index]) / PackedPellet::diameter +
+						_degassing_fluid_volume_fractions * PackedPellet::degassing_fluid->getDensity(_temperature_array[index]) * PackedPellet::degassing_fluid->getHeatCapacity(_temperature_array[index]) * _temperature_array[index] / CoreShellDIffusion::delta_t +
 						(1.0 - kappa) * (
 							lambda_by_delta_x_sqr_forward  * (_temperature_array[index + 1] - _temperature_array[index]) -
 							lambda_by_delta_x_sqr_backward * (_temperature_array[index] - _temperature_array[index - 1])

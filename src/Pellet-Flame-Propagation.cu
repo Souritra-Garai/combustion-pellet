@@ -24,8 +24,8 @@ __device__ double length = 6.35E-3;
 __device__ double diameter = 6.35E-3;
 
 double delta_t = 1E-6;
-size_t num_grid_points_particle = 101;
-size_t num_grid_points_pellet = 101;
+size_t num_grid_points_particle = 1001;
+size_t num_grid_points_pellet = 1001;
 
 __device__ double delta_T = 0.001;
 
