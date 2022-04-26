@@ -12,7 +12,7 @@
 #include "utilities/File_Generator.hpp"
 #include "utilities/Keyboard_Interrupt.hpp"
 
-#define MAX_ITER 2E5
+#define MAX_ITER 1E6
 
 __device__ PelletFlamePropagation::FlamePropagation *flame_propagation_problem;
 __device__ ArrheniusDiffusivityModel *diffusivity_model;
@@ -24,8 +24,8 @@ __device__ double length = 6.35E-3;
 __device__ double diameter = 6.35E-3;
 
 double delta_t = 1E-6;
-size_t num_grid_points_particle = 101;
-size_t num_grid_points_pellet = 101;
+size_t num_grid_points_particle = 1001;
+size_t num_grid_points_pellet = 1001;
 
 __device__ double delta_T = 0.001;
 
@@ -54,6 +54,8 @@ __host__ __forceinline__ void iterate();
 
 int main(int argc, char const *argv[])
 {
+	cudaDeviceSetLimit(cudaLimitMallocHeapSize, 1024 * 1024 * 50);
+
 	allocateMemory<<<1,1>>>(delta_t, num_grid_points_pellet, num_grid_points_particle);
 	allocateParticles<<<num_grid_points_pellet, 1>>>();
 
