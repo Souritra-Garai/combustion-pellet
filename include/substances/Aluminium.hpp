@@ -7,7 +7,7 @@
 
 #include "thermo-physical-properties/Substance.hpp"
 
-#define SHARPNESS_COEFFICIENT_AL 100.0
+#define SHARPNESS_COEFFICIENT_AL 1.0
 
 Enthalpy<long double> enthalpy_solid_Al(
     28.08920,

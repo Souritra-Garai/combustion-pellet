@@ -7,7 +7,7 @@
 
 #include "thermo-physical-properties/Substance.hpp"
 
-#define SHARPNESS_COEFFICIENT_NIAL 100.0
+#define SHARPNESS_COEFFICIENT_NIAL 1.0
 
 Enthalpy<long double> enthalpy_solid_NiAl(
     41.86,

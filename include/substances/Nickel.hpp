@@ -7,7 +7,7 @@
 
 #include "thermo-physical-properties/Substance.hpp"
 
-#define SHARPNESS_COEFFICIENT_NI 100.0
+#define SHARPNESS_COEFFICIENT_NI 1.0
 
 Enthalpy<long double> enthalpy_solid_Ni_1(
     13.69160,

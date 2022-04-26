@@ -18,7 +18,7 @@
 #include "substances/Nickel.hpp"
 #include "substances/NickelAluminide.hpp"
 
-#define MAX_ITER 1E8
+#define MAX_ITER 2E5
 
 long double core_radius = 32.5E-6;
 long double overall_radius = 39.5E-6;
@@ -29,13 +29,13 @@ long double pellet_diameter = 6.35E-3;
 ArrheniusDiffusivityModel<long double> Alawieh_diffusivity(2.56E-6, 102.191E3);
 ArrheniusDiffusivityModel<long double> Du_diffusivity(9.54E-8, 26E3);
 
-long double phi = 0.68;
+long double phi = 0.7;
 ArrheniusDiffusivityModel<long double> * diffusivity_model;
 
 void printState(size_t iteration_number, PelletFlamePropagation<long double> &pellet);
 int setCombustionConfiguration(int argc, char const *argv[]);
 
-size_t data_capture_interval = round(0.005 / 0.000001);
+size_t data_capture_interval = round(0.001 / 0.000001);
 
 int main(int argc, char const *argv[])
 {
@@ -44,7 +44,7 @@ int main(int argc, char const *argv[])
         overall_radius, core_radius
     );
 
-    CoreShellDiffusion<long double>::setGridSize(1001);
+    CoreShellDiffusion<long double>::setGridSize(101);
     // CoreShellDiffusion<long double>::setTimeStep(0.0001);
 
     PelletFlamePropagation<long double>::setPelletDimensions(pellet_length, pellet_diameter);
@@ -52,7 +52,7 @@ int main(int argc, char const *argv[])
     PelletFlamePropagation<long double>::setTemperatureParameters(933, 298);
     PelletFlamePropagation<long double>::setDegassingFluid(Argon);
 
-    PelletFlamePropagation<long double>::setGridSize(1001);
+    PelletFlamePropagation<long double>::setGridSize(101);
     PelletFlamePropagation<long double>::setTimeStep(0.000001);
     PelletFlamePropagation<long double>::setInfinitesimalChangeTemperature(0.001);
     PelletFlamePropagation<long double>::setInitialIgnitionParameters(1500, 0.1 * pellet_length);
