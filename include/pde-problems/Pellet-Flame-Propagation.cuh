@@ -141,26 +141,9 @@ namespace PelletFlamePropagation
 			__device__ __forceinline__ double2 getTransientTerm(size_t index)
 			{
 				double2 expr = {0, 0};
-				
-				// printf("Temperature\t%d\t%f\n", index, _temperature_array[index]);
 
 				if (index > 0 && index < n-1)
 				{
-					// expr.x =
-					// 	_degassing_fluid_volume_fractions * PackedPellet::degassing_fluid->getDensity(_temperature_array[index]) * PackedPellet::degassing_fluid->getHeatCapacity(_temperature_array[index]) / CoreShellDIffusion::delta_t +
-					// 	_overall_particle_density * _diffusion_problems_array[0][index]->getHeatCapacity(_temperature_array[index]) / CoreShellDIffusion::delta_t;
-
-					// expr.y = 0.0;
-
-					// if (inReactionZone(index))
-					// {
-					// 	expr.x += gamma * _overall_particle_density * getParticleEnthalpyTemperatureDerivate(index) / CoreShellDIffusion::delta_t;
-					// 	expr.y += _overall_particle_density * (
-					// 		gamma * getParticleEnthalpyTimeDerivative(index) +
-					// 		(1.0 - gamma) * getParticleEnthalpyExplicitDerivative(index)
-					// 	);
-					// }
-
 					expr.x = _diffusion_problems_array[0][index]->getHeatCapacity(_temperature_array[index]) / CoreShellDIffusion::delta_t;
 
 					expr.y = 0.0;
@@ -173,8 +156,6 @@ namespace PelletFlamePropagation
 					}
 				}
 
-				// printf("Transient term\t%d\t%f\t%f\n", index, expr.x, expr.y);
-
 				return expr;
 			}
 
@@ -185,16 +166,6 @@ namespace PelletFlamePropagation
 				double h = (index == 0) || (index == n-1) ?
 					PackedPellet::convective_heat_transfer_coefficient_flat_surface :
 					PackedPellet::convective_heat_transfer_coefficient_curved_surface;
-
-				// expr.x = 4.0 * gamma * (
-				// 	h +
-				// 	4.0 * PackedPellet::radiative_emissivity * STEFAN_BOLTZMANN_CONSTANT * pow(_temperature_array[index], 3)
-				// ) / PackedPellet::diameter;
-
-				// expr.y = 4.0 * (
-				// 	h * (_temperature_array[index] - PackedPellet::ambient_temperature) +
-				// 	PackedPellet::radiative_emissivity * STEFAN_BOLTZMANN_CONSTANT * (pow(_temperature_array[index], 4) - pow(PackedPellet::ambient_temperature, 4))
-				// ) / PackedPellet::diameter;
 
 				expr.x = gamma * (h + 4.0 * PackedPellet::radiative_emissivity * STEFAN_BOLTZMANN_CONSTANT * pow(_temperature_array[index], 3));
 
@@ -252,22 +223,12 @@ namespace PelletFlamePropagation
 					double lambda_by_delta_x_sqr_forward  = 0.5 * (_thermal_conductivity_array[index] + _thermal_conductivity_array[index+1]) / pow(delta_x, 2);
 					double lambda_by_delta_x_sqr_backward = 0.5 * (_thermal_conductivity_array[index-1] + _thermal_conductivity_array[index]) / pow(delta_x, 2);
 
-					// printf("lambda\t%d\t%f\t%f\n", index, lambda_by_delta_x_sqr_backward, lambda_by_delta_x_sqr_forward);
-
-					// printf("Source\t%d\t%f\t%f\n", index, alpha.x - beta.x + kappa * (lambda_by_delta_x_sqr_backward + lambda_by_delta_x_sqr_forward), (alpha.x - beta.x) * _temperature_array[index] + (beta.y - alpha.x));
-
 					_solver.setEquation(
 						index,
 						- kappa * lambda_by_delta_x_sqr_backward,
 						_overall_particle_density * alpha.x - 4.0 * beta.x / PackedPellet::diameter + kappa * (lambda_by_delta_x_sqr_backward + lambda_by_delta_x_sqr_forward) +
 						_degassing_fluid_volume_fractions * PackedPellet::degassing_fluid->getDensity(_temperature_array[index]) * PackedPellet::degassing_fluid->getHeatCapacity(_temperature_array[index]) / CoreShellDIffusion::delta_t,
-						// alpha.x - beta.x + kappa * (lambda_by_delta_x_sqr_backward + lambda_by_delta_x_sqr_forward),
 						- kappa * lambda_by_delta_x_sqr_forward,
-						// (alpha.x - beta.x) * _temperature_array[index] + (beta.y - alpha.x) +
-						// (1.0 - kappa) * (
-						// 	lambda_by_delta_x_sqr_forward  * (_temperature_array[index + 1] - _temperature_array[index]) -
-						// 	lambda_by_delta_x_sqr_backward * (_temperature_array[index] - _temperature_array[index - 1])
-						// )
 						- _overall_particle_density * (alpha.y - alpha.x * _temperature_array[index]) + 4.0 * (beta.y - beta.x * _temperature_array[index]) / PackedPellet::diameter +
 						_degassing_fluid_volume_fractions * PackedPellet::degassing_fluid->getDensity(_temperature_array[index]) * PackedPellet::degassing_fluid->getHeatCapacity(_temperature_array[index]) * _temperature_array[index] / CoreShellDIffusion::delta_t +
 						(1.0 - kappa) * (
@@ -450,6 +411,18 @@ namespace PelletFlamePropagation
 					delete _diffusion_problems_array[1][pellet_position_index];
 					delete _diffusion_problems_array[2][pellet_position_index];
 				}
+			}
+
+			__device__ __forceinline__ bool isCombustionComplete()
+			{
+				bool flag = true;
+			
+				for (size_t i = 1; i < n-1 && flag; i++)
+				{
+					flag = !inReactionZone(i);
+				}
+				
+				return flag;
 			}
 	};
 } // namespace PelletFlamePropagation
