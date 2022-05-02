@@ -26,19 +26,17 @@ class Phase
 
         ThermalConductivityQuadraticPolynomial<real_t> &_thermal_conductivity;
     
-        real_t _density;
+        const real_t _density;
         
-        real_t _temperature_lower_bound;
-        real_t _temperature_upper_bound;
+        const real_t _temperature_lower_bound;
+        const real_t _temperature_upper_bound;
 
-        real_t _sharpness_coefficient;
-
-        static real_t _getSigmoid(real_t x, real_t origin = 0, real_t scale = 0)
+        static inline real_t _getSigmoid(real_t x, real_t origin = 0, real_t scale = 0)
         {
             return 1 / (1 + exp( - scale * (x - origin)));
         }
 
-        static real_t _getSigmoidDerivative(real_t x, real_t origin = 0, real_t scale = 0)
+        static inline real_t _getSigmoidDerivative(real_t x, real_t origin = 0, real_t scale = 0)
         {
             real_t sigma = _getSigmoid(x, origin, scale);
 
@@ -52,53 +50,52 @@ class Phase
             Enthalpy<real_t> &enthalpy,
             ThermalConductivityQuadraticPolynomial<real_t> &thermal_conductivity,
             real_t temperature_lower_bound = 0,
-            real_t temeprature_upper_bound = INFINITY,
-            real_t sharpness_coefficient = 1
+            real_t temeprature_upper_bound = INFINITY
         ) : _enthalpy(enthalpy),
-            _thermal_conductivity(thermal_conductivity)
+            _thermal_conductivity(thermal_conductivity),
+			_density(density),
+			_temperature_lower_bound(temperature_lower_bound),
+			_temperature_upper_bound(temeprature_upper_bound)
         {
-            _density = density;
-
-            _temperature_lower_bound = temperature_lower_bound;
-            _temperature_upper_bound = temeprature_upper_bound;
-
-            _sharpness_coefficient = sharpness_coefficient;
+			;
         }
 
-        real_t getDensity(real_t temperature) 
+        inline real_t getDensity(real_t temperature) 
         {
             return _density * (
-                _getSigmoid(temperature, _temperature_lower_bound, _sharpness_coefficient) -
-                _getSigmoid(temperature, _temperature_upper_bound, _sharpness_coefficient)
+                _getSigmoid(temperature, _temperature_lower_bound, sharpness_coefficient) -
+                _getSigmoid(temperature, _temperature_upper_bound, sharpness_coefficient)
             );
         }
 
-        real_t getStandardEnthalpy(real_t temperature)
+        inline real_t getStandardEnthalpy(real_t temperature)
         {
             return _enthalpy.getStandardEnthalpy(temperature) * (
-                _getSigmoid(temperature, _temperature_lower_bound, _sharpness_coefficient) -
-                _getSigmoid(temperature, _temperature_upper_bound, _sharpness_coefficient)
+                _getSigmoid(temperature, _temperature_lower_bound, sharpness_coefficient) -
+                _getSigmoid(temperature, _temperature_upper_bound, sharpness_coefficient)
             );
         }
 
-        real_t getHeatCapacity(real_t temperature)
+        inline real_t getHeatCapacity(real_t temperature)
         {
             return _enthalpy.getHeatCapacity(temperature) * (
-                _getSigmoid(temperature, _temperature_lower_bound, _sharpness_coefficient) -
-                _getSigmoid(temperature, _temperature_upper_bound, _sharpness_coefficient)
+                _getSigmoid(temperature, _temperature_lower_bound, sharpness_coefficient) -
+                _getSigmoid(temperature, _temperature_upper_bound, sharpness_coefficient)
             ) + _enthalpy.getStandardEnthalpy(temperature) * (
-                _getSigmoidDerivative(temperature, _temperature_lower_bound, _sharpness_coefficient) -
-                _getSigmoidDerivative(temperature, _temperature_upper_bound, _sharpness_coefficient)
+                _getSigmoidDerivative(temperature, _temperature_lower_bound, sharpness_coefficient) -
+                _getSigmoidDerivative(temperature, _temperature_upper_bound, sharpness_coefficient)
             );
         }
 
-        real_t getThermalConductivity(real_t temperature)
+        inline real_t getThermalConductivity(real_t temperature)
         {
             return _thermal_conductivity.getThermalConductivity(temperature) * (
-                _getSigmoid(temperature, _temperature_lower_bound, _sharpness_coefficient) -
-                _getSigmoid(temperature, _temperature_upper_bound, _sharpness_coefficient)
+                _getSigmoid(temperature, _temperature_lower_bound, sharpness_coefficient) -
+                _getSigmoid(temperature, _temperature_upper_bound, sharpness_coefficient)
             );
         }
+
+		static real_t sharpness_coefficient;
 };
 
 #endif

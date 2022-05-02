@@ -19,12 +19,12 @@ class Enthalpy
 {
     private:
     
-        real_t _A;
-        real_t _B;
-        real_t _C;
-        real_t _D;
-        real_t _E;
-        real_t _F;
+        const real_t _A;
+        const real_t _B;
+        const real_t _C;
+        const real_t _D;
+        const real_t _E;
+        const real_t _F;
 
     public:
         
@@ -35,17 +35,17 @@ class Enthalpy
             real_t D = 0,
             real_t E = 0,
             real_t F = 0
-        )
+        ) :	_A(A),
+			_B(B),
+			_C(C),
+			_D(D),
+			_E(E),
+			_F(F)
         {
-            _A = A;
-            _B = B;
-            _C = C;
-            _D = D;
-            _E = E;
-            _F = F;
+			;
         }
 
-        real_t getStandardEnthalpy(real_t temperature)
+        inline real_t getStandardEnthalpy(real_t temperature)
         {
             temperature /= 1000;
 
@@ -60,7 +60,7 @@ class Enthalpy
             );
         }
 
-        real_t getHeatCapacity(real_t temperature)
+        inline real_t getHeatCapacity(real_t temperature)
         {
             temperature /= 1000;
             

@@ -9,7 +9,6 @@
  * 
  */
 
-#include "qrsolver/Q_Matrix.hpp"
 #include "lusolver/LU_Solver.hpp"
 
 #include <iostream>

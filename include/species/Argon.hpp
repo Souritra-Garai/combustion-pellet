@@ -3,9 +3,7 @@
 
 #include "thermo-physical-properties/Thermal_Conductivity.hpp"
 #include "thermo-physical-properties/Enthalpy.hpp"
-#include "thermo-physical-properties/IdealGas.hpp"
-
-#define SHARPNESS_COEFFICIENT_AR 100.0
+#include "thermo-physical-properties/Ideal_Gas.hpp"
 
 Enthalpy<long double> enthalpy_Ar(
     20.78600,

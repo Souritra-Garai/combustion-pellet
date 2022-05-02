@@ -5,9 +5,9 @@
 #include "thermo-physical-properties/Enthalpy.hpp"
 #include "thermo-physical-properties/Phase.hpp"
 
-#include "thermo-physical-properties/Substance.hpp"
+#include "thermo-physical-properties/Condensed_Species.hpp"
 
-#define SHARPNESS_COEFFICIENT_AL 1.0
+extern long doub;
 
 Enthalpy<long double> enthalpy_solid_Al(
     28.08920,
@@ -35,9 +35,8 @@ Phase<long double> solid_Al(
     2700.0,
     enthalpy_solid_Al,
     thermal_conductivity_solid_Al,
-    273.0,
-    933.47,
-    SHARPNESS_COEFFICIENT_AL
+    -INFINITY,
+    933.47
 );
 
 Phase<long double> liquid_Al(
@@ -45,12 +44,11 @@ Phase<long double> liquid_Al(
     enthalpy_liquid_Al,
     thermal_conductivity_liquid_Al,
     933.47,
-    INFINITY,
-    SHARPNESS_COEFFICIENT_AL
+    INFINITY
 );
 
 Phase<long double> phases_Al[] = {solid_Al, liquid_Al};
 
-Substance<long double> Aluminium(2, phases_Al, 26.9815386E-3);
+CondensedSpecies<long double> Aluminium(2, phases_Al, 26.9815386E-3);
 
 #endif

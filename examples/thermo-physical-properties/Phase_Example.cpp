@@ -1,8 +1,6 @@
-#include <fstream>
+#include <iostream>
 
 #include <thermo-physical-properties/Phase.hpp>
-
-#include <utilities/File_Generator.hpp>
 
 Enthalpy<double> internal_energy_solid_Al(
     28.08920,
@@ -26,18 +24,12 @@ Phase<double> solid_Al(
 
 int main(int argc, char const *argv[])
 {
-    FileGenerator file_generator;
+    std::cout << "Temperature (K)," << "Heat Capacity (J / mol-K)," << "Standard Enthalpy (J / mol)," << "Thermal Conductivity (W / m - K)" << std::endl;
 
-    std::ofstream my_file = file_generator.getCSVFile("Thermo_Physical_Properties");
-    
-    my_file << "Temperature (K)," << "Heat Capacity (J / mol-K)," << "Standard Enthalpy (J / mol)," << "Thermal Conductivity (W / m - K)" << std::endl;
-
-    for (double temperature = 1; temperature <= 2000; temperature += 1)
+    for (double temperature = 273; temperature <= 2500; temperature += 1)
     {
-        my_file << temperature << ',' << solid_Al.getHeatCapacity(temperature) << ',' << solid_Al.getStandardEnthalpy(temperature) << ',' << solid_Al.getThermalConductivity(temperature) << std::endl;
+        std::cout << temperature << ',' << solid_Al.getHeatCapacity(temperature) << ',' << solid_Al.getStandardEnthalpy(temperature) << ',' << solid_Al.getThermalConductivity(temperature) << std::endl;
     }
-
-    my_file.close();
 
     return 0;
 }

@@ -26,7 +26,7 @@ class TridiagonalMatrix
 		~TridiagonalMatrix();
 
 		// row_index and column_index start from 0 to _n-1
-		real_t getElement(
+		inline real_t getElement(
 			unsigned int row_index,
 			unsigned int column_index
 		) {
@@ -34,7 +34,7 @@ class TridiagonalMatrix
 		}
 
 		// row_index and column_index start from 0 to _n-1
-		void setElement(
+		inline void setElement(
 			unsigned int row_index,
 			unsigned int column_index,
 			real_t value

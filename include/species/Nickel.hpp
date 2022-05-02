@@ -5,9 +5,9 @@
 #include "thermo-physical-properties/Enthalpy.hpp"
 #include "thermo-physical-properties/Phase.hpp"
 
-#include "thermo-physical-properties/Substance.hpp"
+#include "thermo-physical-properties/Condensed_Species.hpp"
 
-#define SHARPNESS_COEFFICIENT_NI 1.0
+extern long double sharpness_coefficient;
 
 Enthalpy<long double> enthalpy_solid_Ni_1(
     13.69160,
@@ -55,9 +55,8 @@ Phase<long double> solid_Ni_1(
     8902.0,
     enthalpy_solid_Ni_1,
     thermal_conductivity_solid_Ni_1,
-    273.0,
-    600.0,
-    SHARPNESS_COEFFICIENT_NI
+    -INFINITY,
+    600.0
 );
 
 Phase<long double> solid_Ni_2(
@@ -65,8 +64,7 @@ Phase<long double> solid_Ni_2(
     enthalpy_solid_Ni_2,
     thermal_conductivity_solid_Ni_2_3,
     600.0,
-    700.0,
-    SHARPNESS_COEFFICIENT_NI
+    700.0
 );
 
 Phase<long double> solid_Ni_3(
@@ -74,8 +72,7 @@ Phase<long double> solid_Ni_3(
     enthalpy_solid_Ni_3,
     thermal_conductivity_solid_Ni_2_3,
     700.0,
-    1728.0,
-    SHARPNESS_COEFFICIENT_NI
+    1728.0
 );
 
 Phase<long double> liquid_Ni(
@@ -83,12 +80,11 @@ Phase<long double> liquid_Ni(
     enthalpy_liquid_Ni,
     thermal_conductivity_liquid_Ni,
     1728.0,
-    INFINITY,
-    SHARPNESS_COEFFICIENT_NI
+    INFINITY
 );
 
 Phase<long double> phases_Ni[] = {solid_Ni_1, solid_Ni_2, solid_Ni_3, liquid_Ni};
 
-Substance<long double> Nickel(4, phases_Ni, 58.6934E-3);
+CondensedSpecies<long double> Nickel(4, phases_Ni, 58.6934E-3);
 
 #endif

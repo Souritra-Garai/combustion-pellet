@@ -5,9 +5,9 @@
 #include "thermo-physical-properties/Enthalpy.hpp"
 #include "thermo-physical-properties/Phase.hpp"
 
-#include "thermo-physical-properties/Substance.hpp"
+#include "thermo-physical-properties/Condensed_Species.hpp"
 
-#define SHARPNESS_COEFFICIENT_NIAL 1.0
+extern long double sharpness_coefficient;
 
 Enthalpy<long double> enthalpy_solid_NiAl(
     41.86,
@@ -35,9 +35,8 @@ Phase<long double> solid_NiAl(
     5650.0,
     enthalpy_solid_NiAl,
     thermal_conductivity_solid_NiAl,
-    273.0,
-    1912.0,
-    SHARPNESS_COEFFICIENT_NIAL
+    -INFINITY,
+    1912.0
 );
 
 Phase<long double> liquid_NiAl(
@@ -45,12 +44,11 @@ Phase<long double> liquid_NiAl(
     enthalpy_liquid_NiAl,
     thermal_conductivity_liquid_NiAl,
     1912.0,
-    INFINITY,
-    SHARPNESS_COEFFICIENT_NIAL
+    INFINITY
 );
 
 Phase<long double> phases_NiAl[] = {solid_NiAl, liquid_NiAl};
 
-Substance<long double> NickelAluminide(2, phases_NiAl, 85.6748386E-3);
+CondensedSpecies<long double> NickelAluminide(2, phases_NiAl, 85.6748386E-3);
 
 #endif
