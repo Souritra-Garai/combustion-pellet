@@ -71,15 +71,26 @@ $(BLDDIR)/Thermo-Physical_Properties.o : $(SRCDIR)/Thermo-Physical_Properties.cp
 	@echo "Compiling Thermo-Physical_Properties...";
 	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/Thermo-Physical_Properties.cpp -o $(BLDDIR)/Thermo-Physical_Properties.o
 
+Core-Shell-Diffusion : $(BLDDIR)/Core-Shell-Diffusion.o $(BLDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o $(BLDDIR)/$(TRPDIR)/Core-Shell-Particle.o $(LUSOBJS) $(UTLOBJS)
+	@mkdir -p $(BINDIR)/$(PDEDIR);
+	@echo "Linking Core-Shell-Diffusion...";
+	$(CC) $(CFLAGS) $(LIB) $(BLDDIR)/Core-Shell-Diffusion.o $(BLDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o $(BLDDIR)/$(TRPDIR)/Core-Shell-Particle.o $(LUSOBJS) $(UTLOBJS) -o $(BINDIR)/Core-Shell-Diffusion
+
+$(BLDDIR)/Core-Shell-Diffusion.o : $(SRCDIR)/Core-Shell-Diffusion.cpp $(PDEHPPS) $(TRPHPPS) $(SPCHPPS) $(UTLHPPS)
+	@mkdir -p $(BLDDIR)/$(PDEDIR);
+	@echo "Compiling Core-Shell-Diffusion...";
+	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/Core-Shell-Diffusion.cpp -o $(BLDDIR)/Core-Shell-Diffusion.o
+
+
 # ----------------------------------------------------------------------------------------------------------
 # Building thermo-physical properties source files
 
-$(BLDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o : $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp $(INCDIR)/$(TRPDIR)/Substance.hpp $(SRCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.cpp
+$(BLDDIR)/$(TRPDIR)/Core-Shell-Particle.o : $(SRCDIR)/$(TRPDIR)/Core-Shell-Particle.cpp $(TRPHPPS)
 	@mkdir -p $(BLDDIR)/$(TRPDIR);
-	@echo "Compiling Core-Shell-Combustion-Particle...";
-	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.cpp -o $(BLDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o
+	@echo "Compiling Core-Shell-Particle...";
+	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/$(TRPDIR)/Core-Shell-Particle.cpp -o $(BLDDIR)/$(TRPDIR)/Core-Shell-Particle.o
 
-$(BLDDIR)/$(TRPDIR)/Packed-Pellet.o : $(INCDIR)/$(TRPDIR)/Packed-Pellet.hpp $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp $(INCDIR)/$(TRPDIR)/Substance.hpp $(INCDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.hpp $(SRCDIR)/$(TRPDIR)/Packed-Pellet.cpp
+$(BLDDIR)/$(TRPDIR)/Packed-Pellet.o : $(INCDIR)/$(TRPDIR)/Packed-Pellet.hpp $(INCDIR)/$(TRPDIR)/Core-Shell-Particle.hpp $(INCDIR)/$(TRPDIR)/Substance.hpp $(INCDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.hpp $(SRCDIR)/$(TRPDIR)/Packed-Pellet.cpp
 	@mkdir -p $(BLDDIR)/$(TRPDIR);
 	@echo "Compiling Packed-Pellet...";
 	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/$(TRPDIR)/Packed-Pellet.cpp -o $(BLDDIR)/$(TRPDIR)/Packed-Pellet.o
@@ -92,7 +103,7 @@ $(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.o : $(INCDIR)/$(TRPDIR)/Thermal_
 # ----------------------------------------------------------------------------------------------------------
 # Building pde problems source files
 
-$(BLDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o : $(INCDIR)/$(PDEDIR)/Core-Shell-Diffusion.hpp $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp $(INCDIR)/$(LUSDIR)/LU_Solver.hpp $(SRCDIR)/$(PDEDIR)/Core-Shell-Diffusion.cpp
+$(BLDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o : $(SRCDIR)/$(PDEDIR)/Core-Shell-Diffusion.cpp $(PDEHPPS) $(LUSHPPS) $(TRPHPPS)
 	@mkdir -p $(BLDDIR)/$(PDEDIR);
 	@echo "Compiling Core-Shell-Diffusion...";
 	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/$(PDEDIR)/Core-Shell-Diffusion.cpp -o $(BLDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o
@@ -118,12 +129,12 @@ $(BLDDIR)/$(UTLDIR)/File_Generator.o : $(INCDIR)/$(UTLDIR)/File_Generator.hpp $(
 # ----------------------------------------------------------------------------------------------------------
 # Building PDE Problem Examples
 
-Core-Shell-Diffusion_Example : $(BLDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o $(BLDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o $(BLDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o $(LUSOBJS) $(UTLOBJS)
+Core-Shell-Diffusion_Example : $(BLDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o $(BLDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o $(BLDDIR)/$(TRPDIR)/Core-Shell-Particle.o $(LUSOBJS)
 	@mkdir -p $(BINDIR)/$(PDEDIR);
 	@echo "Linking Core-Shell-Diffusion_Example...";
-	$(CC) $(CFLAGS) $(LIB) $(BLDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o $(BLDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o $(BLDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o $(LUSOBJS) $(UTLOBJS) -o $(BINDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example
+	$(CC) $(CFLAGS) $(LIB) $(BLDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o $(BLDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o $(BLDDIR)/$(TRPDIR)/Core-Shell-Particle.o $(LUSOBJS) -o $(BINDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example
 
-$(BLDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o : $(EXMDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.cpp $(INCDIR)/$(PDEDIR)/Core-Shell-Diffusion.hpp $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp $(SPCHPPS) $(INCDIR)/$(UTLDIR)/Keyboard_Interrupt.hpp $(INCDIR)/$(UTLDIR)/File_Generator.hpp
+$(BLDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o : $(EXMDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.cpp $(PDEHPPS) $(TRPHPPS) $(SPCHPPS)
 	@mkdir -p $(BLDDIR)/$(PDEDIR);
 	@echo "Compiling Core-Shell-Diffusion_Example...";
 	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.cpp -o $(BLDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o
@@ -150,12 +161,12 @@ Pellet-Flame-Propagation-Diffusion_Example : $(BLDDIR)/$(PDEDIR)/Pellet-Flame-Pr
 
 # ----------------------------------------------------------------------------------------------------------
 # Building Thermo-Physical Properties Examples
-Thermal_Conductivity_Pellet_Example : $(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.o $(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.o $(BLDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o $(UTLOBJS)
+Thermal_Conductivity_Pellet_Example : $(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.o $(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.o $(BLDDIR)/$(TRPDIR)/Core-Shell-Particle.o $(UTLOBJS)
 	@mkdir -p $(BINDIR)/$(TRPDIR);
 	@echo "Linking Thermal_Conductivity_Pellet_Example...";
-	$(CC) $(CFLAGS) $(LIB) $(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.o $(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.o $(BLDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o $(UTLOBJS) -o $(BINDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example
+	$(CC) $(CFLAGS) $(LIB) $(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.o $(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.o $(BLDDIR)/$(TRPDIR)/Core-Shell-Particle.o $(UTLOBJS) -o $(BINDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example
 
-$(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.o : $(EXMDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.cpp $(INCDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.hpp $(SPCHPPS) $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp $(INCDIR)/$(UTLDIR)/File_Generator.hpp
+$(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.o : $(EXMDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.cpp $(INCDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.hpp $(SPCHPPS) $(INCDIR)/$(TRPDIR)/Core-Shell-Particle.hpp $(INCDIR)/$(UTLDIR)/File_Generator.hpp
 	@mkdir -p $(BLDDIR)/$(TRPDIR);
 	@echo "Compiling Thermal_Conductivity_Pellet...";
 	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.cpp -o $(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.o
@@ -190,22 +201,22 @@ $(BLDDIR)/$(TRPDIR)/Condensed_Species_Example.o : $(EXMDIR)/$(TRPDIR)/Condensed_
 	@echo "Compiling Condensed_Species_Example...";
 	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(TRPDIR)/Condensed_Species_Example.cpp -o $(BLDDIR)/$(TRPDIR)/Condensed_Species_Example.o
 
-Core-Shell-Combustion-Particle_Example : $(BLDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle_Example.o $(BLDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o
+Core-Shell-Particle_Example : $(BLDDIR)/$(TRPDIR)/Core-Shell-Particle_Example.o $(BLDDIR)/$(TRPDIR)/Core-Shell-Particle.o
 	@mkdir -p $(BINDIR)/$(TRPDIR);
-	@echo "Linking Core-Shell-Combustion-Particle_Example...";
-	$(CC) $(CFLAGS) $(LIB) $(BLDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle_Example.o $(BLDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o -o $(BINDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle_Example
+	@echo "Linking Core-Shell-Particle_Example...";
+	$(CC) $(CFLAGS) $(LIB) $(BLDDIR)/$(TRPDIR)/Core-Shell-Particle_Example.o $(BLDDIR)/$(TRPDIR)/Core-Shell-Particle.o -o $(BINDIR)/$(TRPDIR)/Core-Shell-Particle_Example
 
-$(BLDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle_Example.o : $(EXMDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle_Example.cpp $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp $(SPCHPPS)
+$(BLDDIR)/$(TRPDIR)/Core-Shell-Particle_Example.o : $(EXMDIR)/$(TRPDIR)/Core-Shell-Particle_Example.cpp $(TRPHPPS) $(SPCHPPS)
 	@mkdir -p $(BLDDIR)/$(TRPDIR);
-	@echo "Compiling Core-Shell-Combustion-Particle_Example...";
-	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle_Example.cpp -o $(BLDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle_Example.o
+	@echo "Compiling Core-Shell-Particle_Example...";
+	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(TRPDIR)/Core-Shell-Particle_Example.cpp -o $(BLDDIR)/$(TRPDIR)/Core-Shell-Particle_Example.o
 
-Packed-Pellet_Example : $(BLDDIR)/$(TRPDIR)/Packed-Pellet_Example.o $(BLDDIR)/$(TRPDIR)/Packed-Pellet.o $(BLDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o $(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.o
+Packed-Pellet_Example : $(BLDDIR)/$(TRPDIR)/Packed-Pellet_Example.o $(BLDDIR)/$(TRPDIR)/Packed-Pellet.o $(BLDDIR)/$(TRPDIR)/Core-Shell-Particle.o $(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.o
 	@mkdir -p $(BINDIR)/$(TRPDIR);
 	@echo "Linking Packed-Pellet_Example...";
-	$(CC) $(CFLAGS) $(LIB) $(BLDDIR)/$(TRPDIR)/Packed-Pellet_Example.o $(BLDDIR)/$(TRPDIR)/Packed-Pellet.o $(BLDDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.o $(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.o -o $(BINDIR)/$(TRPDIR)/Packed-Pellet_Example
+	$(CC) $(CFLAGS) $(LIB) $(BLDDIR)/$(TRPDIR)/Packed-Pellet_Example.o $(BLDDIR)/$(TRPDIR)/Packed-Pellet.o $(BLDDIR)/$(TRPDIR)/Core-Shell-Particle.o $(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.o -o $(BINDIR)/$(TRPDIR)/Packed-Pellet_Example
 
-$(BLDDIR)/$(TRPDIR)/Packed-Pellet_Example.o : $(EXMDIR)/$(TRPDIR)/Packed-Pellet_Example.cpp $(INCDIR)/$(TRPDIR)/Packed-Pellet.hpp $(SPCHPPS) $(INCDIR)/$(TRPDIR)/Core-Shell-Combustion-Particle.hpp
+$(BLDDIR)/$(TRPDIR)/Packed-Pellet_Example.o : $(EXMDIR)/$(TRPDIR)/Packed-Pellet_Example.cpp $(INCDIR)/$(TRPDIR)/Packed-Pellet.hpp $(SPCHPPS) $(INCDIR)/$(TRPDIR)/Core-Shell-Particle.hpp
 	@mkdir -p $(BLDDIR)/$(TRPDIR);
 	@echo "Compiling Packed-Pellet_Example...";
 	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(TRPDIR)/Packed-Pellet_Example.cpp -o $(BLDDIR)/$(TRPDIR)/Packed-Pellet_Example.o

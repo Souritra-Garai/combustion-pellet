@@ -101,4 +101,75 @@ double getTemperatureLowerBoundOption(ez::ezOptionParser &opt, double default_va
 	return default_value;
 }
 
+void setTemperatureOption(ez::ezOptionParser &opt)
+{
+	opt.add(
+		"1500.0",
+		0,
+		1,
+		0,
+		"Set temperature to ARG.",
+		"--T"
+	);
+}
+
+double getTemperatureOption(ez::ezOptionParser &opt, double default_value)
+{
+	if (opt.isSet("--T"))
+	{
+		opt.get("--T")->getDouble(default_value);
+		std::cout << "Temperature is set to " << default_value << " K\n";
+	}
+
+	return default_value;
+}
+
+void setParticleGridSizeOption(ez::ezOptionParser &opt)
+{
+	opt.add(
+		"1001",
+		0,
+		1,
+		0,
+		"Set number of grid points in particle to ARG.",
+		"--N"
+	);
+}
+
+size_t getParticleGridSizeOption(ez::ezOptionParser &opt, size_t default_value)
+{
+	if (opt.isSet("--N"))
+	{
+		opt.get("--N")->getDouble(default_value);
+		std::cout << "Particle grid size is set to " << default_value << ".\n";
+	}
+
+	return default_value;
+}
+
+void setTimeStepOption(ez::ezOptionParser &opt)
+{
+	opt.add(
+		"0.000001",
+		0,
+		1,
+		0,
+		"Set the time step to ARG seconds.",
+		"--Dt"
+	);
+}
+
+double getTimeStepOption(ez::ezOptionParser &opt, double default_value)
+{
+	if (opt.isSet("--Dt"))
+	{
+		opt.get("--Dt")->getDouble(default_value);
+		std::cout << "Time step is set to " << default_value << " seconds.\n";
+	}
+
+	return default_value;
+}
+
+
+
 #endif

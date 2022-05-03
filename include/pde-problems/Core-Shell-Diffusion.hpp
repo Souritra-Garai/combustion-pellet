@@ -13,7 +13,7 @@
 #define __CORE_SHELL_DIFFUSION__
 
 // Required for definition of CoreShellCombustionParticle class
-#include "thermo-physical-properties/Core-Shell-Combustion-Particle.hpp"
+#include "thermo-physical-properties/Core-Shell-Particle.hpp"
 // Required for definition of QRSolver class
 #include "lusolver/LU_Solver.hpp"
 
@@ -27,7 +27,7 @@
  * to represent real numbers
  */
 template<typename real_t>
-class CoreShellDiffusion : public CoreShellCombustionParticle<real_t>
+class CoreShellDiffusion : public CoreShellParticle<real_t>
 {
     private :
 
@@ -46,6 +46,8 @@ class CoreShellDiffusion : public CoreShellCombustionParticle<real_t>
          * @brief Distance between consecutive grid points
          */
         static real_t _delta_r;
+
+		static real_t *radial_coordinate_sqr;
 
         /**
          * @brief Array to store molar concentration of substance A in \f$ mol/m^3 \f$,
@@ -213,6 +215,8 @@ class CoreShellDiffusion : public CoreShellCombustionParticle<real_t>
          * @param delimiter Character to separate two consecutive values of temperature
          */
         void printGridPoints(std::ostream &output_stream, char delimiter = '\t');
+
+		static void deallocateRadiusArray();
 };
 
 #endif

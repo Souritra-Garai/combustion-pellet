@@ -24,6 +24,8 @@ template<typename real_t> real_t CoreShellDiffusion<real_t>::_delta_t = 0;
 // Grid size
 template<typename real_t> size_t CoreShellDiffusion<real_t>::_n = 2;
 template<typename real_t> real_t CoreShellDiffusion<real_t>::_delta_r = 0;
+
+template<typename real_t> real_t * CoreShellDiffusion<real_t>::radial_coordinate_sqr = NULL;
 /******************************************************************************************************************/
 
 /******************************************************************************************************************/
@@ -41,7 +43,17 @@ void CoreShellDiffusion<real_t>::setGridSize(size_t n)
     _n = n;
     // Total n grid points (inclusive of boundary points) implies n-1 divisions
     // Thus \f$ \Delta r = r_P / (n-1) \f$
-    _delta_r = CoreShellCombustionParticle<real_t>::_overall_radius / (real_t) (_n - 1);
+    _delta_r = CoreShellParticle<real_t>::_overall_radius / (real_t) (_n - 1);
+
+	radial_coordinate_sqr = new real_t[_n];
+
+	for (size_t i = 0; i < _n; i++) radial_coordinate_sqr[i] = pow(getRadialCoordinate(i), 2);
+}
+
+template<typename real_t>
+void CoreShellDiffusion<real_t>::deallocateRadiusArray()
+{
+	delete [] radial_coordinate_sqr;
 }
 
 template<typename real_t>
@@ -49,7 +61,7 @@ inline real_t CoreShellDiffusion<real_t>::getRadialCoordinate(size_t i)
 {
     // Radial distance from origin of the grid point \f$ i \f$
     // \f$ r_i = r_p \cdot \frac{i}{n-1}
-    return CoreShellCombustionParticle<real_t>::_overall_radius * ((real_t) i) / ((real_t) (_n-1));
+    return CoreShellParticle<real_t>::_overall_radius * ((real_t) i) / ((real_t) (_n-1));
     // For loops will iterate from \f$ i = 0 \f$ to \f$ i = n-1 \f$
 }
 
@@ -69,7 +81,7 @@ void CoreShellDiffusion<real_t>::printConfiguration(std::ostream &output_stream)
 
 template<typename real_t>
 CoreShellDiffusion<real_t>::CoreShellDiffusion() : // Mem initialization list
-    CoreShellCombustionParticle<real_t>(),  // Call the constructor of the base class
+    CoreShellParticle<real_t>(),  // Call the constructor of the base class
     // Initialize solvers
     _solver_A(_n),
     _solver_B(_n)
@@ -104,47 +116,39 @@ void CoreShellDiffusion<real_t>::calcRxnMassFractions()
 
     // Initialising the sums with the term for grid point # N    
     
-    // Calculate \f$ r^2 \f$
-    real_t r2 = pow(this->_overall_radius, 2);
     // Intialise the sums without the common multiplicative factors
-    real_t Y_A  = 0.5 * getRxnConcA(_n-1)  * pow(this->_overall_radius, 2);
-    real_t Y_B  = 0.5 * getRxnConcB(_n-1)  * pow(this->_overall_radius, 2);
-    real_t Y_AB = 0.5 * getRxnConcAB(_n-1) * pow(this->_overall_radius, 2);
-    
-    // Parallelizing the summation loop
-    // Create private copies for Y_A, Y_B and Y_AB; and
-    // sum the copies at the end
-    #pragma omp parallel for reduction(+:Y_A, Y_B, Y_AB) private(r2) num_threads(4) schedule(static, 250)
-        // Summing over all grid points except the first and the last
-        for (size_t i = 1; i < _n-1; i++)
-        {
-            // Calculate \f$ r^2 \f$
-            r2 = pow(getRadialCoordinate(i), 2);
-            // Add the specific terms for the summation
-            Y_A  += getRxnConcA(i)  * r2;
-            Y_B  += getRxnConcB(i)  * r2;
-            Y_AB += getRxnConcAB(i) * r2;
-        }
+    real_t Y_A  = 0.5 * getRxnConcA(_n-1)  * radial_coordinate_sqr[_n - 1];
+    real_t Y_B  = 0.5 * getRxnConcB(_n-1)  * radial_coordinate_sqr[_n - 1];
+    real_t Y_AB = 0.5 * getRxnConcAB(_n-1) * radial_coordinate_sqr[_n - 1];
+
+	// Summing over all grid points except the first and the last
+	for (size_t i = 1; i < _n-1; i++)
+	{
+		// Add the specific terms for the summation
+		Y_A  += getRxnConcA(i)  * radial_coordinate_sqr[i];
+		Y_B  += getRxnConcB(i)  * radial_coordinate_sqr[i];
+		Y_AB += getRxnConcAB(i) * radial_coordinate_sqr[i];
+	}
     
     // Update the reaction mass fractions of the core-shell combustion particle
 
-    // Multiply the summations with the required factors and divide
-    // by the total mass of the particle calculated during initialisation
-    this->_mass_fraction_core_material    = 4.0 * M_PI * _delta_r * Y_A  * this->_core_material->getMolarMass()    / this->_mass;
-    this->_mass_fraction_shell_material   = 4.0 * M_PI * _delta_r * Y_B  * this->_shell_material->getMolarMass()   / this->_mass;
-    this->_mass_fraction_product_material = 4.0 * M_PI * _delta_r * Y_AB * this->_product_material->getMolarMass() / this->_mass;
+    // // Multiply the summations with the required factors and divide
+    // // by the total mass of the particle calculated during initialisation
+    // this->_mass_fraction_core_material    = 4.0 * M_PI * _delta_r * Y_A  * this->_core_material->getMolarMass()    / this->_mass;
+    // this->_mass_fraction_shell_material   = 4.0 * M_PI * _delta_r * Y_B  * this->_shell_material->getMolarMass()   / this->_mass;
+    // this->_mass_fraction_product_material = 4.0 * M_PI * _delta_r * Y_AB * this->_product_material->getMolarMass() / this->_mass;
 
-    // // Multiply the summations with the required factors
-    // Y_A  *= 4.0 * M_PI * _delta_r * this->_core_material->getMolarMass();
-    // Y_B  *= 4.0 * M_PI * _delta_r * this->_shell_material->getMolarMass();
-    // Y_AB *= 4.0 * M_PI * _delta_r * this->_product_material->getMolarMass();
+    // Multiply the summations with the required factors
+    Y_A  *= this->_core_material->getMolarMass();
+    Y_B  *= this->_shell_material->getMolarMass();
+    Y_AB *= this->_product_material->getMolarMass();
     
-    // // Add the summations to get the total mass
-    // float sum = Y_A + Y_B + Y_AB;
-    // // Divide by the sum of the summations to get the mass fractions
-    // this->_mass_fraction_core_material    = Y_A  / sum;
-    // this->_mass_fraction_shell_material   = Y_B  / sum;
-    // this->_mass_fraction_product_material = Y_AB / sum;
+    // Add the summations to get the total mass
+    float sum = Y_A + Y_B + Y_AB;
+    // Divide by the sum of the summations to get the mass fractions
+    this->_mass_fraction_core_material    = Y_A  / sum;
+    this->_mass_fraction_shell_material   = Y_B  / sum;
+    this->_mass_fraction_product_material = Y_AB / sum;
 }
 
 template<typename real_t>
@@ -234,43 +238,38 @@ void CoreShellDiffusion<real_t>::setUpEquations(real_t D)
     _solver_A.setEquationFirstRow(1, -1, 0);
     _solver_B.setEquationFirstRow(1, -1, 0);
 
-    // Parallely setup the matrix for the linear algebra solver
-    // As coefficient 3 is different for every grid point,
-    // it needs to be calculated for each row 
-    // and hence every thread needs a private copy
-    #pragma omp parallel for private(coefficient3) num_threads(4) schedule(static, 250)
-        // Iteratively set up the discretized governing diffusion equation
-        // for all grid points except the grid points # 0 and N, where
-        // zero flux boundary conditions apply
-        for (size_t i = 1; i < _n - 1; i++)
-        {
-            // Calculating coefficient 3 for the current grid point
-            coefficient3 = coefficient1 * pow(getRadialCoordinate(i+1) / getRadialCoordinate(i), 2);
+	// Iteratively set up the discretized governing diffusion equation
+	// for all grid points except the grid points # 0 and N, where
+	// zero flux boundary conditions apply
+	for (size_t i = 1; i < _n - 1; i++)
+	{
+		// Calculating coefficient 3 for the current grid point
+		coefficient3 = coefficient1 * radial_coordinate_sqr[i+1] / radial_coordinate_sqr[i];
 
-            // Set up row for matrix equation representing 
-            // diffusion of substance A
-            _solver_A.setEquation(
-                i,
-                - coefficient1, 
-                coefficient1 + coefficient2 + coefficient3, 
-                - coefficient3, 
-                coefficient1 * _concentration_array_A[i-1] -
-				(coefficient1 - coefficient2 + coefficient3) * _concentration_array_A[i] +
-				coefficient3 * _concentration_array_A[i+1]
-            );
+		// Set up row for matrix equation representing 
+		// diffusion of substance A
+		_solver_A.setEquation(
+			i,
+			- coefficient1, 
+			coefficient1 + coefficient2 + coefficient3, 
+			- coefficient3, 
+			coefficient1 * _concentration_array_A[i-1] -
+			(coefficient1 - coefficient2 + coefficient3) * _concentration_array_A[i] +
+			coefficient3 * _concentration_array_A[i+1]
+		);
 
-            // Set up row for matrix equation representing 
-            // diffusion of substance B
-            _solver_B.setEquation(
-                i, 
-                - coefficient1, 
-                coefficient1 + coefficient2 + coefficient3, 
-                - coefficient3,
-				coefficient1 * _concentration_array_B[i-1] -
-                (coefficient1 - coefficient2 + coefficient3) * _concentration_array_B[i] +
-				coefficient3 * _concentration_array_B[i+1]
-            );
-        }
+		// Set up row for matrix equation representing 
+		// diffusion of substance B
+		_solver_B.setEquation(
+			i, 
+			- coefficient1, 
+			coefficient1 + coefficient2 + coefficient3, 
+			- coefficient3,
+			coefficient1 * _concentration_array_B[i-1] -
+			(coefficient1 - coefficient2 + coefficient3) * _concentration_array_B[i] +
+			coefficient3 * _concentration_array_B[i+1]
+		);
+	}
 
     // Set zero flux boundary condition at grid point # N
     // C_{k,N}^n - C_{k,N-1}^n = 0
@@ -301,43 +300,38 @@ void CoreShellDiffusion<real_t>::setUpEquations(real_t D, CoreShellDiffusion<rea
     _solver_A.setEquationFirstRow(1, -1, 0);
     _solver_B.setEquationFirstRow(1, -1, 0);
 
-    // Parallely setup the matrix for the linear algebra solver
-    // As coefficient 3 is different for every grid point,
-    // it needs to be calculated for each row 
-    // and hence every thread needs a private copy
-    #pragma omp parallel for default(shared) private(coefficient3) num_threads(4) schedule(static, 250)
-        // Iteratively set up the discretized governing diffusion equation
-        // for all grid points except the grid points # 0 and N, where
-        // zero flux boundary conditions apply
-        for (size_t i = 1; i < _n - 1; i++)
-        {
-            // Calculating coefficient 3 for the current grid point
-            coefficient3 = coefficient1 * pow(getRadialCoordinate(i+1) / getRadialCoordinate(i), 2);
+	// Iteratively set up the discretized governing diffusion equation
+	// for all grid points except the grid points # 0 and N, where
+	// zero flux boundary conditions apply
+	for (size_t i = 1; i < _n - 1; i++)
+	{
+		// Calculating coefficient 3 for the current grid point
+		coefficient3 = coefficient1 * radial_coordinate_sqr[i+1] / radial_coordinate_sqr[i];
 
-            // Set up row for matrix equation representing 
-            // diffusion of substance A
-            _solver_A.setEquation(
-                i, 
-                - coefficient1, 
-                coefficient1 + coefficient2 + coefficient3, 
-                - coefficient3, 
-				coefficient1 * diffusion_problem._concentration_array_A[i-1] -
-                (coefficient1 - coefficient2 + coefficient3) * diffusion_problem._concentration_array_A[i] +
-				coefficient3 * diffusion_problem._concentration_array_A[i+1]
-            );
+		// Set up row for matrix equation representing 
+		// diffusion of substance A
+		_solver_A.setEquation(
+			i, 
+			- coefficient1, 
+			coefficient1 + coefficient2 + coefficient3, 
+			- coefficient3, 
+			coefficient1 * diffusion_problem._concentration_array_A[i-1] -
+			(coefficient1 - coefficient2 + coefficient3) * diffusion_problem._concentration_array_A[i] +
+			coefficient3 * diffusion_problem._concentration_array_A[i+1]
+		);
 
-            // Set up row for matrix equation representing 
-            // diffusion of substance B
-            _solver_B.setEquation(
-                i, 
-                - coefficient1, 
-                coefficient1 + coefficient2 + coefficient3, 
-                - coefficient3,
-				coefficient1 * diffusion_problem._concentration_array_B[i-1] -
-                (coefficient1 - coefficient2 + coefficient3) * diffusion_problem._concentration_array_B[i] +
-				coefficient3 * diffusion_problem._concentration_array_B[i+1]
-            );
-        }
+		// Set up row for matrix equation representing 
+		// diffusion of substance B
+		_solver_B.setEquation(
+			i, 
+			- coefficient1, 
+			coefficient1 + coefficient2 + coefficient3, 
+			- coefficient3,
+			coefficient1 * diffusion_problem._concentration_array_B[i-1] -
+			(coefficient1 - coefficient2 + coefficient3) * diffusion_problem._concentration_array_B[i] +
+			coefficient3 * diffusion_problem._concentration_array_B[i+1]
+		);
+	}
 
     // Set zero flux boundary condition at grid point # N
     // C_{k,N}^n - C_{k,N-1}^n = 0
@@ -380,18 +374,15 @@ real_t CoreShellDiffusion<real_t>::getDiffusionMassA()
     
     // Initialise variable to store the integral
     // with the value \f$ \frac{1}{2} C_{A,n}r_n^2 \f$
-    real_t sum = 0.5 * _concentration_array_A[_n-1] * pow(this->_overall_radius, 2);
+    real_t sum = 0.5 * _concentration_array_A[_n-1] * radial_coordinate_sqr[_n - 1];
 
-    // Parallelize the loop
-    // create private copies for the variable sum
-    // and add all of them together at the end (reduction clause)
-    #pragma omp parallel for reduction(+:sum)
-        // Iterate over all the grid points but the last
-        for (size_t i = 0; i < _n-1; i++)
-        {
-            // Cumulatively add the term \f$ C_{A,i} r_i^2 \f$
-            sum += _concentration_array_A[i] * pow(getRadialCoordinate(i), 2);
-        }
+	// Iterate over all the grid points but the last
+	for (size_t i = 0; i < _n-1; i++)
+	{
+		// Cumulatively add the term \f$ C_{A,i} r_i^2 \f$
+		sum += _concentration_array_A[i] * radial_coordinate_sqr[i];
+	}
+
     // Multiply the constant factors in the summation
     return 4.0 * M_PI * this->_core_material->getMolarMass() * _delta_r * sum;
 }
@@ -407,18 +398,15 @@ real_t CoreShellDiffusion<real_t>::getDiffusionMassB()
     
     // Initialise variable to store the integral
     // with the value \f$ \frac{1}{2} C_{A,n}r_n^2 \f$
-    real_t sum = 0.5 * _concentration_array_B[_n-1] * pow(this->_overall_radius, 2);
+    real_t sum = 0.5 * _concentration_array_B[_n-1] * radial_coordinate_sqr[_n - 1];
 
-    // Parallelize the loop
-    // create private copies for the variable sum
-    // and add all of them together at the end (reduction clause)
-    #pragma omp parallel for reduction(+:sum)
-        // Iterate over all the grid points but the last
-        for (size_t i = 0; i < _n-1; i++)
-        {
-            // Cumulatively add the term \f$ C_{A,i} r_i^2 \f$
-            sum += _concentration_array_B[i] * pow(getRadialCoordinate(i), 2);
-        }
+	// Iterate over all the grid points but the last
+	for (size_t i = 0; i < _n-1; i++)
+	{
+		// Cumulatively add the term \f$ C_{A,i} r_i^2 \f$
+		sum += _concentration_array_B[i] * radial_coordinate_sqr[i];
+	}
+
     // Multiply the constant factors in the summation
     return 4.0 * M_PI * this->_shell_material->getMolarMass() * _delta_r * sum;
 }
@@ -426,16 +414,6 @@ real_t CoreShellDiffusion<real_t>::getDiffusionMassB()
 template<typename real_t>
 void CoreShellDiffusion<real_t>::copyFrom(CoreShellDiffusion<real_t> &diffusion_problem)
 {
-    // // Parallelize the copying operation
-    // #pragma omp parallel for num_threads(4) schedule(static, 250)
-    //     // For each element in the concentration array
-    //     // copy the corresponding values
-    //     for (size_t i = 0; i < _n; i++)
-    //     {
-    //         _concentration_array_A[i] = diffusion_problem._concentration_array_A[i];
-    //         _concentration_array_B[i] = diffusion_problem._concentration_array_B[i];
-    //     }
-
 	memcpy(_concentration_array_A, diffusion_problem._concentration_array_A, _n * sizeof(real_t));
 	memcpy(_concentration_array_B, diffusion_problem._concentration_array_B, _n * sizeof(real_t));
 
@@ -448,16 +426,6 @@ void CoreShellDiffusion<real_t>::copyFrom(CoreShellDiffusion<real_t> &diffusion_
 template<typename real_t>
 void CoreShellDiffusion<real_t>::copyTo(CoreShellDiffusion<real_t> &diffusion_problem)
 {
-    // // Parallelize the copying operation
-    // #pragma omp parallel for num_threads(4) schedule(static, 250)
-    //     // For each element in the concentration array
-    //     // copy the corresponding values
-    //     for (size_t i = 0; i < _n; i++)
-    //     {
-    //         diffusion_problem._concentration_array_A[i] = _concentration_array_A[i];
-    //         diffusion_problem._concentration_array_B[i] = _concentration_array_B[i];
-    //     }
-
 	memcpy(diffusion_problem._concentration_array_A, _concentration_array_A, _n * sizeof(real_t));
 	memcpy(diffusion_problem._concentration_array_B, _concentration_array_B, _n * sizeof(real_t));
 
@@ -476,7 +444,7 @@ void CoreShellDiffusion<real_t>::printConcentrationProfileA(std::ostream &output
     // Shift the array elements into the output stream followed by a delimter
     for (size_t i = 0; i < _n-1; i++) output_stream << _concentration_array_A[i] << delimiter;
     // For the last element shift an endline instead of the delimiter
-    output_stream << _concentration_array_A[_n-1] << std::endl;
+    output_stream << _concentration_array_A[_n-1] << '\n';
 }
 
 template<typename real_t>
@@ -488,7 +456,7 @@ void CoreShellDiffusion<real_t>::printConcentrationProfileB(std::ostream &output
     // Shift the array elements into the output stream followed by a delimter
     for (size_t i = 0; i < _n-1; i++) output_stream << _concentration_array_B[i] << delimiter;
     // For the last element shift an endline instead of the delimiter
-    output_stream << _concentration_array_B[_n-1] << std::endl;
+    output_stream << _concentration_array_B[_n-1] << '\n';
 }
 
 template<typename real_t>
@@ -503,7 +471,7 @@ void CoreShellDiffusion<real_t>::printGridPoints(
     // except the last grid point
     for (size_t i = 0; i < _n - 1; i++) output_stream << getRadialCoordinate(i) << delimiter;
     // For the last grid point print the x-coordinate followed by endline
-    output_stream << getRadialCoordinate(_n-1) << std::endl;
+    output_stream << getRadialCoordinate(_n-1) << '\n';
 }
 /******************************************************************************************************************/
 

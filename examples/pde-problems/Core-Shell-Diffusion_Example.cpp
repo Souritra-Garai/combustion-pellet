@@ -10,34 +10,27 @@
  */
 
 #include <iostream>
-#include <omp.h>
 
-#include "substances/Aluminium.hpp"
-#include "substances/Nickel.hpp"
-#include "substances/NickelAluminide.hpp"
+#include "species/Aluminium.hpp"
+#include "species/Nickel.hpp"
+#include "species/NickelAluminide.hpp"
 
-#include "thermo-physical-properties/Substance.hpp"
 #include "thermo-physical-properties/Arrhenius_Diffusivity_Model.hpp"
-#include "thermo-physical-properties/Core-Shell-Combustion-Particle.hpp"
 #include "pde-problems/Core-Shell-Diffusion.hpp"
 
-#include "utilities/Keyboard_Interrupt.hpp"
-#include "utilities/File_Generator.hpp"
-
-#define MAX_ITER 10000
-#define Dt 0.0001
+#define MAX_ITER 1E6
+#define Dt 0.000001
 
 long double core_radius = 32.5E-6;
 long double overall_radius = 39.5E-6;
 
 ArrheniusDiffusivityModel<long double> Alawieh_diffusivity(2.56E-6, 102.191E3);
-ArrheniusDiffusivityModel<long double> Du_diffusivity(9.54E-8, 26E3);
 
-void printState(size_t iteration_number, CoreShellDiffusion<long double> &particle);
+void printState(long double time, CoreShellDiffusion<long double> &particle);
 
 int main(int argc, char const *argv[])
 {
-    CoreShellDiffusion<long double>::setUpCoreShellCombustionParticle(
+    CoreShellDiffusion<long double>::setUpCoreShellParticle(
         Aluminium, Nickel, NickelAluminide,
         overall_radius, core_radius
     );
@@ -47,67 +40,46 @@ int main(int argc, char const *argv[])
 
     CoreShellDiffusion<long double> Ni_clad_Al_particle;
 
-    FileGenerator file_generator;
-
-    std::ofstream config_file = file_generator.getTXTFile("diffusion_config");
-    std::ofstream conc_A_file = file_generator.getCSVFile("concentration_A");
-    std::ofstream conc_B_file = file_generator.getCSVFile("concentration_B");
-
-    Ni_clad_Al_particle.printGridPoints(conc_A_file, ',');
-    Ni_clad_Al_particle.printGridPoints(conc_B_file, ',');
-
-    Ni_clad_Al_particle.printProperties(config_file);
-    config_file.close();
-
-    size_t __iter = 1;
-
     long double temperature = 1900;
     long double diffusivity = Alawieh_diffusivity.getDiffusivity(temperature);
 
-    setUpKeyboardInterrupt();
-    
-    try
-    {
-        while (!Ni_clad_Al_particle.isCombustionComplete() && __iter <= MAX_ITER)
-        {
-            Ni_clad_Al_particle.setUpEquations(diffusivity);
-            Ni_clad_Al_particle.solveEquations();
-            
-            Ni_clad_Al_particle.printConcentrationProfileA(conc_A_file, ',', Dt * __iter);
-            Ni_clad_Al_particle.printConcentrationProfileB(conc_B_file, ',', Dt * __iter);
+    size_t step = 0.001 / Dt;
 
-            if (__iter % 5 == 0)
-            {
-                std::cout << "Iteration # " << __iter << std::endl;
-            }
+	long double time = 0.0;
 
-            __iter++;
-        }
-    }
+	bool combustion_complete = false;
 
-    catch (InterruptException& e)
-    {
-        std::cout << "\nCaught signal " << e.S << std::endl;
+	for (size_t i = 0; i < MAX_ITER && !combustion_complete;)
+	{
+		size_t i_step = i + step;
 
-        conc_A_file.close();
-        conc_B_file.close();
+		for (; i < i_step && !combustion_complete; i++)
+		{
+			Ni_clad_Al_particle.setUpEquations(diffusivity);
+			Ni_clad_Al_particle.solveEquations();
 
-        return 1;
-    }
+			time += Dt;
 
-    conc_A_file.close();
-    conc_B_file.close();
+			combustion_complete = Ni_clad_Al_particle.isCombustionComplete();           
+		}
+
+		std::cout << "Iterations Completed : " << i << "\n";
+
+		printState(time, Ni_clad_Al_particle);
+	}
+
+	CoreShellDiffusion<long double>::deallocateRadiusArray();
     
     return 0;
 }
 
-void printState(size_t iteration_number, CoreShellDiffusion<long double> &particle)
+void printState(long double time, CoreShellDiffusion<long double> &particle)
 {
     long double Y_Al = particle.getMassFractionsCoreMaterial();
     long double Y_Ni = particle.getMassFractionsShellMaterial();
     long double Y_NiAl = particle.getMassFractionsProductMaterial();
 
-    std::cout << "Iteration # " << iteration_number;
+	std::cout << "Time : " << time << "\ts";
 
     std::cout << "\tAl\t:\t" << Y_Al;
     std::cout << "\tNi\t:\t" << Y_Ni;
