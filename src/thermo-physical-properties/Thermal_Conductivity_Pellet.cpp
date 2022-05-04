@@ -69,7 +69,7 @@ real_t getThermalConductivityME2(
 }
 
 template<typename real_t>
-real_t getThermalConductivityME2(
+inline real_t getThermalConductivityME2(
 	real_t v_1,
 	real_t k_1,
 	real_t v_2, 
@@ -83,7 +83,7 @@ real_t getThermalConductivityME2(
 }
 
 template<typename real_t>
-real_t getThermalConductivityEMT(
+inline real_t getThermalConductivityEMT(
 	real_t v_1,
 	real_t k_1,
 	real_t v_2, 

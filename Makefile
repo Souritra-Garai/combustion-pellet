@@ -67,20 +67,29 @@ Thermo-Physical_Properties : $(BLDDIR)/Thermo-Physical_Properties.o $(UTLOBJS)
 	$(CC) $(CFLAGS) $(LIB) $(BLDDIR)/Thermo-Physical_Properties.o $(UTLOBJS) -o $(BINDIR)/Thermo-Physical_Properties
 
 $(BLDDIR)/Thermo-Physical_Properties.o : $(SRCDIR)/Thermo-Physical_Properties.cpp $(TRPHPPS) $(SPCHPPS) $(UTLHPPS)
-	@mkdir -p $(BINDIR);
+	@mkdir -p $(BLDDIR);
 	@echo "Compiling Thermo-Physical_Properties...";
 	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/Thermo-Physical_Properties.cpp -o $(BLDDIR)/Thermo-Physical_Properties.o
 
 Core-Shell-Diffusion : $(BLDDIR)/Core-Shell-Diffusion.o $(BLDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o $(BLDDIR)/$(TRPDIR)/Core-Shell-Particle.o $(LUSOBJS) $(UTLOBJS)
-	@mkdir -p $(BINDIR)/$(PDEDIR);
+	@mkdir -p $(BINDIR);
 	@echo "Linking Core-Shell-Diffusion...";
 	$(CC) $(CFLAGS) $(LIB) $(BLDDIR)/Core-Shell-Diffusion.o $(BLDDIR)/$(PDEDIR)/Core-Shell-Diffusion.o $(BLDDIR)/$(TRPDIR)/Core-Shell-Particle.o $(LUSOBJS) $(UTLOBJS) -o $(BINDIR)/Core-Shell-Diffusion
 
 $(BLDDIR)/Core-Shell-Diffusion.o : $(SRCDIR)/Core-Shell-Diffusion.cpp $(PDEHPPS) $(TRPHPPS) $(SPCHPPS) $(UTLHPPS)
-	@mkdir -p $(BLDDIR)/$(PDEDIR);
+	@mkdir -p $(BLDDIR);
 	@echo "Compiling Core-Shell-Diffusion...";
 	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/Core-Shell-Diffusion.cpp -o $(BLDDIR)/Core-Shell-Diffusion.o
 
+Heterogenous_Thermal_Conductivity_Models : $(BLDDIR)/Heterogenous_Thermal_Conductivity_Models.o $(BLDDIR)/$(TRPDIR)/Core-Shell-Particle.o $(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.o $(UTLOBJS)
+	@mkdir -p $(BINDIR);
+	@echo "Linking Heterogenous_Thermal_Conductivity_Models...";
+	$(CC) $(CFLAGS) $(LIB) $(BLDDIR)/Heterogenous_Thermal_Conductivity_Models.o $(BLDDIR)/$(TRPDIR)/Core-Shell-Particle.o $(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.o $(UTLOBJS) -o $(BINDIR)/Heterogenous_Thermal_Conductivity_Models
+
+$(BLDDIR)/Heterogenous_Thermal_Conductivity_Models.o : $(SRCDIR)/Heterogenous_Thermal_Conductivity_Models.cpp $(TRPHPPS) $(SPCHPPS) $(UTLHPPS)
+	@mkdir -p $(BLDDIR);
+	@echo "Compiling Heterogenous_Thermal_Conductivity_Models...";
+	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/Heterogenous_Thermal_Conductivity_Models.cpp -o $(BLDDIR)/Heterogenous_Thermal_Conductivity_Models.o
 
 # ----------------------------------------------------------------------------------------------------------
 # Building thermo-physical properties source files
@@ -161,12 +170,12 @@ Pellet-Flame-Propagation-Diffusion_Example : $(BLDDIR)/$(PDEDIR)/Pellet-Flame-Pr
 
 # ----------------------------------------------------------------------------------------------------------
 # Building Thermo-Physical Properties Examples
-Thermal_Conductivity_Pellet_Example : $(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.o $(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.o $(BLDDIR)/$(TRPDIR)/Core-Shell-Particle.o $(UTLOBJS)
+Thermal_Conductivity_Pellet_Example : $(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.o $(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.o $(BLDDIR)/$(TRPDIR)/Core-Shell-Particle.o
 	@mkdir -p $(BINDIR)/$(TRPDIR);
 	@echo "Linking Thermal_Conductivity_Pellet_Example...";
 	$(CC) $(CFLAGS) $(LIB) $(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.o $(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.o $(BLDDIR)/$(TRPDIR)/Core-Shell-Particle.o $(UTLOBJS) -o $(BINDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example
 
-$(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.o : $(EXMDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.cpp $(INCDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.hpp $(SPCHPPS) $(INCDIR)/$(TRPDIR)/Core-Shell-Particle.hpp $(INCDIR)/$(UTLDIR)/File_Generator.hpp
+$(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.o : $(EXMDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.cpp $(INCDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.hpp $(SPCHPPS) $(INCDIR)/$(TRPDIR)/Core-Shell-Particle.hpp
 	@mkdir -p $(BLDDIR)/$(TRPDIR);
 	@echo "Compiling Thermal_Conductivity_Pellet...";
 	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.cpp -o $(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet_Example.o

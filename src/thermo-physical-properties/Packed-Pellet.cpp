@@ -12,9 +12,6 @@
 // For definition of PackedPellet class
 #include "thermo-physical-properties/Packed-Pellet.hpp"
 
-// Required for pow function
-#include <math.h>
-
 // Required for functions to calculate heat conductivity
 #include "thermo-physical-properties/Thermal_Conductivity_Pellet.hpp"
 
