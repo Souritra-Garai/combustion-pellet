@@ -21,9 +21,7 @@ long double overall_radius = 39.5E-6;
 
 long double temperature = 1900;
 
-ArrheniusDiffusivityModel<long double> Alawieh_diffusivity(2.56E-6, 102.191E3);
-ArrheniusDiffusivityModel<long double> Du_diffusivity(9.54E-8, 26E3);
-ArrheniusDiffusivityModel<long double> *diffusivity_model = &Alawieh_diffusivity;
+ArrheniusDiffusivityModel<long double> diffusivity_model(2.56E-6, 102.191E3);
 
 void parseProgramOptions(int argc, char const *argv[]);
 
@@ -53,7 +51,7 @@ int main(int argc, char const *argv[])
     Ni_clad_Al_particle.printProperties(config_file);
     config_file.close();
 
-    long double diffusivity = diffusivity_model->getDiffusivity(temperature);
+    long double diffusivity = diffusivity_model.getDiffusivity(temperature);
 
     setUpKeyboardInterrupt();
 
@@ -121,6 +119,9 @@ void parseProgramOptions(int argc, char const *argv[])
 	setParticleGridSizeOption(opt);
 	setTimeStepOption(opt);
 	setTemperatureOption(opt);
+	setDiffusivityModelOption(opt);
+	setCoreRadiusOption(opt);
+	setOverallRadiusOption(opt);
 
 	opt.parse(argc, argv);
 
@@ -130,7 +131,12 @@ void parseProgramOptions(int argc, char const *argv[])
 	
 	temperature = getTemperatureOption(opt, temperature);
 
-	n = getParticleGridSizeOption(n);
+	n = getParticleGridSizeOption(opt, n);
 
-	delta_t = getTimeStepOption(delta_t);
+	delta_t = getTimeStepOption(opt, delta_t);
+
+	getDiffusivityModelOption(opt, diffusivity_model);
+
+	core_radius = getCoreRadiusOption(opt, core_radius);
+	overall_radius = getOverallRadiusOption(opt, overall_radius);
 }

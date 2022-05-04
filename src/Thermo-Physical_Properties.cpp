@@ -14,6 +14,8 @@ template<typename real_t> real_t Phase<real_t>::sharpness_coefficient = 0.1;
 long double temperature_lower_bound = 273.0;
 long double temperature_upper_bound = 2500.0;
 
+long double delta_T = 0.1;
+
 void parseProgramOptions(int, char const *[]);
 
 int main(int argc, char const *argv[])
@@ -32,7 +34,7 @@ int main(int argc, char const *argv[])
     file_Ni   << "Temperature (K)," << "Heat Capacity (J / mol-K)," << "Enthalpy (J / mol)," << "Thermal Conductivity (W / m - K)" << std::endl;
     file_NiAl << "Temperature (K)," << "Heat Capacity (J / mol-K)," << "Enthalpy (J / mol)," << "Thermal Conductivity (W / m - K)" << std::endl;
 
-    for (double temperature = temperature_lower_bound; temperature <= temperature_upper_bound; temperature += 0.1)
+    for (double temperature = temperature_lower_bound; temperature <= temperature_upper_bound; temperature += delta_T)
     {
         file_Ar     << temperature << ',' << Argon.getMolarMass()			* Argon.getCp(temperature)			             << ',' << Argon.getMolarMass()				* Argon.getEnthalpy(temperature)              << ',' << Argon.getThermalConductivity(temperature)             << std::endl;
 
@@ -64,6 +66,7 @@ void parseProgramOptions(int argc, char const *argv[])
 	setSharpnessCoefficientOption(opt);
 	setTemperatureUpperBoundOption(opt);
 	setTemperatureLowerBoundOption(opt);
+	setTemperatureStepOption(opt);
 
 	opt.parse(argc, argv);
 
@@ -73,4 +76,6 @@ void parseProgramOptions(int argc, char const *argv[])
 	
 	temperature_lower_bound = getTemperatureLowerBoundOption(opt, temperature_lower_bound);
 	temperature_upper_bound = getTemperatureUpperBoundOption(opt, temperature_upper_bound);
+
+	delta_T = getTemperatureStepOption(opt, delta_T);
 }
