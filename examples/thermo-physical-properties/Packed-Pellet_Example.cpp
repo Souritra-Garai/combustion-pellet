@@ -1,12 +1,12 @@
 #include <iostream>
 
 #include "thermo-physical-properties/Packed-Pellet.hpp"
-#include "thermo-physical-properties/Core-Shell-Combustion-Particle.hpp"
+#include "thermo-physical-properties/Core-Shell-Particle.hpp"
 
-#include "substances/Argon.hpp"
-#include "substances/Aluminium.hpp"
-#include "substances/Nickel.hpp"
-#include "substances/NickelAluminide.hpp"
+#include "species/Argon.hpp"
+#include "species/Aluminium.hpp"
+#include "species/Nickel.hpp"
+#include "species/NickelAluminide.hpp"
 
 long double core_radius = 32.5E-6;
 long double overall_radius = 39.5E-6;
@@ -16,7 +16,7 @@ long double pellet_diameter = 6.35E-3;
 
 int main(int argc, char const *argv[])
 {
-    CoreShellCombustionParticle<long double>::setUpCoreShellCombustionParticle(
+    CoreShellParticle<long double>::setUpCoreShellParticle(
         Aluminium, Nickel, NickelAluminide,
         overall_radius, core_radius
     );

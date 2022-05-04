@@ -17,11 +17,11 @@
 #include <ostream>
 
 // Required for IdealGas class
-#include "thermo-physical-properties/IdealGas.hpp"
-// Required for Substance class
-#include "thermo-physical-properties/Substance.hpp"
-// Required for CoreShellCombustionParticle class
-#include "thermo-physical-properties/Core-Shell-Combustion-Particle.hpp"
+#include "thermo-physical-properties/Ideal_Gas.hpp"
+// Required for CoreShellParticle class
+#include "thermo-physical-properties/Core-Shell-Particle.hpp"
+// Required for functions to calculate heat conductivity
+#include "thermo-physical-properties/Thermal_Conductivity_Pellet.hpp"
 
 /**
  * @brief Class to represent thermo - physical properties of a cylindrical
@@ -94,7 +94,7 @@ class PackedPellet
 
         /**
          * @brief Calculates the overall density of particles in the pellet,
-         * assuming a fresh instance of CoreShellCombustionParticle
+         * assuming a fresh instance of CoreShellParticle
          * for the particle composition
          * @param particle_volume_fractions Fraction of the pellet volume occupied by
          * core-shell type combustion particles
@@ -176,7 +176,15 @@ class PackedPellet
          * that represents the state of all particles in the pellet
          * @return real_t Mean heat conductivity of the pellet in \f$ W / m - K \f$
          */
-        real_t getThermalConductivity(CoreShellCombustionParticle<real_t> *ptr_2_particle, real_t temperature);
+        inline real_t getThermalConductivity(CoreShellParticle<real_t> *ptr_2_particle, real_t temperature)
+		{    
+			// Return the heat conductivity determined using Bruggeman model
+			return getThermalConductivityMEB(
+				_degassing_fluid_volume_fractions,
+				_degassing_fluid->getThermalConductivity(temperature),
+				ptr_2_particle->getThermalConductivity(temperature)
+			);
+		}
 
         /**
          * @brief Print the properties of the pellet (evaluated at the initial condition)

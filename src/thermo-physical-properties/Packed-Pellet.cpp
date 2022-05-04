@@ -12,9 +12,6 @@
 // For definition of PackedPellet class
 #include "thermo-physical-properties/Packed-Pellet.hpp"
 
-// Required for functions to calculate heat conductivity
-#include "thermo-physical-properties/Thermal_Conductivity_Pellet.hpp"
-
 /*****************************************************************************************************/
 // Instantiation of static members
 // Only one copy of these variables are shared across all classes
@@ -89,10 +86,10 @@ template<typename real_t>
 real_t PackedPellet<real_t>::calcOverallParticleDensity(real_t particle_volume_fractions)
 {
     // Get the density of a defualt Core-Shell Combustion Particle instance
-    // This assumes the static members of the CoreShellCombustionParticle class
+    // This assumes the static members of the CoreShellParticle class
     // have been initialized
 
-    return particle_volume_fractions * CoreShellCombustionParticle<real_t>().getDensity(298.15);
+    return particle_volume_fractions * CoreShellParticle<real_t>().getDensity(298.15);
 }
 
 /*****************************************************************************************************/
@@ -113,17 +110,6 @@ PackedPellet<real_t>::PackedPellet(
 // Defining member functions
 
 template<typename real_t>
-real_t PackedPellet<real_t>::getThermalConductivity(CoreShellCombustionParticle<real_t> *ptr_2_particle, real_t T)
-{    
-    // Return the heat conductivity determined using Bruggeman model
-    return getThermalConductivityMEB(
-		_degassing_fluid_volume_fractions,
-		_degassing_fluid->getThermalConductivity(T),
-		ptr_2_particle->getThermalConductivity(T)
-	);
-}
-
-template<typename real_t>
 void PackedPellet<real_t>::printProperties(std::ostream &output_stream)
 {
 	output_stream << "Packed Pellet Properties\n\n";
@@ -135,7 +121,7 @@ void PackedPellet<real_t>::printProperties(std::ostream &output_stream)
     output_stream << "Radiative emissivity\t\t\t:\t" << _radiative_emissivity << std::endl;
     output_stream << "Ambient Temperature\t\t\t:\t" << _ambient_temperature << "\tK" << std::endl;
 
-    CoreShellCombustionParticle<real_t> particle;
+    CoreShellParticle<real_t> particle;
 
     output_stream << "Heat Conductivity\t\t:\t" << getThermalConductivity(&particle, 298.15) << "\tW/m-K" << std::endl;
 

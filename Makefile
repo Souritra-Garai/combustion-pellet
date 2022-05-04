@@ -99,7 +99,7 @@ $(BLDDIR)/$(TRPDIR)/Core-Shell-Particle.o : $(SRCDIR)/$(TRPDIR)/Core-Shell-Parti
 	@echo "Compiling Core-Shell-Particle...";
 	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/$(TRPDIR)/Core-Shell-Particle.cpp -o $(BLDDIR)/$(TRPDIR)/Core-Shell-Particle.o
 
-$(BLDDIR)/$(TRPDIR)/Packed-Pellet.o : $(INCDIR)/$(TRPDIR)/Packed-Pellet.hpp $(INCDIR)/$(TRPDIR)/Core-Shell-Particle.hpp $(INCDIR)/$(TRPDIR)/Substance.hpp $(INCDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.hpp $(SRCDIR)/$(TRPDIR)/Packed-Pellet.cpp
+$(BLDDIR)/$(TRPDIR)/Packed-Pellet.o : $(SRCDIR)/$(TRPDIR)/Packed-Pellet.cpp $(TRPHPPS)
 	@mkdir -p $(BLDDIR)/$(TRPDIR);
 	@echo "Compiling Packed-Pellet...";
 	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/$(TRPDIR)/Packed-Pellet.cpp -o $(BLDDIR)/$(TRPDIR)/Packed-Pellet.o
@@ -225,7 +225,7 @@ Packed-Pellet_Example : $(BLDDIR)/$(TRPDIR)/Packed-Pellet_Example.o $(BLDDIR)/$(
 	@echo "Linking Packed-Pellet_Example...";
 	$(CC) $(CFLAGS) $(LIB) $(BLDDIR)/$(TRPDIR)/Packed-Pellet_Example.o $(BLDDIR)/$(TRPDIR)/Packed-Pellet.o $(BLDDIR)/$(TRPDIR)/Core-Shell-Particle.o $(BLDDIR)/$(TRPDIR)/Thermal_Conductivity_Pellet.o -o $(BINDIR)/$(TRPDIR)/Packed-Pellet_Example
 
-$(BLDDIR)/$(TRPDIR)/Packed-Pellet_Example.o : $(EXMDIR)/$(TRPDIR)/Packed-Pellet_Example.cpp $(INCDIR)/$(TRPDIR)/Packed-Pellet.hpp $(SPCHPPS) $(INCDIR)/$(TRPDIR)/Core-Shell-Particle.hpp
+$(BLDDIR)/$(TRPDIR)/Packed-Pellet_Example.o : $(EXMDIR)/$(TRPDIR)/Packed-Pellet_Example.cpp $(TRPHPPS)
 	@mkdir -p $(BLDDIR)/$(TRPDIR);
 	@echo "Compiling Packed-Pellet_Example...";
 	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(TRPDIR)/Packed-Pellet_Example.cpp -o $(BLDDIR)/$(TRPDIR)/Packed-Pellet_Example.o
