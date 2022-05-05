@@ -61,7 +61,7 @@ class PelletFlamePropagation : public PackedPellet<real_t>
 {
     private:
 
-		static real_t _theta;
+		static real_t _kappa;
 
 		static real_t _gamma;
     
@@ -235,6 +235,10 @@ class PelletFlamePropagation : public PackedPellet<real_t>
          * the present temperature profile
          */
         void updateParticlesState();
+
+		real_t getParticleEnthalpyExplicitDerivative(size_t index);
+
+		real_t getDegassingFluidTransientTermCoefficient(size_t index);
 
     public:
 

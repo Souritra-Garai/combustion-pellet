@@ -153,7 +153,7 @@ Pellet-Flame-Propagation_Example : $(BLDDIR)/$(PDEDIR)/Pellet-Flame-Propagation_
 	@echo "Linking Pellet-Flame-Propagation_Example...";
 	$(CC) $(CFLAGS) $(LIB) $(BLDDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.o $(PDEOBJS) $(TRPOBJS) $(LUSOBJS) $(UTLOBJS) -o $(BINDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example
 
-$(BLDDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.o : $(EXMDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.cpp $(INCDIR)/$(PDEDIR)/Core-Shell-Diffusion.hpp $(INCDIR)/$(PDEDIR)/Pellet-Flame-Propagation.hpp $(INCDIR)/$(TRPDIR)/Arrhenius_Diffusivity_Model.hpp $(SPCHPPS) $(INCDIR)/$(UTLDIR)/Keyboard_Interrupt.hpp $(INCDIR)/$(UTLDIR)/File_Generator.hpp
+$(BLDDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.o : $(EXMDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.cpp $(PDEHPPS) $(TRPHPPS) $(LUSHPPS) $(SPCHPPS) $(UTLHPPS)
 	@mkdir -p $(BLDDIR)/$(PDEDIR);
 	@echo "Compiling Pellet-Flame-Propagation_Example...";
 	$(CC) $(CFLAGS) $(INC) -c $(EXMDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.cpp -o $(BLDDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.o

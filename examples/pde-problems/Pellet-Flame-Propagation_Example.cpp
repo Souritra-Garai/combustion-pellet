@@ -1,8 +1,5 @@
 #include <iostream>
-#include <string.h>
-#include <omp.h>
 
-#include "thermo-physical-properties/Substance.hpp"
 #include "thermo-physical-properties/Arrhenius_Diffusivity_Model.hpp"
 
 #include "pde-problems/Core-Shell-Diffusion.hpp"
@@ -11,10 +8,10 @@
 #include "utilities/File_Generator.hpp"
 #include "utilities/Keyboard_Interrupt.hpp"
 
-#include "substances/Argon.hpp"
-#include "substances/Aluminium.hpp"
-#include "substances/Nickel.hpp"
-#include "substances/NickelAluminide.hpp"
+#include "species/Argon.hpp"
+#include "species/Aluminium.hpp"
+#include "species/Nickel.hpp"
+#include "species/NickelAluminide.hpp"
 
 #define MAX_ITER 1E6
 
@@ -31,7 +28,7 @@ void printState(size_t iteration_number, PelletFlamePropagation<long double> &pe
 
 int main(int argc, char const *argv[])
 {
-    CoreShellDiffusion<long double>::setUpCoreShellCombustionParticle(
+    CoreShellDiffusion<long double>::setUpCoreShellParticle(
         Aluminium, Nickel, NickelAluminide,
         overall_radius, core_radius
     );
@@ -45,7 +42,7 @@ int main(int argc, char const *argv[])
     PelletFlamePropagation<long double>::setDegassingFluid(Argon);
 
     PelletFlamePropagation<long double>::setGridSize(101);
-    PelletFlamePropagation<long double>::setTimeStep(0.0001);
+    PelletFlamePropagation<long double>::setTimeStep(0.000001);
     PelletFlamePropagation<long double>::setInfinitesimalChangeTemperature(1);
     PelletFlamePropagation<long double>::setInitialIgnitionParameters(1500, 0.1 * pellet_length);
 
@@ -108,6 +105,8 @@ int main(int argc, char const *argv[])
     
     combustion_pellet.printTemperatureProfile(temperature_file, ',');
     temperature_file.close();
+
+	CoreShellDiffusion<long double>::deallocateRadiusArray();
 
     return 0;
 }
