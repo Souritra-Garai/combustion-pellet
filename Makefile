@@ -91,6 +91,16 @@ $(BLDDIR)/Heterogenous_Thermal_Conductivity_Models.o : $(SRCDIR)/Heterogenous_Th
 	@echo "Compiling Heterogenous_Thermal_Conductivity_Models...";
 	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/Heterogenous_Thermal_Conductivity_Models.cpp -o $(BLDDIR)/Heterogenous_Thermal_Conductivity_Models.o
 
+Pellet-Flame-Propagation : $(BLDDIR)/Pellet-Flame-Propagation.o $(PDEOBJS) $(TRPOBJS) $(LUSOBJS) $(UTLOBJS)
+	@mkdir -p $(BINDIR);
+	@echo "Linking Pellet-Flame-Propagation...";
+	$(CC) $(CFLAGS) $(LIB) $(BLDDIR)/Pellet-Flame-Propagation.o $(PDEOBJS) $(TRPOBJS) $(LUSOBJS) $(UTLOBJS) -o $(BINDIR)/Pellet-Flame-Propagation
+
+$(BLDDIR)/Pellet-Flame-Propagation.o : $(SRCDIR)/Pellet-Flame-Propagation.cpp $(PDEHPPS) $(TRPHPPS) $(LUSHPPS) $(SPCHPPS) $(UTLHPPS)
+	@mkdir -p $(BLDDIR);
+	@echo "Compiling Pellet-Flame-Propagation...";
+	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/Pellet-Flame-Propagation.cpp -o $(BLDDIR)/Pellet-Flame-Propagation.o
+
 # ----------------------------------------------------------------------------------------------------------
 # Building thermo-physical properties source files
 

@@ -171,6 +171,29 @@ int getParticleGridSizeOption(ez::ezOptionParser &opt, int default_value)
 	return default_value;
 }
 
+void setPelletGridSizeOption(ez::ezOptionParser &opt)
+{
+	opt.add(
+		"1001",
+		0,
+		1,
+		0,
+		"Set number of grid points in pellet to ARG.",
+		"--M"
+	);
+}
+
+int getPelletGridSizeOption(ez::ezOptionParser &opt, int default_value)
+{
+	if (opt.isSet("--M"))
+	{
+		opt.get("--M")->getInt(default_value);
+		std::cout << "Pellet grid size is set to " << default_value << ".\n";
+	}
+
+	return default_value;
+}
+
 void setTimeStepOption(ez::ezOptionParser &opt)
 {
 	opt.add(
@@ -256,6 +279,145 @@ double getOverallRadiusOption(ez::ezOptionParser &opt, double default_value)
 	{
 		opt.get("--r_P")->getDouble(default_value);
 		std::cout << "Overall radius of Core-Shell Particle is set to " << default_value << " metres.\n";
+	}
+
+	return default_value;
+}
+
+void setPhiOption(ez::ezOptionParser &opt)
+{
+	opt.add(
+		"0.7",
+		0,
+		1,
+		0,
+		"Set the packing volume fractions of particles in the pellet to ARG.",
+		"--phi"
+	);
+}
+
+double getPhiOption(ez::ezOptionParser &opt, double default_value)
+{
+	if (opt.isSet("--phi"))
+	{
+		opt.get("--phi")->getDouble(default_value);
+
+		if (default_value >= 0 && default_value <= 1.0)
+		
+			std::cout << "Packing volume fractions of Particles in the Pellet is set to " << default_value << "\n";
+
+		else
+
+			std::cout << "Packing volume fraction should be in the interval [0, 1].\n";
+			exit(1);
+	}
+
+	return default_value;
+}
+
+void setGammaOption(ez::ezOptionParser &opt)
+{
+	opt.add(
+		"0.5",
+		0,
+		1,
+		0,
+		"Set the degree of implicitness of source terms in pellet enthalpy equation solver to ARG.",
+		"--gamma"
+	);
+}
+
+double getGammaOption(ez::ezOptionParser &opt, double default_value)
+{
+	if (opt.isSet("--gamma"))
+	{
+		opt.get("--gamma")->getDouble(default_value);
+
+		if (default_value >= 0 && default_value <= 1.0)
+		
+			std::cout << "Degree of Implicitness of source terms in Pellet Enthalpy Equation solver is set to " << default_value << "\n";
+
+		else
+
+			std::cout << "Degree of Implicitness should be in the interval [0, 1].\n";
+			exit(1);
+	}
+
+	return default_value;
+}
+
+void setKappaOption(ez::ezOptionParser &opt)
+{
+	opt.add(
+		"0.5",
+		0,
+		1,
+		0,
+		"Set the degree of implicitness of diffusion term in pellet enthalpy equation solver to ARG.",
+		"--kappa"
+	);
+}
+
+double getKappaOption(ez::ezOptionParser &opt, double default_value)
+{
+	if (opt.isSet("--kappa"))
+	{
+		opt.get("--kappa")->getDouble(default_value);
+
+		if (default_value >= 0 && default_value <= 1.0)
+		
+			std::cout << "Degree of Implicitness of diffusion term in Pellet Enthalpy Equation solver is set to " << default_value << "\n";
+
+		else
+
+			std::cout << "Degree of Implicitness should be in the interval [0, 1].\n";
+			exit(1);
+	}
+
+	return default_value;
+}
+
+void setLengthOption(ez::ezOptionParser &opt)
+{
+	opt.add(
+		"6.35E-3",
+		0,
+		1,
+		0,
+		"Set the length of cylindrical pellet to ARG metres.",
+		"--length"
+	);
+}
+
+double getLengthOption(ez::ezOptionParser &opt, double default_value)
+{
+	if (opt.isSet("--length"))
+	{
+		opt.get("--length")->getDouble(default_value);
+		std::cout << "Length of Cylindrical Pellet is set to " << default_value << " metres.\n";
+	}
+
+	return default_value;
+}
+
+void setDiameterOption(ez::ezOptionParser &opt)
+{
+	opt.add(
+		"6.35E-3",
+		0,
+		1,
+		0,
+		"Set diameter of cylindrical pellet to ARG metres.",
+		"--diameter"
+	);
+}
+
+double getDiameterOption(ez::ezOptionParser &opt, double default_value)
+{
+	if (opt.isSet("--diameter"))
+	{
+		opt.get("--diameter")->getDouble(default_value);
+		std::cout << "Diameter of Cylindrical Pellet is set to " << default_value << " metres.\n";
 	}
 
 	return default_value;
