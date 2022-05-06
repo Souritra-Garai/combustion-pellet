@@ -46,21 +46,6 @@ CFLAGS := -fopenmp -O2
 LIB := -lm
 INC := -I $(INCDIR)
 
-$(TARGET) : $(OBJECTS)
-	@mkdir -p $(BINDIR);
-	@echo "Linking all...";
-	$(CC) $(OBJECTS) $(CFLAGS) $(LIB) -o $(TARGET)
-
-main : $(BLDDIR)/main.o $(PDEOBJS) $(TRPOBJS) $(LUSOBJS) $(UTLOBJS)
-	@mkdir -p $(BINDIR);
-	@echo "Linking all files for main...";
-	$(CC) $(CFLAGS) $(LIB) $(BLDDIR)/main.o $(PDEOBJS) $(TRPOBJS) $(LUSOBJS) $(UTLOBJS) -lboost_program_options -o $(BINDIR)/Pellet-Flame-Propagation
-
-$(BLDDIR)/main.o : $(SRCDIR)/main.cpp $(INCDIR)/$(PDEDIR)/Core-Shell-Diffusion.hpp $(INCDIR)/$(PDEDIR)/Pellet-Flame-Propagation.hpp $(INCDIR)/$(TRPDIR)/Arrhenius_Diffusivity_Model.hpp $(SPCHPPS) $(INCDIR)/$(UTLDIR)/Keyboard_Interrupt.hpp $(INCDIR)/$(UTLDIR)/File_Generator.hpp
-	@mkdir -p $(BLDDIR);
-	@echo "Compiling main...";
-	$(CC) $(CFLAGS) $(INC) -c $(SRCDIR)/main.cpp -I /usr/include/boost -o $(BLDDIR)/main.o
-
 Thermo-Physical_Properties : $(BLDDIR)/Thermo-Physical_Properties.o $(UTLOBJS)
 	@mkdir -p $(BINDIR);
 	@echo "Linking all files for Thermo-Physical_Properties...";
