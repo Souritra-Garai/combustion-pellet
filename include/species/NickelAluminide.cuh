@@ -37,7 +37,7 @@ __device__ void loadNickelAlumnide(double sharpness_coefficient = 100.0)
 		5650.0,
 		enthalpy_solid_NiAl,
 		thermal_conductivity_solid_NiAl,
-		273.0,
+		-INFINITY,
 		1912.0,
 		sharpness_coefficient
 	);

@@ -56,11 +56,15 @@ namespace CoreShellDIffusion
 		cudaMemcpyFromSymbol(&delta_r, CoreShellDIffusion::delta_r, sizeof(double));
 		cudaMemcpyFromSymbol(&n, CoreShellDIffusion::n, sizeof(size_t));
 
-		output_stream << "Time Step\t:\t" << delta_t << "\ts" << std::endl;
+		output_stream << "Core Shell Diffusion Solver Configuration\n\n";
 
-		output_stream << "Number of Grid Points\t:\t" << n << std::endl;
+		output_stream << "Time Step :\t" << delta_t << "\ts\n";
 
-		output_stream << "Grid Size\t:\t" << delta_r << "\tm" << std::endl;
+		output_stream << "Number of Grid Points :\t" << n << "\n";
+
+		output_stream << "Grid Size :\t" << delta_r << "\tm\n\n\n";
+
+		CoreShellParticle::printConfiguration(output_stream);
 	}
 
 	__host__ void printGridPoints(std::ostream &output_stream, char delimiter=',')
@@ -74,7 +78,8 @@ namespace CoreShellDIffusion
 		output_stream << NAN << delimiter;
 
 		for (size_t i = 0; i < n-1; i++) output_stream << radius * (double) i / ((double) n - 1.0) << delimiter;
-		output_stream << "\n";
+	
+		output_stream << radius << "\n";
 	}
 
 	__host__ void printConcentrationArray(std::ostream &output_stream, double *concentration_array, double time = 0.0, char delimiter = '\t')

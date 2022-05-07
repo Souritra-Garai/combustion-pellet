@@ -46,6 +46,32 @@ namespace CoreShellParticle
 		setParticleMass(core_radius, overall_radius);
 	}
 
+	__host__ void printConfiguration(std::ostream &output_buffer)
+	{
+		double overall_radius;
+		double core_radius;
+
+		double mass;
+		double core_mass;
+		double shell_mass;
+
+		cudaMemcpyFromSymbol(&overall_radius, CoreShellParticle::overall_radius, sizeof(double));
+		cudaMemcpyFromSymbol(&core_radius, CoreShellParticle::core_radius, sizeof(double));
+
+		cudaMemcpyFromSymbol(&mass, CoreShellParticle::mass, sizeof(double));
+		cudaMemcpyFromSymbol(&core_mass, CoreShellParticle::core_mass, sizeof(double));
+		cudaMemcpyFromSymbol(&shell_mass, CoreShellParticle::shell_mass, sizeof(double));
+		
+		output_buffer << "Particle Configuration\n\n";
+
+		output_buffer << "Overall Radius :\t" << overall_radius << "\tm\n";
+		output_buffer << "Core Radius :\t" << core_radius << "\tm\n\n";
+
+		output_buffer << "Overall Mass :\t" << mass << "\tkg\n";
+		output_buffer << "Core Mass :\t" << core_mass << "\tkg\n";
+		output_buffer << "Shell Mass :\t" << shell_mass << "\tkg\n\n\n";
+	}
+
 	class Particle
 	{
 
