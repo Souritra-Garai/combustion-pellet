@@ -10,6 +10,7 @@
 #include "pde-problems/Pellet-Flame-Propagation.cuh"
 
 #include "utilities/File_Generator.hpp"
+#include "utilities/Program_Options.cuh"
 #include "utilities/Keyboard_Interrupt.hpp"
 
 #define MAX_ITER 1E8
@@ -38,8 +39,9 @@ __device__ double initial_ignition_temperature = 1500;
 
 __device__ double particle_volume_fractions = 0.7;
 
-__device__ double pre_exponential_factor = 2.56E-6;
-__device__ double activation_energy = 102.191E3;
+__device__ double sharpness_coefficient = 0.1;
+
+__device__ double2 diffusivity_parameters = {2.56E-6, 102.191E3};
 
 __global__ void allocateMemory(double delta_t, size_t num_grid_points_pellet, size_t num_grid_points_particle);
 __global__ void allocateParticles();
@@ -53,8 +55,12 @@ __host__ __forceinline__ void evolveMainParticles();
 __host__ __forceinline__ void evolveAuxiliaryParticles();
 __host__ __forceinline__ void iterate();
 
+__host__ void parseProgramOptions(int argc, char const *argv[]);
+
 int main(int argc, char const *argv[])
 {
+	parseProgramOptions(argc, argv);
+
 	cudaDeviceSetLimit(cudaLimitMallocHeapSize, 1024 * 1024 * 500);
 
 	allocateMemory<<<1,1>>>(delta_t, num_grid_points_pellet, num_grid_points_particle);
@@ -149,10 +155,10 @@ __global__ void allocateMemory(
 	size_t num_grid_points_pellet,
 	size_t num_grid_points_particle
 ) {
-	loadAluminium(1);
+	loadAluminium(sharpness_coefficient);
 	loadArgon();
-	loadNickel(1);
-	loadNickelAlumnide(1);
+	loadNickel(sharpness_coefficient);
+	loadNickelAlumnide(sharpness_coefficient);
 
 	CoreShellParticle::initialize(
 		aluminium,
@@ -176,7 +182,7 @@ __global__ void allocateMemory(
 	PelletFlamePropagation::setInfinitesimalChangeInTemperature(delta_T);
 
 	flame_propagation_problem = new PelletFlamePropagation::FlamePropagation(particle_volume_fractions);
-	diffusivity_model = new ArrheniusDiffusivityModel(pre_exponential_factor, activation_energy);
+	diffusivity_model = new ArrheniusDiffusivityModel(diffusivity_parameters.x, diffusivity_parameters.y);
 
 	flame_propagation_problem->setDiffusivityModel(diffusivity_model);
 }
@@ -296,141 +302,73 @@ __host__ __forceinline__ void iterate()
 	evolveMainParticles();
 }
 
-int setConfiguration(int argc, const char * argv[])
+__host__ void parseProgramOptions(int argc, char const *argv[])
 {
-	try
-	{
-		boost::program_options::options_description options_description_obj("Usage: Core-Shell-Diffusion [options]\nOptions");
+	ez::ezOptionParser opt;
 
-		options_description_obj.add_options()
-			("help",		"Produce help message")
-			("Du",			"Set diffusivity parameters to Du et al's model. Default is Alawieh et al's model.")
-			("N",			boost::program_options::value<size_t>(),	"Set number of grid points for particle diffusion pde-solver to arg. Default is 101.")
-			("M",			boost::program_options::value<size_t>(),	"Set number of grid points for pellet enthalpy equation pde-solver to arg. Default is 101.")
-			("Dt",			boost::program_options::value<double>(),	"Set time step in seconds to arg. Default is 1E-6 seconds.")
-			("DT",			boost::program_options::value<double>(),	"Set infinitesimal change in temperature (in kelvin) for temperature derivative. Default is 0.001 seconds.")
-			("r_P",			boost::program_options::value<double>(),	"Set particle radius in metre to arg. Default is 39.5E-6 m.")
-			("r_C",			boost::program_options::value<double>(),	"Set particle core radius in metre to arg. Default is 32.5E-6 m")
-			("phi",			boost::program_options::value<double>(),	"Set particle volume fractions in the pellet to arg. Default is 0.7.")
-			("gamma",		boost::program_options::value<double>(),	"Set implicitness of source terms to arg. Default is 0.5.")
-			("kappa",		boost::program_options::value<double>(),	"Set implicitness of diffusion terms to arg. Default is 0.5")
-			("length",		boost::program_options::value<double>(),	"Set length of pellet in metre to arg. Default is 6.35E-3 m.")
-			("diameter",	boost::program_options::value<double>(),	"Set diameter of pellet in metre to arg. Default is 6.35E-3 m.");
+	opt.overview	= "Flame Propagation in a pellet packed with energetic intermetallic core-shell particles.";
+	opt.syntax		= "Pellet-Flame-Propagation [OPTIONS]";
+	opt.example		= "Pellet-Flame-Propagation --phi 0.68\n\n";
+	opt.footer		= "Developed by Souritra Garai, 2021-22.\n";
 
-		boost::program_options::variables_map variables_map_obj;
-		boost::program_options::store(
-			boost::program_options::parse_command_line(argc, argv, options_description_obj),
-			variables_map_obj
-		);
-		boost::program_options::notify(variables_map_obj);
+	setHelpOption(opt);
+	setSharpnessCoefficientOption(opt);
+	setParticleGridSizeOption(opt);
+	setPelletGridSizeOption(opt);
+	setTimeStepOption(opt);
+	setTemperatureStepOption(opt);
+	setDiffusivityModelOption(opt);
+	setCoreRadiusOption(opt);
+	setOverallRadiusOption(opt);
+	setLengthOption(opt);
+	setDiameterOption(opt);
+	setGammaOption(opt);
+	setKappaOption(opt);
+	setPhiOption(opt);
+
+	opt.parse(argc, argv);
+
+	displayHelpOption(opt);
+
+	double sharpness_coefficient = 0.1;
+	sharpness_coefficient = getSharpnessCoefficientOption(opt, sharpness_coefficient);
+	cudaMemcpyToSymbol(::sharpness_coefficient, &sharpness_coefficient, sizeof(double));
 	
-		if (variables_map_obj.count("help"))
-		{
-			std::cout << options_description_obj << std::endl;
-			return 0;
-		}
+	double delta_T = 0.001;
+	delta_T = getTemperatureStepOption(opt, delta_T);
+	cudaMemcpyToSymbol(::delta_T, &delta_T, sizeof(delta_T));
 
-		if (variables_map_obj.count("Du"))
-		{
-			double activation_energy = 26E3;
-			double pre_exponential_factor = 9.54E-8;
+	num_grid_points_particle = getParticleGridSizeOption(opt, num_grid_points_particle);
+	num_grid_points_pellet   = getPelletGridSizeOption(opt, num_grid_points_pellet);
 
-			cudaMemcpyToSymbol(::activation_energy, &activation_energy, sizeof(double));
-			cudaMemcpyToSymbol(::pre_exponential_factor, &pre_exponential_factor, sizeof(double));
+	delta_t = getTimeStepOption(opt, delta_t);
 
-			std::cout << "Using Du et al's Diffusivity parameters." << std::endl;
-		}
+	double2 parameters = {2.56E-6, 102.191E3};
+	parameters = getDiffusivityModelOption(opt, parameters);
+	cudaMemcpyToSymbol(::diffusivity_parameters, &parameters, sizeof(double2));
 
-		if (variables_map_obj.count("N"))
-		{
-			num_grid_points_particle = variables_map_obj["N"].as<size_t>();
-		}
+	double core_radius = 32.5E-6;
+	core_radius = getCoreRadiusOption(opt, core_radius);
+	cudaMemcpyToSymbol(::core_radius, &core_radius, sizeof(double));
+	double overall_radius = 39.5E-6;
+	overall_radius = getOverallRadiusOption(opt, overall_radius);
+	cudaMemcpyToSymbol(::overall_radius, &overall_radius, sizeof(double));
 
-		if (variables_map_obj.count("M"))
-		{
-			num_grid_points_pellet = variables_map_obj["M"].as<size_t>();
-		}
+	double pellet_length = 6.35E-3;
+	pellet_length = getLengthOption(opt, pellet_length);
+	cudaMemcpyToSymbol(::length, &pellet_length, sizeof(double));
+	double pellet_diameter = 6.35E-3;
+	pellet_diameter = getDiameterOption(opt, pellet_diameter);
+	cudaMemcpyToSymbol(::diameter, &pellet_diameter, sizeof(double));
 
-		if (variables_map_obj.count("Dt"))
-		{
-			delta_t = variables_map_obj["Dt"].as<double>();
-			
-			if (delta_t <= 0.0)
-			{
-				std::cerr << "Dt cannot be negative. Given value : " << delta_t << std::endl;
-				return 1;
-			}
-		}
+	double diffusion_term_implicitness = 0.5;
+	diffusion_term_implicitness = getKappaOption(opt, diffusion_term_implicitness);
+	cudaMemcpyToSymbol(::implicitness_diffusion_term, &diffusion_term_implicitness, sizeof(double));
+	double source_term_implicitness = 0.5;
+	source_term_implicitness = getGammaOption(opt, source_term_implicitness);
+	cudaMemcpyToSymbol(::implicitness_source_term, &source_term_implicitness, sizeof(double));
 
-		if (variables_map_obj.count("DT"))
-		{
-			double delta_T = variables_map_obj["DT"].as<double>();
-
-			cudaMemcpyToSymbol(::delta_T, &delta_T, sizeof(double));
-			
-			if (delta_T <= 0.0)
-			{
-				std::cerr << "DT cannot be negative. Given value : " << delta_T << std::endl;
-				return 1;
-			}
-		}
-
-		if (variables_map_obj.count("r_P"))
-		{
-			double overall_radius = variables_map_obj["r_P"].as<double>();
-
-			cudaMemcpyToSymbol(::overall_radius, &overall_radius, sizeof(double));
-
-			if (overall_radius <= 0.0)
-			{
-				std::cerr << "Overall radius cannot be negative. Given value : " << overall_radius << std::endl;
-				return 1;
-			}
-		}
-
-		if (variables_map_obj.count("r_C"))
-		{
-			double core_radius = variables_map_obj["r_C"].as<double>();
-
-			cudaMemcpyToSymbol(::core_radius, &core_radius, sizeof(double));
-
-			if (core_radius <= 0.0)
-			{
-				std::cerr << "Core radius cannot be negative. Given value : " << core_radius << std::endl;
-				return 1;
-			}
-
-			double overall_radius;
-			cudaMemcpyFromSymbol(&overall_radius, ::overall_radius, sizeof(double));
-
-			if (core_radius >= overall_radius)
-			{
-				std::cerr << "Core radius cannot be greater than overall radius. Given value : " << core_radius << std::endl;
-				std::cerr << "Overall radius : " << overall_radius << std::endl;
-				return 1;
-			}
-		}
-
-		if (variables_map_obj.count("phi"))
-		{
-			double phi = variables_map_obj["phi"].as<double>();
-
-			cudaMemcpyToSymbol(::particle_volume_fractions, &phi, sizeof(double));
-			
-			if (phi <= 0.0 || phi >= 1.0)
-			{
-				std::cerr << "phi must belong to (0, 1). Given value : " << phi << std::endl;
-				return 1;
-			}
-		}
-
-		
-	}
-
-	catch(const std::exception& e)
-	{
-		std::cerr << e.what() << '\n';
-	}
-
-	return 2;
+	double phi = 0.68;
+	phi = getPhiOption(opt, phi);
+	cudaMemcpyToSymbol(::particle_volume_fractions, &phi, sizeof(double));
 }

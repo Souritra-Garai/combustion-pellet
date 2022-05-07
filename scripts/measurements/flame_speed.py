@@ -35,14 +35,14 @@ flame_front_temperature = 1000	# K
 
 flame_locations = x[np.argmin(np.abs(T - flame_front_temperature), axis=1)]	# m
 
-valid_indices = np.where(flame_locations != 0.0)
+valid_indices = np.where(flame_locations[1:] > flame_locations[:-1])
 # print(flame_locations[valid_indices])
 # print(flame_locations[valid_indices].shape)
 
 flame_locations = flame_locations[valid_indices]
 t = t[valid_indices]
 
-valid_indices = np.where(np.logical_and(t > 0.1, t < 0.2))
+valid_indices = np.where(t < 0.62)
 
 flame_locations = flame_locations[valid_indices]
 t = t[valid_indices]
