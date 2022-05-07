@@ -9,7 +9,7 @@ __device__ double atomicAdd(double* a, double b) { return b; }
 #include <ostream>
 
 #include "thermo-physical-properties/Core-Shell-Particle.cuh"
-#include "lusolver/LU_Solver.cuh"
+#include "lu-solver/LU_Solver.cuh"
 
 namespace CoreShellDIffusion
 {
@@ -173,7 +173,7 @@ namespace CoreShellDIffusion
 
 				for (size_t i = 1; i < n-1; i++)	moles += getAtmConcA(i) * radial_coordinate_sqr[i];
 
-				return 4.0 * M_PI * delta_r * CoreShellParticle::core_material->getMolarMass() * moles;
+				return 4.0 * 3.14 * delta_r * CoreShellParticle::core_material->getMolarMass() * moles;
 			}
 
 			__device__ double getAtmMassB()
@@ -182,7 +182,7 @@ namespace CoreShellDIffusion
 
 				for (size_t i = 1; i < n-1; i++)	moles += getAtmConcB(i) * radial_coordinate_sqr[i];
 
-				return 4.0 * M_PI * delta_r * CoreShellParticle::shell_material->getMolarMass() * moles;
+				return 4.0 * 3.14 * delta_r * CoreShellParticle::shell_material->getMolarMass() * moles;
 			}
 
 			__device__ __forceinline__ void setDiffusivity(double diffusivity)

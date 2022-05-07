@@ -25,8 +25,8 @@ namespace CoreShellParticle
 		CoreShellParticle::core_radius = core_radius;
 		CoreShellParticle::overall_radius = overall_radius;
 
-		core_mass = (4.0 / 3.0) * M_PI * pow(core_radius, 3) * core_material->getDensity(298.15);
-		shell_mass = (4.0 / 3.0) * M_PI * (pow(overall_radius, 3) - pow(core_radius, 3)) * shell_material->getDensity(298.15);
+		core_mass = (4.0 / 3.0) * 3.14 * pow(core_radius, 3) * core_material->getDensity(298.15);
+		shell_mass = (4.0 / 3.0) * 3.14 * (pow(overall_radius, 3) - pow(core_radius, 3)) * shell_material->getDensity(298.15);
 
 		mass = core_mass + shell_mass;
 	}

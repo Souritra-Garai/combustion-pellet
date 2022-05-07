@@ -1,6 +1,5 @@
 #include <fstream>
 #include <iostream>
-#include <boost/program_options.hpp>
 
 #include "species/Aluminium.cuh"
 #include "species/Argon.cuh"
@@ -85,11 +84,13 @@ int main(int argc, char const *argv[])
 	std::ofstream config_file = folder.getTXTFile("configurations");
 	std::ofstream temperature_file = folder.getCSVFile("temperature");
 
+	std::cout << "Generated Folders\n";
+
 	PelletFlamePropagation::printConfiguration(config_file);
 	config_file.close();
 
 	double time = 0.0;
-	double temperature_array_host[num_grid_points_pellet];
+	double *temperature_array_host = new double[num_grid_points_pellet];
 	cudaMemcpy(temperature_array_host, temperature_array_device, num_grid_points_pellet * sizeof(double), cudaMemcpyDeviceToHost);
 
 	PelletFlamePropagation::printGridPoints(temperature_file, ',');
@@ -97,7 +98,7 @@ int main(int argc, char const *argv[])
 
 	std::cout << "Starting Iterations\n(Press Ctrl+C to break)\n" ;
 
-	setUpKeyboardInterrupt();
+	// setUpKeyboardInterrupt();
 
 	try
 	{
@@ -147,6 +148,7 @@ int main(int argc, char const *argv[])
 	cudaFree(concentration_array_A_device);
 	cudaFree(concentration_array_B_device);
 
+	delete [] temperature_array_host;
 	return 0;
 }
 

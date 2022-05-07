@@ -310,9 +310,10 @@ __host__ double getPhiOption(ez::ezOptionParser &opt, double default_value)
 			std::cout << "Packing volume fractions of Particles in the Pellet is set to " << default_value << "\n";
 
 		else
-
+		{
 			std::cout << "Packing volume fraction should be in the interval [0, 1].\n";
 			exit(1);
+		}
 	}
 
 	return default_value;

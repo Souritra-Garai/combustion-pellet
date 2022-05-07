@@ -6,7 +6,7 @@
 #include "thermo-physical-properties/Arrhenius_Diffusivity_Model.cuh"
 #include "thermo-physical-properties/Packed-Pellet.cuh"
 #include "pde-problems/Core-Shell-Diffusion.cuh"
-#include "lusolver/LU_Solver.cuh"
+#include "lu-solver/LU_Solver.cuh"
 
 #define STEFAN_BOLTZMANN_CONSTANT 5.670374419E-8 // W / m2 - K4
 

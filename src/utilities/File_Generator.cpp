@@ -10,10 +10,13 @@
  */
 
 // #include <sys/stat.h>
-#include <filesystem>
+// #include <filesystem>
+#include <Windows.h>
 
 #include <time.h>
 #include <string.h>
+
+#include <iostream>
 
 #include "utilities/File_Generator.hpp"
 
@@ -25,14 +28,22 @@ FileGenerator::FileGenerator()
     time(&raw_time);
     time_info = localtime(&raw_time);
 
+	std::cout << "Fetched time...\n";
+
     std::string current_time = asctime(time_info);
     current_time.erase(current_time.end() - 1);
+
+	std::cout << "Formatted time string...\n";
 
 	_folder_name.clear();
 	_folder_name.append("solutions/");
 	_folder_name.append(current_time);
 
-	std::filesystem::create_directory(_folder_name.c_str());
+	std::cout << "Added string to folder...\n";
+
+	CreateDirectory(_folder_name.c_str(), NULL);
+
+	std::cout << "Created folder.\n";
     // mkdir(_folder_name.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 }
 
@@ -50,25 +61,25 @@ std::ofstream FileGenerator::getCSVFile(std::string file_name)
     return std::ofstream(file);
 }
 
-std::ofstream FileGenerator::getCSVFile(std::string file_name, std::string folder)
-{
-    std::string file;
+// std::ofstream FileGenerator::getCSVFile(std::string file_name, std::string folder)
+// {
+//     std::string file;
     
-	file.clear();
-	file.append(_folder_name);
+// 	file.clear();
+// 	file.append(_folder_name);
 	
-	file.append("/");
-	file.append(folder);
+// 	file.append("/");
+// 	file.append(folder);
 
-	std::filesystem::create_directory(_folder_name.c_str());
-	// mkdir(file.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+// 	// std::filesystem::create_directory(_folder_name.c_str());
+// 	// mkdir(file.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
-   	file.append("/");
-    file.append(file_name);
-	file.append(".csv");
+//    	file.append("/");
+//     file.append(file_name);
+// 	file.append(".csv");
 
-    return std::ofstream(file);
-}
+//     return std::ofstream(file);
+// }
 
 std::ofstream FileGenerator::getTXTFile(std::string file_name)
 {
@@ -84,22 +95,22 @@ std::ofstream FileGenerator::getTXTFile(std::string file_name)
     return std::ofstream(file);
 }
 
-std::ofstream FileGenerator::getTXTFile(std::string file_name, std::string folder)
-{
-    std::string file;
+// std::ofstream FileGenerator::getTXTFile(std::string file_name, std::string folder)
+// {
+//     std::string file;
     
-    file.clear();
-	file.append(_folder_name);
+//     file.clear();
+// 	file.append(_folder_name);
 	
-	file.append("/");
-	file.append(folder);
+// 	file.append("/");
+// 	file.append(folder);
 
-	std::filesystem::create_directory(_folder_name.c_str());
-	// mkdir(file.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+// 	std::filesystem::create_directory(_folder_name.c_str());
+// 	// mkdir(file.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
-   	file.append("/");
-    file.append(file_name);
-	file.append(".txt");
+//    	file.append("/");
+//     file.append(file_name);
+// 	file.append(".txt");
 
-    return std::ofstream(file);
-}
+//     return std::ofstream(file);
+// }

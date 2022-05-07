@@ -16,20 +16,20 @@ UTLDIR := utilities
 
 HPPEXT := cuh
 
-LUSHPP := $(shell find $(INCDIR)/$(LUSDIR) -type f -name *.$(HPPEXT))
-TRPHPP := $(shell find $(INCDIR)/$(TRPDIR) -type f -name *.$(HPPEXT))
-PDEHPP := $(shell find $(INCDIR)/$(PDEDIR) -type f -name *.$(HPPEXT))
-SPCHPP := $(shell find $(INCDIR)/$(SPCDIR) -type f -name *.$(HPPEXT))
+# LUSHPP := $(shell find $(INCDIR)/$(LUSDIR) -type f -name *.$(HPPEXT))
+# TRPHPP := $(shell find $(INCDIR)/$(TRPDIR) -type f -name *.$(HPPEXT))
+# PDEHPP := $(shell find $(INCDIR)/$(PDEDIR) -type f -name *.$(HPPEXT))
+# SPCHPP := $(shell find $(INCDIR)/$(SPCDIR) -type f -name *.$(HPPEXT))
 
-UTLHPP := $(shell find $(INCDIR)/$(TRPDIR) -type f -name *.hpp)
-UTLSRCS := $(shell find $(SRCDIR)/$(UTLDIR) -type f -name *.cpp)
-UTLOBJS := $(patsubst $(SRCDIR)/%, $(BUILDDIR)/%, $(UTLSRCS:.cpp=.o))
+# UTLHPP := $(shell find $(INCDIR)/$(TRPDIR) -type f -name *.hpp)
+UTLSRCS := $(SRCDIR)/$(UTLDIR)/File_Generator.cpp $(SRCDIR)/$(UTLDIR)/Keyboard_Interrupt.cpp
+# UTLOBJS := $(patsubst $(SRCDIR)/%, $(BUILDDIR)/%, $(UTLSRCS:.cpp=.o))
 
 # Flags required for compiler
 INC := -I $(INCDIR)
 NFLAGS := # -std c++14
-IBOOST := -I /usr/include/boost
-LBOOST := -lboost_program_options
+IBOOST := # -I /usr/include/boost
+LBOOST := # -lboost_program_options
 
 Thermo-Physical_Properties : $(BUILDDIR)/Thermo-Physical_Properties.o $(BUILDDIR)/$(UTLDIR)/File_Generator.o
 	@mkdir -p $(BINDIR);
@@ -61,10 +61,9 @@ $(BUILDDIR)/Hetergenous_Thermal_Conductivity_Models.o : $(SRCDIR)/Hetergenous_Th
 	@echo "Compiling Hetergenous_Thermal_Conductivity_Models...";
 	$(CC) $(NFLAGS) $(INC) $(IBOOST) -c $(SRCDIR)/Hetergenous_Thermal_Conductivity_Models.cu -o $(BUILDDIR)/Hetergenous_Thermal_Conductivity_Models.o
 
-Pellet-Flame-Propagation : $(BUILDDIR)/Pellet-Flame-Propagation.o $(UTLOBJS)
-	@mkdir -p $(BINDIR);
-	@echo "Linking all files for Pellet-Flame-Propagation...";
-	$(CC) $(BUILDDIR)/Pellet-Flame-Propagation.o $(UTLOBJS) -o $(BINDIR)/Pellet-Flame-Propagation
+Pellet-Flame-Propagation : $(SRCDIR)/Pellet-Flame-Propagation.cu $(UTLSRCS)
+	@echo Linking all files for Pellet-Flame-Propagation...
+	$(CC) $(SRCDIR)/Pellet-Flame-Propagation.cu $(UTLSRCS) $(INC) --std c++17 -o $(BINDIR)/Pellet-Flame-Propagation.exe
 
 $(BUILDDIR)/Pellet-Flame-Propagation.o : $(SRCDIR)/Pellet-Flame-Propagation.cu $(PDEHPP) $(TRPHPP) $(SPCHPP) $(LUSHPP) $(UTLHPP)
 	@mkdir -p $(BUILDDIR);
@@ -97,12 +96,11 @@ $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o : $(EXMDIR)/$(PDEDIR)/Core-
 	@echo "Compiling Core-Shell-Diffusion_Example...";
 	$(CC) $(NFLAGS) $(INC) -c $(EXMDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.cu -o $(BUILDDIR)/$(PDEDIR)/Core-Shell-Diffusion_Example.o
 
-Pellet-Flame-Propagation_Example : $(BUILDDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.o
-	@mkdir -p $(BINDIR)/$(PDEDIR);
-	@echo "Linking Pellet-Flame-Propagation_Example...";
-	$(CC) $(BUILDDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.o -o $(BINDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example
+Pellet-Flame-Propagation_Example : $(EXMDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.cu
+	@echo Linking Pellet-Flame-Propagation_Example...
+	$(CC) $(EXMDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.cu $(INC) -o $(BINDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.exe
 
-$(BUILDDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.o : $(EXMDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.cu $(PDEHPP) $(TRPHPP) $(SPCHPP)
+$(BUILDDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.o :  $(PDEHPP) $(TRPHPP) $(SPCHPP)
 	@mkdir -p $(BUILDDIR)/$(PDEDIR);
 	@echo "Compiling Pellet-Flame-Propagation_Example...";
 	$(CC) $(NFLAGS) $(INC) -c $(EXMDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.cu -o $(BUILDDIR)/$(PDEDIR)/Pellet-Flame-Propagation_Example.o

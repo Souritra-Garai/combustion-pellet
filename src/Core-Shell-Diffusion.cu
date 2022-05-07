@@ -10,7 +10,6 @@
 #include "utilities/File_Generator.hpp"
 
 #include <iostream>
-#include <boost/program_options.hpp>
 
 #define MAX_ITER 1E6
 

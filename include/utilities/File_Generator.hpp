@@ -25,10 +25,10 @@ class FileGenerator
         FileGenerator();
 
         std::ofstream getCSVFile(std::string name);
-        std::ofstream getCSVFile(std::string name, std::string folder);
+        // std::ofstream getCSVFile(std::string name, std::string folder);
 
         std::ofstream getTXTFile(std::string name);        
-        std::ofstream getTXTFile(std::string name, std::string folder);        
+        // std::ofstream getTXTFile(std::string name, std::string folder);        
 };
 
 #endif
