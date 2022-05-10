@@ -307,9 +307,10 @@ double getPhiOption(ez::ezOptionParser &opt, double default_value)
 			std::cout << "Packing volume fractions of Particles in the Pellet is set to " << default_value << "\n";
 
 		else
-
+		{
 			std::cout << "Packing volume fraction should be in the interval [0, 1].\n";
 			exit(1);
+		}
 	}
 
 	return default_value;
@@ -338,9 +339,10 @@ double getGammaOption(ez::ezOptionParser &opt, double default_value)
 			std::cout << "Degree of Implicitness of source terms in Pellet Enthalpy Equation solver is set to " << default_value << "\n";
 
 		else
-
+		{
 			std::cout << "Degree of Implicitness should be in the interval [0, 1].\n";
 			exit(1);
+		}
 	}
 
 	return default_value;
@@ -369,9 +371,10 @@ double getKappaOption(ez::ezOptionParser &opt, double default_value)
 			std::cout << "Degree of Implicitness of diffusion term in Pellet Enthalpy Equation solver is set to " << default_value << "\n";
 
 		else
-
+		{
 			std::cout << "Degree of Implicitness should be in the interval [0, 1].\n";
 			exit(1);
+		}
 	}
 
 	return default_value;
