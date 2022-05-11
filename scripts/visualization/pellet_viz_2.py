@@ -16,7 +16,7 @@ sys.path.insert(0, os.path.dirname(os.path.split(sys.path[0])[0]))
 
 from scripts.utilities.solution_folder import getlatestfolder, getpath
 
-solution_folder = getlatestfolder()
+solution_folder = "solutions/Video Animation" # getlatestfolder()
 
 data = np.genfromtxt(solution_folder + '/temperature.csv', delimiter=',')[:-1]
 
@@ -73,7 +73,7 @@ ax.set_axis_off()
 ax.view_init(azim=-60, elev=15)
 
 cb = fig.colorbar(cm.ScalarMappable(norm=normalizer, cmap=temperature_colormap), ax=ax)
-cb.set_label('Temperature (kelvin)', labelpad=30, size=20)
+cb.set_label('Temperature (K)', labelpad=30, size=20)
 cb.ax.tick_params(labelsize=20)
 
 fig.tight_layout()
@@ -81,7 +81,7 @@ fig.set_size_inches(8 * 1.5, 6 * 1.5)
 fig.set_dpi(600)
 
 # plt.show()
-plt.savefig(solution_folder + '/Flame Propagation', transparent=True)
+plt.savefig(solution_folder + '/Flame Propagation_new.png', transparent=True)
 
 # writervideo = FFMpegWriter(fps=30)
 # my_animation.save('Pellet_Flame_Propagation.mp4', writer=writervideo)
