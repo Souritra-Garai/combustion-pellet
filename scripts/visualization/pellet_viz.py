@@ -1,4 +1,3 @@
-from turtle import color
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -80,7 +79,7 @@ def update(i) :
 
 		particle.set_color(temperature_colormap(normalizer(T)))
 
-	arr = [particle]
+	arr = [particles]
 
 	arr.extend(particle1.update(i))
 	arr.extend(particle2.update(i))
@@ -110,11 +109,11 @@ ax.view_init(azim=-60, elev=15)
 
 fig.colorbar(cm.ScalarMappable(norm=normalizer, cmap=temperature_colormap), ax=ax, label='Temperature (K)')
 
-fig.set_size_inches(8 * 1.5, 8 * 1.5)
-fig.set_dpi(300)
+# fig.set_size_inches(8 * 1.5, 8 * 1.5)
+# fig.set_dpi(300)
 
-# plt.show()
+plt.show()
 
-writervideo = FFMpegWriter(fps=30)
-my_animation.save('Pellet_Flame_Propagation.mp4', writer=writervideo)
-plt.close()
+# writervideo = FFMpegWriter(fps=30)
+# my_animation.save('Pellet_Flame_Propagation.mp4', writer=writervideo)
+# plt.close()

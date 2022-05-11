@@ -111,6 +111,109 @@ class ParticleDiffusion3D :
 
         return self.__spherical_diffusion_A.getPlotLims(extension_factor)
 
+class CircularDiffusion2d :
+
+    def __init__(self, radial_coordinates_array, num_points = 1000, position = [0, 0, 0]) :
+
+        self.__num_points = num_points
+        
+        self.__center = position
+        
+        self.__radial_coordinates = radial_coordinates_array
+
+        self.__theta    = np.random.random(self.__num_points) * np.math.pi * 2
+
+        self.__mpl_objs = None
+
+    def __getRadii(self, probability_array) :
+
+        return np.sort(np.random.choice(
+            self.__radial_coordinates,
+            self.__num_points,
+            True,
+            probability_array
+        ))
+
+    def __transformToCartesian(self, probability_array) :
+
+        r = self.__getRadii(probability_array)
+
+        x = self.__center[0] + r * np.sin(self.__theta)
+        y = self.__center[1] + r * np.cos(self.__theta)
+
+        return (x, y)
+
+    def setUpPlot(self, axes, colour) :
+
+        self.__mpl_objs, = axes.plot([], [], "o", markersize=0.15, c = colour)
+
+        return self.__mpl_objs,
+
+    def update(self, probability_array) :
+        
+        x, y = self.__transformToCartesian(probability_array)
+
+        self.__mpl_objs.set_data(x, y)
+
+        return self.__mpl_objs,
+
+    def getPlotLims(self, extension_factor = 1.2) :
+
+        return np.array([- extension_factor * self.__radial_coordinates[-1], extension_factor * self.__radial_coordinates[-1]])
+
+class ParticleDiffusion2D :
+
+    def __init__(self, solution_path, num_points = 1000, position = [0, 0, 0], scale = 1) :
+
+        conc_A_data = np.genfromtxt(solution_path + '/concentration_A.csv', delimiter=',')
+        conc_B_data = np.genfromtxt(solution_path + '/concentration_B.csv', delimiter=',')
+
+        self.__time_array = conc_A_data[1:, 0]
+        self.__radial_coordinates_array = scale * conc_A_data[0, 1:]
+
+        self.__spherical_diffusion_A = CircularDiffusion2d(self.__radial_coordinates_array, num_points, position)
+        self.__spherical_diffusion_B = CircularDiffusion2d(self.__radial_coordinates_array, num_points, position)
+
+        self.__concentration_matrix = {
+            'A' : conc_A_data[1:, 1:],
+            'B' : conc_B_data[1:, 1:]
+        }
+
+        self.__concentration_matrix['A'][conc_A_data[1:, 1:] < 0] = 0
+        self.__concentration_matrix['B'][conc_B_data[1:, 1:] < 0] = 0
+
+    def __getShellProbability(self, material, time_index) :
+
+        shell_prob = self.__concentration_matrix[material][time_index] * self.__radial_coordinates_array
+
+        return shell_prob / np.sum(shell_prob)
+
+    def setUpPlot(self, axes, color_A = 'yellor', color_B = 'red') :
+
+        mpl_objs = []
+
+        mpl_objs.extend(self.__spherical_diffusion_A.setUpPlot(axes, color_A))
+        mpl_objs.extend(self.__spherical_diffusion_B.setUpPlot(axes, color_B))
+
+        return mpl_objs
+
+    def update(self, time_index) :
+
+        mpl_objs = []
+
+        mpl_objs.extend(self.__spherical_diffusion_A.update(self.__getShellProbability('A', time_index)))
+        mpl_objs.extend(self.__spherical_diffusion_B.update(self.__getShellProbability('B', time_index)))
+
+        return mpl_objs
+
+    def getTime(self, time_index) :
+
+        return self.__time_array[time_index]
+
+    def getPlotLims(self, extension_factor = 1.2) :
+
+        return self.__spherical_diffusion_A.getPlotLims(extension_factor)
+
 if __name__ == '__main__' :
 
 	from matplotlib.animation import FuncAnimation, FFMpegWriter
