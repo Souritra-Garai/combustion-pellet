@@ -11,7 +11,7 @@
 
 // #include <sys/stat.h>
 // #include <filesystem>
-#include <Windows.h>
+// #include <Windows.h>
 
 #include <time.h>
 #include <string.h>
@@ -36,14 +36,18 @@ FileGenerator::FileGenerator()
 	std::cout << "Formatted time string...\n";
 
 	_folder_name.clear();
-	_folder_name.append("solutions/");
-	_folder_name.append(current_time);
+	_folder_name.append("solutions\\");
+	// _folder_name.append(current_time);
 
-	std::cout << "Added string to folder...\n";
+	// std::cout << "Added string to folder...\n" << _folder_name <<  "\n";
 
-	CreateDirectory(_folder_name.c_str(), NULL);
+	// std::filesystem::create_directory(_folder_name.c_str());
 
-	std::cout << "Created folder.\n";
+	// std::cout << CreateDirectory(_folder_name.c_str(), NULL);
+
+	// std::cout << "Error :" << GetLastError() << "\n";
+
+	// std::cout << "Created folder.\n";
     // mkdir(_folder_name.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 }
 

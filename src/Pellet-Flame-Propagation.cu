@@ -14,7 +14,7 @@
 
 #define MAX_ITER 1E8
 
-double delta_t = 1E-6;
+double delta_t = 1E-3;
 size_t num_grid_points_particle = 101;
 size_t num_grid_points_pellet = 101;
 

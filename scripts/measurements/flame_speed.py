@@ -22,6 +22,8 @@ if args.folderpath :
 
 	folder = args.folderpath
 
+folder = "solutions/"
+
 print('Processing solution at the directory ' + folder)
 
 data = np.genfromtxt(os.path.join(folder, 'temperature.csv'), delimiter=',')
