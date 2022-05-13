@@ -50,9 +50,38 @@ namespace PelletFlamePropagation
 		initial_ignition_temperature = ignition_temperature;
 	}
 
-	__host__ void printConfiguration(std::ostream &output_stream)
+	__host__ void printConfiguration(std::ostream &output_stream, double phi)
 	{
-		;
+		double kappa;
+		cudaMemcpyFromSymbol(&kappa, PelletFlamePropagation::kappa, sizeof(double));
+		double gamma;
+		cudaMemcpyFromSymbol(&gamma, PelletFlamePropagation::gamma, sizeof(double));
+
+		size_t n;
+		cudaMemcpyFromSymbol(&n, PelletFlamePropagation::n, sizeof(size_t));
+		double delta_x;
+		cudaMemcpyFromSymbol(&delta_x, PelletFlamePropagation::delta_x, sizeof(double));
+
+		double delta_T;
+		cudaMemcpyFromSymbol(&delta_T, PelletFlamePropagation::delta_T, sizeof(double));
+
+		double initial_ignition_length;
+		cudaMemcpyFromSymbol(&initial_ignition_length, PelletFlamePropagation::initial_ignition_length, sizeof(double));
+		double initial_ignition_temperature;
+		cudaMemcpyFromSymbol(&initial_ignition_temperature, PelletFlamePropagation::initial_ignition_temperature, sizeof(double));
+
+		output_stream << "Pellet Flame Propagation PDE Solver Configuration\n\n";
+
+		output_stream << "Degree of Implicitness\n\tSource Term : " << gamma << "\n\tDiffusion Term : " << kappa << "\n";
+
+		output_stream << "Number of Grid Points : " << n << "\nGrid Size : " << delta_x << " m\n";
+
+		output_stream << "Infinitesimal Change in Temperature : " << delta_T << " K\n";
+
+		output_stream << "Initial Ignition Conditions\n\tLength : " << initial_ignition_length << " m\n\tTemperature : " << initial_ignition_temperature << " K\n\n";
+
+		PackedPellet::printConfiguration(output_stream, phi);
+		CoreShellDIffusion::printConfiguration(output_stream);
 	}
 
 	__host__ void printGridPoints(std::ostream &output_stream, char delimiter=',')

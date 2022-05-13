@@ -52,6 +52,64 @@ namespace PackedPellet
 		PackedPellet::degassing_fluid = degassing_fluid;
 	}
 
+	__host__ void printConfiguration(std::ostream &output_stream, double phi)
+	{
+		double length;
+		cudaMemcpyFromSymbol(&length, PackedPellet::length, sizeof(double));
+		double diameter;
+		cudaMemcpyFromSymbol(&diameter, PackedPellet::diameter, sizeof(double));
+
+		double convective_heat_transfer_coefficient_curved_surface;
+		cudaMemcpyFromSymbol(
+			&convective_heat_transfer_coefficient_curved_surface,
+			PackedPellet::convective_heat_transfer_coefficient_curved_surface,
+			sizeof(double)
+		);
+		
+		double convective_heat_transfer_coefficient_flat_surface;
+		cudaMemcpyFromSymbol(
+			&convective_heat_transfer_coefficient_flat_surface,
+			PackedPellet::convective_heat_transfer_coefficient_flat_surface,
+			sizeof(double)
+		);
+
+		double radiative_emissivity;
+		cudaMemcpyFromSymbol(
+			&radiative_emissivity,
+			PackedPellet::radiative_emissivity,
+			sizeof(double)
+		);
+
+		double ambient_temperature;
+		cudaMemcpyFromSymbol(
+			&ambient_temperature,
+			PackedPellet::ambient_temperature,
+			sizeof(double)
+		);
+
+		double ignition_temperature;
+		cudaMemcpyFromSymbol(
+			&ignition_temperature,
+			PackedPellet::ignition_temperature,
+			sizeof(double)
+		);
+
+		output_stream << "Pellet Properties\n\n";
+
+		output_stream << "Particle Volume Fractions : " << phi << '\n';
+
+		output_stream << "Length : " << length << " m\nDiameter : " << diameter << " m\n";
+
+		output_stream << "Convective Heat Trasfer Coefficients for Heat Loss\n";
+		output_stream << "\tCurved Surface : " << convective_heat_transfer_coefficient_curved_surface << " W / m2-K\n";
+		output_stream << "\tFlat Surface : " << convective_heat_transfer_coefficient_flat_surface << " W / m2-K\n";
+
+		output_stream << "Radiative Emissivity : " << radiative_emissivity << "\n";
+
+		output_stream << "Ambient Temperature : " << ambient_temperature << " K\n";
+		output_stream << "Ignition Temperature : " << ignition_temperature << " K\n\n";
+	}
+
 	class Pellet
 	{
 		protected:

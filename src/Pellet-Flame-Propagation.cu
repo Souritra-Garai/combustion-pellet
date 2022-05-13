@@ -85,7 +85,9 @@ int main(int argc, char const *argv[])
 	std::ofstream config_file = folder.getTXTFile("configurations");
 	std::ofstream temperature_file = folder.getCSVFile("temperature");
 
-	PelletFlamePropagation::printConfiguration(config_file);
+	double phi;
+	cudaMemcpyFromSymbol(&phi, ::particle_volume_fractions, sizeof(double));
+	PelletFlamePropagation::printConfiguration(config_file, phi);
 	config_file.close();
 
 	double time = 0.0;
