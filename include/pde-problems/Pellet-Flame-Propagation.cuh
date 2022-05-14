@@ -142,7 +142,7 @@ namespace PelletFlamePropagation
 			{
 				// printf("%d\t%b\t%b\n", index);
 				return 
-					_temperature_array[index] >= PackedPellet::ignition_temperature &&
+					// _temperature_array[index] >= PackedPellet::ignition_temperature &&
 					!_diffusion_problems_array[0][index]->isReactionComplete();
 			}
 
