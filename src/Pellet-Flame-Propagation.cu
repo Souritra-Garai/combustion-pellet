@@ -86,7 +86,12 @@ int main(int argc, char const *argv[])
 
 	std::cout << "Generated Folders\n";
 
-	PelletFlamePropagation::printConfiguration(config_file);
+	double phi;
+	cudaMemcpyFromSymbol(&phi, ::particle_volume_fractions, sizeof(double));
+	double2 diffusivity_parameters;
+	cudaMemcpyFromSymbol(&diffusivity_parameters, ::diffusivity_parameters, sizeof(double));
+
+	PelletFlamePropagation::printConfiguration(config_file, phi, diffusivity_parameters);
 	config_file.close();
 
 	double time = 0.0;
@@ -175,7 +180,7 @@ __global__ void allocateMemory(
 
 	PackedPellet::setPelletDimensions(length, diameter);
 	PackedPellet::setDegassingFluid(argon);
-	PackedPellet::setHeatLossParameters(0, 0, 0);
+	PackedPellet::setHeatLossParameters(15.681, 15.715, 0.25);
 	PackedPellet::setTemperatureParameters(298.15, 900.0);
 
 	PelletFlamePropagation::setNumGridPoints(num_grid_points_pellet);
