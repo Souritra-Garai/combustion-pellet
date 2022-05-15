@@ -89,7 +89,7 @@ int main(int argc, char const *argv[])
 	double phi;
 	cudaMemcpyFromSymbol(&phi, ::particle_volume_fractions, sizeof(double));
 	double2 diffusivity_parameters;
-	cudaMemcpyFromSymbol(&diffusivity_parameters, ::diffusivity_parameters, sizeof(double));
+	cudaMemcpyFromSymbol(&diffusivity_parameters, ::diffusivity_parameters, sizeof(double2));
 
 	PelletFlamePropagation::printConfiguration(config_file, phi, diffusivity_parameters);
 	config_file.close();
