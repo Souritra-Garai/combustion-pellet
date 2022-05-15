@@ -10,10 +10,10 @@
 
 #define N 10000
 #define TEMPERATURE_LOWER_BOUND	250.0	// K
-#define TEMPERATURE_UPPER_BOUND 1000.0	// K
+#define TEMPERATURE_UPPER_BOUND 2000.0	// K
 #define GET_TEMPERATURE(i) (TEMPERATURE_LOWER_BOUND + (TEMPERATURE_UPPER_BOUND - TEMPERATURE_LOWER_BOUND) * ((double) i) / ((double) N - 1.0))
 
-double sharpness_coefficient = 100.0;
+double sharpness_coefficient = 0.1;
 
 __global__ void allocateMemory(double sharpness_coefficient)
 {
@@ -188,14 +188,14 @@ __global__ void getHeatCapacities(double *heat_capacities, Species *species_ptr)
 {
 	unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
 
-	if (i < N) heat_capacities[i] = species_ptr->getHeatCapacity(GET_TEMPERATURE(i));
+	if (i < N) heat_capacities[i] = species_ptr->getHeatCapacity(GET_TEMPERATURE(i)) * species_ptr->getMolarMass();
 }
 
 __global__ void getEnthalpies(double *enthalpies, Species *species_ptr)
 {
 	unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
 
-	if (i < N) enthalpies[i] = species_ptr->getEnthalpy(GET_TEMPERATURE(i));
+	if (i < N) enthalpies[i] = species_ptr->getEnthalpy(GET_TEMPERATURE(i)) * species_ptr->getMolarMass();
 }
 
 __global__ void getThermalConductivities(double *thermal_conductivities, IdealGas *species_ptr)
@@ -209,12 +209,12 @@ __global__ void getHeatCapacities(double *heat_capacities, IdealGas *species_ptr
 {
 	unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
 
-	if (i < N) heat_capacities[i] = species_ptr->getHeatCapacity(GET_TEMPERATURE(i));
+	if (i < N) heat_capacities[i] = species_ptr->getHeatCapacity(GET_TEMPERATURE(i)) * species_ptr->getMolarMass();
 }
 
 __global__ void getEnthalpies(double *enthalpies, IdealGas *species_ptr)
 {
 	unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
 
-	if (i < N) enthalpies[i] = species_ptr->getEnthalpy(GET_TEMPERATURE(i));
+	if (i < N) enthalpies[i] = species_ptr->getEnthalpy(GET_TEMPERATURE(i)) * species_ptr->getMolarMass();
 }
