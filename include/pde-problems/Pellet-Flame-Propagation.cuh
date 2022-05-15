@@ -50,7 +50,7 @@ namespace PelletFlamePropagation
 		initial_ignition_temperature = ignition_temperature;
 	}
 
-	__host__ void printConfiguration(std::ostream &output_stream, double phi)
+	__host__ void printConfiguration(std::ostream &output_stream, double phi, double2 diffusivity_parameters)
 	{
 		double kappa;
 		cudaMemcpyFromSymbol(&kappa, PelletFlamePropagation::kappa, sizeof(double));
@@ -78,7 +78,10 @@ namespace PelletFlamePropagation
 
 		output_stream << "Infinitesimal Change in Temperature : " << delta_T << " K\n";
 
-		output_stream << "Initial Ignition Conditions\n\tLength : " << initial_ignition_length << " m\n\tTemperature : " << initial_ignition_temperature << " K\n\n";
+		output_stream << "Initial Ignition Conditions\n\tLength : " << initial_ignition_length << " m\n\tTemperature : " << initial_ignition_temperature << " K\n";
+
+		output_stream << "Diffusivity Parameters\n\tPre-exponential Factor : " << diffusivity_parameters.x << " m2 / s\n\t";
+		output_stream << "Activation Energy : " << diffusivity_parameters.y << " J / mol.\n\n";
 
 		PackedPellet::printConfiguration(output_stream, phi);
 		CoreShellDIffusion::printConfiguration(output_stream);
@@ -139,7 +142,7 @@ namespace PelletFlamePropagation
 			{
 				// printf("%d\t%b\t%b\n", index);
 				return 
-					_temperature_array[index] >= PackedPellet::ignition_temperature &&
+					// _temperature_array[index] >= PackedPellet::ignition_temperature &&
 					!_diffusion_problems_array[0][index]->isReactionComplete();
 			}
 

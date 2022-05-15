@@ -87,7 +87,10 @@ int main(int argc, char const *argv[])
 
 	double phi;
 	cudaMemcpyFromSymbol(&phi, ::particle_volume_fractions, sizeof(double));
-	PelletFlamePropagation::printConfiguration(config_file, phi);
+	double2 diffusivity_parameters;
+	cudaMemcpyFromSymbol(&diffusivity_parameters, ::diffusivity_parameters, sizeof(double2));
+
+	PelletFlamePropagation::printConfiguration(config_file, phi, diffusivity_parameters);
 	config_file.close();
 
 	double time = 0.0;
@@ -139,6 +142,8 @@ int main(int argc, char const *argv[])
 		cudaMemcpy(temperature_array_host, temperature_array_device, num_grid_points_pellet * sizeof(double), cudaMemcpyDeviceToHost);
 		PelletFlamePropagation::printTemperatureArray(temperature_file, temperature_array_host, time, ',');
     }
+
+	std::cout << "Combustion completed.\n";
 
 	temperature_file.close();
 

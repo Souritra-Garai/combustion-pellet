@@ -36,7 +36,7 @@ N = t.shape[0]
 # Number of line plots
 n = 10
 
-fig = plt.figure(figsize=[4*1.6, 4], constrained_layout=True)
+fig = plt.figure(figsize=[3*1.6, 3], constrained_layout=True)
 
 line_plot_axes = fig.add_subplot(1, 1, 1)
 
