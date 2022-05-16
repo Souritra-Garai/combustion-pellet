@@ -181,7 +181,7 @@ __global__ void allocateMemory(
 
 	PackedPellet::setPelletDimensions(length, diameter);
 	PackedPellet::setDegassingFluid(argon);
-	PackedPellet::setHeatLossParameters(0, 0, 0);
+	PackedPellet::setHeatLossParameters(15.681, 15.715, 0.25);
 	PackedPellet::setTemperatureParameters(298.15, 900.0);
 
 	PelletFlamePropagation::setNumGridPoints(num_grid_points_pellet);
