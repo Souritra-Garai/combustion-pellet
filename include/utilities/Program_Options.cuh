@@ -228,19 +228,21 @@ __host__ void setDiffusivityModelOption(ez::ezOptionParser &opt)
 	);
 }
 
-__host__ double2 getDiffusivityModelOption(ez::ezOptionParser &opt, double2 parameters)
+__host__ double2 getDiffusivityModelOption(ez::ezOptionParser &opt, double2 &parameters, double2 &parameters_low)
 {
 	if (opt.isSet("--Du"))
 	{
 		parameters.x = 9.54E-8;
 		parameters.y = 26E3;
+
+		parameters_low.x = 4.10E-4;
+		parameters_low.y = 144.6E3;
 		
 		std::cout << "Diffusivity parameters are set to Du's model.\n";
 	}
 
 	return parameters;
 }
-
 __host__ void setCoreRadiusOption(ez::ezOptionParser &opt)
 {
 	opt.add(

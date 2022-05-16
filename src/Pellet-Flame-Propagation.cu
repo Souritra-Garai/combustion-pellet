@@ -41,6 +41,7 @@ __device__ double particle_volume_fractions = 0.7;
 __device__ double sharpness_coefficient = 0.1;
 
 __device__ double2 diffusivity_parameters = {2.56E-6, 102.191E3};
+__device__ double2 diffusivity_parameters_low = {2.08E-7, 92.586E3};
 
 __global__ void allocateMemory(double delta_t, size_t num_grid_points_pellet, size_t num_grid_points_particle);
 __global__ void allocateParticles();
@@ -190,7 +191,8 @@ __global__ void allocateMemory(
 
 	flame_propagation_problem = new PelletFlamePropagation::FlamePropagation(particle_volume_fractions);
 	diffusivity_model = new ArrheniusDiffusivityModel(diffusivity_parameters.x, diffusivity_parameters.y);
-
+	diffusivity_model->setParametersLow(diffusivity_parameters_low.x, diffusivity_parameters_low.y);
+	
 	flame_propagation_problem->setDiffusivityModel(diffusivity_model);
 }
 
@@ -351,8 +353,10 @@ __host__ void parseProgramOptions(int argc, char const *argv[])
 	delta_t = getTimeStepOption(opt, delta_t);
 
 	double2 parameters = {2.56E-6, 102.191E3};
-	parameters = getDiffusivityModelOption(opt, parameters);
+	double2 parameters_low = {2.08E-7, 92.586E3};
+	parameters = getDiffusivityModelOption(opt, parameters, parameters_low);
 	cudaMemcpyToSymbol(::diffusivity_parameters, &parameters, sizeof(double2));
+	cudaMemcpyToSymbol(::diffusivity_parameters_low, &parameters_low, sizeof(double2));
 
 	double core_radius = 32.5E-6;
 	core_radius = getCoreRadiusOption(opt, core_radius);
