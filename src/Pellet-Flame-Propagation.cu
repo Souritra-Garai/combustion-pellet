@@ -14,9 +14,9 @@
 
 #define MAX_ITER 1E8
 
-double delta_t = 1E-3;
-size_t num_grid_points_particle = 101;
-size_t num_grid_points_pellet = 101;
+double delta_t = 5E-6;
+size_t num_grid_points_particle = 1001;
+size_t num_grid_points_pellet = 1001;
 
 __device__ PelletFlamePropagation::FlamePropagation *flame_propagation_problem;
 __device__ ArrheniusDiffusivityModel *diffusivity_model;
@@ -358,17 +358,17 @@ __host__ void parseProgramOptions(int argc, char const *argv[])
 	cudaMemcpyToSymbol(::diffusivity_parameters, &parameters, sizeof(double2));
 	cudaMemcpyToSymbol(::diffusivity_parameters_low, &parameters_low, sizeof(double2));
 
-	double core_radius = 32.5E-6;
+	double core_radius = 43E-6;
 	core_radius = getCoreRadiusOption(opt, core_radius);
 	cudaMemcpyToSymbol(::core_radius, &core_radius, sizeof(double));
-	double overall_radius = 39.5E-6;
+	double overall_radius = 50E-6;
 	overall_radius = getOverallRadiusOption(opt, overall_radius);
 	cudaMemcpyToSymbol(::overall_radius, &overall_radius, sizeof(double));
 
-	double pellet_length = 6.35E-3;
+	double pellet_length = 20E-3;
 	pellet_length = getLengthOption(opt, pellet_length);
 	cudaMemcpyToSymbol(::length, &pellet_length, sizeof(double));
-	double pellet_diameter = 6.35E-3;
+	double pellet_diameter = 10E-3;
 	pellet_diameter = getDiameterOption(opt, pellet_diameter);
 	cudaMemcpyToSymbol(::diameter, &pellet_diameter, sizeof(double));
 
