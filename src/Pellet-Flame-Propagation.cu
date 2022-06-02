@@ -1,6 +1,4 @@
-#include <fstream>
-#include <iostream>
-#include <boost/program_options.hpp>
+#include <stdio.h>
 
 #include "species/Aluminium.cuh"
 #include "species/Argon.cuh"
@@ -80,11 +78,11 @@ int main(int argc, char const *argv[])
 
 	cudaDeviceSynchronize();
 
-	std::cout << "Initialization complete.\n";
+	printf("Initialization complete.\n");
 
 	FileGenerator folder;
-	std::ofstream config_file = folder.getTXTFile("configurations");
-	std::ofstream temperature_file = folder.getCSVFile("temperature");
+	FILE * config_file = folder.getTXTFile("configurations");
+	FILE * temperature_file = folder.getCSVFile("temperature");
 
 	double phi;
 	cudaMemcpyFromSymbol(&phi, ::particle_volume_fractions, sizeof(double));
@@ -92,7 +90,7 @@ int main(int argc, char const *argv[])
 	cudaMemcpyFromSymbol(&diffusivity_parameters, ::diffusivity_parameters, sizeof(double2));
 
 	PelletFlamePropagation::printConfiguration(config_file, phi, diffusivity_parameters);
-	config_file.close();
+	fclose(config_file);
 
 	double time = 0.0;
 	double temperature_array_host[num_grid_points_pellet];
@@ -101,7 +99,7 @@ int main(int argc, char const *argv[])
 	PelletFlamePropagation::printGridPoints(temperature_file, ',');
 	PelletFlamePropagation::printTemperatureArray(temperature_file, temperature_array_host, time, ',');
 
-	std::cout << "Starting Iterations\n(Press Ctrl+C to break)\n" ;
+	printf("Starting Iterations\n(Press Ctrl+C to break)\n");
 
 	setUpKeyboardInterrupt();
 
@@ -125,7 +123,7 @@ int main(int argc, char const *argv[])
 				cudaMemcpyFromSymbol(&combustion_complete, ::combustion_complete, sizeof(bool));
 			}
 
-			std::cout << "Iterations completed : " << i << "\n";
+			printf("Iterations completed : %i\n", i);
 
 			cudaDeviceSynchronize();
 
@@ -136,7 +134,7 @@ int main(int argc, char const *argv[])
 
 	catch (InterruptException& e)
     {
-		std::cout << "\nQuitting...\n";
+		printf("\nQuitting...\n");
 
 		cudaDeviceSynchronize();
 
@@ -144,9 +142,9 @@ int main(int argc, char const *argv[])
 		PelletFlamePropagation::printTemperatureArray(temperature_file, temperature_array_host, time, ',');
     }
 
-	std::cout << "Combustion completed.\n";
+	printf("Combustion completed.\n");
 
-	temperature_file.close();
+	fclose(temperature_file);
 
 	deallocateParticles<<<num_grid_points_pellet, 1>>>();
 	deallocateMemory<<<1,1>>>();

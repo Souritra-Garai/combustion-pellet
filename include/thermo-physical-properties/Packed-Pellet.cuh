@@ -1,7 +1,7 @@
 #ifndef __PACKED_PELLET__
 #define __PACKED_PELLET__
 
-#include <ostream>
+#include <stdio.h>
 
 #include "thermo-physical-properties/Ideal_Gas.cuh"
 #include "thermo-physical-properties/Species.cuh"
@@ -52,7 +52,7 @@ namespace PackedPellet
 		PackedPellet::degassing_fluid = degassing_fluid;
 	}
 
-	__host__ void printConfiguration(std::ostream &output_stream, double phi)
+	__host__ void printConfiguration(FILE * file, double phi)
 	{
 		double length;
 		cudaMemcpyFromSymbol(&length, PackedPellet::length, sizeof(double));
@@ -94,20 +94,23 @@ namespace PackedPellet
 			sizeof(double)
 		);
 
-		output_stream << "Pellet Properties\n\n";
+		fprintf(file, "Pellet Properties\n\n");
 
-		output_stream << "Particle Volume Fractions : " << phi << '\n';
+		fprintf(file, "Particle Volume Fractions : %f\n", phi);
 
-		output_stream << "Length : " << length << " m\nDiameter : " << diameter << " m\n";
+		fprintf(file, "Length : %e m\nDiameter : %e m\n", length, diameter);
 
-		output_stream << "Convective Heat Trasfer Coefficients for Heat Loss\n";
-		output_stream << "\tCurved Surface : " << convective_heat_transfer_coefficient_curved_surface << " W / m2-K\n";
-		output_stream << "\tFlat Surface : " << convective_heat_transfer_coefficient_flat_surface << " W / m2-K\n";
+		fprintf(
+			file,
+			"Convective Heat Transfer Coefficients for Heat Loss\n\tCurved Surface : %e W / m2-K\n\tFlat Surface : %e W / m2-K\n",
+			convective_heat_transfer_coefficient_curved_surface,
+			convective_heat_transfer_coefficient_flat_surface
+		);
 
-		output_stream << "Radiative Emissivity : " << radiative_emissivity << "\n";
+		fprintf(file, "Radiative Emissivity : %e\n", radiative_emissivity);
 
-		output_stream << "Ambient Temperature : " << ambient_temperature << " K\n";
-		output_stream << "Ignition Temperature : " << ignition_temperature << " K\n\n";
+		fprintf(file, "Ambient Temperature : %.3f K\n", ambient_temperature);
+		fprintf(file, "Ignition Temperature : %.3f K\n\n", ignition_temperature);
 	}
 
 	class Pellet

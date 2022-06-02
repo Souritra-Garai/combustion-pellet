@@ -34,7 +34,7 @@ FileGenerator::FileGenerator()
     mkdir(_folder_name.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 }
 
-std::ofstream FileGenerator::getCSVFile(std::string file_name)
+FILE* FileGenerator::getCSVFile(std::string file_name)
 {
     std::string file;
     
@@ -45,10 +45,10 @@ std::ofstream FileGenerator::getCSVFile(std::string file_name)
     file.append(file_name);
 	file.append(".csv");
 
-    return std::ofstream(file);
+    return fopen(file.c_str(), "w");
 }
 
-std::ofstream FileGenerator::getCSVFile(std::string file_name, std::string folder)
+FILE * FileGenerator::getCSVFile(std::string file_name, std::string folder)
 {
     std::string file;
     
@@ -64,10 +64,10 @@ std::ofstream FileGenerator::getCSVFile(std::string file_name, std::string folde
     file.append(file_name);
 	file.append(".csv");
 
-    return std::ofstream(file);
+    return fopen(file.c_str(), "w");
 }
 
-std::ofstream FileGenerator::getTXTFile(std::string file_name)
+FILE * FileGenerator::getTXTFile(std::string file_name)
 {
     std::string file;
     
@@ -78,10 +78,10 @@ std::ofstream FileGenerator::getTXTFile(std::string file_name)
     file.append(file_name);
 	file.append(".txt");
 
-    return std::ofstream(file);
+    return fopen(file.c_str(), "w");
 }
 
-std::ofstream FileGenerator::getTXTFile(std::string file_name, std::string folder)
+FILE * FileGenerator::getTXTFile(std::string file_name, std::string folder)
 {
     std::string file;
     
@@ -97,5 +97,5 @@ std::ofstream FileGenerator::getTXTFile(std::string file_name, std::string folde
     file.append(file_name);
 	file.append(".txt");
 
-    return std::ofstream(file);
+    return fopen(file.c_str(), "w");
 }

@@ -6,7 +6,7 @@
 __device__ double atomicAdd(double* a, double b) { return b; }
 #endif
 
-#include <ostream>
+#include <stdio.h>
 
 #include "thermo-physical-properties/Core-Shell-Particle.cuh"
 #include "lusolver/LU_Solver.cuh"
@@ -47,7 +47,7 @@ namespace CoreShellDIffusion
 		_coefficient_2 = 1.0 / delta_t;
 	}
 
-	__host__ void printConfiguration(std::ostream &output_stream)
+	__host__ void printConfiguration(FILE * file)
 	{
 		double delta_t, delta_r;
 		size_t n;
@@ -56,18 +56,18 @@ namespace CoreShellDIffusion
 		cudaMemcpyFromSymbol(&delta_r, CoreShellDIffusion::delta_r, sizeof(double));
 		cudaMemcpyFromSymbol(&n, CoreShellDIffusion::n, sizeof(size_t));
 
-		output_stream << "Core Shell Diffusion Solver Configuration\n\n";
+		fprintf(file, "Core Shell Diffusion Solver Configuration\n\n");
 
-		output_stream << "Time Step :\t" << delta_t << "\ts\n";
+		fprintf(file, "Time Step : %e s\n", delta_t);
+		
+		fprintf(file, "Number of Grid Points : %i \n", n);
 
-		output_stream << "Number of Grid Points :\t" << n << "\n";
+		fprintf(file, "Grid Size : %e m\n\n\n", delta_r);
 
-		output_stream << "Grid Size :\t" << delta_r << "\tm\n\n\n";
-
-		CoreShellParticle::printConfiguration(output_stream);
+		CoreShellParticle::printConfiguration(file);
 	}
 
-	__host__ void printGridPoints(std::ostream &output_stream, char delimiter=',')
+	__host__ void printGridPoints(FILE * file, char delimiter=',')
 	{
 		double radius;
 		cudaMemcpyFromSymbol(&radius, CoreShellParticle::overall_radius, sizeof(double));
@@ -75,23 +75,23 @@ namespace CoreShellDIffusion
 		size_t n;
 		cudaMemcpyFromSymbol(&n, CoreShellDIffusion::n, sizeof(size_t));
 
-		output_stream << NAN << delimiter;
+		fprintf(file, "nan%c", delimiter);
 
-		for (size_t i = 0; i < n-1; i++) output_stream << radius * (double) i / ((double) n - 1.0) << delimiter;
+		for (size_t i = 0; i < n-1; i++) fprintf(file, "%e%c", radius * (double) i / ((double) n - 1.0), delimiter);
 	
-		output_stream << radius << "\n";
+		fprintf(file, "%e\n", radius);
 	}
 
-	__host__ void printConcentrationArray(std::ostream &output_stream, double *concentration_array, double time = 0.0, char delimiter = '\t')
+	__host__ void printConcentrationArray(FILE * file, double *concentration_array, double time = 0.0, char delimiter = '\t')
 	{
-		output_stream << time << delimiter;
+		fprintf(file, "%e%c", time, delimiter);
 
 		size_t n;
 		cudaMemcpyFromSymbol(&n, CoreShellDIffusion::n, sizeof(size_t));
 		
-		for (size_t i = 0; i < n-1; i++) output_stream << concentration_array[i] << delimiter;
+		for (size_t i = 0; i < n-1; i++) fprintf(file, "%e%c", concentration_array[i], delimiter);
 
-		output_stream << concentration_array[n-1] << '\n';
+		fprintf(file, "%e\n", concentration_array[n-1]);
 	}
 
 	class Diffusion : public CoreShellParticle::Particle

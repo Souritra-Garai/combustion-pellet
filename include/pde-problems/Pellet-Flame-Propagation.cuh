@@ -1,7 +1,7 @@
 #ifndef __PELLET_FLAME_PROPAGATION__
 #define __PELLET_FLAME_PROPAGATION__
 
-#include <ostream>
+#include <stdio.h>
 
 #include "thermo-physical-properties/Arrhenius_Diffusivity_Model.cuh"
 #include "thermo-physical-properties/Packed-Pellet.cuh"
@@ -50,7 +50,7 @@ namespace PelletFlamePropagation
 		initial_ignition_temperature = ignition_temperature;
 	}
 
-	__host__ void printConfiguration(std::ostream &output_stream, double phi, double2 diffusivity_parameters)
+	__host__ void printConfiguration(FILE * file, double phi, double2 diffusivity_parameters)
 	{
 		double kappa;
 		cudaMemcpyFromSymbol(&kappa, PelletFlamePropagation::kappa, sizeof(double));
@@ -70,24 +70,23 @@ namespace PelletFlamePropagation
 		double initial_ignition_temperature;
 		cudaMemcpyFromSymbol(&initial_ignition_temperature, PelletFlamePropagation::initial_ignition_temperature, sizeof(double));
 
-		output_stream << "Pellet Flame Propagation PDE Solver Configuration\n\n";
+		fprintf(file, "Pellet Flame Propagation PDE Solver Configuration\n\n");
 
-		output_stream << "Degree of Implicitness\n\tSource Term : " << gamma << "\n\tDiffusion Term : " << kappa << "\n";
+		fprintf(file, "Degree of Implicitness\n\tSource Term : %f\n\tDiffusion Term : %f\n", gamma, kappa);
 
-		output_stream << "Number of Grid Points : " << n << "\nGrid Size : " << delta_x << " m\n";
+		fprintf(file, "Number of Grid Points : %d\nGrid Size : %e m\n", n, delta_x);
 
-		output_stream << "Infinitesimal Change in Temperature : " << delta_T << " K\n";
+		fprintf(file, "Infinitesimal change in temperature : %e K\n", delta_T);
 
-		output_stream << "Initial Ignition Conditions\n\tLength : " << initial_ignition_length << " m\n\tTemperature : " << initial_ignition_temperature << " K\n";
+		fprintf(file, "Initial Ignition Conditions\n\tLength : %e m\n\tTemperature : %f K\n", initial_ignition_length, initial_ignition_temperature);
 
-		output_stream << "Diffusivity Parameters\n\tPre-exponential Factor : " << diffusivity_parameters.x << " m2 / s\n\t";
-		output_stream << "Activation Energy : " << diffusivity_parameters.y << " J / mol.\n\n";
+		fprintf(file, "Diffusivity Parameters\n\tPre-exponential Factor : %e m2 / s\n\tActivation Energy : %e J / mol.\n\n", diffusivity_parameters.x, diffusivity_parameters.y);
 
-		PackedPellet::printConfiguration(output_stream, phi);
-		CoreShellDIffusion::printConfiguration(output_stream);
+		PackedPellet::printConfiguration(file, phi);
+		CoreShellDIffusion::printConfiguration(file);
 	}
 
-	__host__ void printGridPoints(std::ostream &output_stream, char delimiter=',')
+	__host__ void printGridPoints(FILE * file, char delimiter=',')
 	{
 		double length;
 		cudaMemcpyFromSymbol(&length, PackedPellet::length, sizeof(double));
@@ -95,23 +94,23 @@ namespace PelletFlamePropagation
 		size_t n;
 		cudaMemcpyFromSymbol(&n, PelletFlamePropagation::n, sizeof(size_t));
 
-		output_stream << NAN << delimiter;
+		fprintf(file, "nan%c", delimiter);
 
-		for (size_t i = 0; i < n-1; i++) output_stream << length * (double) i / ((double) n - 1.0) << delimiter;
+		for (size_t i = 0; i < n-1; i++) fprintf(file, "%e%c", length * (double) i / ((double) n - 1.0), delimiter);
 		
-		output_stream << length << "\n";
+		fprintf(file, "%e\n", length);
 	}
 
-	__host__ void printTemperatureArray(std::ostream &output_stream, double *temperature_array, double time, char delimiter='\t')
+	__host__ void printTemperatureArray(FILE * file, double *temperature_array, double time, char delimiter='\t')
 	{
-		output_stream << time << delimiter;
+		fprintf(file, "%e%c", time, delimiter);
 
 		size_t n;
 		cudaMemcpyFromSymbol(&n, PelletFlamePropagation::n, sizeof(size_t));
 		
-		for (size_t i = 0; i < n-1; i++) output_stream << temperature_array[i] << delimiter;
+		for (size_t i = 0; i < n-1; i++) fprintf(file, "%.3f%c", temperature_array[i], delimiter);
 
-		output_stream << temperature_array[n-1] << '\n';
+		fprintf(file, "%.3f\n", temperature_array[n-1]);
 	}
 
 	class FlamePropagation : public PackedPellet::Pellet

@@ -3,7 +3,7 @@
 
 #include "thermo-physical-properties/Species.cuh"
 
-#include <ostream>
+#include <stdio.h>
 
 namespace CoreShellParticle
 {
@@ -46,7 +46,7 @@ namespace CoreShellParticle
 		setParticleMass(core_radius, overall_radius);
 	}
 
-	__host__ void printConfiguration(std::ostream &output_buffer)
+	__host__ void printConfiguration(FILE * file)
 	{
 		double overall_radius;
 		double core_radius;
@@ -61,15 +61,15 @@ namespace CoreShellParticle
 		cudaMemcpyFromSymbol(&mass, CoreShellParticle::mass, sizeof(double));
 		cudaMemcpyFromSymbol(&core_mass, CoreShellParticle::core_mass, sizeof(double));
 		cudaMemcpyFromSymbol(&shell_mass, CoreShellParticle::shell_mass, sizeof(double));
+
+		fprintf(file, "Particle Configuration\n\n");
 		
-		output_buffer << "Particle Configuration\n\n";
+		fprintf(file, "Overall Radius : %e m\n", overall_radius);
+		fprintf(file, "Core Radius : %e m\n", core_radius);
 
-		output_buffer << "Overall Radius :\t" << overall_radius << "\tm\n";
-		output_buffer << "Core Radius :\t" << core_radius << "\tm\n\n";
-
-		output_buffer << "Overall Mass :\t" << mass << "\tkg\n";
-		output_buffer << "Core Mass :\t" << core_mass << "\tkg\n";
-		output_buffer << "Shell Mass :\t" << shell_mass << "\tkg\n\n\n";
+		fprintf(file, "Overall Mass : %e kg\n", mass);
+		fprintf(file, "Core Mass : %e kg\n", core_mass);
+		fprintf(file, "Shell Mass : %e kg\n\n\n", shell_mass);
 	}
 
 	class Particle

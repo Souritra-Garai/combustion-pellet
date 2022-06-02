@@ -12,7 +12,8 @@
 #ifndef __FILE_GENERATOR__
 #define __FILE_GENERATOR__
 
-#include <fstream>
+#include <stdio.h>
+#include <string>
 
 class FileGenerator
 {
@@ -24,11 +25,11 @@ class FileGenerator
         
         FileGenerator();
 
-        std::ofstream getCSVFile(std::string name);
-        std::ofstream getCSVFile(std::string name, std::string folder);
+        FILE * getCSVFile(std::string name);
+        FILE * getCSVFile(std::string name, std::string folder);
 
-        std::ofstream getTXTFile(std::string name);        
-        std::ofstream getTXTFile(std::string name, std::string folder);        
+        FILE * getTXTFile(std::string name);        
+        FILE * getTXTFile(std::string name, std::string folder);        
 };
 
 #endif

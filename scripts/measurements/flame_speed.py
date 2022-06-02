@@ -31,21 +31,21 @@ x = data[0, 1:]
 
 T = data[1:, 1:]
 
-flame_front_temperature = 1000	# K
+flame_front_temperature = 1500	# K
 
 flame_locations = x[np.argmin(np.abs(T - flame_front_temperature), axis=1)]	# m
 
-valid_indices = np.where(np.logical_and(flame_locations > 2E-3, flame_locations < 4E-3))
+valid_indices = np.where(np.logical_and(flame_locations > 2E-3, flame_locations < 18E-3))
 # print(flame_locations[valid_indices])
 # print(flame_locations[valid_indices].shape)
 
 flame_locations = flame_locations[valid_indices]
 t = t[valid_indices]
 
-# valid_indices = np.where(np.logical_and(t > 0.0, t < 0.6))
+valid_indices = np.where(np.logical_and(t > 0.0, t < 0.154))
 
-# flame_locations = flame_locations[valid_indices]
-# t = t[valid_indices]
+flame_locations = flame_locations[valid_indices]
+t = t[valid_indices]
 
 line, cov = np.polyfit(t, flame_locations, 1, cov=True)
 # print(line)
