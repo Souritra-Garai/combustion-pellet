@@ -4,6 +4,8 @@
 #include "thermo-physical-properties/Enthalpy.cuh"
 #include "thermo-physical-properties/Thermal_Conductivity.cuh"
 
+#define PRESSURE	101325.0
+
 class IdealGas
 {
 	private :
@@ -32,7 +34,7 @@ class IdealGas
 
 		__host__ __device__ __forceinline__ double getMolarDensity(double temperature)
         { 
-            return 1.01325E5 / (8.314 * temperature);
+            return PRESSURE / (8.314 * temperature);
         }
 
 		__host__ __device__ __forceinline__ double getDensity(double temperature)

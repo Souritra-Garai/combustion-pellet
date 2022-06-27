@@ -42,7 +42,7 @@ valid_indices = np.where(np.logical_and(flame_locations > 2E-3, flame_locations 
 flame_locations = flame_locations[valid_indices]
 t = t[valid_indices]
 
-valid_indices = np.where(np.logical_and(t > 0.0, t < 0.154))
+valid_indices = np.where(np.logical_and(t > 0.0, t < 3.0))
 
 flame_locations = flame_locations[valid_indices]
 t = t[valid_indices]

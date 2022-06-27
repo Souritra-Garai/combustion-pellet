@@ -58,7 +58,7 @@ line_plot_axes.minorticks_on()
 line_plot_axes.grid(which='minor', color='lightgrey', ls='--')
 
 # line_plot_axes.set_axis_off()
-line_plot_axes.legend()
+# line_plot_axes.legend()
 
 plt.show()
 # plt.savefig(folder + '/flame_propagation.png', dpi=600, transparent=True)
