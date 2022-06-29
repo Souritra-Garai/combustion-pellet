@@ -25,6 +25,8 @@ t_array = data[1:, 0]
 
 T_matrix = data[1:, 1:]
 
+plt.style.use('science')
+
 normalizer = Normalize(np.min(T_matrix), 2000)
 
 temperature_colormap = cm.get_cmap('plasma', 1000)
