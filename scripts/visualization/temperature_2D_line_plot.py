@@ -34,28 +34,30 @@ T = data[1:, 1:]
 N = t.shape[0]
 
 # Number of line plots
-n = 10
+n = 5
 
-fig = plt.figure(figsize=[3*1.6, 3], constrained_layout=True)
+plt.style.use(['science', 'high-vis'])
+
+fig = plt.figure()#(figsize=[3*1.6, 3], constrained_layout=True)
 
 line_plot_axes = fig.add_subplot(1, 1, 1)
 
 for i in range(n) :
 
 	line_plot_axes.plot(x, T[i * N // n], label=u'$t$ = {:.0f} ms'.format(t[i * N // n] * 1E3))
-	# line_plot_axes.plot([], [], label=u't = {:.0f} ms'.format(t[i * N // n] * 1E3))
+	# line_plot_axes.plot([], [], label=u't = {:.0f} ms'.format(t[i * N // n]*1E3))
 
 line_plot_axes.plot(x, T[-1], label=u"$t$ = {:.0f} ms".format(t[-1] * 1E3))
-# line_plot_axes.plot([], [], label=u"t = {:.0f} ms".format(t[-1] * 1E3))
+# line_plot_axes.plot([], [], label=u"t = {:.0f} ms".format(t[-1]*1E3))
 
 line_plot_axes.set_xlabel('$x$ (mm)')
 line_plot_axes.set_ylabel('Temperature (K)')
 
 # line_plot_axes.set_title('Temperature Evolution in Pellet')
 
-line_plot_axes.grid(which='major', color='lightgrey')
-line_plot_axes.minorticks_on()
-line_plot_axes.grid(which='minor', color='lightgrey', ls='--')
+# line_plot_axes.grid(which='major', color='lightgrey')
+# line_plot_axes.minorticks_on()
+# line_plot_axes.grid(which='minor', color='lightgrey', ls='--')
 
 # line_plot_axes.set_axis_off()
 # line_plot_axes.legend()

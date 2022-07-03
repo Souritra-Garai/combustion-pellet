@@ -42,7 +42,7 @@ valid_indices = np.where(np.logical_and(flame_locations > 2E-3, flame_locations 
 flame_locations = flame_locations[valid_indices]
 t = t[valid_indices]
 
-valid_indices = np.where(np.logical_and(t > 0.0, t < 3.0))
+valid_indices = np.where(np.logical_and(t > 0.0, t < 0.85))
 
 flame_locations = flame_locations[valid_indices]
 t = t[valid_indices]
@@ -52,11 +52,13 @@ line, cov = np.polyfit(t, flame_locations, 1, cov=True)
 
 print('Flame Speed : ', line[0]*1000, ' mm/s')
 
-fig = plt.figure(figsize=[4*1.6, 4], constrained_layout=True)
+plt.style.use('science')
+
+fig = plt.figure() # (figsize=[4*1.6, 4], constrained_layout=True)
 ax = fig.add_subplot()
 
 ax.plot(t, flame_locations * 1E3, label='Simulation Results')
-ax.plot(t, np.polyval(line, t) * 1E3, label='Linear fit : ' + '$x = ' + str(round(line[0] * 1E3, 4)) + '\;t + ' + str(round(line[1] * 1E3, 4)) + '$', lw=1)
+ax.plot(t, np.polyval(line, t) * 1E3, label='Linear fit : ' + '$x = ' + str(round(line[0] * 1E3)) + '\;t + ' + str(round(line[1] * 1E3, 1)) + '$', lw=1)
 
 # ax.set_title('Flame Speed : ' +  str(line[0]*100) + ' cm/s')
 
@@ -69,8 +71,9 @@ ax.grid(which='minor', color='lightgrey', ls='--')
 
 ax.legend()
 
-# fig.set_size_inches(10, 4.5)
+fig.set_size_inches(10, 4.5)
 # fig.set_dpi(600)
+fig.tight_layout()
 
 # plt.savefig(folder + '/Flame Position.png', dpi=600, transparent=True)
 plt.show()
