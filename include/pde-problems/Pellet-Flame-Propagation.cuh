@@ -451,6 +451,7 @@ namespace PelletFlamePropagation
 				for (size_t i = 1; i < n-1 && flag; i++)
 				{
 					flag = !inReactionZone(i);
+					flag |= isnan(_temperature_array[i]);
 				}
 				
 				return flag;
