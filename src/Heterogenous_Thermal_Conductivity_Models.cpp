@@ -34,7 +34,7 @@ int main(int argc, char const *argv[])
 
     std::ofstream file = file_generator.getCSVFile("thermal_conductivity_pellet");
 
-    file << "Particle Volume Fraction,ME1,EMT,MEB,CC,ME2" << std::endl;
+    file << "Particle Volume Fraction,ME1,EMT,CCB,MEB,CC,ME2" << std::endl;
 
     long double particle_thermal_conductivity = Ni_clad_Al_particle.getThermalConductivity(temperature);
     long double fluid_thermal_conductivity = Argon.getThermalConductivity(temperature);
@@ -47,6 +47,7 @@ int main(int argc, char const *argv[])
         file << particle_volume_fraction << ',';
         file << getThermalConductivityME1(1.0 - particle_volume_fraction, fluid_thermal_conductivity, particle_thermal_conductivity) << ',';
         file << getThermalConductivityEMT(1.0 - particle_volume_fraction, fluid_thermal_conductivity, particle_thermal_conductivity) << ',';
+        file << getThermalConductivityCCB(1.0 - particle_volume_fraction, fluid_thermal_conductivity, particle_thermal_conductivity) << ',';
         file << getThermalConductivityMEB(1.0 - particle_volume_fraction, fluid_thermal_conductivity, particle_thermal_conductivity) << ',';
         file << getThermalConductivityCC( 1.0 - particle_volume_fraction, fluid_thermal_conductivity, particle_thermal_conductivity) << ',';
         file << getThermalConductivityME2(1.0 - particle_volume_fraction, fluid_thermal_conductivity, particle_thermal_conductivity) << std::endl;

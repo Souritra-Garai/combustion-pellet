@@ -47,4 +47,11 @@ real_t getThermalConductivityMEB(
     real_t thermal_conductivity_particle
 );
 
+template<typename real_t>
+real_t getThermalConductivityCCB(
+    real_t porosity,
+    real_t thermal_conductivity_fluid,
+    real_t thermal_conductivity_particle
+);
+
 #endif

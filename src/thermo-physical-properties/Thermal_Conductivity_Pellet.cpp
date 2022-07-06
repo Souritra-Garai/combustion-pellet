@@ -99,6 +99,24 @@ inline real_t getThermalConductivityEMT(
 }
 
 template<typename real_t>
+inline real_t getThermalConductivityCC(
+	real_t v_1,
+	real_t k_1,
+	real_t v_2, 
+	real_t k_2,
+	real_t phi_11
+) {
+	real_t phi_21 = phi_11; 
+	phi_11 = (0.5 - v_1 * phi_11) / v_2;
+
+	real_t K_s = 1.0 / ((v_1 * phi_11 / k_1) + (v_2 * phi_21 / k_2));
+
+	real_t K_p = k_1 * v_1 * phi_11 + k_2 * v_2 * phi_21;
+
+	return (K_s / 2.0) * (sqrt(1.0 + 8.0 * K_p / K_s) - 1.0);
+}
+
+template<typename real_t>
 real_t getThermalConductivityMEB(
 	real_t v_2,
 	real_t k_2,
@@ -153,6 +171,61 @@ real_t getThermalConductivityMEB(
 	return	getThermalConductivityEMT(v_1, k_1, v_2, k_2, phi_11_m);
 }
 
+template<typename real_t>
+real_t getThermalConductivityCCB(
+	real_t v_2,
+	real_t k_2,
+	real_t k_1
+) {
+	real_t v_1 = 1.0 - v_2;
+
+	real_t phi_11_u = (2.0 * k_2 + k_1) / (2.0 * v_1 * (k_1 - k_2)) - 0.0000001;
+	real_t phi_11_l = 0.0;
+	
+	real_t k_e_u = 
+		getThermalConductivityEMT(v_1, k_1, v_2, k_2, phi_11_u) - 
+		getThermalConductivityCC(v_1, k_1, v_2, k_2, phi_11_u);
+
+	real_t k_e_l = 
+		getThermalConductivityEMT(v_1, k_1, v_2, k_2, phi_11_l) - 
+		getThermalConductivityCC(v_1, k_1, v_2, k_2, phi_11_l);
+
+	unsigned int __iter = 0;
+
+	real_t k_e_m, phi_11_m;
+
+	while (abs(k_e_u - k_e_l) > 0.001 && __iter < MAX_ITER)
+	{
+		phi_11_m = 0.5 * (phi_11_u + phi_11_l);
+		
+		k_e_m = 
+			getThermalConductivityEMT(v_1, k_1, v_2, k_2, phi_11_m) - 
+			getThermalConductivityCC(v_1, k_1, v_2, k_2, phi_11_m);
+
+		if (k_e_m == 0)
+		
+			break;
+
+		else if (k_e_l * k_e_m < 0.0)
+		{
+			phi_11_u = phi_11_m;
+			k_e_u = k_e_m;
+		}
+
+		else
+		{
+			phi_11_l = phi_11_m;
+			k_e_l = k_e_m;
+		}
+
+		__iter++;
+	}
+
+	phi_11_m = 0.5 * (phi_11_u + phi_11_l);
+
+	return	getThermalConductivityEMT(v_1, k_1, v_2, k_2, phi_11_m);
+}
+
 template long double	getThermalConductivityCC(	long double,	long double,	long double);
 template double			getThermalConductivityCC(	double,			double,			double);
 template float			getThermalConductivityCC(	float,			float,			float);
@@ -168,6 +241,10 @@ template float			getThermalConductivityME1(	float,			float,			float);
 template long double	getThermalConductivityME2(	long double,	long double,	long double);
 template double			getThermalConductivityME2(	double,			double,			double);
 template float			getThermalConductivityME2(	float,			float,			float);
+
+template long double	getThermalConductivityCCB(	long double,	long double,	long double);
+template double			getThermalConductivityCCB(	double,			double,			double);
+template float			getThermalConductivityCCB(	float,			float,			float);
 
 template long double	getThermalConductivityMEB(	long double,	long double,	long double);
 template double			getThermalConductivityMEB(	double,			double,			double);
