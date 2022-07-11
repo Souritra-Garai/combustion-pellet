@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 
 #include "thermo-physical-properties/Arrhenius_Diffusivity_Model.hpp"
 
@@ -74,12 +75,15 @@ int main(int argc, char const *argv[])
 
 	combustion_pellet.printConfiguration(config_file);
     combustion_pellet.printProperties(config_file);
-    config_file.close();
 
     std::cout << "Initialized Pellet. Starting iterations.\nPress Ctrl+C to stop...\n\n";
 
     setUpKeyboardInterrupt();
+
+	size_t i = 0;
     
+	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+
     try
     {
 		combustion_pellet.printGridPoints(temperature_file, ',');
@@ -88,7 +92,7 @@ int main(int argc, char const *argv[])
 
 		bool combustion_not_complete = true;
 
-		for (size_t i = 0; i < MAX_ITER && combustion_not_complete;)
+		for (; i < MAX_ITER && combustion_not_complete;)
 		{
 			size_t i_step = i + step;
 
@@ -117,6 +121,12 @@ int main(int argc, char const *argv[])
 
         return 1;
     }
+
+	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+
+	config_file << "\n\nTime difference = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "[ms]" << std::endl;
+	config_file << "Time per iteration = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() / i << "[ms]" << std::endl;
+    config_file.close();
 
     combustion_pellet.printTemperatureProfile(temperature_file, ',');
     temperature_file.close();
