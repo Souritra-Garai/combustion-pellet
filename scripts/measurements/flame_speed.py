@@ -42,7 +42,7 @@ valid_indices = np.where(np.logical_and(flame_locations > 2E-3, flame_locations 
 flame_locations = flame_locations[valid_indices]
 t = t[valid_indices]
 
-valid_indices = np.where(np.logical_and(t > 0.0, t < 0.85))
+valid_indices = np.where(np.logical_and(t > 0.0, t < 0.68))
 
 flame_locations = flame_locations[valid_indices]
 t = t[valid_indices]
@@ -52,7 +52,7 @@ line, cov = np.polyfit(t, flame_locations, 1, cov=True)
 
 print('Flame Speed : ', line[0]*1000, ' mm/s')
 
-plt.style.use('science')
+# plt.style.use('science')
 
 fig = plt.figure() # (figsize=[4*1.6, 4], constrained_layout=True)
 ax = fig.add_subplot()
@@ -71,9 +71,9 @@ ax.grid(which='minor', color='lightgrey', ls='--')
 
 ax.legend()
 
-fig.set_size_inches(10, 4.5)
+# fig.set_size_inches(10, 4.5)
 # fig.set_dpi(600)
-fig.tight_layout()
+# fig.tight_layout()
 
 # plt.savefig(folder + '/Flame Position.png', dpi=600, transparent=True)
 plt.show()

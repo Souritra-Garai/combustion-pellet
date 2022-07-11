@@ -34,11 +34,11 @@ T = data[1:, 1:]
 N = t.shape[0]
 
 # Number of line plots
-n = 5
+n = 10
 
-plt.style.use(['science', 'high-vis'])
+# plt.style.use(['science'])#, 'high-vis'])
 
-fig = plt.figure()#(figsize=[3*1.6, 3], constrained_layout=True)
+fig = plt.figure(figsize=[3*1.6, 3], constrained_layout=True)
 
 line_plot_axes = fig.add_subplot(1, 1, 1)
 
