@@ -2,6 +2,10 @@
 
 This program solves the PDEs governing flame propagation in a pellet packed with energetic intermetallic particles. The particles of concern are nickel-coated aluminium particles. The reaction kinetics for the combustion of these particles is assumed to be dominated by intermetallic diffusion. The pellet-scale heat equation is coupled to particle-level species diffusion equations and solved using an innovative quasi-implicit scheme. The physico-chemical process is represented in the following figure.
 
+More details are available in the article -
+
+Garai, S., & Sundaram, D. S., A Quasi-Implicit and Coupled Multiscale Scheme for Simulating Combustion of Pellets of Core-Shell Structured Intermetallic Particles. Combustion and Flame 250 (2023) 112650. DOI:[10.1016/j.combustflame.2023.112650](https://doi.org/10.1016/j.combustflame.2023.112650)
+
 ![Flame Propagation](https://github.com/Souritra-Garai/radiation-pellet/blob/master/images/Flame%20Propagation.jpg)
 
 ## Compiling the code
