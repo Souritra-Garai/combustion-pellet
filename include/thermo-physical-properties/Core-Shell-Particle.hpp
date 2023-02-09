@@ -13,10 +13,9 @@
 #define __CORE_SHELL_PARTICLE__
 
 // Required for Substance class
-#include "thermo-physical-properties/Condensed_Species.hpp"
+#include "thermo-physical-properties/Condensed-Species.hpp"
 
-// Required for << operator for printing to file / screen
-#include <ostream>
+#include "thermo-physical-properties/Arrhenius-Diffusivity-Model.hpp"
 
 /**
  * @brief Class to represent Core-Shell Particle with functions to
@@ -51,50 +50,35 @@ class CoreShellParticle
          * @brief Substance present in the core of 
          * the core-shell particle
          */
-        static CondensedSpecies<real_t> *_core_material;
+        static CondensedSpecies<real_t> _core_species;
         /**
          * @brief Substance present in the shell of
          * the core-shell particle
          */
-        static CondensedSpecies<real_t> *_shell_material;
+        static CondensedSpecies<real_t> _shell_species;
         /**
          * @brief Substance formed upon reaction of
          * the core and shell substances
          */
-        static CondensedSpecies<real_t> *_product_material;
+        static CondensedSpecies<real_t> _product_species;
 
         /**
          * @brief Overall radius of the Core-Shell Particle
          */
-        static real_t _overall_radius;
+        static const real_t _overall_radius;
         /**
          * @brief Core radius of the Core-Shell Particle
          */
-        static real_t _core_radius;
+        static const real_t _core_radius;
 
         /**
          * @brief Mass of the Core-Shell Particle
          */
-        static real_t _mass;
+        static const real_t _mass;
+
+		static ArrheniusDiffusivityModel<real_t> _diffusivity_model;
 
     public :
-
-        /**
-         * @brief Set up Core Shell Combustion Particle 
-         * 
-         * @param core_material Substance that forms the core of the core-shell particle
-         * @param shell_material Substance that forms the shell of the core-shell particle
-         * @param product_material Substance that is produced upon reaction of the core and shell materials
-         * @param overall_radius Overall radius of the core-shell particle in m
-         * @param core_radius Radius of the core of the particle in m
-         */
-        static void setUpCoreShellParticle(
-            CondensedSpecies<real_t> &core_material,
-            CondensedSpecies<real_t> &shell_material,
-            CondensedSpecies<real_t> &product_material,
-            real_t overall_radius,
-            real_t core_radius
-        );
 
         /**
          * @brief Function to calculate volume of the core
@@ -140,21 +124,14 @@ class CoreShellParticle
          */
         inline real_t getDensity(real_t temperature)
 		{
-			real_t volume_fraction_core_material    = _mass_fraction_core_material      / _core_material->getDensity(temperature);
-			real_t volume_fraction_shell_material   = _mass_fraction_shell_material     / _shell_material->getDensity(temperature);
-			real_t volume_fraction_product_material = _mass_fraction_product_material   / _product_material->getDensity(temperature);
+			real_t volume_fraction_core_material    = _mass_fraction_core_material      / _core_species.getDensity(temperature);
+			real_t volume_fraction_shell_material   = _mass_fraction_shell_material     / _shell_species.getDensity(temperature);
+			real_t volume_fraction_product_material = _mass_fraction_product_material   / _product_species.getDensity(temperature);
 
-			real_t sum = volume_fraction_core_material + volume_fraction_shell_material + volume_fraction_product_material;
-
-			volume_fraction_core_material       /= sum;
-			volume_fraction_shell_material      /= sum;
-			volume_fraction_product_material    /= sum;
-
-			// \f$ \rho = \sum_{k \in \left\{ Core, Shell, Product \right}} Y_k \rho_k \f$
-			return 1.0 / (
-				volume_fraction_core_material    / _core_material->getDensity(temperature) +
-				volume_fraction_shell_material   / _shell_material->getDensity(temperature) +
-				volume_fraction_product_material / _product_material->getDensity(temperature)
+			return 1 / (
+				volume_fraction_core_material +
+				volume_fraction_shell_material +
+				volume_fraction_product_material
 			);
 		}
 
@@ -167,9 +144,9 @@ class CoreShellParticle
 		{
 			// \f$ c = \sum_{k \in \left\{ Core, Shell, Product \right}} Y_k c_k \f$
 			return 
-				_mass_fraction_core_material    * _core_material->getHeatCapacity(temperature) +
-				_mass_fraction_shell_material   * _shell_material->getHeatCapacity(temperature) +
-				_mass_fraction_product_material * _product_material->getHeatCapacity(temperature); 
+				_mass_fraction_core_material    * _core_species.getHeatCapacity(temperature) +
+				_mass_fraction_shell_material   * _shell_species.getHeatCapacity(temperature) +
+				_mass_fraction_product_material * _product_species.getHeatCapacity(temperature); 
 		}
 
         /**
@@ -181,9 +158,9 @@ class CoreShellParticle
 		{
 			// \f$ \lambda = \sum_{k \in \left\{ Core, Shell, Product \right}} Y_k \lambda_k \f$
 
-			real_t volume_fraction_core_material    = _mass_fraction_core_material      / _core_material->getDensity(temperature);
-			real_t volume_fraction_shell_material   = _mass_fraction_shell_material     / _shell_material->getDensity(temperature);
-			real_t volume_fraction_product_material = _mass_fraction_product_material   / _product_material->getDensity(temperature);
+			real_t volume_fraction_core_material    = _mass_fraction_core_material      / _core_species.getDensity(temperature);
+			real_t volume_fraction_shell_material   = _mass_fraction_shell_material     / _shell_species.getDensity(temperature);
+			real_t volume_fraction_product_material = _mass_fraction_product_material   / _product_species.getDensity(temperature);
 
 			real_t sum = volume_fraction_core_material + volume_fraction_shell_material + volume_fraction_product_material;
 
@@ -192,9 +169,9 @@ class CoreShellParticle
 			volume_fraction_product_material    /= sum;
 
 			return
-				volume_fraction_core_material       * _core_material->getThermalConductivity(temperature)     +
-				volume_fraction_shell_material      * _shell_material->getThermalConductivity(temperature)    +
-				volume_fraction_product_material    * _product_material->getThermalConductivity(temperature)  ;
+				volume_fraction_core_material       * _core_species.getThermalConductivity(temperature)     +
+				volume_fraction_shell_material      * _shell_species.getThermalConductivity(temperature)    +
+				volume_fraction_product_material    * _product_species.getThermalConductivity(temperature)  ;
 		}
 
         /**
@@ -208,17 +185,10 @@ class CoreShellParticle
 			// \f$ h \left( T \right) 
 			// = \sum_{k \in \left\{ Core, Shell, Product \right}} Y_k h_k \left( T \right)\f$
 			return
-				_mass_fraction_core_material    * _core_material->getEnthalpy(temperature) +
-				_mass_fraction_shell_material   * _shell_material->getEnthalpy(temperature) +
-				_mass_fraction_product_material * _product_material->getEnthalpy(temperature);
+				_mass_fraction_core_material    * _core_species.getEnthalpy(temperature) +
+				_mass_fraction_shell_material   * _shell_species.getEnthalpy(temperature) +
+				_mass_fraction_product_material * _product_species.getEnthalpy(temperature);
 		}
-
-        /**
-         * @brief Print the properties of the substance to the given stream
-         * 
-         * @param output_stream Stream to which the properties are printed
-         */
-        void printProperties(std::ostream &output_stream);
 
         /**
          * @brief Determine whether combustion is complete based on
@@ -231,7 +201,6 @@ class CoreShellParticle
          */
         inline bool isCombustionComplete(real_t tolerance = 1E-3)
 		{
-			// printf("%lf, %lf", _mass_fraction_shell_material, _mass_fraction_core_material);
     		return _mass_fraction_core_material < tolerance || _mass_fraction_shell_material < tolerance;
 		}
 
@@ -250,24 +219,5 @@ class CoreShellParticle
 			return _mass_fraction_product_material;
 		}
 };
-
-
-/**
- * @brief Function to calculate mass of core shell type particle
- * 
- * @tparam real_t 
- * @param core_material Substance forming the core of the core shell particle
- * @param shell_material Substance forming the shell of the core shell particle
- * @param overall_radius Overall radius of the core shell particle
- * @param core_radius Radius of the core of the core sheel particle
- * @return real_t Mass of the core sheel particle
- */
-template<typename real_t>
-real_t calcMassCoreShellParticle(
-    CondensedSpecies<real_t> core_material,
-    CondensedSpecies<real_t> shell_material,
-    real_t overall_radius,
-    real_t core_radius
-);
 
 #endif

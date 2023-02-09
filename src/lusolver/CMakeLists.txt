@@ -1,0 +1,1 @@
+add_library(LUSolver LU_Solver.cpp Tridiagonal_Matrix.cpp)

@@ -1,77 +1,36 @@
 #include <iostream>
 
-#include "thermo-physical-properties/Arrhenius_Diffusivity_Model.hpp"
-
 #include "pde-problems/Core-Shell-Diffusion.hpp"
 #include "pde-problems/Pellet-Flame-Propagation.hpp"
 
-#include "utilities/File_Generator.hpp"
-#include "utilities/Keyboard_Interrupt.hpp"
+#include "utilities/File-Generator.hpp"
+#include "utilities/Keyboard-Interrupt.hpp"
 
-#include "species/Argon.hpp"
-#include "species/Aluminium.hpp"
-#include "species/Nickel.hpp"
-#include "species/NickelAluminide.hpp"
-
-#define MAX_ITER 1E6
-
-long double core_radius = 32.5E-6;
-long double overall_radius = 39.5E-6;
-
-long double pellet_length = 6.35E-3;
-long double pellet_diameter = 6.35E-3;
-
-ArrheniusDiffusivityModel<long double> Alawieh_diffusivity(2.56E-6, 102.191E3);
-ArrheniusDiffusivityModel<long double> Du_diffusivity(9.54E-8, 26E3);
+#define MAX_ITER 1E8
 
 void printState(size_t iteration_number, PelletFlamePropagation<long double> &pellet);
 
 int main(int argc, char const *argv[])
 {
-    CoreShellDiffusion<long double>::setUpCoreShellParticle(
-        Aluminium, Nickel, NickelAluminide,
-        overall_radius, core_radius
-    );
+    CoreShellDiffusion<long double>::setUpRadiusArray();
 
-    CoreShellDiffusion<long double>::setGridSize(1001);
-    // CoreShellDiffusion<long double>::setTimeStep(0.0001);
-
-    PelletFlamePropagation<long double>::setPelletDimensions(pellet_length, pellet_diameter);
-    PelletFlamePropagation<long double>::setAmbientHeatLossParameters(0, 0, 0);
-    PelletFlamePropagation<long double>::setTemperatureParameters(933, 298);
-    PelletFlamePropagation<long double>::setDegassingFluid(Argon);
-
-    PelletFlamePropagation<long double>::setGridSize(101);
-    PelletFlamePropagation<long double>::setTimeStep(0.000001);
-    PelletFlamePropagation<long double>::setInfinitesimalChangeTemperature(1);
-    PelletFlamePropagation<long double>::setInitialIgnitionParameters(1500, 0.1 * pellet_length);
-
-    PelletFlamePropagation<long double> combustion_pellet(0.7);
-    combustion_pellet.setDiffusivityModel(Alawieh_diffusivity);
-
-    combustion_pellet.initializePellet();
+    PelletFlamePropagation<long double> combustion_pellet(0.8);
+   
+    combustion_pellet.initializePellet(1900, 0.1);
 
     FileGenerator file_generator;
 
     std::ofstream temperature_file = file_generator.getCSVFile("temperature");
-    std::ofstream config_file = file_generator.getTXTFile("combustion_config");
-
-	combustion_pellet.printConfiguration(config_file);
-    combustion_pellet.printProperties(config_file);
-    config_file.close();
-
-    std::cout << std::endl;
-
+	combustion_pellet.printGridPoints(temperature_file, ',');
+    
     size_t __iter = 1;
 
     printState(0, combustion_pellet);
 
     setUpKeyboardInterrupt();
-    
+
     try
     {
-		combustion_pellet.printGridPoints(temperature_file, ',');
-
         while (!combustion_pellet.isCombustionComplete() && __iter <= MAX_ITER)
         {
             combustion_pellet.setUpEquations();
@@ -79,8 +38,8 @@ int main(int argc, char const *argv[])
 
             if (__iter % 1000 == 0)
             {
-                std::cout << "Iteration # " << __iter << std::endl;
-                // printState(__iter, combustion_pellet);
+                // std::cout << "Iteration # " << __iter << std::endl;
+                printState(__iter, combustion_pellet);
 	            combustion_pellet.printTemperatureProfile(temperature_file, ',');
             }
 

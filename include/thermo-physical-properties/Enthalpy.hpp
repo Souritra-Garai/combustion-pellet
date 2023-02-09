@@ -47,14 +47,14 @@ class Enthalpy
 
         inline real_t getStandardEnthalpy(real_t temperature)
         {
-            temperature /= 1000;
+            temperature *= 1E-3;
 
             // A*t + B*t2/2 + C*t3/3 + D*t4/4 − E/t + F − H
             return 1000.0 * (
                 _A * temperature +
-                _B * pow(temperature, 2) / 2 +
-                _C * pow(temperature, 3) / 3 +
-                _D * pow(temperature, 4) / 4 -
+                _B * pow(temperature, 2) * 0.5 +
+                _C * pow(temperature, 3) * (1./3) +
+                _D * pow(temperature, 4) * 0.25 -
                 _E / temperature +
                 _F
             );

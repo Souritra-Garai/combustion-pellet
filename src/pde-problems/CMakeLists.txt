@@ -1,0 +1,5 @@
+add_library(CoreShellDiffusion Core-Shell-Diffusion.cpp)
+target_link_libraries(CoreShellDiffusion PUBLIC CoreShellParticle LUSolver ReadData)
+
+add_library(PelletFlamePropagation Pellet-Flame-Propagation.cpp)
+target_link_libraries(PelletFlamePropagation PUBLIC PackedPellet CoreShellDiffusion LUSolver ReadData)

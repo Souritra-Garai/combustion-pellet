@@ -1,6 +1,6 @@
 /**
  * @file Phase.hpp
- * @author your name (you@domain.com)
+ * @author Souritra Garai (souritra.garai@iitgn.ac.in)
  * @brief 
  * @version 0.1
  * @date 2021-09-17
@@ -15,25 +15,28 @@
 #include <math.h>
 
 #include "thermo-physical-properties/Enthalpy.hpp"
-#include "thermo-physical-properties/Thermal_Conductivity.hpp"
+#include "thermo-physical-properties/Thermal-Conductivity.hpp"
 
 template<typename real_t>
 class Phase
 {
     private:
 
-        Enthalpy<real_t> &_enthalpy;
+        Enthalpy<real_t> _enthalpy;
 
-        ThermalConductivityQuadraticPolynomial<real_t> &_thermal_conductivity;
+        ThermalConductivityQuadraticPolynomial<real_t> _thermal_conductivity;
     
         const real_t _density;
         
         const real_t _temperature_lower_bound;
         const real_t _temperature_upper_bound;
 
+		static const real_t sharpness_coefficient;
+
         static inline real_t _getSigmoid(real_t x, real_t origin = 0, real_t scale = 0)
         {
-            return 1 / (1 + exp( - scale * (x - origin)));
+            // return 1 / (1 + exp( - scale * (x - origin)));
+			return 0.5 * (1. + tanh(0.5 * scale * (x - origin)));
         }
 
         static inline real_t _getSigmoidDerivative(real_t x, real_t origin = 0, real_t scale = 0)
@@ -94,8 +97,6 @@ class Phase
                 _getSigmoid(temperature, _temperature_upper_bound, sharpness_coefficient)
             );
         }
-
-		static real_t sharpness_coefficient;
 };
 
 #endif

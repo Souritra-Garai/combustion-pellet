@@ -1,0 +1,10 @@
+add_subdirectory(lusolver)
+add_subdirectory(utilities)
+add_subdirectory(pde-problems)
+add_subdirectory(thermo-physical-properties)
+
+add_executable(CoreShellDiffusionEXE Core-Shell-Diffusion.cpp)
+target_link_libraries(CoreShellDiffusionEXE PUBLIC CoreShellDiffusion MyUtilities)
+
+add_executable(PelletFlamePropagationEXE Pellet-Flame-Propagation.cpp)
+target_link_libraries(PelletFlamePropagationEXE PUBLIC PelletFlamePropagation CoreShellDiffusion MyUtilities)

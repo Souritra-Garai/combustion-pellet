@@ -1,35 +1,23 @@
 #include <iostream>
 
-#include <thermo-physical-properties/Phase.hpp>
+#include "thermo-physical-properties/Phase.hpp"
+#include "utilities/Read-Data.hpp"
 
-Enthalpy<double> internal_energy_solid_Al(
-    28.08920,
-   -5.414849,
-    8.560423,
-    3.427370,
-   -0.277375,
-   -9.147187
-);
-
-ThermalConductivityQuadraticPolynomial<double> thermal_conductivity_solid_Al(248.0, -0.067, 0.0);
-
-Phase<double> solid_Al(
-    2700.0,
-    internal_energy_solid_Al,
-    thermal_conductivity_solid_Al,
-    0,
-    933,
-    100
-);
+template<typename real_t> const real_t Phase<real_t>::sharpness_coefficient = 0.1;
 
 int main(int argc, char const *argv[])
 {
-    std::cout << "Temperature (K)," << "Heat Capacity (J / mol-K)," << "Standard Enthalpy (J / mol)," << "Thermal Conductivity (W / m - K)" << std::endl;
+	Phase<long double> nickel_solid_1 = readPhaseData<long double>("data/species/nickel/solid-1");
 
-    for (double temperature = 273; temperature <= 2500; temperature += 1)
-    {
-        std::cout << temperature << ',' << solid_Al.getHeatCapacity(temperature) << ',' << solid_Al.getStandardEnthalpy(temperature) << ',' << solid_Al.getThermalConductivity(temperature) << std::endl;
-    }
+	long double temperature;
+	
+	std::cout << "Enter Temperature (K) : ";
+	std::cin >> temperature;
 
-    return 0;
+	std::cout << "Heat Capacity : " << nickel_solid_1.getHeatCapacity(temperature) << std::endl;
+	std::cout << "Enthalpy : " <<  nickel_solid_1.getStandardEnthalpy(temperature) << std::endl;
+
+	std::cout << "Density : " << nickel_solid_1.getDensity(temperature) << std::endl;
+	
+	return 0;
 }

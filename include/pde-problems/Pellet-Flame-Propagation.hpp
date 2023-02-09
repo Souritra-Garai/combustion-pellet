@@ -17,9 +17,6 @@
 // (to print temperature / other properties to screen / file)
 #include <ostream>
 
-// Required for ArrheniusDiffusivityModel class that returns value of diffusivity
-// for various temperatures
-#include "thermo-physical-properties/Arrhenius_Diffusivity_Model.hpp"
 // Required for PackedPellet class representing thermo-physical properties of 
 // a pellet packed with energetic particles and degassed with an inert
 #include "thermo-physical-properties/Packed-Pellet.hpp"
@@ -60,52 +57,6 @@ template<typename real_t>
 class PelletFlamePropagation : public PackedPellet<real_t>
 {
     private:
-
-		static real_t _kappa;
-
-		static real_t _gamma;
-    
-        /**
-         * @brief Number of grid points in the pellet
-         * including both points on the boundaries
-         */
-        static size_t _m;
-        /**
-         * @brief Distance between consecutive grid points
-         * on the x axis, \f$ \Delta x \f$
-         */
-        static real_t _delta_x;
-
-        /**
-         * @brief Duration of time step, \f$ \Delta t \f$
-         */
-        static real_t _delta_t;
-
-        /**
-         * @brief Infinitesimal change in temperature used to
-         * find derivative of a function with respect to temperature
-         * using first principle
-         */
-        static real_t _delta_T;
-
-        /**
-         * @brief Length \f$ l \f$ of the pellet that is at temperature
-         * \f$ T_{ign,0} \f$ at time \f$ t = 0 \t$
-         * \f$ T \left( t = 0, x \right) = \begin{cases}
-         *      T_{ign,0}   &   0 \leq x \leq l\\
-         *      T_a         &   l < x \leq L
-         * \f$
-         */
-        static real_t _initial_ignition_length;
-        /**
-         * @brief Temperature \f$ T_{ign,0} \f$ of the initial small segment 
-         * of the pellet at time \f$ t = 0 \f$, to start the combustion front propagation
-         * \f$ T \left( t = 0, x \right) = \begin{cases}
-         *      T_{ign,0}   &   0 \leq x \leq l\\
-         *      T_a         &   l < x \leq L
-         * \f$
-         */
-        static real_t _initial_ignition_temperature;
 
         /**
          * @brief Stores the time evolved since the zeroth iteration
@@ -148,18 +99,12 @@ class PelletFlamePropagation : public PackedPellet<real_t>
         LUSolver<real_t> _solver;
 
         /**
-         * @brief Arrhenius Diffusivity model to get value of diffusivity in core-shell
-         * particle at different diffusivities
-         */
-        ArrheniusDiffusivityModel<real_t> _diffusivity_model;
-
-        /**
          * @brief Get the x-coordinate of the grid point
          * 
          * @param index Index of the grid point whose x-coordinate is desired
          * @return real_t x-coordiante of grid point # index
          */
-        real_t getXCoordinate(size_t index);
+        static real_t getXCoordinate(size_t index);
 
         /**
          * @brief Determine if the grid point is inside reaction zone or not
@@ -178,27 +123,6 @@ class PelletFlamePropagation : public PackedPellet<real_t>
          * @param index Index of the grid point where particle needs to be evolved
          */
         void evolveParticleForEnthalpyDerivative(size_t index);
-
-        /**
-         * @brief Get the partial derivative of enthalpy of a particle with respect to temperature
-         * \f$ \left\delimiter0\frac{\partial Y_k}{\partial T}\right|_{x,t} \left(t_n, x_j\right)
-         * \approx \left\delimiter0\frac{\Delta Y_k}{\Delta T}\right|_j^n \f$
-         * 
-         * @param index Index of the grid point where the particle whose enthalpy derivative is desired, is
-         * @return real_t The partial derivative of enthalpy of a particle at the specified grid point 
-         * with respect to temperature
-         */
-        real_t getParticleEnthalpyTemperatureDerivative(size_t index);
-        /**
-         * @brief Get the partial derivative of enthalpy of a particle with respect to time
-         * \left\delimiter0\frac{\partial Y_k}{\partial t}\right|_{x,T} \left(t_n, x_j\right)
-         * \approx \left\delimiter0\frac{\Delta Y_k}{\Delta t}\right|_j^n
-         * 
-         * @param index Index of the grid point where the particle whose enthalpy derivative is desired, is
-         * @return real_t The partial derivative of enthalpy of a particle at the specified grid point 
-         * with respect to time 
-         */
-        real_t getParticleEnthalpyTimeDerivative(size_t index);
 
         /**
          * @brief Calculates the linear expression in terms of Temperature
@@ -236,47 +160,36 @@ class PelletFlamePropagation : public PackedPellet<real_t>
          */
         void updateParticlesState();
 
-		real_t getParticleEnthalpyExplicitDerivative(size_t index);
-
-		real_t getDegassingFluidTransientTermCoefficient(size_t index);
+		real_t getInterstitialGasTransientTermCoefficient(size_t index);
 
     public:
+	
+		static const real_t kappa;
 
-		static void setImplicitnessSourceTerm(real_t gamma);
-
-		static void setImplicitnessDiffusionTerm(real_t theta);
-
+		static const real_t gamma;
+    
         /**
-         * @brief Set the Grid Size to M including boundary points
-         * 
-         * @param M Number of grid points including the boundary points
+         * @brief Number of grid points in the pellet
+         * including both points on the boundaries
          */
-        static void setGridSize(size_t M);
+        static const size_t m;
         /**
-         * @brief Set the time step duration
-         * 
-         * @param delta_t 
+         * @brief Distance between consecutive grid points
+         * on the x axis, \f$ \Delta x \f$
          */
-        static void setTimeStep(real_t delta_t);
+        static const real_t delta_x;
+
         /**
-         * @brief Set the infinitesimal change in temperature used to
+         * @brief Duration of time step, \f$ \Delta t \f$
+         */
+        static const real_t delta_t;
+
+        /**
+         * @brief Infinitesimal change in temperature used to
          * find derivative of a function with respect to temperature
          * using first principle
-         * 
-         * @param delta_T Infinitesimal change in temperature
          */
-        static void setInfinitesimalChangeTemperature(real_t delta_T);
-
-        /**
-         * @brief Set the Initial Ignition Parameters
-         * 
-         * @param initial_ignition_temperature 
-         * @param initial_ignition_length 
-         */
-        static void setInitialIgnitionParameters(
-            real_t initial_ignition_temperature,
-            real_t initial_ignition_length
-        );
+        static const real_t delta_T;
 
         /**
          * @brief Construct a new Pellet Flame Propagation object
@@ -291,19 +204,13 @@ class PelletFlamePropagation : public PackedPellet<real_t>
         ~PelletFlamePropagation();
 
         /**
-         * @brief Set the Diffusivity Model for core-shell diffusion
-         * of the energetic particle
-         * 
-         * @param diffusivity_model ArrheniusDiffusivityModel type object
-         * that returns diffusivity at a given temperature
-         */
-        void setDiffusivityModel(ArrheniusDiffusivityModel<real_t> diffusivity_model);
-
-        /**
          * @brief Initialize the pellet by setting the temperature profile and energetic
          * particles to the initial conditions
          */
-        void initializePellet();
+        void initializePellet(
+			real_t initial_ignition_temperature = 1500.,
+			real_t initial_ignition_length_fraction = 0.1
+		);
 
         /**
          * @brief Set up the discretized energy transport equations
@@ -333,13 +240,6 @@ class PelletFlamePropagation : public PackedPellet<real_t>
          */
         void printTemperatureProfile(std::ostream &output_stream, char delimiter = '\t');
         
-        /**
-         * @brief Print the configuration of the PDE solver to the output stream
-         * 
-         * @param output_stream Output stream where the configuration details will be printed
-         */
-        void printConfiguration(std::ostream &output_stream);
-
         /**
          * @brief Prints the x-coordinates of the grid points in the discretized pellet
          * 

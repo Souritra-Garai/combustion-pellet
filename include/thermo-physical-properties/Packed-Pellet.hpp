@@ -17,11 +17,11 @@
 #include <ostream>
 
 // Required for IdealGas class
-#include "thermo-physical-properties/Ideal_Gas.hpp"
+#include "thermo-physical-properties/Ideal-Gas.hpp"
 // Required for CoreShellParticle class
 #include "thermo-physical-properties/Core-Shell-Particle.hpp"
 // Required for functions to calculate heat conductivity
-#include "thermo-physical-properties/Thermal_Conductivity_Pellet.hpp"
+#include "thermo-physical-properties/Thermal-Conductivity-Pellet.hpp"
 
 /**
  * @brief Class to represent thermo - physical properties of a cylindrical
@@ -33,16 +33,16 @@
 template<typename real_t>
 class PackedPellet
 {
-    protected :
+    public :
 
         /**
          * @brief Length of cylindrical pellet in \f$ m \f$
          */
-        static real_t _length;
+        static const real_t length;
         /**
          * @brief Diameter of cylindrical pellet in \f$ m \f$
          */
-        static real_t _diameter;
+        static const real_t diameter;
 
         /**
          * @brief Convective heat transfer coefficient
@@ -50,47 +50,42 @@ class PackedPellet
          * convection at the curved surface of the pellet.
 		 * Units - \f$ W / m^2 - K \f$
          */
-        static real_t _convective_heat_transfer_coefficient_curved_surface;
+        static const real_t convective_heat_transfer_coefficient_curved_surface;
 		/**
          * @brief Convective heat transfer coefficient
          * for heat loss to surrounding atmosphere via 
          * convection at the flat surface of the pellet.
 		 * Units - \f$ W / m^2 - K \f$
          */
-        static real_t _convective_heat_transfer_coefficient_flat_surface;
+        static const real_t convective_heat_transfer_coefficient_flat_surface;
         /**
          * @brief Emissivity for the surface of the cylinder
          * through which radiative heat loss to the surrounding
          * atmosphere occurs
          */
-        static real_t _radiative_emissivity;
+        static const real_t radiative_emissivity;
         
         /**
          * @brief Temperature of surrounding atmosphere in \f$ K \f$
          */
-        static real_t _ambient_temperature;
-
-        /**
-         * @brief Temperature at which reactions begin in the pellet
-         */
-        static real_t _ignition_temperature;
+        static const real_t ambient_temperature;
 
         /**
          * @brief Fluid (gas) filling the voids of the packed pellet
          */
-        static IdealGas<real_t> *_degassing_fluid;
+        static IdealGas<real_t> interstitial_gas;
 
         /**
          * @brief Fraction of the pellet volume occupied by
          * the degassing fluid
          */
-        const real_t _degassing_fluid_volume_fractions;
+        const real_t interstitial_volume_fractions;
         
         /**
          * @brief Density of particle in the pellet, i.e.,
          * \f$ \rho_P \phi_P \f$ in \f$ kg / m^3 \f$
          */
-		const real_t _overall_particle_density;
+		const real_t overall_particle_density;
 
         /**
          * @brief Calculates the overall density of particles in the pellet,
@@ -102,8 +97,6 @@ class PackedPellet
          */
         static real_t calcOverallParticleDensity(real_t particle_volume_fractions);
 
-    public :
-
         /**
          * @brief Construct a new Packed Pellet object
          * 
@@ -111,61 +104,6 @@ class PackedPellet
          * core-shell type combustion particles
          */
         PackedPellet(real_t particle_volume_fractions);
-
-        /**
-         * @brief Set the dimensions of the cylindrical pellet
-         * 
-         * @param length Length of the cylindrical pellet
-         * @param diameter Diameter of the cylindrical pellet
-         */
-        static void setPelletDimensions(
-            real_t length,
-            real_t diameter
-        );
-
-        /**
-         * @brief Set the parameters for Heat Loss to the ambient
-         * 
-         * @param convective_heat_transfer_coefficient Convective heat transfer 
-         * coefficient for heat loss to surrounding atmosphere via convection
-         * @param radiative_emissivity Emissivity for the surface of the cylinder
-         * through which radiative heat loss to the surrounding atmosphere occurs
-         */
-
-		/**
-		 * @brief Set the parameters for Heat Loss to the ambient
-		 * 
-		 * @param convective_heat_transfer_coefficient_curved_surface Convective heat transfer 
-         * coefficient for heat loss to surrounding atmosphere via convection at the curved surface
-		 * @param convective_heat_transfer_coefficient_flat_surface Convective heat transfer 
-         * coefficient for heat loss to surrounding atmosphere via convection at the flat surface
-		 * @param radiative_emissivity Emissivity for the surface of the cylinder
-         * through which radiative heat loss to the surrounding atmosphere occurs
-		 */
-        static void setAmbientHeatLossParameters(
-            real_t convective_heat_transfer_coefficient_curved_surface,
-			real_t convective_heat_transfer_coefficient_flat_surface,
-            real_t radiative_emissivity
-        );
-
-        /**
-         * @brief Set the Temperature Parameters for the pellet
-         * 
-         * @param ignition_temperature Temperature at which reactions of energetic 
-         * particles begin inside the pellet
-         * @param ambient_temperature Temperature of surrounding atmosphere
-         */
-        static void setTemperatureParameters(
-            real_t ignition_temperature,
-            real_t ambient_temperature
-        );
-
-        /**
-         * @brief Set the fluid that fills the voids in the pellet
-         * 
-         * @param degassing_fluid Fluid degassing the pellet
-         */
-        static void setDegassingFluid(IdealGas<real_t> &degassing_fluid);
 
         /**
          * @brief Get he mean heat conductivity at a point in the pellet
@@ -180,18 +118,11 @@ class PackedPellet
 		{    
 			// Return the heat conductivity determined using Bruggeman model
 			return getThermalConductivityMEB(
-				_degassing_fluid_volume_fractions,
-				_degassing_fluid->getThermalConductivity(temperature),
+				interstitial_volume_fractions,
+				interstitial_gas.getThermalConductivity(temperature),
 				ptr_2_particle->getThermalConductivity(temperature)
 			);
 		}
-
-        /**
-         * @brief Print the properties of the pellet (evaluated at the initial condition)
-         * to the output stream
-         * @param output_stream Stream to which the properties are to be printed 
-         */
-        void printProperties(std::ostream &output_stream);
 };
 
 #endif

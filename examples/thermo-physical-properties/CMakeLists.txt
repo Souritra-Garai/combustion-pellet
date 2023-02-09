@@ -1,0 +1,20 @@
+add_executable(EnthalpyExample Enthalpy_Example.cpp)
+target_link_libraries(EnthalpyExample PUBLIC ReadData)
+
+add_executable(ThermalConductivityExample Thermal-Conductivity_Example.cpp)
+target_link_libraries(ThermalConductivityExample PUBLIC ReadData)
+
+add_executable(IdealGasExample Ideal-Gas_Example.cpp)
+target_link_libraries(IdealGasExample PUBLIC ReadData)
+
+add_executable(PhaseExample Phase_Example.cpp)
+target_link_libraries(PhaseExample PUBLIC ReadData)
+
+add_executable(CondensedSpeciesExample Condensed-Species_Example.cpp)
+target_link_libraries(CondensedSpeciesExample PUBLIC ReadData)
+
+add_executable(CoreShellParticleExample Core-Shell-Particle_Example.cpp)
+target_link_libraries(CoreShellParticleExample PUBLIC CoreShellParticle ReadData)
+
+add_executable(PackedPelletExample Packed-Pellet_Example.cpp)
+target_link_libraries(PackedPelletExample PUBLIC PackedPellet)

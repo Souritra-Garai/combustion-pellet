@@ -1,41 +1,19 @@
 #include <iostream>
 #include <chrono>
 
-#include "thermo-physical-properties/Arrhenius_Diffusivity_Model.hpp"
-
 #include "pde-problems/Core-Shell-Diffusion.hpp"
 #include "pde-problems/Pellet-Flame-Propagation.hpp"
 
-#include "utilities/File_Generator.hpp"
-#include "utilities/Program_Options.hpp"
-#include "utilities/Keyboard_Interrupt.hpp"
-
-#include "species/Argon.hpp"
-#include "species/Aluminium.hpp"
-#include "species/Nickel.hpp"
-#include "species/NickelAluminide.hpp"
+#include "utilities/File-Generator.hpp"
+#include "utilities/Program-Options.hpp"
+#include "utilities/Keyboard-Interrupt.hpp"
 
 #define MAX_ITER 1E6
 
-long double delta_t = 1E-6;
-
-size_t num_grid_points_pellet = 1001;
-size_t num_grid_points_particle = 1001;
-
-long double delta_T = 0.001;
-
-long double core_radius = 32.5E-6;
-long double overall_radius = 39.5E-6;
-
-long double pellet_length = 6.35E-3;
-long double pellet_diameter = 6.35E-3;
-
-long double diffusion_term_implicitness = 0.5;
-long double source_term_implicitness = 0.5;
-
-ArrheniusDiffusivityModel<long double> diffusivity_model(2.56E-6, 102.191E3);
-
 long double phi = 0.7;
+
+long double initial_ignition_temperature = 1500;
+long double initial_ignition_length_fraction = 0.1;
 
 void parseProgramOptions(int argc, char const *argv[]);
 
@@ -43,38 +21,18 @@ int main(int argc, char const *argv[])
 {
 	parseProgramOptions(argc, argv);
 
-    CoreShellDiffusion<long double>::setUpCoreShellParticle(
-        Aluminium, Nickel, NickelAluminide,
-        overall_radius, core_radius
-    );
-
-    CoreShellDiffusion<long double>::setGridSize(num_grid_points_particle);
-    // CoreShellDiffusion<long double>::setTimeStep(0.0001);
-
-    PelletFlamePropagation<long double>::setPelletDimensions(pellet_length, pellet_diameter);
-    PelletFlamePropagation<long double>::setAmbientHeatLossParameters(0, 0, 0);
-    PelletFlamePropagation<long double>::setTemperatureParameters(933, 298);
-    PelletFlamePropagation<long double>::setDegassingFluid(Argon);
-
-    PelletFlamePropagation<long double>::setGridSize(num_grid_points_pellet);
-    PelletFlamePropagation<long double>::setTimeStep(delta_t);
-    PelletFlamePropagation<long double>::setInfinitesimalChangeTemperature(delta_T);
-    PelletFlamePropagation<long double>::setInitialIgnitionParameters(1500, 0.1 * pellet_length);
-
-	PelletFlamePropagation<long double>::setImplicitnessSourceTerm(source_term_implicitness);
-	PelletFlamePropagation<long double>::setImplicitnessDiffusionTerm(diffusion_term_implicitness);
+    CoreShellDiffusion<long double>::setUpRadiusArray();
 
 	PelletFlamePropagation<long double> combustion_pellet(phi);
-    combustion_pellet.setDiffusivityModel(diffusivity_model);
-    combustion_pellet.initializePellet();
+
+    combustion_pellet.initializePellet(
+		initial_ignition_temperature,
+		initial_ignition_length_fraction
+	);
 
     FileGenerator file_generator;
 
     std::ofstream temperature_file = file_generator.getCSVFile("temperature");
-    std::ofstream config_file = file_generator.getTXTFile("combustion_config");
-
-	combustion_pellet.printConfiguration(config_file);
-    combustion_pellet.printProperties(config_file);
 
     std::cout << "Initialized Pellet. Starting iterations.\nPress Ctrl+C to stop...\n\n";
 
@@ -88,7 +46,7 @@ int main(int argc, char const *argv[])
     {
 		combustion_pellet.printGridPoints(temperature_file, ',');
 
-		size_t step = 0.001 / delta_t;
+		size_t step = 0.001 / PelletFlamePropagation<long double>::delta_t;
 
 		bool combustion_not_complete = true;
 
@@ -106,7 +64,6 @@ int main(int argc, char const *argv[])
 
 			combustion_pellet.printTemperatureProfile(temperature_file, ',');
 			std::cout << "Iterations Completed : " << i << "\n";
-
 		}
 
     	std::cout << "\nPellet combustion complete.\n";
@@ -124,9 +81,11 @@ int main(int argc, char const *argv[])
 
 	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
-	config_file << "\n\nTime difference = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "[ms]" << std::endl;
-	config_file << "Time per iteration = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() / i << "[ms]" << std::endl;
-    config_file.close();
+	std::ofstream time_file = file_generator.getTXTFile("runtime");
+
+	time_file << "Time difference\t= " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " [ms]" << std::endl;
+	time_file << "Time per iteration\t= " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() / i << " [ms]" << std::endl;
+    time_file.close();
 
     combustion_pellet.printTemperatureProfile(temperature_file, ',');
     temperature_file.close();
@@ -142,47 +101,20 @@ void parseProgramOptions(int argc, char const *argv[])
 
 	opt.overview	= "Flame Propagation in a pellet packed with energetic intermetallic core-shell particles.";
 	opt.syntax		= "Pellet-Flame-Propagation [OPTIONS]";
-	opt.example		= "Pellet-Flame-Propagation --phi 0.68\n\n";
-	opt.footer		= "Developed by Souritra Garai, 2021-22.\n";
+	opt.example		= "Pellet-Flame-Propagation -phi 0.68\n\n";
+	opt.footer		= "Developed by Souritra Garai, 2021-23.\n";
 
 	setHelpOption(opt);
-	setSharpnessCoefficientOption(opt);
-	setParticleGridSizeOption(opt);
-	setPelletGridSizeOption(opt);
-	setTimeStepOption(opt);
-	setTemperatureStepOption(opt);
-	setDiffusivityModelOption(opt);
-	setCoreRadiusOption(opt);
-	setOverallRadiusOption(opt);
-	setLengthOption(opt);
-	setDiameterOption(opt);
-	setGammaOption(opt);
-	setKappaOption(opt);
 	setPhiOption(opt);
+	setIgnitionTemperatureOption(opt);
+	setIgnitionLengthOption(opt);
 
 	opt.parse(argc, argv);
 
 	displayHelpOption(opt);
 
-	Phase<long double>::sharpness_coefficient = getSharpnessCoefficientOption(opt, Phase<long double>::sharpness_coefficient);
-	
-	delta_T = getTemperatureStepOption(opt, delta_T);
-
-	num_grid_points_particle = getParticleGridSizeOption(opt, num_grid_points_particle);
-	num_grid_points_pellet   = getPelletGridSizeOption(opt, num_grid_points_pellet);
-
-	delta_t = getTimeStepOption(opt, delta_t);
-
-	getDiffusivityModelOption(opt, diffusivity_model);
-
-	core_radius = getCoreRadiusOption(opt, core_radius);
-	overall_radius = getOverallRadiusOption(opt, overall_radius);
-
-	pellet_length = getLengthOption(opt, pellet_length);
-	pellet_diameter = getDiameterOption(opt, pellet_diameter);
-
-	diffusion_term_implicitness = getKappaOption(opt, diffusion_term_implicitness);
-	source_term_implicitness = getGammaOption(opt, source_term_implicitness);
-
 	phi = getPhiOption(opt, phi);
+
+	initial_ignition_temperature = getIgnitionTemperatureOption(opt, initial_ignition_temperature);
+	initial_ignition_length_fraction = getIgnitionLengthOption(opt, initial_ignition_length_fraction);
 }

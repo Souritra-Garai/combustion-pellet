@@ -17,6 +17,8 @@
 // Required for definition of QRSolver class
 #include "lusolver/LU_Solver.hpp"
 
+#include "iostream"
+
 /**
  * @brief Class with functionalities to perform diffusion in a
  * spherical core shell particle
@@ -30,24 +32,6 @@ template<typename real_t>
 class CoreShellDiffusion : public CoreShellParticle<real_t>
 {
     private :
-
-        /**
-         * @brief Duration of interval between consecutive time steps
-         */
-        static real_t _delta_t;
-
-        /**
-         * @brief Number of grid points along the radial axis
-         * includeing the first point at \f$ r = 0 \f$ and last point
-         * at \f$ r = r_P \f$
-         */
-        static size_t _n;
-        /**
-         * @brief Distance between consecutive grid points
-         */
-        static real_t _delta_r;
-
-		static real_t *radial_coordinate_sqr;
 
         /**
          * @brief Array to store molar concentration of substance A in \f$ mol/m^3 \f$,
@@ -71,6 +55,9 @@ class CoreShellDiffusion : public CoreShellParticle<real_t>
          */
         LUSolver<real_t> _solver_B;
 
+		static real_t *radial_coordinate_sqr;
+		static real_t *radial_ratio;
+
         /**
          * @brief Get the Radial Coordinate of the grid point 
          * at the specified index
@@ -78,7 +65,7 @@ class CoreShellDiffusion : public CoreShellParticle<real_t>
          * @return real_t Radial distance of the grid point from origin in \f$ m \f$
          */
         static real_t getRadialCoordinate(size_t index);
-        
+
         /**
          * @brief Calculate reaction mass fractions of the substances A, B and AB
          * in the particle and set the mass fraction variables to the calculated values
@@ -115,6 +102,22 @@ class CoreShellDiffusion : public CoreShellParticle<real_t>
 
     public :
 
+		/**
+         * @brief Duration of interval between consecutive time steps
+         */
+        static const real_t delta_t;
+
+        /**
+         * @brief Number of grid points along the radial axis
+         * includeing the first point at \f$ r = 0 \f$ and last point
+         * at \f$ r = r_P \f$
+         */
+        static const size_t n;
+        /**
+         * @brief Distance between consecutive grid points
+         */
+        static const real_t delta_r;
+
         /**
          * @brief Construct a new Core Shell Diffusion object
          */
@@ -129,19 +132,7 @@ class CoreShellDiffusion : public CoreShellParticle<real_t>
          * @param n Number of grid points to consider,
          * including the points \f$ r = 0 \f$ and \f$ r = r_P \f$
          */
-        static void setGridSize(size_t n);
-        /**
-         * @brief Set the duration of time step interval
-         * @param Delta_t Duration of time step intervals in \f$ s \f$
-         */
-        static void setTimeStep(real_t Delta_t);
-
-        /**
-         * @brief Print the PDE solver configuration to the output stream
-         * 
-         * @param output_stream Stream to which configuration is printed
-         */
-        static void printConfiguration(std::ostream &output_stream);
+        static void setUpRadiusArray();
 
         /**
          * @brief Initialize the concentration of the species in the core and shell
@@ -153,12 +144,12 @@ class CoreShellDiffusion : public CoreShellParticle<real_t>
          * @brief Set up the matrix equation for diffusion over one time step
          * @param diffusivity Value of diffusivity in \f$ m^2 / s \f$
          */
-        void setUpEquations(real_t diffusivity);
+        inline void setUpEquations(real_t diffusivity) { setUpEquations(diffusivity, *this);}
 		/**
          * @brief Set up the matrix equation for diffusion over one time step
-         * @param diffusivity Value of diffusivity in \f$ m^2 / s \f$
+         * @param temperature Temperature of core-shell particle in \f$ K \f$
          */
-        void setUpEquations(real_t diffusivity, CoreShellDiffusion<real_t> &diffusion_problem);
+        void setUpEquations(real_t temperature, CoreShellDiffusion<real_t> &diffusion_problem);
 
         /**
          * @brief Solve the matrix equations and update the particle state internally

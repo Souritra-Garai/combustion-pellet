@@ -1,0 +1,5 @@
+add_executable(CoreShellDiffusionExample Core-Shell-Diffusion_Example.cpp)
+target_link_libraries(CoreShellDiffusionExample PUBLIC CoreShellDiffusion ReadData)
+
+add_executable(PelletFlamePropagationExample Pellet-Flame-Propagation_Example.cpp)
+target_link_libraries(PelletFlamePropagationExample PUBLIC PelletFlamePropagation MyUtilities)
