@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <chrono>
 
 #include "species/Aluminium.cuh"
 #include "species/Argon.cuh"
@@ -11,7 +12,7 @@
 #include "utilities/Program_Options.cuh"
 #include "utilities/Keyboard_Interrupt.hpp"
 
-#define MAX_ITER 1E8
+#define MAX_ITER 1E6
 
 double delta_t = 5E-6;
 size_t num_grid_points_particle = 1001;
@@ -90,7 +91,6 @@ int main(int argc, char const *argv[])
 	cudaMemcpyFromSymbol(&diffusivity_parameters, ::diffusivity_parameters, sizeof(double2));
 
 	PelletFlamePropagation::printConfiguration(config_file, phi, diffusivity_parameters);
-	fclose(config_file);
 
 	double time = 0.0;
 	double temperature_array_host[num_grid_points_pellet];
@@ -103,6 +103,10 @@ int main(int argc, char const *argv[])
 
 	setUpKeyboardInterrupt();
 
+	size_t i = 0;
+
+	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+	
 	try
 	{
 		size_t step = 0.001 / delta_t;
@@ -111,7 +115,7 @@ int main(int argc, char const *argv[])
 
 		evolveMainParticles();
 
-		for (size_t i = 0; i < MAX_ITER && !combustion_complete;)
+		for (; i < MAX_ITER && !combustion_complete;)
 		{
 			size_t i_steps = i + step;
 
@@ -146,6 +150,12 @@ int main(int argc, char const *argv[])
 
 	fclose(temperature_file);
 
+	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+
+	fprintf(config_file, "\n\nTime difference = %f ms\n", (double) std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count());
+	fprintf(config_file, "Time difference = %f ms\n", (double) std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() / i);
+	fclose(config_file);
+
 	deallocateParticles<<<num_grid_points_pellet, 1>>>();
 	deallocateMemory<<<1,1>>>();
 
@@ -179,7 +189,7 @@ __global__ void allocateMemory(
 
 	PackedPellet::setPelletDimensions(length, diameter);
 	PackedPellet::setDegassingFluid(argon);
-	PackedPellet::setHeatLossParameters(12.182, 11.340, 0.25);
+	PackedPellet::setHeatLossParameters(0, 0, 0);
 	PackedPellet::setTemperatureParameters(298.15, 900.0);
 
 	PelletFlamePropagation::setNumGridPoints(num_grid_points_pellet);
@@ -356,17 +366,17 @@ __host__ void parseProgramOptions(int argc, char const *argv[])
 	cudaMemcpyToSymbol(::diffusivity_parameters, &parameters, sizeof(double2));
 	cudaMemcpyToSymbol(::diffusivity_parameters_low, &parameters_low, sizeof(double2));
 
-	double core_radius = 43E-6;
+	double core_radius = 32.5E-6;
 	core_radius = getCoreRadiusOption(opt, core_radius);
 	cudaMemcpyToSymbol(::core_radius, &core_radius, sizeof(double));
-	double overall_radius = 50E-6;
+	double overall_radius = 39.5E-6;
 	overall_radius = getOverallRadiusOption(opt, overall_radius);
 	cudaMemcpyToSymbol(::overall_radius, &overall_radius, sizeof(double));
 
-	double pellet_length = 20E-3;
+	double pellet_length = 6.35E-3;
 	pellet_length = getLengthOption(opt, pellet_length);
 	cudaMemcpyToSymbol(::length, &pellet_length, sizeof(double));
-	double pellet_diameter = 10E-3;
+	double pellet_diameter = 6.35E-3;
 	pellet_diameter = getDiameterOption(opt, pellet_diameter);
 	cudaMemcpyToSymbol(::diameter, &pellet_diameter, sizeof(double));
 
