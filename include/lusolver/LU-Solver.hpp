@@ -1,9 +1,9 @@
 #ifndef __LU_SOLVER__
 #define __LU_SOLVER__
 
-#include "lusolver/Tridiagonal_Matrix.hpp"
+#include "math/Data-Type.hpp"
+#include "lusolver/Tridiagonal-Matrix.hpp"
 
-template<typename real_t>
 class LUSolver
 {
 	private:
@@ -11,7 +11,7 @@ class LUSolver
 		// size of x vector for the linear algebra problem A.x = b
 		const unsigned int _n;
 
-		TridiagonalMatrix<real_t> _A;
+		TridiagonalMatrix _A;
 
 		// pointer to array of real type numbers representing
 		// constant vector b in the matrix equation
@@ -28,7 +28,8 @@ class LUSolver
 				Lower_Matrix_Diagonal_less_1 = _A.getElement(i, i-1) / _A.getElement(i-1, i-1);
 
 				// Set u_{i,i} = a_{i,i} - a_{i-1,i} * l_(i,i-1)
-				_A.setElement(i, i,
+				_A.setElement(
+					i, i,
 					_A.getElement(i, i) - _A.getElement(i-1, i) * Lower_Matrix_Diagonal_less_1
 				);
 				

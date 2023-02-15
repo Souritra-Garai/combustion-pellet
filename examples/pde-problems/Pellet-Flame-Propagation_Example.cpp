@@ -8,13 +8,13 @@
 
 #define MAX_ITER 1E8
 
-void printState(size_t iteration_number, PelletFlamePropagation<long double> &pellet);
+void printState(size_t iteration_number, PelletFlamePropagation &pellet);
 
 int main(int argc, char const *argv[])
 {
-    CoreShellDiffusion<long double>::setUpRadiusArray();
+    CoreShellDiffusion::setUpRadiusArray();
 
-    PelletFlamePropagation<long double> combustion_pellet(0.8);
+    PelletFlamePropagation combustion_pellet(0.8);
    
     combustion_pellet.initializePellet(1900, 0.1);
 
@@ -38,7 +38,6 @@ int main(int argc, char const *argv[])
 
             if (__iter % 1000 == 0)
             {
-                // std::cout << "Iteration # " << __iter << std::endl;
                 printState(__iter, combustion_pellet);
 	            combustion_pellet.printTemperatureProfile(temperature_file, ',');
             }
@@ -65,16 +64,16 @@ int main(int argc, char const *argv[])
     combustion_pellet.printTemperatureProfile(temperature_file, ',');
     temperature_file.close();
 
-	CoreShellDiffusion<long double>::deallocateRadiusArray();
+	CoreShellDiffusion::deallocateRadiusArray();
 
     return 0;
 }
 
-void printState(size_t iteration_number, PelletFlamePropagation<long double> &pellet)
+void printState(size_t iteration_number, PelletFlamePropagation &pellet)
 {
-    std::cout << "Iteration # " << iteration_number << "\t";
-    
-    pellet.printTemperatureProfile(std::cout);
+	std::cout << "Iteration # " << iteration_number << "\t";
 
-    std::cout << std::endl;
+	pellet.printTemperatureProfile(std::cout);
+
+	std::cout << std::endl;
 }

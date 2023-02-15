@@ -1,0 +1,2 @@
+add_library(PelletFlamePropagation Utilities.cpp Equations.cpp)
+target_link_libraries(PelletFlamePropagation PUBLIC PackedPellet CoreShellDiffusion LUSolver ReadData)

@@ -1,4 +1,4 @@
-#include "lusolver/Tridiagonal_Matrix.hpp"
+#include "lusolver/Tridiagonal-Matrix.hpp"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,9 +8,9 @@ int main(int argc, char const *argv[])
 {
     const unsigned int N = 5;
 
-    long double x[N], b[N];
+    real_t x[N], b[N];
 
-	TridiagonalMatrix<long double> A(N);
+	TridiagonalMatrix A(N);
 
     srand(time(0));
 

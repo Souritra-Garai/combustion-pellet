@@ -1,18 +1,20 @@
 #include <iostream>
-#include "thermo-physical-properties/Enthalpy.hpp"
+#include "math/Shomate-Expression.hpp"
 #include "utilities/Read-Data.hpp"
 
 int main(int argc, char const *argv[])
 {
-	Enthalpy<long double> enthalpy_Ni = readEnthalpyData<long double>("data/species/nickel/solid-1");
+	ShomateExpression enthalpy_Ni = readShomateExpressionCoefficients("data/species/nickel/solid-1");
 
 	long double temperature;
 
 	std::cout << "Enter Temperature (K) : ";
 	std::cin >> temperature;
 
-	std::cout << "Heat Capacity : " << enthalpy_Ni.getHeatCapacity(temperature) << std::endl;
-	std::cout << "Enthalpy : " <<  enthalpy_Ni.getStandardEnthalpy(temperature) << std::endl;
+	temperature = ShomateExpression::normalizeInput(temperature);
+
+	std::cout << "Heat Capacity :\t" << enthalpy_Ni.evaluateExpression(temperature) << "\tJ/mol-K" << std::endl;
+	std::cout << "Enthalpy :\t" <<  enthalpy_Ni.evaluateExpressionIntegral(temperature) << "\tkJ/mol-K" << std::endl;
 	
 	return 0;
 }

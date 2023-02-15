@@ -1,7 +1,8 @@
 #ifndef __TRIDIAGONAL_MATRIX__
 #define __TRIDIAGONAL_MATRIX__
 
-template<typename real_t>
+#include "math/Data-Type.hpp"
+
 class TridiagonalMatrix
 {
 	private:

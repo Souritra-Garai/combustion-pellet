@@ -9,7 +9,8 @@
  * 
  */
 
-#include "lusolver/LU_Solver.hpp"
+#include "math/Data-Type.hpp"
+#include "lusolver/LU-Solver.hpp"
 
 #include <iostream>
 #include <stdlib.h>
@@ -19,9 +20,9 @@ int main(int argc, char const *argv[])
 {
     const unsigned int N = 10000;
 
-    long double x[N], b[N];
+    real_t x[N], b[N];
 
-    TridiagonalMatrix<long double> A(N);
+    TridiagonalMatrix A(N);
 
     srand(time(0));
 
@@ -49,7 +50,7 @@ int main(int argc, char const *argv[])
 
     A.multiply(x, b);
 
-    LUSolver<long double> my_solver(N);
+    LUSolver my_solver(N);
 
     my_solver.setEquationFirstRow(A.getElement(0, 0), A.getElement(0, 1), b[0]);
 
@@ -62,11 +63,11 @@ int main(int argc, char const *argv[])
 
 	// my_solver.printMatrixEquation();
 
-    long double x_soln[N];
+    real_t x_soln[N];
 
     my_solver.getSolution(x_soln);
 
-    long double MSE = 0;
+    real_t MSE = 0;
 
     for (int i = 0; i < N; i++) MSE += (x[i] - x_soln[i]) * (x[i] - x_soln[i]);
 

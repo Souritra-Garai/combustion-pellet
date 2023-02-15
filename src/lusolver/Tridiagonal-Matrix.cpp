@@ -1,21 +1,18 @@
-#include "lusolver/Tridiagonal_Matrix.hpp"
+#include "lusolver/Tridiagonal-Matrix.hpp"
 
 #include <iostream>
 
-template<typename real_t>
-TridiagonalMatrix<real_t>::TridiagonalMatrix(unsigned int n) : _n(n)
+TridiagonalMatrix::TridiagonalMatrix(unsigned int n) : _n(n)
 {
 	_array = new real_t[3*n - 2];
 }
 
-template<typename real_t>
-TridiagonalMatrix<real_t>::~TridiagonalMatrix()
+TridiagonalMatrix::~TridiagonalMatrix()
 {
 	delete [] _array;
 }
 
-template<typename real_t>
-void TridiagonalMatrix<real_t>::printMatrix()
+void TridiagonalMatrix::printMatrix()
 {
 	unsigned int i, j;
 
@@ -46,8 +43,7 @@ void TridiagonalMatrix<real_t>::printMatrix()
 	std::cout << std::endl;
 }
 
-template<typename real_t>
-void TridiagonalMatrix<real_t>::multiply(real_t *x, real_t *b)
+void TridiagonalMatrix::multiply(real_t *x, real_t *b)
 {
 	b[0] = getElement(0, 0) * x[0] + getElement(0, 1) * x[1];
 
@@ -57,7 +53,3 @@ void TridiagonalMatrix<real_t>::multiply(real_t *x, real_t *b)
 
 	b[_n-1] = getElement(_n-1, _n-2) * x[_n-2] + getElement(_n-1, _n-1) * x[_n-1];
 }
-
-template class TridiagonalMatrix<long double>;
-template class TridiagonalMatrix<double>;
-template class TridiagonalMatrix<float>;

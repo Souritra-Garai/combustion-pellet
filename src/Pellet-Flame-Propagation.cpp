@@ -21,9 +21,9 @@ int main(int argc, char const *argv[])
 {
 	parseProgramOptions(argc, argv);
 
-    CoreShellDiffusion<long double>::setUpRadiusArray();
+    CoreShellDiffusion::setUpRadiusArray();
 
-	PelletFlamePropagation<long double> combustion_pellet(phi);
+	PelletFlamePropagation combustion_pellet(phi);
 
     combustion_pellet.initializePellet(
 		initial_ignition_temperature,
@@ -31,6 +31,16 @@ int main(int argc, char const *argv[])
 	);
 
     FileGenerator file_generator;
+
+	std::ofstream program_input_file = file_generator.getTXTFile("program-input");
+
+	program_input_file << "Pellet\n\nParticle Volume Fractions:\t" << phi << "\n";
+	program_input_file << "Density:\t" << combustion_pellet.overall_particle_density + combustion_pellet.interstitial_volume_fractions * PackedPellet::interstitial_gas.getDensity(298.15) << " kg/m3\n\n";
+	program_input_file << "Initial Ignition Temperature:\t" << initial_ignition_temperature << " K\n";
+	program_input_file << "Initial Ignition Length:\t" << initial_ignition_length_fraction * PackedPellet::length << " m\n";
+	program_input_file << "Initial Ignition Length Fraction:\t" << initial_ignition_length_fraction << "\n";
+
+	program_input_file.close();
 
     std::ofstream temperature_file = file_generator.getCSVFile("temperature");
 
@@ -46,7 +56,7 @@ int main(int argc, char const *argv[])
     {
 		combustion_pellet.printGridPoints(temperature_file, ',');
 
-		size_t step = 0.001 / PelletFlamePropagation<long double>::delta_t;
+		size_t step = 0.001 / PelletFlamePropagation::delta_t;
 
 		bool combustion_not_complete = true;
 
@@ -90,7 +100,7 @@ int main(int argc, char const *argv[])
     combustion_pellet.printTemperatureProfile(temperature_file, ',');
     temperature_file.close();
 
-	CoreShellDiffusion<long double>::deallocateRadiusArray();
+	CoreShellDiffusion::deallocateRadiusArray();
 
     return 0;
 }

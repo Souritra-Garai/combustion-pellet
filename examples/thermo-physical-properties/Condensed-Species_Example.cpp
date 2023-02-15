@@ -2,20 +2,22 @@
 #include "thermo-physical-properties/Condensed-Species.hpp"
 #include "utilities/Read-Data.hpp"
 
-template<typename real_t> const real_t Phase<real_t>::sharpness_coefficient = 0.1;
+const real_t Phase::sharpness_coefficient = 0.1;
 
-CondensedSpecies<float> nickel = readCondensedSpeciesData<float>("data/species/nickel");
+CondensedSpecies nickel = readCondensedSpeciesData("data/species/nickel");
 
 int main(int argc, char const *argv[])
 {
-	float temperature;
+	real_t temperature;
 
+	std::cout << "Density :\t" << nickel.getDensity(298.15) << "\tkg/m3" << std::endl;
 	std::cout << "Enter Temperature (K) : ";
 	std::cin >> temperature;
-	
-	std::cout << "Density : " << nickel.getThermalConductivity(temperature) << "\n";
-	std::cout << "Enthalpy : " << nickel.getEnthalpy(temperature) << "\tC : " << nickel.getHeatCapacity(temperature) << "\n";
-	std::cout << "Conductivity : " << nickel.getThermalConductivity(temperature) << "\n";
+
+	std::cout << "Heat Capacity :\t" << nickel.getHeatCapacity(temperature) << "\tJ/kg-K" << std::endl;
+	std::cout << "Enthalpy :\t" <<  nickel.getEnthalpy(temperature) << "\tJ/kg" << std::endl;
+
+	std::cout << "Thermal Conductivity :\t" <<  nickel.getThermalConductivity(temperature) << "\tW/m-K" << std::endl;
 	
 	return 0;
 }

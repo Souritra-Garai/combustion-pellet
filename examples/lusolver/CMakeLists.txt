@@ -1,5 +1,5 @@
-add_executable(LUSolverExample LU_Solver_Example.cpp)
+add_executable(LUSolverExample LU-Solver_Example.cpp)
 target_link_libraries(LUSolverExample LUSolver)
 
-add_executable(TridiagonalMatrixExample Tridiagonal_Matrix_Example.cpp)
+add_executable(TridiagonalMatrixExample Tridiagonal-Matrix_Example.cpp)
 target_link_libraries(TridiagonalMatrixExample LUSolver)

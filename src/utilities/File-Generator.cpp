@@ -11,26 +11,25 @@
 
 #include <sys/stat.h>
 
-#include <time.h>
-#include <string.h>
+#include <ctime>
 
 #include "utilities/File-Generator.hpp"
 
 FileGenerator::FileGenerator()
 {
-    time_t raw_time;
-    struct tm * time_info;
+    std::time_t raw_time;
+    std::tm * time_info;
 
-    time(&raw_time);
-    time_info = localtime(&raw_time);
+    std::time(&raw_time);
+    time_info = std::localtime(&raw_time);
 
-    std::string current_time = asctime(time_info);
+    std::string current_time = std::asctime(time_info);
     current_time.erase(current_time.end() - 1);
 
 	_folder_name.clear();
 	_folder_name.append("solutions/");
 	_folder_name.append(current_time);
-
+	
     mkdir(_folder_name.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 }
 

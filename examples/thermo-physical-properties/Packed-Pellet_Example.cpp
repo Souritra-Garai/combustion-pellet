@@ -4,9 +4,9 @@
 
 int main(int argc, char const *argv[])
 {
-	PackedPellet<long double> pellet(0.5);
+	PackedPellet pellet(0.5);
     
-    std::cout << pellet.length << std::endl;
+    std::cout << "Overall Particle Density :\t" << pellet.overall_particle_density << "\tkg/m3" << std::endl;
 
     return 0;
 }

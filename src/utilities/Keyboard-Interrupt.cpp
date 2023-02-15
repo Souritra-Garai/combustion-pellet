@@ -11,7 +11,7 @@
 
 #include "utilities/Keyboard-Interrupt.hpp"
 
-#include <signal.h>
+#include <csignal>
 
 void throwInterruptException(int signal_code)
 {

@@ -12,64 +12,67 @@
 #ifndef __IDEAL_GAS__
 #define __IDEAL_GAS__
 
-#include "thermo-physical-properties/Enthalpy.hpp"
-#include "thermo-physical-properties/Thermal-Conductivity.hpp"
+#include "math/Data-Type.hpp"
 
-template<typename real_t>
+#include "math/Shomate-Expression.hpp"
+#include "math/Quadratic-Expression.hpp"
+
 class IdealGas
 {
 	private :
 
-		const real_t _molar_mass;
-		const real_t _gamma;
+		ShomateExpression	_enthalpy;
+		QuadraticExpression	_thermal_conductivity;
 
-		Enthalpy<real_t> _enthalpy;
-		ThermalConductivityQuadraticPolynomial<real_t> _thermal_conductivity;
+		const real_t molar_mass_inverse;
 
 	public :
+
+		const real_t molar_mass;
+		const real_t gamma;
 
 		IdealGas(
 			real_t molar_mass,
 			real_t gamma,
-			Enthalpy<real_t> &enthalpy,
-			ThermalConductivityQuadraticPolynomial<real_t> &thermal_conductivity
+			ShomateExpression	&enthalpy,
+			QuadraticExpression	&thermal_conductivity
 		) :	_enthalpy(enthalpy),
 			_thermal_conductivity(thermal_conductivity),
-			_molar_mass(molar_mass),
-			_gamma(gamma)
+			molar_mass(molar_mass),
+			gamma(gamma),
+			molar_mass_inverse(1./molar_mass)
 		{
 			;
 		}
 
-		IdealGas() : _enthalpy(), _thermal_conductivity(), _molar_mass(1.0), _gamma(1.4)
-		{;}
-
-		inline real_t getDensity(real_t temperature, real_t pressure = 1.01325E5)
-		{
-			return (1./8.314) * _molar_mass * pressure / temperature;
-		}
-
-		inline real_t getEnthalpy(real_t temperature)
-		{
-			return _enthalpy.getStandardEnthalpy(temperature) * (1. / _molar_mass);
-		}
-
-		inline real_t getCp(real_t temperature)
-		{
-			return _enthalpy.getHeatCapacity(temperature) * (1. / _molar_mass);
-		}
-
-		inline real_t getThermalConductivity(real_t temperature)
-		{
-			return _thermal_conductivity.getThermalConductivity(temperature);
-		}
-
-		inline real_t getMolarMass()  { return _molar_mass; }
-
-		inline real_t getMolarDensity(real_t temperature, real_t pressure = 1.01325E5)
+		inline real_t getMolarDensity(real_t temperature, real_t pressure = 1.01325E5) const
         { 
             return (1./8.314) * pressure / temperature;
         }
+
+		inline real_t getDensity(real_t temperature, real_t pressure = 1.01325E5) const
+		{
+			return molar_mass * getMolarDensity(temperature, pressure);
+		}
+
+		inline real_t getEnthalpy(real_t temperature) const
+		{
+			return 
+			ShomateExpression::
+			normalizeIntegralOutput(
+				_enthalpy.evaluateExpressionIntegral(
+					ShomateExpression::normalizeInput(temperature))) * molar_mass_inverse;
+		}
+
+		inline real_t getCp(real_t temperature) const
+		{
+			return _enthalpy.evaluateExpression(ShomateExpression::normalizeInput(temperature)) * molar_mass_inverse;
+		}
+
+		inline real_t getThermalConductivity(real_t temperature) const
+		{
+			return _thermal_conductivity.evaluateExpression(temperature);
+		}
 };
 
 #endif

@@ -13,10 +13,10 @@
 #ifndef __ARRHENIUS_DIFFUSIVITY_MODEL__
 #define __ARRHENIUS_DIFFUSIVITY_MODEL__
 
-// Required for the exponential function
-#include <math.h>
+#include <cmath>
 
-template<typename real_t>
+#include <math/Data-Type.hpp>
+
 class ArrheniusDiffusivityModel
 {
     private:
@@ -42,15 +42,15 @@ class ArrheniusDiffusivityModel
 			_activation_energy_high(activation_energy_high / 8.314)
 		{ ; }
 
-        inline real_t getDiffusivity(real_t temperature)
+        inline real_t getDiffusivity(real_t temperature) const
 		{
 			if (temperature > _critical_temperature)
 
-            	return _pre_exponential_factor_high * exp(- _activation_energy_high / temperature);
+            	return _pre_exponential_factor_high * std::exp(- _activation_energy_high / temperature);
 
 			else
 
-            	return _pre_exponential_factor_low * exp(- _activation_energy_low / temperature);
+            	return _pre_exponential_factor_low * std::exp(- _activation_energy_low / temperature);
         }
 };
 

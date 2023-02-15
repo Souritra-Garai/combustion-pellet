@@ -15,10 +15,18 @@
 
 int main(int argc, char const *argv[])
 {
-    CoreShellParticle<float> Ni_clad_Al_particle;
+    CoreShellParticle Ni_clad_Al_particle;
 
-	std::cout << "Enthalpy\t:\t" << Ni_clad_Al_particle.getEnthalpy(298.15) << "\n";
-	std::cout << "Density\t\t:\t" << Ni_clad_Al_particle.getDensity(298.15) << "\n";
+	real_t temperature;
 
+	std::cout << "Density :\t" << Ni_clad_Al_particle.getDensity(298.15) << "\tkg/m3" << std::endl;
+	std::cout << "Enter Temperature (K) : ";
+	std::cin >> temperature;
+
+	std::cout << "Heat Capacity :\t" << Ni_clad_Al_particle.getHeatCapacity(temperature) << "\tJ/kg-K" << std::endl;
+	std::cout << "Enthalpy :\t" <<  Ni_clad_Al_particle.getEnthalpy(temperature) << "\tJ/kg" << std::endl;
+
+	std::cout << "Thermal Conductivity :\t" <<  Ni_clad_Al_particle.getThermalConductivity(temperature) << "\tW/m-K" << std::endl;
+	
     return 0;
 }

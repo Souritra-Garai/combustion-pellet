@@ -16,9 +16,9 @@ int main(int argc, char const *argv[])
 {
 	parseProgramOptions(argc, argv);
 
-    CoreShellDiffusion<long double>::setUpRadiusArray();
+    CoreShellDiffusion::setUpRadiusArray();
 
-    CoreShellDiffusion<long double> Ni_clad_Al_particle;
+    CoreShellDiffusion Ni_clad_Al_particle;
 
     FileGenerator file_generator;
 
@@ -34,7 +34,7 @@ int main(int argc, char const *argv[])
 
     try
     {
-		size_t step = 0.001 / CoreShellDiffusion<long double>::delta_t;
+		size_t step = 0.001 / CoreShellDiffusion::delta_t;
 
 		bool combustion_complete = false;
 
@@ -47,7 +47,7 @@ int main(int argc, char const *argv[])
 				Ni_clad_Al_particle.setUpEquations(temperature);
             	Ni_clad_Al_particle.solveEquations();
 
-				simulation_time += CoreShellDiffusion<long double>::delta_t;
+				simulation_time += CoreShellDiffusion::delta_t;
 
 				combustion_complete = Ni_clad_Al_particle.isCombustionComplete();           
 			}
@@ -75,7 +75,7 @@ int main(int argc, char const *argv[])
     conc_A_file.close();
     conc_B_file.close();
 
-	CoreShellDiffusion<long double>::deallocateRadiusArray();
+	CoreShellDiffusion::deallocateRadiusArray();
     
     return 0;
 }
