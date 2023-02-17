@@ -1,5 +1,7 @@
 #include "pde-problems/Pellet-Flame-Propagation.hpp"
 
+#include <cmath>
+
 #define STEFAN_BOLTZMANN_CONSTANT 5.670374419E-8 // W / m2 - K4
 
 inline
@@ -78,14 +80,18 @@ inline LinearExpression PelletFlamePropagation::calcHeatLossTerm(size_t i)
 
     LinearExpression expression;
 
+	real_t h = (i == 0) || (i == m-1) ?
+		PackedPellet::convective_heat_transfer_coefficient_flat_surface :
+		PackedPellet::convective_heat_transfer_coefficient_curved_surface;
+
     expression.a_0 =
-		PackedPellet::convective_heat_transfer_coefficient_curved_surface * (_temperature_array[i] - PackedPellet::ambient_temperature) +
-		constant1 * (pow(_temperature_array[i], 4) - pow(PackedPellet::ambient_temperature, 4))
+		h * (_temperature_array[i] - PackedPellet::ambient_temperature) +
+		constant1 * (std::pow(_temperature_array[i], 4) - std::pow(PackedPellet::ambient_temperature, 4))
 	;
 
     expression.a_1 = gamma * (
-		PackedPellet::convective_heat_transfer_coefficient_curved_surface +
-		constant2 * pow(_temperature_array[i], 3)
+		h +
+		constant2 * std::pow(_temperature_array[i], 3)
 	);
 
 	return expression;
@@ -103,16 +109,16 @@ inline real_t PelletFlamePropagation::getInterstitialGasTransientTermCoefficient
 
 inline void PelletFlamePropagation::setUpBoundaryConditionX0()
 {
-	static const real_t constant = 1. / delta_x;
+	static const real_t one_by_delta_x = 1. / delta_x;
     
     LinearExpression beta = calcHeatLossTerm(0);
     
-    real_t lambda_by_delta_x = _thermal_conductivity[0] * constant;
+    real_t lambda_by_delta_x = _thermal_conductivity[0] * one_by_delta_x;
     
     _solver.setEquationFirstRow(
           beta.a_1 + lambda_by_delta_x,
         - lambda_by_delta_x,
-		  beta.evaluateExpression(_temperature_array[0])
+		- beta.evaluateExpression(- _temperature_array[0])
     );
 }
 
@@ -126,8 +132,8 @@ inline void PelletFlamePropagation::setUpBoundaryConditionXN()
     
 	_solver.setEquationLastRow(
     	- lambda_by_delta_x,
-		beta.a_1 + lambda_by_delta_x,
-		beta.evaluateExpression(_temperature_array[m - 1])
+		- beta.a_1 + lambda_by_delta_x,
+		  beta.evaluateExpression(- _temperature_array[m - 1])
     );
 }
 
@@ -164,8 +170,8 @@ void PelletFlamePropagation::setUpEquations()
 				
 				- kappa_lambda_forward_by_delta_x_sqr,
 				
-				  alpha.a_1 * _temperature_array[i] - alpha.a_0 + coeff_fluid * _temperature_array[i]
-				+ four_by_pellet_diameter * (beta.a_0 - beta.a_1 * _temperature_array[i])
+				- alpha.evaluateExpression(-_temperature_array[i]) + coeff_fluid * _temperature_array[i]
+				+ four_by_pellet_diameter * beta.evaluateExpression(-_temperature_array[i])
 				+ one_minus_kappa * (
 					lambda_forward_by_delta_x_sqr  * (_temperature_array[i+1] - _temperature_array[i]) -
 					lambda_backward_by_delta_x_sqr * (_temperature_array[i] - _temperature_array[i-1])
