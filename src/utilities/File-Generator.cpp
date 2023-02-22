@@ -26,6 +26,12 @@ FileGenerator::FileGenerator()
     std::string current_time = std::asctime(time_info);
     current_time.erase(current_time.end() - 1);
 
+	for (size_t i=0; i < current_time.length(); i++)
+
+		if (current_time[i] == ' ' || current_time[i] == ':')
+
+			current_time[i] = '_';
+
 	_folder_name.clear();
 	_folder_name.append("solutions/");
 	_folder_name.append(current_time);

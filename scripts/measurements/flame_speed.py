@@ -15,12 +15,26 @@ folder = getlatestfolder()
 parser = argparse.ArgumentParser()
 
 parser.add_argument("-f", "--folderpath", help="Path to folder containing temperature.csv")
+parser.add_argument("-s", "--savefigure", help="Save temperature plot", action='store_true')
+
+parser.add_argument("--tmin", help="Find flame positions starting from time ARG")
+parser.add_argument("--tmax", help="Find flame positions upto time ARG")
 
 args = parser.parse_args()
 
 if args.folderpath :
 
 	folder = args.folderpath
+
+tmin, tmax = 0, np.inf
+
+if args.tmin :
+
+	tmin = float(args.tmin)
+
+if args.tmax :
+
+	tmax = float(args.tmax)
 
 print('Processing solution at the directory ' + folder)
 
@@ -42,7 +56,7 @@ valid_indices = np.where(flame_locations != 0.0)
 flame_locations = flame_locations[valid_indices]
 t = t[valid_indices]
 
-valid_indices = np.where(np.logical_and(t > 0.0, t < 0.64))
+valid_indices = np.where(np.logical_and(t >= tmin, t <= tmax))
 
 flame_locations = flame_locations[valid_indices]
 t = t[valid_indices]
@@ -52,7 +66,7 @@ line, cov = np.polyfit(t, flame_locations, 1, cov=True)
 
 print('Flame Speed : ', line[0]*1000, ' mm/s')
 
-fig = plt.figure()
+fig = plt.figure(constrained_layout=True)
 ax = fig.add_subplot()
 
 ax.plot(t, flame_locations, label='Simulation Results')
@@ -69,8 +83,8 @@ ax.grid(which='minor', color='grey', ls='--')
 
 ax.legend()
 
-# fig.set_size_inches(10, 4.5)
-# fig.set_dpi(600)
-
-# plt.savefig(folder + '/Flame_Position_2000.png', dpi=600)
 plt.show()
+
+if args.savefigure :
+
+	fig.savefig(folder + '/flame_positions.jpeg', dpi=600)
