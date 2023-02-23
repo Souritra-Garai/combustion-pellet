@@ -30,6 +30,7 @@ class PackedPellet
 		static const real_t convective_heat_transfer_coefficient_flat_surface;
 		static const real_t radiative_emissivity;
 		
+		static const real_t ambient_pressure;
     	static const real_t ambient_temperature;
 
 		static IdealGas interstitial_gas;

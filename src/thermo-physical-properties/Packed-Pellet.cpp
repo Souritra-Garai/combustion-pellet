@@ -20,6 +20,7 @@ const real_t PackedPellet::convective_heat_transfer_coefficient_curved_surface	=
 const real_t PackedPellet::convective_heat_transfer_coefficient_flat_surface	= readScalarData<real_t>("data/pellet", "convective-heat-transfer-coefficient-flat-surface.txt");
 const real_t PackedPellet::radiative_emissivity = readScalarData<real_t>("data/pellet", "radiative-emissivity.txt");
 
+const real_t PackedPellet::ambient_pressure = readScalarData<real_t>("data/pellet", "ambient-pressure.txt");
 const real_t PackedPellet::ambient_temperature = readScalarData<real_t>("data/pellet", "ambient-temperature.txt");
 
 IdealGas PackedPellet::interstitial_gas = readIdealGasData("data/pellet/interstitial-gas");

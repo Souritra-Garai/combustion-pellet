@@ -103,7 +103,7 @@ inline real_t PelletFlamePropagation::getInterstitialGasTransientTermCoefficient
 
 	return
 		constant * 
-		PackedPellet::interstitial_gas.getDensity(_temperature_array[i]) *
+		PackedPellet::interstitial_gas.getDensity(_temperature_array[i], PackedPellet::ambient_pressure) *
 		PackedPellet::interstitial_gas.getCp(_temperature_array[i]);
 }
 
