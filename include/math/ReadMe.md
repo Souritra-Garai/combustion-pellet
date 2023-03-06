@@ -74,9 +74,9 @@ h(T) = ShomateEquation::normalizeIntegralOutput(
 
 ## Sigmoid Function
 
-`Sigmoid-Function.hpp` defines the functions for implementing the sigmoid function of the form
+`Sigmoid-Function.hpp` defines functions for implementing the sigmoid function of the form
 ```
-sigma(x) = 1 / (1 + exp(x))
+sigma(x) = 1 / (1 + exp(-x))
 ```
 The function is implemented using the `tanh` function from cmath library.
 ```

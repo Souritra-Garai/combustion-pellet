@@ -22,6 +22,8 @@ class QuadraticExpression
             ;
         }
 
+		// Expects input T in K
+		// Returns output in W/m-K
         inline real_t evaluateExpression(real_t x) const
         {
             return _a_0 + _a_1 * x + _a_2 * x * x;
