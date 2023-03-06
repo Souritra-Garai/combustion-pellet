@@ -61,7 +61,7 @@ void CoreShellDiffusion::setUpEquations(real_t T, CoreShellDiffusion &diffusion_
 	{
 		coefficient4 = coefficient1 * radial_ratio[i];
 
-		_solver_A.setEquation(
+		_solver_A.setEquationSerially(
 			  i, 
 			- coefficient1, 
 			  coefficient2 + coefficient4, 
@@ -71,7 +71,7 @@ void CoreShellDiffusion::setUpEquations(real_t T, CoreShellDiffusion &diffusion_
 			+ coefficient4 * diffusion_problem._concentration_array_A[i+1]
 		);
 
-		_solver_B.setEquation(
+		_solver_B.setEquationSerially(
 			i, 
 			- coefficient1,
 			  coefficient2 + coefficient4,
@@ -83,14 +83,14 @@ void CoreShellDiffusion::setUpEquations(real_t T, CoreShellDiffusion &diffusion_
 	}
 
     // Set zero flux boundary condition at grid point # N
-    _solver_A.setEquationLastRow(-1, 1, 0);
-    _solver_B.setEquationLastRow(-1, 1, 0);
+    _solver_A.setEquationLastRowSerially(-1, 1, 0);
+    _solver_B.setEquationLastRowSerially(-1, 1, 0);
 }
 
 void CoreShellDiffusion::solveEquations()
 {
-	_solver_A.getSolution(_concentration_array_A);
-	_solver_B.getSolution(_concentration_array_B);
+	_solver_A.getSolutionSerially(_concentration_array_A);
+	_solver_B.getSolutionSerially(_concentration_array_B);
 
 	updateMassFractions();
 }

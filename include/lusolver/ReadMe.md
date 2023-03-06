@@ -77,4 +77,19 @@ for iteration # i from 1 to n-1
 	U[i][i]   = A[i][i] - L[i][i-1] * U[i-1][i]
 	U[i][i+1] = A[i][i+1]
 ```
+Let `U.x = d`. Hence, `A.x = L.(U.x) = L.d = b`.
+Solving for `d` simply requires forward substitution
+```
+d[0] = b[0]
 
+for iteration # i from 1 to n-1
+
+	// d[i-1] was already set in previous iteration
+	// L[i][i] = 1
+
+	d[i] = L[i][i] * b[i] - L[i][i-1] * b[i-1]
+```
+During LU decomposition, if forward substitution is done simultaneously, there is not need to store `L` matrix.
+To optimize memory, `U[i][j]` are stored in the same location as `A[i][j]`.
+
+The functions with suffix "Serially" assume the triadiagonal matrix equations are chronologically populated by their row index. Hence, those perform the LU decomposition and forward subsitution simultaneously with populating matrix elements. This reduces overheads associated with another for loop.

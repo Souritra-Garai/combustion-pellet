@@ -8,7 +8,7 @@
 #include "utilities/Program-Options.hpp"
 #include "utilities/Keyboard-Interrupt.hpp"
 
-#define MAX_ITER 1E6
+#define MAX_ITER 1E8
 
 long double phi = 0.7;
 
