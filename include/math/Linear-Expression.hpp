@@ -17,11 +17,16 @@ class LinearExpression
 			return a_0 + a_1 * x;
 		}
 
+		inline LinearExpression operator + () const
+		{
+			return LinearExpression(a_0, a_1);
+		}
+
 		inline LinearExpression operator + (LinearExpression z) const
 		{
 			return LinearExpression(a_0 + z.a_0, a_1 + z.a_1);
 		}
-
+		
 		inline LinearExpression operator - () const
 		{
 			return LinearExpression(-a_0, -a_1);

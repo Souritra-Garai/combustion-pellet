@@ -42,11 +42,15 @@ class ShomateExpression
 			;
         }
 
+		// Normalizes T(K) for input
+		// T (in K) -> T / 1000
 		inline static real_t normalizeInput(real_t x)
 		{
 			return x * 1E-3;
 		}
 
+		// Expects input as T(K)/1000
+		// Returns output in J/mol.-K
 		inline real_t evaluateExpression(real_t x) const
         {
             return 
@@ -58,6 +62,8 @@ class ShomateExpression
             ;
         }
 
+		// Expects input as T(K)/1000
+		// Returns output in kJ/mol.
         inline real_t evaluateExpressionIntegral(real_t x) const
         {
             return
@@ -70,6 +76,8 @@ class ShomateExpression
             ;
         }
 
+		// Converts to SI units
+		// kJ/mol. -> J/mol.
 		inline static real_t normalizeIntegralOutput(real_t h)
 		{
 			return h * 1E3;
