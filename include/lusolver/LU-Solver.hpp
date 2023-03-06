@@ -13,28 +13,38 @@ class LUSolver
 
 		TridiagonalMatrix _A;
 
-		// pointer to array of real type numbers representing
-		// constant vector b in the matrix equation
-		real_t *b;
+		real_t *_b;
 
-		// helper function to decompose the A matrix in Upper and Lower matrices
+		// Required during LU decomposition
+		real_t _lower_matrix_off_diagonal_element;
+
+		// Aliases
+		real_t * &_d = _b;
+		
+		// Upper Diagonal matrix
+		// U[i][j], j > i-1
+		inline real_t& _U(unsigned int i, unsigned int j)
+		{
+			// if (j < i) throw std::out_of_range("Indices cannot be j < i for upper diagonal matrices.");
+			return _A(i, j);
+		}
+
+		// Function to decompose the matrix A into Upper and Lower matrices
+		// and simultaneously perform forward substitution
 		inline void LU_DecompositionAndForwardSubstitution()
 		{
-			real_t Lower_Matrix_Diagonal_less_1;
-			
 			for (int i=1; i<_n; i++)
 			{
-				// Set l_{i,i-1} = a_{i,i-1} / u_{i-1,i-1}
-				Lower_Matrix_Diagonal_less_1 = _A.getElement(i, i-1) / _A.getElement(i-1, i-1);
+				// L[i][i-1] = A[i][i-1] / U[i-1][i-1]
+				_lower_matrix_off_diagonal_element = _A(i, i-1) / _U(i-1, i-1);
 
-				// Set u_{i,i} = a_{i,i} - a_{i-1,i} * l_(i,i-1)
-				_A.setElement(
-					i, i,
-					_A.getElement(i, i) - _A.getElement(i-1, i) * Lower_Matrix_Diagonal_less_1
-				);
+				// U[i][i] = A[i][i] - A[i-1][i] * L[i][i-1]
+				// _U(i, i) = _A(i, i) - _A(i-1, i) * _lower_matrix_off_diagonal_element;
+				_U(i, i) -= _A(i-1, i) * _lower_matrix_off_diagonal_element;
 				
-				// Set d_{i} = b_{i} - d_{i-1} * l_{i,i-1}
-				b[i] -= b[i-1] * Lower_Matrix_Diagonal_less_1;
+				// Set d[i] = b[i] - d[i-1] * L[i][i-1]
+				// _d[i] = _b[i] - _d[i-1] * _lower_matrix_off_diagonal_element;
+				_d[i] -= _d[i-1] * _lower_matrix_off_diagonal_element;
 			}
 		}
 
@@ -44,110 +54,117 @@ class LUSolver
 
 		~LUSolver();
 
-        /**
-         * @brief Set up equation represented by ith
-         * row of the matrix equation
-         * \f$ e x_{i-1} + f x_i + g x_{i+1} = b \f$
-         * 
-         * @param index i
-         * @param e Coefficient to \f$ x_{i-1} \f$
-         * @param f Coefficient to \f$ x_{i} \f$
-         * @param g Coefficient to \f$ x_{i+1} \f$
-         * @param b Constant
-         */
-        inline void setEquation(
-            unsigned int i,
-            real_t e_val,
-            real_t f_val,
-            real_t g_val,
-            real_t b_val
-        ) {
-			// \f$ e x_{i-1} + f x_i + g x_{i+1} = b \f$
-
-			// Set \f$ a_{i,i-1} \f$ to e_val
-			_A.setElement(i, i-1, e_val);
-			// Set \f$ a_{i,i} \f$ to f_val
-			_A.setElement(i, i,   f_val);
-			// Set \f$ a_{i,i+1} \f$ to g_val
-			_A.setElement(i, i+1, g_val);
-
-			// Set the constant
-			b[i] = b_val;
+		// Set up equation represented by ith row of the matrix equation, i.e.,
+		// e * x[i-1] + f * x[i] + g * x[i+1] = b
+		inline void setEquation(
+			unsigned int i,
+			real_t e,
+			real_t f,
+			real_t g,
+			real_t b
+		) {
+			_A(i, i-1) = e;
+			_A(i, i)   = f;
+			_A(i, i+1) = g;
+			
+			_b[i] = b;
 		}
 
-        /**
-         * @brief Set up equation represented by the first row
-         * of the matrix equation
-         * \f$ f x_i + g x_{i+1} = b \f$
-         * 
-         * @param f Coefficient to \f$ x_{i} \f$
-         * @param g Coefficient to \f$ x_{i+1} \f$
-         * @param b Constant
-         */
-        inline void setEquationFirstRow(
-            real_t f_val,
-            real_t g_val,
-            real_t b_val
-        ) {
-			// \f$ f x_i + g x_{i+1} = b \f$
+		// Set up equation represented by ith row of the matrix equation, i.e.,
+		// e * x[i-1] + f * x[i] + g * x[i+1] = b
+		// Assuming rows of the matrix are populated chronologically by row index i
+		// Decomposition and forward substitution are done simultaneously
+		inline void setEquationSerially(
+			unsigned int i,
+			real_t e,
+			real_t f,
+			real_t g,
+			real_t b
+		) {
+			_A(i, i+1) = g;
 
-			// Set \f$ a_{i,i} \f$ to f_val
-			_A.setElement(0, 0, f_val);
-			// Set \f$ a_{i,i+1} \f$ to g_val
-			_A.setElement(0, 1, g_val);
+			// L[i][i-1] = A[i][i-1] / U[i-1][i-1]
+			_lower_matrix_off_diagonal_element = e / _U(i-1, i-1);
 
-			// Set the constant
-			b[0] = b_val;
+			// U[i][i] = A[i][i] - A[i-1][i] * L[i][i-1]
+			_U(i, i) = f - _A(i-1, i) * _lower_matrix_off_diagonal_element;
+
+			// Set d[i] = b[i] - d[i-1] * L[i][i-1]
+			_d[i] = b - _d[i-1] * _lower_matrix_off_diagonal_element;
 		}
 
-        /**
-         * @brief up equation represented by the last row
-         * of the matrix equation
-         * \f$ e x_{i-1} f x_i = b \f$
-         * 
-         * @param e Coefficient to \f$ x_{i-1} \f$
-         * @param f Coefficient to \f$ x_{i} \f$
-         * @param b Constant
-         */
-        inline void setEquationLastRow(
-            real_t e_val,
-            real_t f_val,
-            real_t b_val
-        ) {
-			// \f$ e x_{i-1} f x_i = b \f$
-
-			// Set \f$ a_{i,i-1} \f$ to e_val
-			_A.setElement(_n-1, _n-2, e_val);
-			// Set \f$ a_{i,i} \f$ to f_val
-			_A.setElement(_n-1, _n-1, f_val);
-
-			// Set the constant
-			b[_n-1] = b_val;
+		// Set up equation represented by the first row of the matrix equation
+		// f * x[i] + g * x[i+1] = b
+		inline void setEquationFirstRow(
+			real_t f,
+			real_t g,
+			real_t b
+		) {
+			_A(0, 0) = f;
+			_A(0, 1) = g;
+			
+			_b[0] = b;
 		}
 
-        /**
-         * @brief Prints the matrix \f$ A \f$ and vector \f$ b \f$
-         */
-        void printMatrixEquation();
+		// Set up equation represented by the last row of the matrix equation
+		// e * x[n-2] + f * x[n-1] = b
+		inline void setEquationLastRow(
+			real_t e,
+			real_t f,
+			real_t b
+		) {
+			_A(_n-1, _n-2) = e;
+			_A(_n-1, _n-1) = f;
+			
+			_b[_n-1] = b;
+		}
 
-        /**
-         * @brief Finds the solution to matrix equation and saves
-         * it to array x
-         * 
-         * @param x Array to store the solution of the matrix equation
-         */
-        inline void getSolution(real_t *x)
+		// Set up equation represented by the last row of the matrix equation
+		// e * x[n-2] + f * x[n-1] = b
+		// Assuming rows of the matrix are populated chronologically by row index i
+		// Decomposition and forward substitution are done simultaneously
+		inline void setEquationLastRowSerially(
+			real_t e,
+			real_t f,
+			real_t b
+		) {
+			// L[i][i-1] = A[i][i-1] / U[i-1][i-1]
+			_lower_matrix_off_diagonal_element = e / _U(_n-2, _n-2);
+
+			// U[i][i] = A[i][i] - A[i-1][i] * L[i][i-1]
+			_U(_n-1, _n-1) = f - _A(_n-2, _n-1) * _lower_matrix_off_diagonal_element;
+
+			// Set d[i] = b[i] - d[i-1] * L[i][i-1]
+			_d[_n-1] = b - _d[_n-2] * _lower_matrix_off_diagonal_element;
+		}
+
+		// Prints the matrix equation A.x = b
+		void printMatrixEquation();
+
+		// Solve the matrix equation and store it to array x
+		inline void getSolution(real_t *x)
 		{
 			LU_DecompositionAndForwardSubstitution();
 
 			// Backward substitution
-			// Last element is simply x_{n-1} = d_{n-1} / U_{n-1, n-1}
-			x[_n-1] = b[_n-1] / _A.getElement(_n-1, _n-1);
+			x[_n-1] = _d[_n-1] / _U(_n-1, _n-1);
 
 			for (int i=_n-2; i>=0; i--)
 
-				// Set x_{i} = ( d_{i} - U_{i,i+1} * x_{i+1} ) / U_{i,i}
-				x[i] = ( b[i] - _A.getElement(i, i+1) * x[i+1] ) / _A.getElement(i, i);
+				x[i] = ( _d[i] - _U(i, i+1) * x[i+1] ) / _U(i, i);
+		}
+
+		// Solve the matrix equation and store it to array x
+		// Assuming rows of the matrix were populated chronologically by row index i
+		// Decomposition and forward substitution were done simultaneously
+		inline void getSolutionSerially(real_t *x)
+		{
+			// Backward substitution
+			x[_n-1] = _d[_n-1] / _U(_n-1, _n-1);
+
+			for (int i=_n-2; i>=0; i--)
+
+				x[i] = ( _d[i] - _U(i, i+1) * x[i+1] ) / _U(i, i);
 		}
 };
 

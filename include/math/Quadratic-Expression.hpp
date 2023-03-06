@@ -5,29 +5,29 @@
 
 class QuadraticExpression
 {
-    private :
+	private :
 
-        const real_t _a_0;
-        const real_t _a_1;
-        const real_t _a_2;
+		const real_t _a_0;
+		const real_t _a_1;
+		const real_t _a_2;
 
-    public :
+	public :
 
-        QuadraticExpression(
-            real_t a_0,
-            real_t a_1,
-            real_t a_2
-        ) :	_a_0(a_0), _a_1(a_1), _a_2(a_2)
+		QuadraticExpression(
+			real_t a_0,
+			real_t a_1,
+			real_t a_2
+		) :	_a_0(a_0), _a_1(a_1), _a_2(a_2)
 		{
-            ;
-        }
+			;
+		}
 
 		// Expects input T in K
 		// Returns output in W/m-K
-        inline real_t evaluateExpression(real_t x) const
-        {
-            return _a_0 + _a_1 * x + _a_2 * x * x;
-        }
+		inline real_t evaluateExpression(real_t x) const
+		{
+			return _a_0 + _a_1 * x + _a_2 * x * x;
+		}
 };
 
 #endif

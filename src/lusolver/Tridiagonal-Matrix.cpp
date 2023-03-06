@@ -43,7 +43,7 @@ void TridiagonalMatrix::printMatrix()
 	std::cout << std::endl;
 }
 
-void TridiagonalMatrix::multiply(real_t *x, real_t *b)
+void TridiagonalMatrix::multiply(real_t *x, real_t *b) const
 {
 	b[0] = getElement(0, 0) * x[0] + getElement(0, 1) * x[1];
 
