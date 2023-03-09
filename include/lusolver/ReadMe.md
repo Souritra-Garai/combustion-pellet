@@ -4,7 +4,7 @@ This library can be used to solve the Matrix equation
 ```
 A.x = b
 ```
-using Thomas algorithm / LU method.
+using Thomas algorithm/LU decomposition method.
 '`A`' must be a tridiagonal matrix, i.e.
 ```
 A[i][j] = 0
@@ -28,11 +28,11 @@ It is assumed indices like `A[1][3]`, `A[2][0]` etc., i.e., where either `j < i-
 
 ## LU Solver
 
-The class `LUSolver` lets the user enter one row equation at a time for tridiagonal matrix equations. Then it can solve the matrix equation at one go using LU decomposition and forward substitution.
+The class `LUSolver` lets the user enter one row equation at a time for tridiagonal matrix equations. Then it can solve the matrix equation at one go using LU decomposition and forward/backward substitutions.
 
 For certain applications, the calculations before setting one row equation takes considerable time. Hence, this class provides function to parallely compute the necessary values and enter one row at time.
 
-In the LU decomposition method, the matrix `A` is decomposed into the multiplication of a lower and an upper diagonal matrices, i.e.,
+In the LU decomposition method, the matrix `A` is decomposed into the multiplication of a lower and an upper diagonal matrix, i.e.,
 ```
 A = L.U
 ```
@@ -87,7 +87,7 @@ for iteration # i from 1 to n-1
 	// d[i-1] was already set in previous iteration
 	// L[i][i] = 1
 
-	d[i] = L[i][i] * b[i] - L[i][i-1] * b[i-1]
+	d[i] = (b[i] - L[i][i-1] * d[i-1]) / L[i][i]
 ```
 During LU decomposition, if forward substitution is done simultaneously, there is not need to store `L` matrix.
 To optimize memory, `U[i][j]` are stored in the same location as `A[i][j]`.
