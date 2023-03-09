@@ -1,14 +1,3 @@
-/**
- * @file Core-Shell-Diffusion.hpp
- * @author Souritra Garai (souritra.garai@iitgn.ac.in)
- * @brief Definition for Core-Shell Diffusion problem class
- * @version 0.1
- * @date 2021-07-16
- * 
- * @copyright Copyright (c) 2021
- * 
- */
-
 #ifndef __CORE_SHELL_DIFFUSION__
 #define __CORE_SHELL_DIFFUSION__
 
@@ -30,7 +19,7 @@ class CoreShellDiffusion : public CoreShellParticle
 		LUSolver _solver_B;
 
 		static real_t *radial_coordinate_sqr;
-		static real_t *radial_ratio;
+		static real_t *radial_coordinate_sqr_ratio;
 
 		static real_t getRadialCoordinate(size_t index);
 
@@ -56,7 +45,7 @@ class CoreShellDiffusion : public CoreShellParticle
 		void initializeParticle();
 		
 		inline
-		void setUpEquations(real_t diffusivity) { setUpEquations(diffusivity, *this);}
+		void setUpEquations(real_t temperature) { setUpEquations(temperature, *this);}
 		void setUpEquations(real_t temperature, CoreShellDiffusion &diffusion_problem);
 		void solveEquations();
 
