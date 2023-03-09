@@ -29,6 +29,12 @@ class LUSolver
 			return _A(i, j);
 		}
 
+		inline real_t _U(unsigned int i, unsigned int j) const
+		{
+			// if (j < i) throw std::out_of_range("Indices cannot be j < i for upper diagonal matrices.");
+			return _A(i, j);
+		}
+
 		// Function to decompose the matrix A into Upper and Lower matrices
 		// and simultaneously perform forward substitution
 		inline void LU_DecompositionAndForwardSubstitution()
@@ -55,7 +61,7 @@ class LUSolver
 		~LUSolver();
 
 		// Set up equation represented by ith row of the matrix equation, i.e.,
-		// e * x[i-1] + f * x[i] + g * x[i+1] = b
+		// e * x[i+1] + f * x[i] + g * x[i-1] = b
 		inline void setEquation(
 			unsigned int i,
 			real_t e,
@@ -63,15 +69,15 @@ class LUSolver
 			real_t g,
 			real_t b
 		) {
-			_A(i, i-1) = e;
+			_A(i, i+1) = e;
 			_A(i, i)   = f;
-			_A(i, i+1) = g;
+			_A(i, i-1) = g;
 			
 			_b[i] = b;
 		}
 
 		// Set up equation represented by ith row of the matrix equation, i.e.,
-		// e * x[i-1] + f * x[i] + g * x[i+1] = b
+		// e * x[i+1] + f * x[i] + g * x[i-1] = b
 		// Assuming rows of the matrix are populated chronologically by row index i
 		// Decomposition and forward substitution are done simultaneously
 		inline void setEquationSerially(
@@ -81,10 +87,10 @@ class LUSolver
 			real_t g,
 			real_t b
 		) {
-			_A(i, i+1) = g;
+			_A(i, i+1) = e;
 
 			// L[i][i-1] = A[i][i-1] / U[i-1][i-1]
-			_lower_matrix_off_diagonal_element = e / _U(i-1, i-1);
+			_lower_matrix_off_diagonal_element = g / _U(i-1, i-1);
 
 			// U[i][i] = A[i][i] - A[i-1][i] * L[i][i-1]
 			_U(i, i) = f - _A(i-1, i) * _lower_matrix_off_diagonal_element;
@@ -94,42 +100,42 @@ class LUSolver
 		}
 
 		// Set up equation represented by the first row of the matrix equation
-		// f * x[i] + g * x[i+1] = b
+		// e * x[1] + f * x[0] = b
 		inline void setEquationFirstRow(
+			real_t e,
 			real_t f,
-			real_t g,
 			real_t b
 		) {
 			_A(0, 0) = f;
-			_A(0, 1) = g;
+			_A(0, 1) = e;
 			
 			_b[0] = b;
 		}
 
 		// Set up equation represented by the last row of the matrix equation
-		// e * x[n-2] + f * x[n-1] = b
+		// f * x[n-1] + g * x[n-2] = b
 		inline void setEquationLastRow(
-			real_t e,
 			real_t f,
+			real_t g,
 			real_t b
 		) {
-			_A(_n-1, _n-2) = e;
+			_A(_n-1, _n-2) = g;
 			_A(_n-1, _n-1) = f;
 			
 			_b[_n-1] = b;
 		}
 
 		// Set up equation represented by the last row of the matrix equation
-		// e * x[n-2] + f * x[n-1] = b
+		// f * x[n-1] + g * x[n-2] = b
 		// Assuming rows of the matrix are populated chronologically by row index i
 		// Decomposition and forward substitution are done simultaneously
 		inline void setEquationLastRowSerially(
-			real_t e,
 			real_t f,
+			real_t g,
 			real_t b
 		) {
 			// L[i][i-1] = A[i][i-1] / U[i-1][i-1]
-			_lower_matrix_off_diagonal_element = e / _U(_n-2, _n-2);
+			_lower_matrix_off_diagonal_element = g / _U(_n-2, _n-2);
 
 			// U[i][i] = A[i][i] - A[i-1][i] * L[i][i-1]
 			_U(_n-1, _n-1) = f - _A(_n-2, _n-1) * _lower_matrix_off_diagonal_element;

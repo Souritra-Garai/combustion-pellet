@@ -1,14 +1,3 @@
-/**
- * @file QR_Solver_Example.cpp
- * @author Souritra Garai (souritra.garai@iitgn.ac.in)
- * @brief Example cpp file to test out QRSolver class
- * @version 0.1
- * @date 2021-06-24
- * 
- * @copyright Copyright (c) 2021
- * 
- */
-
 #include "math/Data-Type.hpp"
 #include "lusolver/LU-Solver.hpp"
 
@@ -52,14 +41,14 @@ int main(int argc, char const *argv[])
 
 	LUSolver my_solver(N);
 
-	my_solver.setEquationFirstRow(A.getElement(0, 0), A.getElement(0, 1), b[0]);
+	my_solver.setEquationFirstRow(A.getElement(0, 1), A.getElement(0, 0), b[0]);
 
 	for (int i = 1; i < N-1; i++)
 	{
-		my_solver.setEquationSerially(i, A.getElement(i, i-1), A.getElement(i, i), A.getElement(i, i+1), b[i]);
+		my_solver.setEquationSerially(i, A.getElement(i, i+1), A.getElement(i, i), A.getElement(i, i-1), b[i]);
 	}
 
-	my_solver.setEquationLastRowSerially(A.getElement(N-1, N-2), A.getElement(N-1, N-1), b[N-1]);
+	my_solver.setEquationLastRowSerially(A.getElement(N-1, N-1), A.getElement(N-1, N-2), b[N-1]);
 
 	// my_solver.printMatrixEquation();
 
