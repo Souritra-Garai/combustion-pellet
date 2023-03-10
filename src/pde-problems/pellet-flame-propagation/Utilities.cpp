@@ -1,14 +1,3 @@
-/**
- * @file Pellet-Flame-Propagation.cpp
- * @author Souritra Garai (souritra.garai@iitgn.ac.in)
- * @brief Implementation details for PelletFlamePropagation class
- * @version 0.1
- * @date 2021-08-02
- * 
- * @copyright Copyright (c) 2021
- * 
- */
-
 #include "pde-problems/Pellet-Flame-Propagation.hpp"
 
 #include "utilities/Read-Data.hpp"
@@ -24,9 +13,9 @@ const real_t PelletFlamePropagation::delta_t = readScalarData<real_t>("data/PDE-
 const real_t PelletFlamePropagation::delta_T = readScalarData<real_t>("data/PDE-solver-config", "delta_T.txt");
 
 PelletFlamePropagation::PelletFlamePropagation(
-    real_t particle_volume_fraction
+	real_t particle_volume_fraction
 ) : PackedPellet(particle_volume_fraction),
-    _solver(m)
+	_solver(m)
 {
 	_temperature_array = new real_t[m];
 
@@ -58,7 +47,7 @@ PelletFlamePropagation::~PelletFlamePropagation()
 
 inline real_t PelletFlamePropagation::getXCoordinate(size_t index)
 {
-	return (real_t) index * PackedPellet::length / (real_t) (m - 1);
+	return (real_t) index * delta_x;
 }
 
 void PelletFlamePropagation::initializePellet(
@@ -75,25 +64,23 @@ void PelletFlamePropagation::initializePellet(
 		for (size_t i = 1; i < m-1; i++)
 		{
 			if (getXCoordinate(i) < initial_ignition_length) _temperature_array[i] = initial_ignition_temperature;
-            
+			
 			else _temperature_array[i] = PackedPellet::ambient_temperature;
 			
 			_particles_array[i].initializeParticle();
 			
-			_prev_enthalpy_particle[i] = _particles_array[i].getEnthalpy(_temperature_array[i]);
-            
 			_particles_array_raised_temperature_evolution[i].initializeParticle();
 			_particles_array_const_temperature_evolution[i].initializeParticle();
-        }
-    	
+		}
+		
 	_temperature_array[m-1] = PackedPellet::ambient_temperature;
 
 	updateParticles();
 }
 
 void PelletFlamePropagation::printTemperatureProfile(
-    std::ostream &output_stream,
-    char delimiter
+	std::ostream &output_stream,
+	char delimiter
 ) {
 	output_stream << _time << delimiter;
 
@@ -103,8 +90,8 @@ void PelletFlamePropagation::printTemperatureProfile(
 }
 
 void PelletFlamePropagation::printGridPoints(
-    std::ostream &output_stream,
-    char delimiter
+	std::ostream &output_stream,
+	char delimiter
 ) {
 	output_stream << NAN << delimiter;
 

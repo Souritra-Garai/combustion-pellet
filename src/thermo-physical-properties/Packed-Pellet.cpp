@@ -1,14 +1,3 @@
-/**
- * @file Packed-Pellet.cpp
- * @author Souritra Garai (souritra.garai@iitgn.ac.in)
- * @brief Implementation details for the class PackedPellet
- * @version 0.1
- * @date 2021-07-31
- * 
- * @copyright Copyright (c) 2021
- * 
- */
-
 #include "thermo-physical-properties/Packed-Pellet.hpp"
 
 #include "utilities/Read-Data.hpp"
@@ -25,13 +14,15 @@ const real_t PackedPellet::ambient_temperature = readScalarData<real_t>("data/pe
 
 IdealGas PackedPellet::interstitial_gas = readIdealGasData("data/pellet/interstitial-gas");
 
+// Input temperature T in K
+// Returns density in kg/m^3
 real_t calcOverallParticleDensity(real_t particle_volume_fractions, real_t temperature = 298.15)
 {
-    return particle_volume_fractions * CoreShellParticle().getDensity(temperature);
+	return particle_volume_fractions * CoreShellParticle().getDensity(temperature);
 }
 
 PackedPellet::PackedPellet(
-    real_t particle_volume_fractions
+	real_t particle_volume_fractions
 ) : overall_particle_density(calcOverallParticleDensity(particle_volume_fractions, ambient_temperature)),
 	interstitial_volume_fractions(1.0 - particle_volume_fractions)
 { ; }

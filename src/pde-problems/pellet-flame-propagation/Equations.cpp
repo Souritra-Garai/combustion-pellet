@@ -16,9 +16,9 @@ bool PelletFlamePropagation::isCombustionComplete()
 	
 	for (size_t i=1; i < m-1 && flag; i++)
 	{
-		flag = !inReactionZone(i);
+		flag = !inReactionZone(i) || std::isnan(_temperature_array[i]);
 	}
-    
+	
 	return flag;
 }
 
@@ -45,51 +45,49 @@ inline LinearExpression PelletFlamePropagation::calcTransientTerm(size_t i)
 	static const real_t gamma_by_delta_t			= gamma / delta_t;
 	static const real_t one_minus_gamma_by_delta_t	= (1. - gamma) / delta_t;
 	static const real_t gamma_by_delta_T_delta_t	= gamma / (delta_t * delta_T);
-    
+	
 	LinearExpression expression;
 	
 	expression.a_1 = _particles_array[i].getHeatCapacity(_temperature_array[i]) * delta_t_inverse;
-    
-    expression.a_0 = 0.0;
+	
+	expression.a_0 = 0.0;
 
-    if (inReactionZone(i))
-    {
+	if (inReactionZone(i))
+	{
 		evolveParticleForEnthalpyDerivative(i);
 
 		real_t enthalpy						= _particles_array[i].getEnthalpy(_temperature_array[i]);
 		real_t enthalpy_const_T_evolution	= _particles_array_const_temperature_evolution[i].getEnthalpy(_temperature_array[i]);
 		real_t enthalpy_raised_T_evolution	= _particles_array_raised_temperature_evolution[i].getEnthalpy(_temperature_array[i]);
-        
-        expression.a_1	+=	gamma_by_delta_T_delta_t * (enthalpy_raised_T_evolution - enthalpy_const_T_evolution);
+		
+		expression.a_1	+=	gamma_by_delta_T_delta_t * (enthalpy_raised_T_evolution - enthalpy_const_T_evolution);
 
-        expression.a_0	+=	one_minus_gamma_by_delta_t * (enthalpy - _prev_enthalpy_particle[i])
+		expression.a_0	+=	one_minus_gamma_by_delta_t * (enthalpy - _prev_enthalpy_particle[i])
 						+ 	gamma_by_delta_t * (enthalpy_const_T_evolution - enthalpy);
-
-		_prev_enthalpy_particle[i] = enthalpy;
-    }
+	}
 
 	expression *= PackedPellet::overall_particle_density;
-    
-    return expression;
+	
+	return expression;
 }
 
 inline LinearExpression PelletFlamePropagation::calcHeatLossTerm(size_t i)
 {
 	static const real_t constant1 = PackedPellet::radiative_emissivity * STEFAN_BOLTZMANN_CONSTANT;
-	static const real_t constant2 = 4. * PackedPellet::radiative_emissivity * STEFAN_BOLTZMANN_CONSTANT;
+	static const real_t constant2 = 4. * constant1;
 
-    LinearExpression expression;
+	LinearExpression expression;
 
 	real_t h = (i == 0) || (i == m-1) ?
 		PackedPellet::convective_heat_transfer_coefficient_flat_surface :
 		PackedPellet::convective_heat_transfer_coefficient_curved_surface;
 
-    expression.a_0 =
+	expression.a_0 =
 		h * (_temperature_array[i] - PackedPellet::ambient_temperature) +
 		constant1 * (std::pow(_temperature_array[i], 4) - std::pow(PackedPellet::ambient_temperature, 4))
 	;
 
-    expression.a_1 = gamma * (
+	expression.a_1 = gamma * (
 		h +
 		constant2 * std::pow(_temperature_array[i], 3)
 	);
@@ -110,31 +108,31 @@ inline real_t PelletFlamePropagation::getInterstitialGasTransientTermCoefficient
 inline void PelletFlamePropagation::setUpBoundaryConditionX0()
 {
 	static const real_t one_by_delta_x = 1. / delta_x;
-    
-    LinearExpression beta = calcHeatLossTerm(0);
-    
-    real_t lambda_by_delta_x = _thermal_conductivity[0] * one_by_delta_x;
-    
-    _solver.setEquationFirstRow(
-          beta.a_1 + lambda_by_delta_x,
-        - lambda_by_delta_x,
+	
+	LinearExpression beta = calcHeatLossTerm(0);
+	
+	real_t lambda_by_delta_x = _thermal_conductivity[0] * one_by_delta_x;
+	
+	_solver.setEquationFirstRow(
+		- lambda_by_delta_x,
+		beta.a_1 + lambda_by_delta_x,
 		- beta.evaluateExpression(- _temperature_array[0])
-    );
+	);
 }
 
 inline void PelletFlamePropagation::setUpBoundaryConditionXN()
 {
 	static const real_t constant = 1. / delta_x;
-    
+	
 	LinearExpression beta = calcHeatLossTerm(m-1);
 
-    real_t lambda_by_delta_x = _thermal_conductivity[m - 1] * constant;
-    
+	real_t lambda_by_delta_x = _thermal_conductivity[m - 1] * constant;
+	
 	_solver.setEquationLastRow(
-    	- lambda_by_delta_x,
 		- beta.a_1 + lambda_by_delta_x,
-		  beta.evaluateExpression(- _temperature_array[m - 1])
-    );
+		- lambda_by_delta_x,
+		beta.evaluateExpression(- _temperature_array[m - 1])
+	);
 }
 
 void PelletFlamePropagation::setUpEquations()
@@ -151,7 +149,7 @@ void PelletFlamePropagation::setUpEquations()
 		{
 			LinearExpression alpha = calcTransientTerm(i);
 
-			LinearExpression beta = calcHeatLossTerm(i);
+			LinearExpression beta = calcHeatLossTerm(i) * four_by_pellet_diameter;
 
 			real_t coeff_fluid = getInterstitialGasTransientTermCoefficient(i);
 
@@ -161,23 +159,23 @@ void PelletFlamePropagation::setUpEquations()
 			real_t kappa_lambda_forward_by_delta_x_sqr  = kappa * lambda_forward_by_delta_x_sqr;
 			real_t kappa_lambda_backward_by_delta_x_sqr = kappa * lambda_backward_by_delta_x_sqr;
 
-            _solver.setEquation(
+			_solver.setEquation(
 				i,
-				- kappa_lambda_backward_by_delta_x_sqr,
-				
-				  alpha.a_1 + coeff_fluid - four_by_pellet_diameter * beta.a_1
-				+ kappa_lambda_backward_by_delta_x_sqr + kappa_lambda_forward_by_delta_x_sqr,
-				
 				- kappa_lambda_forward_by_delta_x_sqr,
 				
+				alpha.a_1 + coeff_fluid - beta.a_1
+				+ kappa_lambda_backward_by_delta_x_sqr + kappa_lambda_forward_by_delta_x_sqr,
+				
+				- kappa_lambda_backward_by_delta_x_sqr,
+				
 				- alpha.evaluateExpression(-_temperature_array[i]) + coeff_fluid * _temperature_array[i]
-				+ four_by_pellet_diameter * beta.evaluateExpression(-_temperature_array[i])
+				+ beta.evaluateExpression(-_temperature_array[i])
 				+ one_minus_kappa * (
 					lambda_forward_by_delta_x_sqr  * (_temperature_array[i+1] - _temperature_array[i]) -
 					lambda_backward_by_delta_x_sqr * (_temperature_array[i] - _temperature_array[i-1])
 				)
-            );
-        }
+			);
+		}
 	
 	setUpBoundaryConditionXN();
 }
@@ -194,9 +192,11 @@ void PelletFlamePropagation::solveEquations()
 void PelletFlamePropagation::updateParticles()
 {
 	#pragma omp parallel for default(shared) schedule(static, 1)
-        
+		
 		for (size_t i = 1; i < m-1; i++)
 		{
+			_prev_enthalpy_particle[i] = _particles_array[i].getEnthalpy(_temperature_array[i]);
+
 			if (inReactionZone(i))
 			{
 				_particles_array[i].setUpEquations(_temperature_array[i]);

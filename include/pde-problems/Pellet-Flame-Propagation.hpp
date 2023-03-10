@@ -1,15 +1,3 @@
-/**
- * @file Pellet-Flame-Propagation.hpp
- * @author Souritra Garai (souritra.garai@iitgn.ac.in)
- * @brief Definition of class representing energy transport problem in
- * a packed pellet of core shell particles
- * @version 0.1
- * @date 2021-08-02
- * 
- * @copyright Copyright (c) 2021
- * 
- */
-
 #ifndef __PELLET_FLAME_PROPAGATION__
 #define __PELLET_FLAME_PROPAGATION__
 
@@ -24,7 +12,7 @@
 
 class PelletFlamePropagation : public PackedPellet
 {
-    private:
+	private:
 
 		real_t _time;
 		
@@ -33,7 +21,7 @@ class PelletFlamePropagation : public PackedPellet
 		real_t * _thermal_conductivity;
 
 		real_t * _prev_enthalpy_particle;
-        
+		
 		CoreShellDiffusion * _particles_array;
 
 		CoreShellDiffusion * _particles_array_const_temperature_evolution;
@@ -53,22 +41,22 @@ class PelletFlamePropagation : public PackedPellet
 		void setUpBoundaryConditionX0();
 		void setUpBoundaryConditionXN();
 
-        void updateParticles();
+		void updateParticles();
 
 		real_t getInterstitialGasTransientTermCoefficient(size_t index);
 
-    public:
+	public:
 	
 		static const real_t kappa;
 
 		static const real_t gamma;
-    
+	
 		static const size_t m;
-    	static const real_t delta_x;
+		static const real_t delta_x;
 
 		static const real_t delta_t;
 
-        static const real_t delta_T;
+		static const real_t delta_T;
 
 		PelletFlamePropagation(real_t particle_volume_fraction);
 		~PelletFlamePropagation();
@@ -84,8 +72,8 @@ class PelletFlamePropagation : public PackedPellet
 		bool isCombustionComplete();
 
 		void printTemperatureProfile(std::ostream &output_stream, char delimiter = '\t');
-        
-        void printGridPoints(std::ostream &output_stream, char delimiter = '\t');
+		
+		void printGridPoints(std::ostream &output_stream, char delimiter = '\t');
 
 		void printDiffusionParticleGridPoints(std::ostream &output_stream, unsigned int particle_index, char delimiter = '\t');
 

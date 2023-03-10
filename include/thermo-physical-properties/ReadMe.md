@@ -27,4 +27,14 @@ The header `Core-Shell-Particle.hpp` defines the class `CoreShellParticle` to re
 
 The combustion reaction is completed when the mass of one of the core or shell species is depleted (mass fractions is below an user-defined limit).
 
-## 
+## Thermal Conductivity of Pellet
+The header `Thermal-Conductivity-Pellet.hpp` declares a set of functions to calculate effective thermal conductivity of a heterogenous mixture. Provided models are - 
+- Bruggeman (EMT)
+- Co-continuous (CC)
+- Maxwell-Eucken 1 (ME1)
+- Maxwell-Eucken 2 (ME2)
+- Combined EMT + ME2 (MEB)
+The thermal conductivities input to the functions in this library should have consistent units. The output will then be returned in the same unit.
+
+## Packed Pellet
+The header `Packed-Pellet.hpp` defines the class `PackedPellet` to represent a pellet packed with particles. It mostly contains constants and functions essential for calculating thermo-physical properties at pellet level.
