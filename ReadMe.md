@@ -1,5 +1,7 @@
 # Combustion in Pellets packed with Core-Shell Structured Intermetallic Particles
 
+[![DOI](https://zenodo.org/badge/381698482.svg)](https://zenodo.org/badge/latestdoi/381698482)
+
 This program solves the PDEs governing flame propagation in a pellet packed with energetic intermetallic particles. The particles of concern are nickel-coated aluminium particles. The reaction kinetics for the combustion of these particles is assumed to be dominated by intermetallic diffusion. The pellet-scale heat equation is coupled to particle-level species diffusion equations and solved using an innovative quasi-implicit scheme. The physico-chemical process is represented in the following figure.
 
 More details are available in the article -
