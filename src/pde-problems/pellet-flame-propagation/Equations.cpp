@@ -163,13 +163,13 @@ void PelletFlamePropagation::setUpEquations()
 				i,
 				- kappa_lambda_forward_by_delta_x_sqr,
 				
-				alpha.a_1 + coeff_fluid - beta.a_1
+				alpha.a_1 + coeff_fluid + beta.a_1
 				+ kappa_lambda_backward_by_delta_x_sqr + kappa_lambda_forward_by_delta_x_sqr,
 				
 				- kappa_lambda_backward_by_delta_x_sqr,
 				
 				- alpha.evaluateExpression(-_temperature_array[i]) + coeff_fluid * _temperature_array[i]
-				+ beta.evaluateExpression(-_temperature_array[i])
+				- beta.evaluateExpression(-_temperature_array[i])
 				+ one_minus_kappa * (
 					lambda_forward_by_delta_x_sqr  * (_temperature_array[i+1] - _temperature_array[i]) -
 					lambda_backward_by_delta_x_sqr * (_temperature_array[i] - _temperature_array[i-1])
